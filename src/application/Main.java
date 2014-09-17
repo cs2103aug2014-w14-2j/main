@@ -20,9 +20,11 @@ public class Main extends Application {
 	}
 	
 	public static void displayUI(Stage primaryStage) {
-		primaryStage.setScene(new UiComponent().getScene());
+		UiComponent mainUI = new UiComponent();
+		primaryStage.setScene(mainUI.getScene());
 		primaryStage.setTitle("WAVE WAVE!");
 		primaryStage.show();
+		mainUI.focusCommandInputBox();
 	}
 	
 	public static void main(String[] args) {

@@ -11,6 +11,8 @@ public class UiComponent {
 	private Scene scene;
 	private BorderPane rootPane;
 	private GridPane summaryPane, userPane;
+	private TextArea timeTaskedDisplay, floatingTaskedDisplay, summaryDisplay, pendingDisplay;
+	private TextField cmdInput, suggestionDisplay;
 	
 	public UiComponent() {
 		inIt();
@@ -21,7 +23,7 @@ public class UiComponent {
 		summaryPane = new GridPane();
 		userPane = new GridPane();
 		
-		TextArea timeTaskedDisplay = new TextArea();
+		timeTaskedDisplay = new TextArea();
 		timeTaskedDisplay.setPrefRowCount(10);
 	    timeTaskedDisplay.setPrefColumnCount(100);
 	    timeTaskedDisplay.setWrapText(true);
@@ -29,7 +31,7 @@ public class UiComponent {
 	    timeTaskedDisplay.setEditable(false);
 	    timeTaskedDisplay.setFocusTraversable(false);
 	    
-		TextArea floatingTaskedDisplay = new TextArea();
+		floatingTaskedDisplay = new TextArea();
 		floatingTaskedDisplay.setPrefRowCount(10);
 	    floatingTaskedDisplay.setPrefColumnCount(100);
 	    floatingTaskedDisplay.setWrapText(true);
@@ -37,7 +39,7 @@ public class UiComponent {
 	    floatingTaskedDisplay.setEditable(false);
 	    floatingTaskedDisplay.setFocusTraversable(false);
 	    
-		TextArea summaryDisplay = new TextArea();
+		summaryDisplay = new TextArea();
 		summaryDisplay.setPrefRowCount(10);
 	    summaryDisplay.setPrefColumnCount(100);
 	    summaryDisplay.setWrapText(true);
@@ -46,7 +48,7 @@ public class UiComponent {
 	    summaryDisplay.setEditable(false);
 	    summaryDisplay.setFocusTraversable(false);
 	    
-		TextArea pendingDisplay = new TextArea();
+		pendingDisplay = new TextArea();
 		pendingDisplay.setPrefRowCount(10);
 	    pendingDisplay.setPrefColumnCount(100);
 	    pendingDisplay.setWrapText(true);
@@ -56,21 +58,17 @@ public class UiComponent {
 		pendingDisplay.setEditable(false);
 		pendingDisplay.setFocusTraversable(false);
 		
-		TextField cmdInput = new TextField();
+		cmdInput = new TextField();
 		cmdInput.setPrefColumnCount(900);
+		cmdInput.setFocusTraversable(false);
 		
-		TextField suggestion = new TextField();
-		suggestion.setPrefColumnCount(900);
-		suggestion.setEditable(false);
-		suggestion.setFocusTraversable(false);
+		suggestionDisplay = new TextField();
+		suggestionDisplay.setPrefColumnCount(900);
+		suggestionDisplay.setEditable(false);
+		suggestionDisplay.setFocusTraversable(false);
 	
-		userPane.setRowIndex(suggestion, 1);
-		userPane.setRowIndex(cmdInput, 2);
-		userPane.getChildren().addAll(suggestion, cmdInput);
-		
-	    summaryPane.setRowIndex(summaryDisplay,1);
-	    summaryPane.setRowIndex(pendingDisplay,2);
-	    summaryPane.getChildren().addAll(summaryDisplay, pendingDisplay);
+		userPane.addColumn(0,suggestionDisplay, cmdInput);
+	    summaryPane.addColumn(0,summaryDisplay, pendingDisplay);
 	    
 	    rootPane.setLeft(timeTaskedDisplay);
 	    rootPane.setCenter(floatingTaskedDisplay);
@@ -83,6 +81,10 @@ public class UiComponent {
 	
 	public Scene getScene() {
 		return scene;
+	}
+	
+	public void focusCommandInputBox() {
+		cmdInput.requestFocus();
 	}
 	
 	
