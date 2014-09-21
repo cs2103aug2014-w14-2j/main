@@ -9,7 +9,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class UiComponent {
     
@@ -30,7 +33,7 @@ public class UiComponent {
 	}
 	
 	private void setupScene() {
-		scene = new Scene(rootPane,900,500);
+		scene = new Scene(rootPane,950,500);
 	}
 	
 	private void initializeComponents() {
@@ -44,15 +47,18 @@ public class UiComponent {
 	private HBox getBottomHBox() {
 		HBox hbox = new HBox();
 		
-		VBox vbox = new VBox(0);
-		vbox.setAlignment(Pos.CENTER);
-		vbox.setPadding(new Insets(15,15,15,15));
+		VBox vbox = new VBox(-10);
+		vbox.setAlignment(Pos.BASELINE_LEFT);
+		vbox.setPadding(new Insets(0,15,25,15));
 				
 		cmdInput = new TextField();
 		cmdInput.setPrefColumnCount(900);
 		cmdInput.setFocusTraversable(false);
+		cmdInput.setPrefHeight(35);
 		
-		Text suggestionText = new Text("Input Command : ");
+		Text suggestionText = new Text(" Command : ");
+		suggestionText.setTextAlignment(TextAlignment.JUSTIFY);
+		suggestionText.setFont(Font.font("Ariel", FontWeight.NORMAL, 15));
 		
 		vbox.getChildren().addAll(suggestionText,cmdInput);
 		hbox.getChildren().addAll(vbox);
@@ -65,7 +71,7 @@ public class UiComponent {
 		
 		VBox vbox = new VBox(10);
 		vbox.setAlignment(Pos.CENTER);
-		vbox.setPadding(new Insets(15,15,15,0));
+		vbox.setPadding(new Insets(15,20,0,-20));
 		
 		summaryDisplay = new TextArea();
 		summaryDisplay.setPrefRowCount(10);
@@ -94,7 +100,7 @@ public class UiComponent {
 	
 	private HBox getCenterHBox() {
 		HBox hbox = new HBox();
-		hbox.setPadding(new Insets(15, 15, 15, 0));
+		hbox.setPadding(new Insets(15, 0, 0, -20));
 		hbox.setMaxHeight(500);
 		hbox.setMaxWidth(300);
 		
@@ -112,7 +118,7 @@ public class UiComponent {
 	
 	private HBox getLeftHBox() {
 		HBox hbox = new HBox();
-		hbox.setPadding(new Insets(15, 0, 15, 15));
+		hbox.setPadding(new Insets(15, 0, 0, 15));
 		hbox.setMaxHeight(500);
 		hbox.setMaxWidth(300);
 		

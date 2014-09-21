@@ -10,14 +10,20 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			UiComponent uiComponent = new UiComponent();
-			primaryStage.setScene(uiComponent.getScene());
-			primaryStage.setResizable(false);
-			primaryStage.show();
+			showStage(primaryStage);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	private static void showStage(Stage primaryStage) {
+		UiComponent uiComponent = new UiComponent();
+		primaryStage.setScene(uiComponent.getScene());
+		primaryStage.setResizable(false);
+		primaryStage.setTitle("WaveWave[0.1]");
+		primaryStage.show();
+	}
+	
 	
 	public static void main(String[] args) {
 		launch(args);
