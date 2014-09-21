@@ -12,6 +12,7 @@ public class Main extends Application {
 		try {
 			UiComponent uiComponent = new UiComponent();
 			primaryStage.setScene(uiComponent.getScene());
+			primaryStage.setResizable(false);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();

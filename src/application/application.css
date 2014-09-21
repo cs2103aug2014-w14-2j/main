@@ -1,0 +1,8 @@
+.rootPane {
+    -fx-background-color: #cef0fc;
+}
+ 
+ .display {
+ 	-fx-border-radius: 10 10 0 0;
+    -fx-background-radius: 10 10 0 0;
+ }
