@@ -11,7 +11,10 @@ import javafx.stage.Stage;
  * @author Sun Wang Jun
  */
 public class Controller extends Application {
-    private static ArrayList floatingTasks;
+    private static ArrayList<FloatingTask> floatingTasks;
+    private static ArrayList<TimedTask> timedTasks;
+    private static ArrayList<DeadlineTask> deadlineTasks;
+    
 	
 	// Actually do all these console outputs even work?
 
@@ -30,7 +33,63 @@ public class Controller extends Application {
 	public static void runCommandInput(String input) {
 	    Command command = (new Parser(input)).getCmd();
 		
-//	    String type = command.get
+	    String commandType = command.getCommandType();
+	    String taskType = command.getTaskType();
+	    String taskID, taskDesc;
+	    int id;
+	    switch(commandType) {
+	        case "add":
+	            taskDesc = command.getTaskDesc();
+	            switch (taskType) {
+	                case "floating":
+	                    FloatingTask newFT = new FloatingTask();
+	                    newFT.setDescription(taskDesc);
+	                    floatingTasks.add(newFT);
+	                    break;
+	                case "timed":
+	                    TimedTask newTT = new TimedTask();
+	                    newTT.setDescription(taskDesc);
+	                    timedTasks.add(newTT);
+	                    break;
+	                case "deadline":
+	                    DeadlineTask newDT = new DeadlineTask();
+	                    newDT.setDescription(taskDesc);
+	                    deadlineTasks.add(newDT);
+	                    break;
+	                    
+	            }
+	            break;
+	        case "delete":
+	            taskID = command.getTaskID().substring(1); // Strip first letter.
+	            id = Integer.parseInt(taskID) - 1; // Woo magic numbers.
+	            switch (taskType) {
+	                case "floating":
+	                    floatingTasks.remove(id);
+	                    break;
+                    case "timed":
+                        timedTasks.remove(id);
+                        break;
+	                case "deadline":
+                        deadlineTasks.remove(id);
+	                    break;	                
+	            }
+	            break;
+	        case "edit":
+	            taskID = command.getTaskID().substring(1); // Strip first letter.
+                id = Integer.parseInt(taskID) - 1; // Woo magic numbers.
+	            taskDesc = command.getTaskDesc();
+	            switch (taskType) {
+	                case "floating":
+	                    floatingTasks.get(id).setDescription(taskDesc);
+	                    break;
+	                case "timed":
+                        timedTasks.get(id).setDescription(taskDesc);
+	                    break;
+	                case "deadline":
+                        deadlineTasks.get(id).setDescription(taskDesc);
+	                    break;
+	            }
+	    }
 		// find out what type of command it is, switch case maybe,
 		// then call the appropriate method.
 	    
@@ -104,6 +163,9 @@ public class Controller extends Application {
     
     
     public static void main(String[] args) {
+        floatingTasks = new ArrayList<FloatingTask>();
+        timedTasks = new ArrayList<TimedTask>();
+        deadlineTasks = new ArrayList<DeadlineTask>();
         launch(args);
     }
 }
