@@ -5,6 +5,10 @@ package application;
  * @author Jinyu
  * @version 2.0
  */
+import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
+
+import java.util.Date;
+import java.util.List;
 
 public class Parser {
 
@@ -35,14 +39,16 @@ public class Parser {
         }
         case "add" : {
             taskDesc = userInput.replace(getFirstWord(userInput), "").trim();
-            taskTime = "dummy";
+            List<Date> dates = new PrettyTimeParser().parse(taskDesc);
+            taskTime = dates.toString();
             cmd = new Command(commandType,taskDesc,taskTime);
             break;
         }
         case "edit" : {
             taskID = userInput.trim().split("\\s+")[1];
             taskDesc = userInput.replace(getFirstWord(userInput)+" "+taskID,"").trim();
-            taskTime = null;
+            List<Date> dates = new PrettyTimeParser().parse(taskDesc);
+            taskTime = dates.toString();
             cmd = new Command(commandType, taskID, taskDesc, taskTime);
             break;	    
         }
