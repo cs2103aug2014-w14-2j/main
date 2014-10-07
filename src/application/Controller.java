@@ -15,6 +15,8 @@ public class Controller extends Application {
     private static ArrayList<TimedTask> timedTasks;
     private static ArrayList<DeadlineTask> deadlineTasks;
     
+    private static UiComponent uiComponent;
+    
 	
 	// Actually do all these console outputs even work?
 
@@ -45,6 +47,7 @@ public class Controller extends Application {
 	                    FloatingTask newFT = new FloatingTask();
 	                    newFT.setDescription(taskDesc);
 	                    floatingTasks.add(newFT);
+	                    uiComponent.updateFloatingTasks(floatingTasks);
 	                    break;
 	                case "timed":
 	                    TimedTask newTT = new TimedTask();
@@ -65,6 +68,7 @@ public class Controller extends Application {
 	            switch (taskType) {
 	                case "floating":
 	                    floatingTasks.remove(id);
+                        uiComponent.updateFloatingTasks(floatingTasks);
 	                    break;
                     case "timed":
                         timedTasks.remove(id);
@@ -81,6 +85,7 @@ public class Controller extends Application {
 	            switch (taskType) {
 	                case "floating":
 	                    floatingTasks.get(id).setDescription(taskDesc);
+                        uiComponent.updateFloatingTasks(floatingTasks);
 	                    break;
 	                case "timed":
                         timedTasks.get(id).setDescription(taskDesc);
@@ -144,7 +149,7 @@ public class Controller extends Application {
 	    System.out.println("searchTasks() called");
 	}
 	
-    @Override
+    @Override // What is this sia?
     public void start(Stage primaryStage) {
         try {
             showStage(primaryStage);
@@ -154,7 +159,7 @@ public class Controller extends Application {
     }
     
     private static void showStage(Stage primaryStage) {
-        UiComponent uiComponent = new UiComponent();
+        uiComponent = new UiComponent();
         primaryStage.setScene(uiComponent.getScene());
         primaryStage.setResizable(false);
         primaryStage.setTitle("WaveWave[0.1]");
