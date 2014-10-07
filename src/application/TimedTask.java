@@ -1,8 +1,8 @@
 package application;
 
-public class DeadlineTasks extends Task { 
+public class TimedTask extends Task {
 
-    public DeadlineTasks() {
+    public TimedTask() {
         // TODO Auto-generated constructor stub
     }
 

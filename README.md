@@ -6,6 +6,6 @@
 2. Go to _Project_ > _Generate Javadoc..._,
   * Locate **javadoc.exe** in your _jdk_ folder if you have not done so,
 3. Click _Next_ or _Finish_,
-4. Commit the updated Javadocs if necessary.
+4. **You do not, and should not be able to commit the generated Javadocs.**
 
 You can view the Javadocs by navigating to `/doc/index.html` in the root folder of WaveWave.
