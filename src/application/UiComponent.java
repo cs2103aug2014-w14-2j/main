@@ -79,8 +79,6 @@ public class UiComponent {
                     input_text = cmdInput.getText();
                     Controller.runCommandInput(input_text);
                     
-                    output_text = "dummy";
-                  
                     cmdInput.clear();
                     rootPane.setCenter(getCenterHBox());   // display what is entered on Floating Task Box
                 }
@@ -174,6 +172,13 @@ public class UiComponent {
 
     public void focusCommandInputBox() {
         cmdInput.requestFocus();
+    }
+    
+    public void updateFloatingTasks(ArrayList<Task> floatingTasks) {
+        output_text = "";
+        for (int i = 0; i <floatingTasks.size();i++) {
+            output_text += "F" + Integer.toString(i+1)+" "+floatingTasks.get(i).getDescription()+"\n";
+        }
     }
 
 
