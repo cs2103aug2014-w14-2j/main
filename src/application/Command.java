@@ -11,7 +11,7 @@ public class Command {
     private String keyword;
     private String taskDesc;
     private String taskType;
-    private List<Date> taskTime;
+    private Date taskTime;
 
     Command(String commandType) {  // for undo command
         this.commandType = commandType;
@@ -34,25 +34,25 @@ public class Command {
         }
         taskTime = null;
     }
-    Command(String commandType, String taskDesc, List<Date> taskTime) {   // add command
+    Command(String commandType, String taskDesc, Date taskTime) {   // add command
         this.commandType = commandType;
         taskID = null;
         keyword = null;
         this.taskDesc = taskDesc;
         this.taskTime = taskTime;
-        if (taskTime.toString().equals("[]")) {
+        if (taskTime.toString().equals("")) {
             taskType = "floating";
         }
         else {
             taskType = "deadline";
         }
     }
-    Command(String commandType, String taskID, String taskDesc, List<Date> taskTime) {  // edit 
+    Command(String commandType, String taskID, String taskDesc, Date taskTime) {  // edit 
         this.commandType = commandType;
         this.taskID = taskID;
         this.taskDesc = taskDesc;
         this.taskTime = taskTime;
-        if (taskTime.toString().equals("[]")) {
+        if (taskTime.toString().equals("")) {
             taskType = "floating";
         }
         else {
@@ -80,7 +80,7 @@ public class Command {
     public String getKeyword(){
         return keyword;
     }
-    public List<Date> getTaskTime(){
+    public Date getTaskTime(){
         return taskTime;
     }
     public String getTaskType(){
