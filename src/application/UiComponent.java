@@ -26,7 +26,8 @@ public class UiComponent {
     private TextArea timeTaskedDisplay, floatingTaskedDisplay, summaryDisplay, pendingDisplay;
     private TextField cmdInput;
     public String input_text;  //added
-    public String output_text = ""; //added
+    public String output_text_floating = ""; //added
+    public String output_text_deadline = ""; // added
     public Parser parser;    //added
     public Command cmd;// added
     public int floating_task_counter = 0; //added
@@ -81,6 +82,7 @@ public class UiComponent {
                     
                     cmdInput.clear();
                     rootPane.setCenter(getCenterHBox());   // display what is entered on Floating Task Box
+                    rootPane.setLeft(getLeftHBox());
                 }
             }
                 });
@@ -142,7 +144,7 @@ public class UiComponent {
         floatingTaskedDisplay.setPrefWidth(300);
         floatingTaskedDisplay.setEditable(false);
         floatingTaskedDisplay.setFocusTraversable(false);
-        floatingTaskedDisplay.setText(output_text); //get task name from controller then display here 
+        floatingTaskedDisplay.setText(output_text_floating); //get task name from controller then display here 
 
         hbox.getChildren().addAll(floatingTaskedDisplay);
         return hbox;
@@ -161,6 +163,7 @@ public class UiComponent {
         timeTaskedDisplay.setPrefWidth(300);
         timeTaskedDisplay.setEditable(false);
         timeTaskedDisplay.setFocusTraversable(false);
+        timeTaskedDisplay.setText(output_text_deadline);
 
         hbox.getChildren().addAll(timeTaskedDisplay);
         return hbox;
@@ -174,12 +177,20 @@ public class UiComponent {
         cmdInput.requestFocus();
     }
     
-    public void updateFloatingTasks(ArrayList<Task> floatingTasks) {
-        output_text = "";
+    public void updateFloatingTasks(ArrayList<FloatingTask> floatingTasks) {
+        output_text_floating = "";
         for (int i = 0; i <floatingTasks.size();i++) {
-            output_text += "F" + Integer.toString(i+1)+" "+floatingTasks.get(i).getDescription()+"\n";
+            output_text_floating += "F" + Integer.toString(i+1)+" "+floatingTasks.get(i).getDescription()+"\n";
         }
     }
+    public void updateDeadlineTasks(ArrayList<DeadlineTask> deadlineTasks) {
+        output_text_deadline = "";
+        for (int i = 0; i<deadlineTasks.size(); i++) {
+            output_text_deadline += "D" + Integer.toString(i+1) + " " + deadlineTasks.get(i).getDescription()+ "     " 
+                    + deadlineTasks.get(i).getDeadline().toString()+"\n";
+        }
+    }
+    
 
 
 }
