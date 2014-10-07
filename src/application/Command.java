@@ -1,4 +1,8 @@
 package application;
+import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
+
+import java.util.Date;
+import java.util.List;
 
 public class Command {
 
@@ -9,7 +13,7 @@ public class Command {
     private String taskType;
     private String taskTime;
 
-    Command(String commandType) {
+    Command(String commandType) {  // for undo command
         this.commandType = commandType;
         taskID = null;
         keyword = null;
@@ -17,7 +21,7 @@ public class Command {
         taskType = null;
         taskTime = null;      
     }
-    Command(String commandType, String taskID) {
+    Command(String commandType, String taskID) {   // for delete, complete and search 
         this.commandType = commandType;
         this.taskID = taskID;
         this.keyword = taskID;
@@ -25,20 +29,30 @@ public class Command {
         taskType = null;
         taskTime = null;
     }
-    Command(String commandType, String taskDesc, String taskTime) {
+    Command(String commandType, String taskDesc, String taskTime) {   // add command
         this.commandType = commandType;
         taskID = null;
         keyword = null;
         this.taskDesc = taskDesc;
         this.taskTime = taskTime;
-        taskType = null;
+        if (taskTime.equals("[]")) {
+            taskType = "floating";
+        }
+        else {
+            taskType = "deadline";
+        }
     }
-    Command(String commandType, String taskID, String taskDesc, String taskTime) {
+    Command(String commandType, String taskID, String taskDesc, String taskTime) {  // edit 
         this.commandType = commandType;
         this.taskID = taskID;
         this.taskDesc = taskDesc;
         this.taskTime = taskTime;
-        taskType = null;
+        if (taskTime.equals("[]")) {
+            taskType = "floating";
+        }
+        else {
+            taskType = "deadline";
+        }
         keyword = null;
     }
     /**
