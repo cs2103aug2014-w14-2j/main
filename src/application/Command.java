@@ -40,7 +40,7 @@ public class Command {
         keyword = null;
         this.taskDesc = taskDesc;
         this.taskTime = taskTime;
-        if (taskTime.toString().equals("")) {
+        if (taskTime == null ) {
             taskType = "floating";
         }
         else {
@@ -52,7 +52,7 @@ public class Command {
         this.taskID = taskID;
         this.taskDesc = taskDesc;
         this.taskTime = taskTime;
-        if (taskTime.toString().equals("")) {
+        if (taskTime == null) {
             taskType = "floating";
         }
         else {
