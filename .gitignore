@@ -31,3 +31,4 @@ local.properties
 
 # Javadocs
 /doc/
+/target/
