@@ -39,14 +39,26 @@ public class Parser {
         }
         case "add" : {
             taskDesc = userInput.replace(getFirstWord(userInput), "").trim();
-            
+            List<Date> dates = new PrettyTimeParser().parse(taskDesc);
+            if (dates.size()>0) {
             taskTime =  new PrettyTimeParser().parse(taskDesc).get(0);
+            }
+            else {
+                taskTime = null;
+            }
             cmd = new Command(commandType,taskDesc,taskTime);
             break;
         }
         case "edit" : {
             taskID = userInput.trim().split("\\s+")[1];
-            taskDesc = userInput.replace(getFirstWord(userInput)+" "+taskID,"").trim();          
+            taskDesc = userInput.replace(getFirstWord(userInput)+" "+taskID,"").trim(); 
+            List<Date> dates = new PrettyTimeParser().parse(taskDesc);
+            if (dates.size()>0) {
+            taskTime =  new PrettyTimeParser().parse(taskDesc).get(0);
+            }
+            else {
+                taskTime = null;
+            }
             taskTime = new PrettyTimeParser().parse(taskDesc).get(0);
             cmd = new Command(commandType, taskID, taskDesc, taskTime);
             break;	    
