@@ -17,7 +17,7 @@ public class Parser {
     private String commandType;
     private String taskID;
     private String taskDesc;
-    private String taskTime;
+    private List<Date> taskTime;
 
     /**
      * This constructs a parser object with an user input 
@@ -39,16 +39,15 @@ public class Parser {
         }
         case "add" : {
             taskDesc = userInput.replace(getFirstWord(userInput), "").trim();
-            List<Date> dates = new PrettyTimeParser().parse(taskDesc);
-            taskTime = dates.toString();
+            
+            taskTime =  new PrettyTimeParser().parse(taskDesc);
             cmd = new Command(commandType,taskDesc,taskTime);
             break;
         }
         case "edit" : {
             taskID = userInput.trim().split("\\s+")[1];
-            taskDesc = userInput.replace(getFirstWord(userInput)+" "+taskID,"").trim();
-            List<Date> dates = new PrettyTimeParser().parse(taskDesc);
-            taskTime = dates.toString();
+            taskDesc = userInput.replace(getFirstWord(userInput)+" "+taskID,"").trim();          
+            taskTime = new PrettyTimeParser().parse(taskDesc);
             cmd = new Command(commandType, taskID, taskDesc, taskTime);
             break;	    
         }

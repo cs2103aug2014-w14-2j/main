@@ -174,12 +174,14 @@ public class UiComponent {
         cmdInput.requestFocus();
     }
     
-    public void updateFloatingTasks(ArrayList<Task> floatingTasks) {
+    public void updateFloatingTasks(ArrayList<FloatingTask> floatingTasks) {
         output_text = "";
         for (int i = 0; i <floatingTasks.size();i++) {
             output_text += "F" + Integer.toString(i+1)+" "+floatingTasks.get(i).getDescription()+"\n";
         }
     }
+    
+    
 
 
 }
