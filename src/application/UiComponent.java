@@ -28,6 +28,7 @@ public class UiComponent {
     public String input_text;  //added
     public String output_text = ""; //added
     public Parser parser;    //added
+    public Command cmd;// added
     public int floating_task_counter = 0; //added
     public ArrayList<String> floating_tasks = new ArrayList<String>();
 
@@ -76,19 +77,20 @@ public class UiComponent {
                 if (ke.getCode().equals(KeyCode.ENTER))
                 {
                     input_text = cmdInput.getText();
-                    parser = new Parser(input_text);        
-                    if (parser.getCommand().equals("add")) {
-                        floating_tasks.add(parser.getTaskName());
+                    parser = new Parser(input_text);  
+                    cmd = parser.getCmd();
+                    if (cmd.getCommandType().equals("add")) {
+                        floating_tasks.add(cmd.getTaskDesc());
                         floating_task_counter++;
-                        output_text += "F"+ String.valueOf(floating_task_counter)+" " + parser.getTaskName() + "\n";
+                        output_text += "F"+ String.valueOf(floating_task_counter)+" " + cmd.getTaskDesc() + "\n";
                         //    for (int i = 0; i<floating_tasks.size(); i++) {
                         //       output_text += "F" + String.valueOf(i+1) + " " + floating_tasks.get(i) + "\n";
                         //  }
 
                     }
-                    if (parser.getCommand().equals("delete")){
+                    if (cmd.getCommandType().equals("delete")){
                         floating_task_counter--;
-                        String floating_ID = parser.getTaskName().substring(1);
+                        String floating_ID = cmd.getTaskID().substring(1);
                         int ID = Integer.parseInt(floating_ID);
                         floating_tasks.remove(ID-1);
                         output_text = "";
