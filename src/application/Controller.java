@@ -206,6 +206,7 @@ public class Controller extends Application {
         timedTasks = new ArrayList<TimedTask>();
         deadlineTasks = new ArrayList<DeadlineTask>();
         fileManage = new FileManager();
+        fileManage.initiateFile();
         launch(args);
     }
 }

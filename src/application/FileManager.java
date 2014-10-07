@@ -23,7 +23,6 @@ public class FileManager {
 	private JSONArray timedTasks = new JSONArray();
 	
 	public FileManager() {
-		initiateFile();
 	}
 	
 	public void initiateFile() {
@@ -76,6 +75,7 @@ public class FileManager {
 	}
 	
 	public void retrieveFloating() {
+		floatingTasks.clear();
 		JSONParser parser = new JSONParser();
 		try {
 			Object filereader = parser.parse(new FileReader(floatingFilename));
@@ -88,6 +88,7 @@ public class FileManager {
 	}
 	
 	public void retrieveDeadline() {
+		deadlineTasks.clear();
 		JSONParser parser = new JSONParser();
 		try {
 			Object filereader = parser.parse(new FileReader(deadlineFilename));
@@ -101,6 +102,7 @@ public class FileManager {
 	}
 	
 	public void retrieveTimed() {
+		timedTasks.clear();
 		JSONParser parser = new JSONParser();
 		try {
 			Object filereader = parser.parse(new FileReader(timedFilename));
@@ -158,7 +160,6 @@ public class FileManager {
 		floatingTasks.clear();
 		for (int i = 0; i < list.size(); i++) {
 			JSONObject obj = new JSONObject();
-			obj.put("ID", list.get(i).getId());
 			obj.put("Description", list.get(i).getDescription());
 			floatingTasks.add(obj);
 		}
@@ -168,7 +169,6 @@ public class FileManager {
 		deadlineTasks.clear();
 		for (int i = 0; i < list.size(); i++) {
 			JSONObject obj = new JSONObject();
-			obj.put("ID", list.get(i).getId());
 			obj.put("Description", list.get(i).getDescription());
 			obj.put("Deadline", list.get(i).getDeadline());
 			deadlineTasks.add(obj);
@@ -179,7 +179,6 @@ public class FileManager {
 		timedTasks.clear();
 		for (int i = 0; i < list.size(); i++) {
 			JSONObject obj = new JSONObject();
-			obj.put("ID", list.get(i).getId());
 			obj.put("Description", list.get(i).getDescription());
 			timedTasks.add(obj);
 		}
@@ -191,6 +190,7 @@ public class FileManager {
 			FloatingTask task = new FloatingTask();
 			JSONObject obj = (JSONObject) floatingTasks.get(i);
 			task.setDescription((String) obj.get("Description")); 
+			list.add(task);
 		}
 		return list;
 	}
@@ -202,6 +202,7 @@ public class FileManager {
 			JSONObject obj = (JSONObject) deadlineTasks.get(i);
 			task.setDescription((String) obj.get("Description")); 
 			task.setDeadline((Date) obj.get("Deadline"));
+			list.add(task);
 		}
 		return list;
 	}
@@ -212,6 +213,7 @@ public class FileManager {
 			TimedTask task = new TimedTask();
 			JSONObject obj = (JSONObject) timedTasks.get(i);
 			task.setDescription((String) obj.get("Description")); 
+			list.add(task);
 		}
 		return list;
 	}
