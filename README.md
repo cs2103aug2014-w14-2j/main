@@ -1,5 +1,4 @@
 # WaveWave
-====
 
 ## To re-generate Javadocs,
 
@@ -9,4 +8,4 @@
 3. Click _Next_ or _Finish_,
 4. Commit the updated Javadocs if necessary.
 
-You can view the Javadocs by navigating to `/doc/index.html` in the root folder of WaveWAve.
+You can view the Javadocs by navigating to `/doc/index.html` in the root folder of WaveWave.
