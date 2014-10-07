@@ -3,5 +3,14 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
+	<classpathentry kind="lib" path="PrettyTimeLib/prettytime-3.2.5.Final-javadoc.jar"/>
+	<classpathentry kind="lib" path="PrettyTimeLib/prettytime-3.2.5.Final-sources.jar"/>
+	<classpathentry kind="lib" path="PrettyTimeLib/prettytime-3.2.5.Final.jar"/>
+	<classpathentry kind="lib" path="PrettyTimeLib/prettytime-integration-jsf-3.2.5.Final-javadoc.jar"/>
+	<classpathentry kind="lib" path="PrettyTimeLib/prettytime-integration-jsf-3.2.5.Final-sources.jar"/>
+	<classpathentry kind="lib" path="PrettyTimeLib/prettytime-integration-jsf-3.2.5.Final.jar"/>
+	<classpathentry kind="lib" path="PrettyTimeLib/prettytime-nlp-3.2.5.Final-javadoc.jar"/>
+	<classpathentry kind="lib" path="PrettyTimeLib/prettytime-nlp-3.2.5.Final-sources.jar"/>
+	<classpathentry kind="lib" path="PrettyTimeLib/prettytime-nlp-3.2.5.Final.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
