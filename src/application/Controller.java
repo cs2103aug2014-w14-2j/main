@@ -1,10 +1,5 @@
 package application;
 
-class Task {
-    // For skeleton purposes.
-    // Move to separate file later.
-}
-
 /**
  * The controller logic that integrates UI, Storage and Parser.
  * 
