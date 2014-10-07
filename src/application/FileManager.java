@@ -139,6 +139,10 @@ public class FileManager {
 	public void buildTimedArrayList() {
 		
 	}
+	
+	public void convertToJSON() {
+		
+	}
 
 	public static void main(String[] args) {
 		
