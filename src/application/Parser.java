@@ -59,7 +59,6 @@ public class Parser {
             else {
                 taskTime = null;
             }
-            taskTime = new PrettyTimeParser().parse(taskDesc).get(0);
             cmd = new Command(commandType, taskID, taskDesc, taskTime);
             break;	    
         }
