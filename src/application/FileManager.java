@@ -69,17 +69,10 @@ public class FileManager {
 		}
 	}
 	
-	public void retrieveLists(int type) {
-		if (type == 1) {
-			retrieveFloating();
-		} else if (type == 2) {
-			retrieveDeadline();
-		} else if (type == 3) {
-			retrieveTimed();
-		} else {
-			
-		}
-		
+	public void retrieveLists() {
+		retrieveFloating();
+		retrieveDeadline();
+		retrieveTimed();
 	}
 	
 	public void retrieveFloating() {
@@ -120,17 +113,10 @@ public class FileManager {
 		
 	}
 	
-	public void saveToFiles(int type) {
-		if (type == 1) {
-			saveFloatingToFiles();
-		} else if (type == 2) {
-			saveDeadlineToFiles();
-		} else if (type == 3) {
-			saveTimedToFiles();
-		} else {
-			
-		}
-		
+	public void saveToFiles() {
+		saveFloatingToFiles();
+		saveDeadlineToFiles();
+		saveTimedToFiles();
 	}
 	
 	public void saveFloatingToFiles() {

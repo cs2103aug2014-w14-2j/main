@@ -15,6 +15,7 @@ public class Controller extends Application {
     private static ArrayList<FloatingTask> floatingTasks;
     private static ArrayList<TimedTask> timedTasks;
     private static ArrayList<DeadlineTask> deadlineTasks;
+    private static FileManager fileManage;
 
     private static UiComponent uiComponent;
 
@@ -38,6 +39,11 @@ public class Controller extends Application {
      *            The entire command input.
      */
     public static void runCommandInput(String input) {
+    	fileManage.retrieveLists();
+    	floatingTasks = fileManage.convertFloatingJSONArrayToArrayList();
+    	deadlineTasks = fileManage.convertDeadlineJSONArrayToArrayList();
+    	timedTasks = fileManage.convertTimedJSONArrayToArrayList();
+    	
         Command command = (new Parser(input)).getCmd();
 
         String commandType = command.getCommandType();
@@ -114,6 +120,11 @@ public class Controller extends Application {
         // Handle errors here!
 
         System.out.println("runCommandInput(input: " + input + ") called");
+        
+        fileManage.convertFloatingArrayListToJSONArray(floatingTasks);
+        fileManage.convertDeadlineArrayListToJSONArray(deadlineTasks);
+        fileManage.convertTimedArrayListToJSONArray(timedTasks);
+        fileManage.saveToFiles();
     }
 
     /**
@@ -194,6 +205,7 @@ public class Controller extends Application {
         floatingTasks = new ArrayList<FloatingTask>();
         timedTasks = new ArrayList<TimedTask>();
         deadlineTasks = new ArrayList<DeadlineTask>();
+        fileManage = new FileManager();
         launch(args);
     }
 }
