@@ -26,7 +26,12 @@ public class Command {
         this.taskID = taskID;
         this.keyword = taskID;
         taskDesc = null;
-        taskType = null;
+        if (String.valueOf(taskDesc.charAt(0)).equals("F")) {
+            taskType = "floating";
+        }
+        else {
+            taskType = "deadline";
+        }
         taskTime = null;
     }
     Command(String commandType, String taskDesc, String taskTime) {   // add command
