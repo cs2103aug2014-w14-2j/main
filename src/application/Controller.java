@@ -1,10 +1,106 @@
 package application;
 
 import java.util.ArrayList;
-import java.util.Date;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+abstract class TaskManager<E> {
+    protected ArrayList<E> list;
+    protected E task; // Maybe this can act as "last modified task".
+    
+    public abstract ArrayList<E> add(Command command);
+    public abstract ArrayList<E> edit(Command command);
+    public abstract ArrayList<E> delete(Command command);
+    public abstract void updateUi(UiComponent uiComponent);
+    
+    public ArrayList<E> getList() {
+        return this.list;
+    }
+    
+    public ArrayList<E> initializeList(ArrayList<E> storedList) {
+        list = storedList;
+        return this.list;
+    }
+    
+}
+
+class FloatingTaskManager extends TaskManager<FloatingTask> {    
+    public ArrayList<FloatingTask> add(Command command) {
+        this.task = new FloatingTask();
+        this.task.setDescription(command.getTaskDesc());
+        this.list.add(this.task);
+        return this.list;
+    }
+    
+    public ArrayList<FloatingTask> edit(Command command) {
+        return this.list;
+    }
+    
+    public ArrayList<FloatingTask> delete(Command command) {
+        // Temporary hack to remove via ArrayList index.
+        int taskId = Integer.parseInt(command.getTaskID().substring(1)) - 1;
+        this.list.remove(taskId);
+        
+        return this.list;        
+    }
+    
+    public void updateUi(UiComponent uiComponent) {
+        uiComponent.updateFloatingTasks(this.list);
+    }
+}
+
+class TimedTaskManager extends TaskManager<TimedTask> {    
+    public ArrayList<TimedTask> add(Command command) {
+        this.task = new TimedTask();
+        this.task.setDescription(command.getTaskDesc());
+        this.list.add(this.task);
+        return this.list;
+    }
+    
+    public ArrayList<TimedTask> edit(Command command) {
+        return this.list;
+    }
+    
+    public ArrayList<TimedTask> delete(Command command) {
+        // Temporary hack to remove via ArrayList index.
+        int taskId = Integer.parseInt(command.getTaskID().substring(1)) - 1;
+        this.list.remove(taskId);
+        
+        return this.list;        
+    }
+    
+    
+    public void updateUi(UiComponent uiComponent) {
+        //uiComponent.updateFloatingTasks(this.list);
+    }
+}
+
+class DeadlineTaskManager extends TaskManager<DeadlineTask> {    
+    public ArrayList<DeadlineTask> add(Command command) {
+        this.task = new DeadlineTask();
+        this.task.setDescription(command.getTaskDesc());
+        this.task.setDeadline(command.getTaskTime());
+        this.list.add(this.task);
+        return list;
+    }
+    
+    public ArrayList<DeadlineTask> edit(Command command) {
+        return this.list;
+    }
+    
+    public ArrayList<DeadlineTask> delete(Command command) {
+        // Temporary hack to remove via ArrayList index.
+        int taskId = Integer.parseInt(command.getTaskID().substring(1)) - 1;
+        this.list.remove(taskId);
+        
+        return this.list;        
+    }
+    
+    
+    public void updateUi(UiComponent uiComponent) {
+        uiComponent.updateDeadlineTasks(this.list);
+    }
+}
 
 /**
  * The controller logic that integrates UI, Storage and Parser.
@@ -12,25 +108,13 @@ import javafx.stage.Stage;
  * @author Sun Wang Jun
  */
 public class Controller extends Application {
-    private static ArrayList<FloatingTask> floatingTasks;
-    private static ArrayList<TimedTask> timedTasks;
-    private static ArrayList<DeadlineTask> deadlineTasks;
     private static FileManager fileManage;
+    
+    private static FloatingTaskManager floatingTasks = new FloatingTaskManager();
+    private static TimedTaskManager timedTasks = new TimedTaskManager();
+    private static DeadlineTaskManager deadlineTasks = new DeadlineTaskManager();
 
     private static UiComponent uiComponent;
-
-    // Actually do all these console outputs even work?
-
-    /**
-     * Returns an ArrayList of tasks of a specific type.
-     * 
-     * @param type
-     *            "events" (timed), "reminders" (floating), "deadlines"
-     *            (deadlines)
-     */
-    public static void getTasks(String type) {
-        System.out.println("getTasks(type: " + type + ") called");
-    }
 
     /**
      * Executes the command entered.
@@ -39,148 +123,41 @@ public class Controller extends Application {
      *            The entire command input.
      */
     public static void runCommandInput(String input) {
-    	fileManage.retrieveLists();
-    	floatingTasks = fileManage.convertFloatingJSONArrayToArrayList();
-    	deadlineTasks = fileManage.convertDeadlineJSONArrayToArrayList();
-    	timedTasks = fileManage.convertTimedJSONArrayToArrayList();
-    	
-        Command command = (new Parser(input)).getCmd();
-
-        String commandType = command.getCommandType();
-        String taskType = command.getTaskType();
-        String taskID, taskDesc;
-        int id;
-        Date deadline;
-        switch (commandType) {
-        case "add":
-            taskDesc = command.getTaskDesc();
-            switch (taskType) {
-            case "floating":
-                FloatingTask newFT = new FloatingTask();
-                newFT.setDescription(taskDesc);
-                floatingTasks.add(newFT);
-                uiComponent.updateFloatingTasks(floatingTasks);
-                break;
-            case "timed":
-                TimedTask newTT = new TimedTask();
-                newTT.setDescription(taskDesc);
-                timedTasks.add(newTT);
-                break;
-            case "deadline":
-                DeadlineTask newDT = new DeadlineTask();
-                newDT.setDescription(taskDesc);
-                deadline = command.getTaskTime();
-                newDT.setDeadline(deadline);
-                deadlineTasks.add(newDT);
-                uiComponent.updateDeadlineTasks(deadlineTasks);
-                break;
-
-            }
-            break;
-        case "delete":
-            taskID = command.getTaskID().substring(1); // Strip first letter.
-            id = Integer.parseInt(taskID) - 1; // Woo magic numbers.
-            switch (taskType) {
-            case "floating":
-                floatingTasks.remove(id);
-                uiComponent.updateFloatingTasks(floatingTasks);
-                break;
-            case "timed":
-                timedTasks.remove(id);
-                break;
-            case "deadline":
-                deadlineTasks.remove(id);
-                uiComponent.updateDeadlineTasks(deadlineTasks);
-                break;
-            }
-            break;
-        case "edit":
-            taskID = command.getTaskID().substring(1); // Strip first letter.
-            id = Integer.parseInt(taskID) - 1; // Woo magic numbers.
-            taskDesc = command.getTaskDesc();
-            switch (taskType) {
-            case "floating":
-                floatingTasks.get(id).setDescription(taskDesc);
-                uiComponent.updateFloatingTasks(floatingTasks);
-                break;
-            case "timed":
-                timedTasks.get(id).setDescription(taskDesc);
-                break;
-            case "deadline":
-                deadlineTasks.get(id).setDescription(taskDesc);
-                deadline = command.getTaskTime();
-                deadlineTasks.get(id).setDeadline(deadline);
-                uiComponent.updateDeadlineTasks(deadlineTasks);
-                break;
-            }
-        }
-        // find out what type of command it is, switch case maybe,
-        // then call the appropriate method.
-
-        // Handle errors here!
-
         System.out.println("runCommandInput(input: " + input + ") called");
         
-        fileManage.convertFloatingArrayListToJSONArray(floatingTasks);
-        fileManage.convertDeadlineArrayListToJSONArray(deadlineTasks);
-        fileManage.convertTimedArrayListToJSONArray(timedTasks);
+    	fileManage.retrieveLists();
+    	floatingTasks.initializeList(fileManage.convertFloatingJSONArrayToArrayList());
+    	deadlineTasks.initializeList(fileManage.convertDeadlineJSONArrayToArrayList());
+    	timedTasks.initializeList(fileManage.convertTimedJSONArrayToArrayList());
+    	
+        Command command = (new Parser(input)).getCmd();
+        TaskManager<?> taskManager = null; // Wild card to avoid warning.
+        
+        switch (command.getTaskType()) {
+            case "floating": taskManager = floatingTasks; break;
+            case "timed": taskManager = timedTasks; break;
+            case "deadline": taskManager = deadlineTasks; break;
+            default: break; // Throw exception here?
+        }
+        
+        switch (command.getCommandType()) {
+        case "add":
+            taskManager.add(command);
+            taskManager.updateUi(uiComponent);
+            break;
+        case "delete":
+            taskManager.delete(command);
+            taskManager.updateUi(uiComponent);
+            break;
+        case "edit":
+            taskManager.edit(command);
+            taskManager.updateUi(uiComponent);
+        }
+        
+        fileManage.convertFloatingArrayListToJSONArray(floatingTasks.getList());
+        fileManage.convertDeadlineArrayListToJSONArray(deadlineTasks.getList());
+        fileManage.convertTimedArrayListToJSONArray(timedTasks.getList());
         fileManage.saveToFiles();
-    }
-
-    /**
-     * Adds a new task.
-     * 
-     * @param task
-     *            Task object.
-     */
-    public static void addTask(Task task) {
-        // Maybe we should expect an id?
-        // And return something to runCommandInput probably.
-        System.out.println("addTask(task: " + task.toString() + ") called");
-    }
-
-    /**
-     * Edits a given task object.
-     * 
-     * @param id
-     *            id of the task to edit.
-     * @param task
-     *            new task information.
-     */
-    public static void editTask(int id, Task task) { // This is very
-                                                     // interesting.
-        // Not sure how the parameters should work in this case.
-        // Probably an EditTask object?
-        System.out.println("editTask(id: " + id + "\n" + "\ttask: "
-                + task.toString() + ") called");
-    }
-
-    // Shit we may need to overload the delete and complete tasks if
-    // there are multiple ids!
-
-    /**
-     * Deletes a given task object.
-     * 
-     * @param id
-     */
-    public static void deleteTask(int id) {
-        System.out.println("deleteTask(id: " + id + ") called");
-    }
-
-    /**
-     * Marks a given task object as complete.
-     * 
-     * @param id
-     */
-    public static void completeTask(int id) {
-        System.out.println("completeTask(id: " + id + ") called");
-    }
-
-    /**
-     * Searches tasks.
-     */
-    public static void searchTasks() { // I have no clue what to pass in here!
-        System.out.println("searchTasks() called");
     }
 
     @Override
@@ -202,9 +179,9 @@ public class Controller extends Application {
     }
 
     public static void main(String[] args) {
-        floatingTasks = new ArrayList<FloatingTask>();
-        timedTasks = new ArrayList<TimedTask>();
-        deadlineTasks = new ArrayList<DeadlineTask>();
+        floatingTasks = new FloatingTaskManager();
+        timedTasks = new TimedTaskManager();
+        deadlineTasks = new DeadlineTaskManager();
         fileManage = new FileManager();
         fileManage.initiateFile();
         launch(args);
