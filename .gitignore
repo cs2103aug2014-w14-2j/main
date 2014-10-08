@@ -31,4 +31,9 @@ local.properties
 
 # Javadocs
 /doc/
+
+# Maven Build
 /target/
+
+# Json
+*.json
