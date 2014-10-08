@@ -20,14 +20,19 @@ import javafx.scene.text.TextAlignment;
 import javafx.event.EventHandler;
 
 public class UiComponent {
-
+	
+	private final int DISPLAY_WIDTH = 300;
+	private final int DISPLAY_HEIGHT = 500;
+	
     private Scene scene;
     private BorderPane rootPane;
     private TextArea timeTaskedDisplay, floatingTaskedDisplay, summaryDisplay, pendingDisplay;
     private TextField cmdInput;
+    
     public String input_text;  //added
     public String output_text = ""; //added
     public Parser parser;    //added
+    
     public int floating_task_counter = 0; //added
     public ArrayList<String> floating_tasks = new ArrayList<String>();
 
@@ -68,13 +73,10 @@ public class UiComponent {
 
         cmdInput.setPromptText("Write here");
 
-        cmdInput.setOnKeyPressed(new EventHandler<KeyEvent>()
-                {
+        cmdInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
-            public void handle(KeyEvent ke)
-            {
-                if (ke.getCode().equals(KeyCode.ENTER))
-                {
+            public void handle(KeyEvent ke) {
+                if (ke.getCode().equals(KeyCode.ENTER)) {
                     input_text = cmdInput.getText();
                     parser = new Parser(input_text);        
                     if (parser.getCommand().equals("add")) {
@@ -86,7 +88,7 @@ public class UiComponent {
                         //  }
 
                     }
-                    if (parser.getCommand().equals("delete")){
+                    if (parser.getCommand().equals("delete")) {
                         floating_task_counter--;
                         String floating_ID = parser.getTaskName().substring(1);
                         int ID = Integer.parseInt(floating_ID);
@@ -97,10 +99,10 @@ public class UiComponent {
                         }
                     }
                     cmdInput.clear();
-                    rootPane.setCenter(getCenterHBox());   // display what is entered on Floating Task Box
+                    floatingTaskedDisplay.setText(output_text);   // display what is entered on Floating Task Box
                 }
             }
-                });
+         });
 
         input_text = cmdInput.getText();   //retrieve input text
 
@@ -116,10 +118,9 @@ public class UiComponent {
 
     private HBox getRightHBox() {
         HBox hbox = new HBox();
-
         VBox vbox = new VBox(10);
         vbox.setAlignment(Pos.CENTER);
-        vbox.setPadding(new Insets(15,20,0,-20));
+        vbox.setPadding(new Insets(15, 20, 0, -20));
 
         summaryDisplay = new TextArea();
         summaryDisplay.setPrefRowCount(10);
@@ -149,8 +150,8 @@ public class UiComponent {
     private HBox getCenterHBox() {
         HBox hbox = new HBox();
         hbox.setPadding(new Insets(15, 0, 0, -20));
-        hbox.setMaxHeight(500);
-        hbox.setMaxWidth(300);
+        hbox.setMaxHeight(DISPLAY_HEIGHT);
+        hbox.setMaxWidth(DISPLAY_WIDTH);
 
         floatingTaskedDisplay = new TextArea();
         floatingTaskedDisplay.setPrefRowCount(10);
@@ -168,8 +169,8 @@ public class UiComponent {
     private HBox getLeftHBox() {
         HBox hbox = new HBox();
         hbox.setPadding(new Insets(15, 0, 0, 15));
-        hbox.setMaxHeight(500);
-        hbox.setMaxWidth(300);
+        hbox.setMaxHeight(DISPLAY_HEIGHT);
+        hbox.setMaxWidth(DISPLAY_WIDTH);
 
         timeTaskedDisplay = new TextArea();
         timeTaskedDisplay.setPrefRowCount(10);
