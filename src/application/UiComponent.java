@@ -30,10 +30,12 @@ public class UiComponent {
     private TextField cmdInput;
     
     public String input_text;  //added
-    public String output_text = ""; //added
+    public String output_text_floating = ""; //added
+    public String output_text_deadline = ""; // added
     public Parser parser;    //added
-    
-    public int floating_task_counter = 0; //added
+    public Command cmd;// added
+
+    public int floating_task_counter = 0; 
     public ArrayList<String> floating_tasks = new ArrayList<String>();
 
     public UiComponent() {
@@ -78,28 +80,11 @@ public class UiComponent {
             public void handle(KeyEvent ke) {
                 if (ke.getCode().equals(KeyCode.ENTER)) {
                     input_text = cmdInput.getText();
-                    parser = new Parser(input_text);        
-                    if (parser.getCommand().equals("add")) {
-                        floating_tasks.add(parser.getTaskName());
-                        floating_task_counter++;
-                        output_text += "F"+ String.valueOf(floating_task_counter)+" " + parser.getTaskName() + "\n";
-                        //    for (int i = 0; i<floating_tasks.size(); i++) {
-                        //       output_text += "F" + String.valueOf(i+1) + " " + floating_tasks.get(i) + "\n";
-                        //  }
-
-                    }
-                    if (parser.getCommand().equals("delete")) {
-                        floating_task_counter--;
-                        String floating_ID = parser.getTaskName().substring(1);
-                        int ID = Integer.parseInt(floating_ID);
-                        floating_tasks.remove(ID-1);
-                        output_text = "";
-                        for (int i = 0; i<floating_tasks.size(); i++) {
-                            output_text += "F" + String.valueOf(i+1) + " " + floating_tasks.get(i) + "\n";
-                        }
-                    }
+                    Controller.runCommandInput(input_text);
+                    
                     cmdInput.clear();
-                    floatingTaskedDisplay.setText(output_text);   // display what is entered on Floating Task Box
+                    rootPane.setCenter(getCenterHBox());   // display what is entered on Floating Task Box
+                    rootPane.setLeft(getLeftHBox());
                 }
             }
          });
@@ -160,7 +145,7 @@ public class UiComponent {
         floatingTaskedDisplay.setPrefWidth(300);
         floatingTaskedDisplay.setEditable(false);
         floatingTaskedDisplay.setFocusTraversable(false);
-        floatingTaskedDisplay.setText(output_text); //get task name from controller then display here 
+        floatingTaskedDisplay.setText(output_text_floating); //get task name from controller then display here 
 
         hbox.getChildren().addAll(floatingTaskedDisplay);
         return hbox;
@@ -179,6 +164,7 @@ public class UiComponent {
         timeTaskedDisplay.setPrefWidth(300);
         timeTaskedDisplay.setEditable(false);
         timeTaskedDisplay.setFocusTraversable(false);
+        timeTaskedDisplay.setText(output_text_deadline);
 
         hbox.getChildren().addAll(timeTaskedDisplay);
         return hbox;
@@ -191,6 +177,21 @@ public class UiComponent {
     public void focusCommandInputBox() {
         cmdInput.requestFocus();
     }
+    
+    public void updateFloatingTasks(ArrayList<FloatingTask> floatingTasks) {
+        output_text_floating = "";
+        for (int i = 0; i <floatingTasks.size();i++) {
+            output_text_floating += "F" + Integer.toString(i+1)+" "+floatingTasks.get(i).getDescription()+"\n";
+        }
+    }
+    public void updateDeadlineTasks(ArrayList<DeadlineTask> deadlineTasks) {
+        output_text_deadline = "";
+        for (int i = 0; i<deadlineTasks.size(); i++) {
+            output_text_deadline += "D" + Integer.toString(i+1) + " " + deadlineTasks.get(i).getDescription()+ "     " 
+                    + deadlineTasks.get(i).getDeadline().toString()+"\n";
+        }
+    }
+    
 
 
 }
