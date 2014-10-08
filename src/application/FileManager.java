@@ -170,7 +170,7 @@ public class FileManager {
 		for (int i = 0; i < list.size(); i++) {
 			JSONObject obj = new JSONObject();
 			obj.put("Description", list.get(i).getDescription());
-			obj.put("Deadline", list.get(i).getDeadline());
+			obj.put("Deadline", (Date) list.get(i).getDeadline());
 			deadlineTasks.add(obj);
 		}
 	}
@@ -200,7 +200,7 @@ public class FileManager {
 		for (int i = 0; i < deadlineTasks.size(); i++) {
 			DeadlineTask task = new DeadlineTask();
 			JSONObject obj = (JSONObject) deadlineTasks.get(i);
-			task.setDescription((String) obj.get("Description")); 
+			task.setDescription((String) obj.get("Description"));
 			task.setDeadline((Date) obj.get("Deadline"));
 			list.add(task);
 		}
