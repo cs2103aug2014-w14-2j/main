@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -26,7 +26,9 @@ public class UiComponent {
 	
     private Scene scene;
     private BorderPane rootPane;
-    private TextArea timeTaskedDisplay, floatingTaskedDisplay, summaryDisplay, pendingDisplay;
+    private TextArea /*timeTaskedDisplay, floatingTaskedDisplay,*/ summaryDisplay, pendingDisplay;
+    private ListView<String> timedTaskList, taskList ;
+    
     private TextField cmdInput;
     
     public String input_text;  //added
@@ -137,8 +139,12 @@ public class UiComponent {
         hbox.setPadding(new Insets(15, 0, 0, -20));
         hbox.setMaxHeight(DISPLAY_HEIGHT);
         hbox.setMaxWidth(DISPLAY_WIDTH);
+        
+        taskList = new ListView<String>();
+        taskList.setPrefHeight(DISPLAY_HEIGHT);
+        taskList.setPrefWidth(DISPLAY_WIDTH);
 
-        floatingTaskedDisplay = new TextArea();
+        /*floatingTaskedDisplay = new TextArea();
         floatingTaskedDisplay.setPrefRowCount(10);
         floatingTaskedDisplay.setPrefColumnCount(100);
         floatingTaskedDisplay.setWrapText(true);
@@ -146,8 +152,8 @@ public class UiComponent {
         floatingTaskedDisplay.setEditable(false);
         floatingTaskedDisplay.setFocusTraversable(false);
         floatingTaskedDisplay.setText(output_text_floating); //get task name from controller then display here 
-
-        hbox.getChildren().addAll(floatingTaskedDisplay);
+        */
+        hbox.getChildren().addAll(taskList);
         return hbox;
     }
 
@@ -156,8 +162,12 @@ public class UiComponent {
         hbox.setPadding(new Insets(15, 0, 0, 15));
         hbox.setMaxHeight(DISPLAY_HEIGHT);
         hbox.setMaxWidth(DISPLAY_WIDTH);
+        
+        timedTaskList = new ListView<String>();
+        timedTaskList.setPrefHeight(DISPLAY_HEIGHT);
+        timedTaskList.setPrefWidth(DISPLAY_WIDTH);
 
-        timeTaskedDisplay = new TextArea();
+        /*timeTaskedDisplay = new TextArea();
         timeTaskedDisplay.setPrefRowCount(10);
         timeTaskedDisplay.setPrefColumnCount(100);
         timeTaskedDisplay.setWrapText(true);
@@ -165,8 +175,9 @@ public class UiComponent {
         timeTaskedDisplay.setEditable(false);
         timeTaskedDisplay.setFocusTraversable(false);
         timeTaskedDisplay.setText(output_text_deadline);
-
-        hbox.getChildren().addAll(timeTaskedDisplay);
+		*/
+        hbox.getChildren().addAll(timedTaskList);
+        
         return hbox;
     }
 
