@@ -1,8 +1,6 @@
 package application;
 
 import java.util.Date;
-import org.ocpsoft.prettytime.PrettyTime;
-
 
 /**
  * The task object!
@@ -12,6 +10,8 @@ import org.ocpsoft.prettytime.PrettyTime;
 public class Task {
     private String id;
     private String description;
+    private Date date;
+    private Date endDate;
     private boolean completed;
     
     /**
@@ -32,6 +32,36 @@ public class Task {
     public void setDescription(String description) {
         this.description = description;
     }
+    
+    /**
+     * @return the (start) date of the Task. This returns null if there is no date.
+     */
+    public Date getDate() { return this.date; }
+    /**
+     * @param date sets the (start) date of the Task. Set to null to remove the date.
+     */
+    public void setDate(Date date) {
+        // We should probably set endDate to null if date is null.
+        this.date = date;
+    }
+    /**
+     * Removes the (start) date of the Task.
+     */
+    public void removeDate() { this.setDate(null); }
+    
+    /**
+     * @return the end date of the Task. This returns null if there is no date.
+     */
+    public Date getEndDate() { return this.endDate; }
+    /**
+     * @param endDate sets the end date of the Task. Set to null to remove the date.
+     */
+    public void setEndDate(Date endDate) { this.endDate = endDate; }
+    /**
+     * Removes the end date of the Task.
+     */
+    public void removeEndDate() { this.setEndDate(null); }
+    
     
     /**
      * @return boolean whether Task is completed.
