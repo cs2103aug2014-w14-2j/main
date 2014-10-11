@@ -1,6 +1,6 @@
 package application;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
  * The task object!
@@ -10,8 +10,8 @@ import java.util.Date;
 public class Task {
     private String id;
     private String description;
-    private Date date;
-    private Date endDate;
+    private DateTime date;
+    private DateTime endDate;
     private boolean completed;
     
     /**
@@ -36,11 +36,11 @@ public class Task {
     /**
      * @return the (start) date of the Task. This returns null if there is no date.
      */
-    public Date getDate() { return this.date; }
+    public DateTime getDate() { return this.date; }
     /**
      * @param date sets the (start) date of the Task. Set to null to remove the date.
      */
-    public void setDate(Date date) {
+    public void setDate(DateTime date) {
         // We should probably set endDate to null if date is null.
         this.date = date;
     }
@@ -52,11 +52,11 @@ public class Task {
     /**
      * @return the end date of the Task. This returns null if there is no date.
      */
-    public Date getEndDate() { return this.endDate; }
+    public DateTime getEndDate() { return this.endDate; }
     /**
      * @param endDate sets the end date of the Task. Set to null to remove the date.
      */
-    public void setEndDate(Date endDate) { this.endDate = endDate; }
+    public void setEndDate(DateTime endDate) { this.endDate = endDate; }
     /**
      * Removes the end date of the Task.
      */
@@ -73,4 +73,8 @@ public class Task {
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
+    /**
+     * Completes the task.
+     */
+    public void complete() { this.setCompleted(true); }
 }

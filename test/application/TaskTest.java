@@ -4,6 +4,7 @@
 package application;
 
 import static org.junit.Assert.*;
+import org.joda.time.DateTime;
 
 import org.junit.After;
 import org.junit.Before;
@@ -57,54 +58,39 @@ public class TaskTest {
     @Test
     public void testDate() {
         assertNull("has null date", task.getDate());
+        
+        DateTime dateTime = new DateTime(2014, 10, 11, 12, 44, 0);
+        task.setDate(dateTime);
+        assertEquals("has set date", dateTime, task.getDate());
+        
+        task.setDate(null);
+        assertNull("has set null date", task.getDate());
     }
 
     /**
-     * Test method for {@link application.Task#removeDate()}.
+     * Test method for {@link application.Task#endDate}.
      */
     @Test
-    public void testRemoveDate() {
-        fail("Not yet implemented");
+    public void testEndDate() {
+        assertNull("has null endDate", task.getEndDate());
+        
+        DateTime dateTime = new DateTime(2014, 10, 11, 12, 44, 0);
+        task.setEndDate(dateTime);
+        assertEquals("has set endDate", dateTime, task.getEndDate());
+        
+        task.setEndDate(null);
+        assertNull("has set null endDate", task.getEndDate());
     }
 
     /**
-     * Test method for {@link application.Task#getEndDate()}.
+     * Test method for {@link application.Task#completed}.
      */
     @Test
-    public void testGetEndDate() {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link application.Task#setEndDate(java.util.Date)}.
-     */
-    @Test
-    public void testSetEndDate() {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link application.Task#removeEndDate()}.
-     */
-    @Test
-    public void testRemoveEndDate() {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link application.Task#isCompleted()}.
-     */
-    @Test
-    public void testIsCompleted() {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link application.Task#setCompleted(boolean)}.
-     */
-    @Test
-    public void testSetCompleted() {
-        fail("Not yet implemented");
+    public void testCompleted() {
+        assertFalse("is not completed", task.isCompleted());
+        
+        task.complete();
+        assertTrue("is completed", task.isCompleted());
     }
 
 }
