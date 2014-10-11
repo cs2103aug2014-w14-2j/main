@@ -133,7 +133,7 @@ public class Controller extends Application {
      * @param task
      *            Task object.
      */
-    public static void addTask(Task task) {
+    public static void addTask(String task) {
         // Maybe we should expect an id?
         // And return something to runCommandInput probably.
         System.out.println("addTask(task: " + task.toString() + ") called");
@@ -147,7 +147,7 @@ public class Controller extends Application {
      * @param task
      *            new task information.
      */
-    public static void editTask(int id, Task task) { // This is very
+    public static void editTask(int id, String task) { // This is very
                                                      // interesting.
         // Not sure how the parameters should work in this case.
         // Probably an EditTask object?
