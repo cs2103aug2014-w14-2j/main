@@ -3,194 +3,188 @@ package application;
 import java.util.ArrayList;
 
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 
 public class UiComponent {
-
-    private Scene scene;
-    private BorderPane rootPane;
-    private TextArea timeTaskedDisplay, floatingTaskedDisplay, summaryDisplay, pendingDisplay;
-    private TextField cmdInput;
-    public String input_text;  //added
-    public String output_text_floating = ""; //added
-    public String output_text_deadline = ""; // added
-    public Parser parser;    //added
-    public Command cmd;// added
-    public int floating_task_counter = 0; //added
-    public ArrayList<String> floating_tasks = new ArrayList<String>();
-
-    public UiComponent() {
-        initializeComponents();
-        setupScene();
-        initializeStyleSheetToComponents();
-    }
-
-    private void initializeStyleSheetToComponents() {
-        scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-        rootPane.getStyleClass().add("rootPane");
-    }
-
-    private void setupScene() {
-        scene = new Scene(rootPane,950,500);
-    }
-
-    private void initializeComponents() {
-        rootPane = new BorderPane();
-        rootPane.setLeft(getLeftHBox());
-        rootPane.setCenter(getCenterHBox());
-        rootPane.setRight(getRightHBox());
-        rootPane.setBottom(getBottomHBox());
-    }
-
-    private HBox getBottomHBox() {
-        HBox hbox = new HBox();
-
-        VBox vbox = new VBox(-10);
-        vbox.setAlignment(Pos.BASELINE_LEFT);
-        vbox.setPadding(new Insets(0,15,25,15));
-
-        cmdInput = new TextField();
-        cmdInput.setPrefColumnCount(900);
-        cmdInput.setFocusTraversable(false);
-        cmdInput.setPrefHeight(35);
-
-        cmdInput.setPromptText("Write here");
-
-        cmdInput.setOnKeyPressed(new EventHandler<KeyEvent>()
-                {
-            @Override
-            public void handle(KeyEvent ke)
-            {
-                if (ke.getCode().equals(KeyCode.ENTER))
-                {
-                    input_text = cmdInput.getText();
-                    Controller.runCommandInput(input_text);
-                    
-                    cmdInput.clear();
-                    rootPane.setCenter(getCenterHBox());   // display what is entered on Floating Task Box
-                    rootPane.setLeft(getLeftHBox());
-                }
-            }
-                });
-
-        input_text = cmdInput.getText();   //retrieve input text
-
-        Text suggestionText = new Text(" Command : ");
-        suggestionText.setTextAlignment(TextAlignment.JUSTIFY);
-        suggestionText.setFont(Font.font("Ariel", FontWeight.NORMAL, 15));
-
-        vbox.getChildren().addAll(suggestionText,cmdInput);
-        hbox.getChildren().addAll(vbox);
-
-        return hbox;
-    }
-
-    private HBox getRightHBox() {
-        HBox hbox = new HBox();
-
-        VBox vbox = new VBox(10);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setPadding(new Insets(15,20,0,-20));
-
-        summaryDisplay = new TextArea();
-        summaryDisplay.setPrefRowCount(10);
-        summaryDisplay.setPrefColumnCount(100);
-        summaryDisplay.setWrapText(true);
-        summaryDisplay.setPrefWidth(300);
-        summaryDisplay.setPrefHeight(250);
-        summaryDisplay.setEditable(false);
-        summaryDisplay.setFocusTraversable(false);
-
-        pendingDisplay = new TextArea();
-        pendingDisplay.setPrefRowCount(10);
-        pendingDisplay.setPrefColumnCount(100);
-        pendingDisplay.setWrapText(true);
-        pendingDisplay.setPrefWidth(300);
-        pendingDisplay.setPrefHeight(250);
-        pendingDisplay.setText("SURPRISE");
-        pendingDisplay.setEditable(false);
-        pendingDisplay.setFocusTraversable(false);
-
-        vbox.getChildren().addAll(summaryDisplay,pendingDisplay);
-        hbox.getChildren().addAll(vbox);
-
-        return hbox;
-    }
-
-    private HBox getCenterHBox() {
-        HBox hbox = new HBox();
-        hbox.setPadding(new Insets(15, 0, 0, -20));
-        hbox.setMaxHeight(500);
-        hbox.setMaxWidth(300);
-
-        floatingTaskedDisplay = new TextArea();
-        floatingTaskedDisplay.setPrefRowCount(10);
-        floatingTaskedDisplay.setPrefColumnCount(100);
-        floatingTaskedDisplay.setWrapText(true);
-        floatingTaskedDisplay.setPrefWidth(300);
-        floatingTaskedDisplay.setEditable(false);
-        floatingTaskedDisplay.setFocusTraversable(false);
-        floatingTaskedDisplay.setText(output_text_floating); //get task name from controller then display here 
-
-        hbox.getChildren().addAll(floatingTaskedDisplay);
-        return hbox;
-    }
-
-    private HBox getLeftHBox() {
-        HBox hbox = new HBox();
-        hbox.setPadding(new Insets(15, 0, 0, 15));
-        hbox.setMaxHeight(500);
-        hbox.setMaxWidth(300);
-
-        timeTaskedDisplay = new TextArea();
-        timeTaskedDisplay.setPrefRowCount(10);
-        timeTaskedDisplay.setPrefColumnCount(100);
-        timeTaskedDisplay.setWrapText(true);
-        timeTaskedDisplay.setPrefWidth(300);
-        timeTaskedDisplay.setEditable(false);
-        timeTaskedDisplay.setFocusTraversable(false);
-        timeTaskedDisplay.setText(output_text_deadline);
-
-        hbox.getChildren().addAll(timeTaskedDisplay);
-        return hbox;
-    }
-
-    public Scene getScene() {
-        return scene;
-    }
-
-    public void focusCommandInputBox() {
-        cmdInput.requestFocus();
-    }
     
-    public void updateFloatingTasks(ArrayList<FloatingTask> floatingTasks) {
-        output_text_floating = "";
-        for (int i = 0; i <floatingTasks.size();i++) {
-            output_text_floating += "F" + Integer.toString(i+1)+" "+floatingTasks.get(i).getDescription()+"\n";
-        }
-    }
-    public void updateDeadlineTasks(ArrayList<DeadlineTask> deadlineTasks) {
-        output_text_deadline = "";
-        for (int i = 0; i<deadlineTasks.size(); i++) {
-            output_text_deadline += "D" + Integer.toString(i+1) + " " + deadlineTasks.get(i).getDescription()+ "     " 
-                    + deadlineTasks.get(i).getDeadline().toString()+"\n";
-        }
-    }
+    private final int CMDINPUT_HEIGHT = 35;
+    private final String CMDINPUT_PROMPT_TEXT = "Ask WaveWave to do something ?";
+    private final String CMDINPUT_STYLESHEET = "cmdBox_outer";
     
+    private final String SUGGESTION_TEXT = "Did you mean this : add ?";
+    
+	private final int LISTVIEW_DISPLAY_WIDTH = 300;
+	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
+	private final String LISTVIEW_STYLESHEET = "taskDisplay_outer";
+	
+	private final int APPLICATION_WIDTH = 650;
+	private final int APPLICATION_HEIGHT = 650;
+	
+	private final String APP_DEFAULT_FONT = "Ariel";
+	private final String APP_DEFAULT_STYLESHEET = "application.css";
+	
+
+	private Scene scene;
+	private BorderPane rootPane;
+	private TextField cmdInputBox;
+	private TaskListView floatingTaskListView, eventAndRemainderTaskListView;
+
+	public Scene getScene() {
+		return scene;
+	}
+	
+	public UiComponent() {
+		initializeComponents();
+		setupScene();
+		initializeStyleSheetToComponents();
+	}
+
+	private void initializeStyleSheetToComponents() {
+		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
+		rootPane.getStyleClass().add("rootPane");
+	}
+
+	private void setupScene() {
+		scene = new Scene(rootPane, APPLICATION_WIDTH, APPLICATION_HEIGHT);
+	}
+
+	private void initializeComponents() {
+		rootPane = new BorderPane();
+		rootPane.setCenter(getMainComponentHolder());
+	}
+	
+	private VBox createVBox(int spacing, Insets padding, int prefWidth, int prefHeight, String style) {
+		VBox vBox = new VBox(spacing);
+		vBox.setPadding(padding);
+		vBox.getStyleClass().add(style);
+		vBox.setPrefHeight(prefHeight);
+		
+		if(prefWidth != 0) {
+			vBox.setPrefWidth(prefWidth);
+		} else {
+			vBox.setFillWidth(true);
+		}
+		
+		return vBox;
+	}
+	
+	private HBox createHBox(int spacing, Insets padding, int prefWidth, int prefHeight, String style) {
+		HBox hBox = new HBox(spacing);
+		hBox.setPadding(padding);
+		hBox.getStyleClass().add(style);
+		hBox.setPrefWidth(prefWidth);
+		
+		if(prefHeight != 0) {
+			hBox.setPrefHeight(prefHeight);
+		} else {
+			hBox.setFillHeight(true);
+		}
+		
+		return hBox;
+	}
+	
+	private Text createText(String text, int size, FontWeight weight, String fontFamily, Color color) {
+		Text textLabel = new Text(text);
+		textLabel.setTextAlignment(TextAlignment.JUSTIFY);
+		textLabel.setFont(Font.font(fontFamily, weight, size));
+		
+		if(color == null) {
+			color = Color.WHITE;
+		}
+		
+		textLabel.setFill(color);
+		return textLabel;
+	}
+	
+	private void createCmdInputBox() {
+        cmdInputBox = new TextField();
+        cmdInputBox.setFocusTraversable(false);
+        cmdInputBox.setPrefHeight(CMDINPUT_HEIGHT);
+        cmdInputBox.setPromptText(CMDINPUT_PROMPT_TEXT);
+        
+        cmdInputBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
+             @Override 
+             public void handle(KeyEvent ke) { 
+                 if (ke.getCode().equals(KeyCode.ENTER)) { 
+                     Controller.runCommandInput(cmdInputBox.getText());  
+                 } 
+             } 
+         });
+	}
+	
+	private VBox getUserInputComponentHolder() {
+		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_STYLESHEET);
+		Text suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
+		createCmdInputBox();
+		userInputComponentHolder.getChildren().addAll(cmdInputBox, suggestionText);
+		return userInputComponentHolder;
+	}
+
+	private VBox getMainComponentHolder() {
+		HBox taskListViewComponentHolder = createHBox(10, new Insets(10, 0, 10, 0), 0, 0, "");
+		VBox mainComponentHolder = createVBox(5, new Insets(15, 15, 0, 15), 0, 0, "");
+
+		VBox timedAndDeadlineTaskHolder = getTimedAndDeadlineTaskHolder();
+		VBox floatingTaskListViewHolder = getFloatingTaskListViewHolder();
+		VBox userInputComponentHolder = getUserInputComponentHolder();
+
+		taskListViewComponentHolder.getChildren().addAll(timedAndDeadlineTaskHolder, floatingTaskListViewHolder);
+		mainComponentHolder.getChildren().addAll(userInputComponentHolder, taskListViewComponentHolder);
+		return mainComponentHolder;
+	}
+
+	private VBox getFloatingTaskListViewHolder() {
+		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
+		Text taskTitle = createText("Tasks", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
+
+		floatingTaskListView = new TaskListView();
+		ObservableList<Task> items = FXCollections.observableArrayList();
+		floatingTaskListView.populateTaskListWithData(items);
+		innerBox.getChildren().addAll(taskTitle, floatingTaskListView.getListView());
+		
+		return innerBox;
+	}
+
+	private VBox getTimedAndDeadlineTaskHolder() {
+		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
+		Text taskTitle = createText("Reminder & Events", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
+		
+		eventAndRemainderTaskListView = new TaskListView();
+        ObservableList<Task> items = FXCollections.observableArrayList();
+        eventAndRemainderTaskListView.populateTaskListWithData(items);
+		innerBox.getChildren().addAll(taskTitle, eventAndRemainderTaskListView.getListView());
+
+		return innerBox;
+	}
 
 
+	public void focusCommandInputBox() {
+		cmdInputBox.requestFocus();
+	}
+	
+	public void updateTaskList(ArrayList<Task> items) {
+	    ObservableList<Task> taskList = FXCollections.observableArrayList();
+	    taskList.setAll(items);
+	    floatingTaskListView.populateTaskListWithData(taskList);
+	}
+	
+	public void updateReminderList(ArrayList<Task> items) {
+	    ObservableList<Task> taskList = FXCollections.observableArrayList();
+	    taskList.setAll(items);
+	    eventAndRemainderTaskListView.populateTaskListWithData(taskList);
+	}
 }

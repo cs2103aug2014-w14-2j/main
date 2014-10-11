@@ -9,6 +9,7 @@ import javafx.stage.Stage;
  * @author Sun Wang Jun
  */
 public class Controller extends Application {
+
     private static FileManager fileManage;
     
     private static TaskManager taskManager;
@@ -22,15 +23,16 @@ public class Controller extends Application {
      *            The entire command input.
      */
     public static void runCommandInput(String input) {
+
         System.out.println("runCommandInput(input: " + input + ") called");
-        
-    	fileManage.retrieveLists();
-//    	floatingTasks.initializeList(fileManage.convertFloatingJSONArrayToArrayList());
-//    	deadlineTasks.initializeList(fileManage.convertDeadlineJSONArrayToArrayList());
-//    	timedTasks.initializeList(fileManage.convertTimedJSONArrayToArrayList());
-    	
+
+        fileManage.retrieveLists();
+        // floatingTasks.initializeList(fileManage.convertFloatingJSONArrayToArrayList());
+        // deadlineTasks.initializeList(fileManage.convertDeadlineJSONArrayToArrayList());
+        // timedTasks.initializeList(fileManage.convertTimedJSONArrayToArrayList());
+
         Command command = (new Parser(input)).getCmd();
-        
+
         switch (command.getCommandType()) {
         case "add":
             taskManager.add(command);
@@ -44,15 +46,14 @@ public class Controller extends Application {
             taskManager.edit(command);
             taskManager.updateUi(uiComponent);
         }
-        
-//        fileManage.convertFloatingArrayListToJSONArray(floatingTasks.getList());
-//        fileManage.convertDeadlineArrayListToJSONArray(deadlineTasks.getList());
-//        fileManage.convertTimedArrayListToJSONArray(timedTasks.getList());
+
+        // fileManage.convertFloatingArrayListToJSONArray(floatingTasks.getList());
+        // fileManage.convertDeadlineArrayListToJSONArray(deadlineTasks.getList());
+        // fileManage.convertTimedArrayListToJSONArray(timedTasks.getList());
         fileManage.saveToFiles();
     }
 
     @Override
-    // What is this sia?
     public void start(Stage primaryStage) {
         try {
             showStage(primaryStage);
@@ -70,9 +71,9 @@ public class Controller extends Application {
     }
 
     public static void main(String[] args) {
-//        floatingTasks = new FloatingTaskManager();
-//        timedTasks = new TimedTaskManager();
-//        deadlineTasks = new DeadlineTaskManager();
+        // floatingTasks = new FloatingTaskManager();
+        // timedTasks = new TimedTaskManager();
+        // deadlineTasks = new DeadlineTaskManager();
         fileManage = new FileManager();
         fileManage.initiateFile();
         
