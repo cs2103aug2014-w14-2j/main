@@ -1,46 +1,7 @@
 package application;
 
-import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-class TaskManager {
-    private ArrayList<Task> list;
-    private Task task; // Maybe this can act as "last modified task".
-    
-    public ArrayList<Task> add(Command command) {
-        this.task = new Task();
-        this.task.setDescription(command.getTaskDesc());
-        this.list.add(this.task);
-        return this.list;
-    }
-    
-    public ArrayList<Task> edit(Command command) {
-        return this.list;
-    }
-    
-    public ArrayList<Task> delete(Command command) {
-        // Temporary hack to remove via ArrayList index.
-        int taskId = Integer.parseInt(command.getTaskID().substring(1)) - 1;
-        this.list.remove(taskId);
-        
-        return this.list;        
-    }
-    
-    public void updateUi(UiComponent uiComponent) {
-        //uiComponent.updateFloatingTasks(this.list);
-    }
-    
-    public ArrayList<Task> getList() {
-        return this.list;
-    }
-    
-    public ArrayList<Task> initializeList(ArrayList<Task> storedList) {
-        list = storedList;
-        return this.list;
-    }
-    
-}
 
 /**
  * The controller logic that integrates UI, Storage and Parser.

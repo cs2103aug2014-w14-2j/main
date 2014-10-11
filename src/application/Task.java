@@ -4,8 +4,8 @@ import org.joda.time.DateTime;
 
 /**
  * The task object!
+ * 
  * @author Sun Wang Jun
- *
  */
 public class Task {
     private String id;
