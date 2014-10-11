@@ -22,7 +22,6 @@ public class CmdInputBox {
     }
     
     private void setInputBoxProperty() {
-        //cmdInputBox.setFocusTraversable(false);
         cmdInputBox.setPrefHeight(CMDINPUT_HEIGHT);
         cmdInputBox.setPromptText(CMDINPUT_PROMPT_TEXT);
     }

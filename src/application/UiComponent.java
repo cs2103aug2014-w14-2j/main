@@ -21,7 +21,7 @@ import javafx.collections.ObservableList;
 
 public class UiComponent {
     
-    private final String SUGGESTION_TEXT = "Did you mean this : add ?";
+    private final String SUGGESTION_TEXT = "Hello User! I am WaveWave.";
     
 	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
 	private final String LISTVIEW_STYLESHEET = "taskDisplay_outer";
@@ -58,8 +58,11 @@ public class UiComponent {
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override 
             public void handle(KeyEvent ke) { 
+                String currentText = cmdInputBox.getText();
                 if(!cmdInputBox.isFocused() && ke.getText().matches("^[a-zA-Z0-9_]*$")) {
                     focusCommandInputBox();
+                    cmdInputBox.setText(currentText);
+                    cmdInputBox.positionCaret(currentText.length());
                 }
             } 
         });
