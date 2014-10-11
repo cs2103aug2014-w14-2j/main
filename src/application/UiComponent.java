@@ -24,13 +24,11 @@ import javafx.event.EventHandler;
 public class UiComponent {
 
 	private final int DISPLAY_WIDTH = 300;
-	private final int DISPLAY_HEIGHT = 500;
+	private final int DISPLAY_HEIGHT = 550;
 	private final String APP_DEFAULT_FONT = "Ariel";
 
 	private Scene scene;
 	private BorderPane rootPane;
-	private TextArea summaryDisplay, pendingDisplay, completedTaskDisplay;
-	private ListView<String> timedTaskList, taskList;
 
 	private TextField cmdInputBox;
 
@@ -52,8 +50,7 @@ public class UiComponent {
 	}
 
 	private void initializeStyleSheetToComponents() {
-		scene.getStylesheets().add(
-				getClass().getResource("application.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		rootPane.getStyleClass().add("rootPane");
 	}
 
@@ -64,8 +61,6 @@ public class UiComponent {
 	private void initializeComponents() {
 		rootPane = new BorderPane();
 		rootPane.setCenter(getMainComponentHolder());
-		// Side panel
-		// rootPane.setRight(getRightHBox());
 	}
 	
 	private VBox createVBox(int spacing, Insets padding, int prefWidth, int prefHeight, String style) {
@@ -138,14 +133,14 @@ public class UiComponent {
 	}
 
 	private VBox getFloatingTaskListViewHolder() {
-		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, 0, "taskDisplay_outer"); 
+		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, DISPLAY_HEIGHT, "taskDisplay_outer"); 
 		Text taskTitle = createText("Tasks", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 
 		TaskListView floatingTaskListView = new TaskListView();
 		ObservableList<String> items = FXCollections.observableArrayList(
 				"Demo Task1\nDemo Task1\nDemo Task1\n", "Demo Task2",
-				"Demo Task3", "Demo Task4", "Demo Task1\njadsjadkj",
-				"Demo Task1\njadsjadkj", "Demo Task1\njadsjadkj");
+				"Demo Task3", "Demo Task4", "Demo Task1\n",
+				"Demo Task1\n", "Demo Task1\n");
 		
 		floatingTaskListView.populateTaskListWithData(items);
 		innerBox.getChildren().addAll(taskTitle, floatingTaskListView.getListView());
@@ -153,21 +148,17 @@ public class UiComponent {
 	}
 
 	private VBox getTimedAndDeadlineTaskHolder() {
-		VBox innerBox = new VBox();
-		innerBox.setSpacing(10);
-		innerBox.setPadding(new Insets(5, 10, 30, 10));
-		innerBox.getStyleClass().add("taskDisplay_outer");
+		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, DISPLAY_HEIGHT, "taskDisplay_outer"); 
+		Text taskTitle = createText("Reminder & Events", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
+		
+		TaskListView eventAndRemainderTaskListView = new TaskListView();
+        ObservableList<String> items = FXCollections.observableArrayList(
+                "Demo Task1\nDemo Task1\nDemo Task1\n", "Demo Task2",
+                "Demo Task3", "Demo Task4", "Demo Task1\n",
+                "Demo Task1\n", "Demo Task1\n");
 
-		Text taskTitle = new Text("Reminder & Events");
-		taskTitle.setTextAlignment(TextAlignment.JUSTIFY);
-		taskTitle.setFont(Font.font("Ariel", FontWeight.BOLD, 15));
-		taskTitle.setFill(Color.WHITE);
-
-		timedTaskList = new ListView<String>();
-		timedTaskList.setPrefHeight(DISPLAY_HEIGHT);
-		timedTaskList.setPrefWidth(DISPLAY_WIDTH);
-		innerBox.getChildren().addAll(taskTitle, timedTaskList);
-		timedTaskList.getStyleClass().add("taskList_style");
+        eventAndRemainderTaskListView.populateTaskListWithData(items);
+		innerBox.getChildren().addAll(taskTitle, eventAndRemainderTaskListView.getListView());
 
 		return innerBox;
 	}
