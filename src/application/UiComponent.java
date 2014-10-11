@@ -146,59 +146,15 @@ public class UiComponent {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, 0, "taskDisplay_outer"); 
 		Text taskTitle = createText("Tasks", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 
-		taskList = new ListView<String>();
-		taskList.setPrefHeight(DISPLAY_HEIGHT);
-		taskList.setPrefWidth(DISPLAY_WIDTH);
+		TaskListView floatingTaskListView = new TaskListView();
 		ObservableList<String> items = FXCollections.observableArrayList(
 				"Demo Task1\nDemo Task1\nDemo Task1\n", "Demo Task2",
 				"Demo Task3", "Demo Task4", "Demo Task1\njadsjadkj",
 				"Demo Task1\njadsjadkj", "Demo Task1\njadsjadkj");
 		
-		taskList.setItems(items);
-		taskList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-			@Override
-			public ListCell<String> call(ListView<String> list) {
-				return new ColorRectCell();
-			}
-		});
-		taskList.getStyleClass().add("taskList_style");
-		innerBox.getChildren().addAll(taskTitle, taskList);
+		floatingTaskListView.populateTaskListWithData(items);
+		innerBox.getChildren().addAll(taskTitle, floatingTaskListView.getListView());
 		return innerBox;
-	}
-
-	static class ColorRectCell extends ListCell<String> {
-		@Override
-		public void updateItem(String item, boolean empty) {
-			super.updateItem(item, empty);
-			Rectangle rect = new Rectangle(260, 70);
-			Rectangle rect1 = new Rectangle(50, 50);
-			Color c = Color.web("rgba(238,188,11,1)");
-			rect1.setFill(c);
-			//rect.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);");
-			
-			rect.setArcHeight(10);
-			rect.setArcWidth(10);
-			if (item != null) {
-				rect.setFill(Color.WHITE);
-				Text text = new Text("HELLO WORLD! This is a task that i have defined to test the layout and text overflow.");
-				text.setWrappingWidth(160);
-				text.setBoundsType(TextBoundsType.VISUAL); 
-				text.setTextAlignment(TextAlignment.LEFT);
-				text.setFont(Font.font("Ariel", FontWeight.NORMAL, 12));
-				
-				HBox hbox = new HBox(15);
-				hbox.setPadding(new Insets(10, 0, 0, 15));
-				hbox.getChildren().addAll(rect1, text);
-				
-				StackPane stack = new StackPane();
-				stack.setPrefHeight(70);
-				stack.setPrefWidth(260);
-				stack.getChildren().addAll(rect, hbox);
-				setGraphic(stack);
-				
-				
-			}
-		}
 	}
 
 	private VBox getTimedAndDeadlineTaskHolder() {
