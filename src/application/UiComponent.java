@@ -171,7 +171,6 @@ public class UiComponent {
 		return innerBox;
 	}
 
-
 	public void focusCommandInputBox() {
 		cmdInputBox.requestFocus();
 	}
