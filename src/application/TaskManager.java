@@ -16,7 +16,7 @@ class TaskManager {
      *            the view to update
      */
     public void updateUi(UiComponent uiComponent) {
-        // uiComponent.updateFloatingTasks(this.list);
+        //uiComponent.updateFloatingTasks(this.list);
     }
 
     /**

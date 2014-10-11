@@ -1,6 +1,6 @@
 package application;
 
-import javafx.collections.FXCollections;
+
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
@@ -18,7 +18,7 @@ import javafx.util.Callback;
 
 public class TaskListView {
 
-    private ListView<String> taskList;
+    private ListView<Task> taskList;
 
     private final int DISPLAY_WIDTH = 300;
     private final int DISPLAY_HEIGHT = 500;
@@ -26,7 +26,7 @@ public class TaskListView {
     private final String TASKLIST_DEFAULT_STYLE = "taskList_style";
 
     public TaskListView() {
-        taskList = new ListView<String>();
+        taskList = new ListView<Task>();
         setTaskListProperty();
     }
 
@@ -35,29 +35,35 @@ public class TaskListView {
         taskList.setPrefWidth(DISPLAY_WIDTH);
         taskList.getStyleClass().add(TASKLIST_DEFAULT_STYLE);
 
-        taskList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        taskList.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
             @Override
-            public ListCell<String> call(ListView<String> list) {
+            public ListCell<Task> call(ListView<Task> list) {
                 return new TaskListCell();
             }
         });
     }
 
-    public void populateTaskListWithData(ObservableList<String> items) {
+    public void populateTaskListWithData(ObservableList<Task> items) {
         taskList.setItems(items);
     }
 
-    public ListView<String> getListView() {
+    public ListView<Task> getListView() {
         return taskList;
     }
 
-    static class TaskListCell extends ListCell<String> { 
+    static class TaskListCell extends ListCell<Task> { 
         static private final int TASK_CONTAINER_WIDTH = 260;
         static private final int TASK_CONTAINER_HEIGHT = 70;
         static private final int TASK_CONTAINER_SPACING = 15;
         static private int color_counter = 0;
         
-        private String[] colorArray = {"rgba(150,255,156,1)", "rgba(238,255,112,1)", "rgba(255,79,100,1)", "rgba(204,255,254,1)", "rgba(255,150,204,1)" };
+        private String COLOR_GREEN = "rgba(43, 255, 0, 1)";
+        private String COLOR_RED = "rgba(255, 79, 100, 1)";
+        private String COLOR_YELLOW = "rgba(255, 246, 0, 1)";
+        private String COLOR_BLUE = "rgba(0, 131, 255, 1)";
+        private String COLOR_PINK = "rgba(246, 96, 171, 1)";
+          
+        private String[] colorArray = {COLOR_PINK, COLOR_BLUE, COLOR_YELLOW, COLOR_RED, COLOR_GREEN};
         
         private Rectangle createRectangle(int width, int height, int arcWidth, int arcHeight, Color c) {
             Rectangle rect = new Rectangle(width, height);
@@ -77,7 +83,7 @@ public class TaskListView {
         }
 
         @Override
-        public void updateItem(String item, boolean empty) {
+        public void updateItem(Task item, boolean empty) {
             super.updateItem(item, empty);
             
             Rectangle contentPlaceHolder = createRectangle(260, 70, 10, 10, Color.WHITE);
@@ -89,7 +95,7 @@ public class TaskListView {
             }
             
             if (item != null) {
-                Text text = createText(item, 150, 12);
+                Text text = createText("pending", 150, 12);
 
                 HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
                 taskInnerContentHolder.setPadding(new Insets(10, 0, 0, 15));

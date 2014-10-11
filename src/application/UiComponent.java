@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -22,22 +20,28 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 
 public class UiComponent {
-
-	private final int DISPLAY_WIDTH = 300;
-	private final int DISPLAY_HEIGHT = 550;
+    
+    private final int CMDINPUT_HEIGHT = 35;
+    private final String CMDINPUT_PROMPT_TEXT = "Ask WaveWave to do something ?";
+    private final String CMDINPUT_STYLESHEET = "cmdBox_outer";
+    
+    private final String SUGGESTION_TEXT = "Did you mean this : add ?";
+    
+	private final int LISTVIEW_DISPLAY_WIDTH = 300;
+	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
+	private final String LISTVIEW_STYLESHEET = "taskDisplay_outer";
+	
+	private final int APPLICATION_WIDTH = 650;
+	private final int APPLICATION_HEIGHT = 650;
+	
 	private final String APP_DEFAULT_FONT = "Ariel";
+	private final String APP_DEFAULT_STYLESHEET = "application.css";
+	
 
 	private Scene scene;
 	private BorderPane rootPane;
-
 	private TextField cmdInputBox;
-
-	//public String input_text; // added
-	//public String output_text_floating = ""; // added
-	//public String output_text_deadline = ""; // added
-
-	//public int floating_task_counter = 0;
-	//public ArrayList<String> floating_tasks = new ArrayList<String>();
+	private TaskListView floatingTaskListView, eventAndRemainderTaskListView;
 
 	public Scene getScene() {
 		return scene;
@@ -50,12 +54,12 @@ public class UiComponent {
 	}
 
 	private void initializeStyleSheetToComponents() {
-		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
 		rootPane.getStyleClass().add("rootPane");
 	}
 
 	private void setupScene() {
-		scene = new Scene(rootPane, 650, 650);
+		scene = new Scene(rootPane, APPLICATION_WIDTH, APPLICATION_HEIGHT);
 	}
 
 	private void initializeComponents() {
@@ -106,15 +110,26 @@ public class UiComponent {
 		return textLabel;
 	}
 	
+	private void createCmdInputBox() {
+        cmdInputBox = new TextField();
+        cmdInputBox.setFocusTraversable(false);
+        cmdInputBox.setPrefHeight(CMDINPUT_HEIGHT);
+        cmdInputBox.setPromptText(CMDINPUT_PROMPT_TEXT);
+        
+        cmdInputBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
+             @Override 
+             public void handle(KeyEvent ke) { 
+                 if (ke.getCode().equals(KeyCode.ENTER)) { 
+                     Controller.runCommandInput(cmdInputBox.getText());  
+                 } 
+             } 
+         });
+	}
+	
 	private VBox getUserInputComponentHolder() {
-		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, "cmdBox_outer");
-		Text suggestionText = createText("Did you mean this : add ?", 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
-		
-		cmdInputBox = new TextField();
-		cmdInputBox.setFocusTraversable(false);
-		cmdInputBox.setPrefHeight(35);
-		cmdInputBox.setPromptText("Ask WaveWave to do something ?");
-		
+		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_STYLESHEET);
+		Text suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
+		createCmdInputBox();
 		userInputComponentHolder.getChildren().addAll(cmdInputBox, suggestionText);
 		return userInputComponentHolder;
 	}
@@ -133,30 +148,23 @@ public class UiComponent {
 	}
 
 	private VBox getFloatingTaskListViewHolder() {
-		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, DISPLAY_HEIGHT, "taskDisplay_outer"); 
+		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		Text taskTitle = createText("Tasks", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 
-		TaskListView floatingTaskListView = new TaskListView();
-		ObservableList<String> items = FXCollections.observableArrayList(
-				"Demo Task1\nDemo Task1\nDemo Task1\n", "Demo Task2",
-				"Demo Task3", "Demo Task4", "Demo Task1\n",
-				"Demo Task1\n", "Demo Task1\n");
-		
+		floatingTaskListView = new TaskListView();
+		ObservableList<Task> items = FXCollections.observableArrayList();
 		floatingTaskListView.populateTaskListWithData(items);
 		innerBox.getChildren().addAll(taskTitle, floatingTaskListView.getListView());
+		
 		return innerBox;
 	}
 
 	private VBox getTimedAndDeadlineTaskHolder() {
-		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, DISPLAY_HEIGHT, "taskDisplay_outer"); 
+		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		Text taskTitle = createText("Reminder & Events", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 		
-		TaskListView eventAndRemainderTaskListView = new TaskListView();
-        ObservableList<String> items = FXCollections.observableArrayList(
-                "Demo Task1\nDemo Task1\nDemo Task1\n", "Demo Task2",
-                "Demo Task3", "Demo Task4", "Demo Task1\n",
-                "Demo Task1\n", "Demo Task1\n");
-
+		eventAndRemainderTaskListView = new TaskListView();
+        ObservableList<Task> items = FXCollections.observableArrayList();
         eventAndRemainderTaskListView.populateTaskListWithData(items);
 		innerBox.getChildren().addAll(taskTitle, eventAndRemainderTaskListView.getListView());
 
@@ -167,22 +175,16 @@ public class UiComponent {
 	public void focusCommandInputBox() {
 		cmdInputBox.requestFocus();
 	}
-
-	public void updateFloatingTasks(ArrayList<FloatingTask> floatingTasks) {
-		String output_text_floating = "";
-		for (int i = 0; i < floatingTasks.size(); i++) {
-			output_text_floating += "F" + Integer.toString(i + 1) + " "
-					+ floatingTasks.get(i).getDescription() + "\n";
-		}
+	
+	public void updateListViewForTask(ArrayList<Task> items) {
+	    ObservableList<Task> taskList = FXCollections.observableArrayList();
+	    taskList.setAll(items);
+	    floatingTaskListView.populateTaskListWithData(taskList);
 	}
-
-	public void updateDeadlineTasks(ArrayList<DeadlineTask> deadlineTasks) {
-		String output_text_deadline = "";
-		for (int i = 0; i < deadlineTasks.size(); i++) {
-			output_text_deadline += "D" + Integer.toString(i + 1) + " "
-					+ deadlineTasks.get(i).getDescription() + "     "
-					+ deadlineTasks.get(i).getDeadline().toString() + "\n";
-		}
+	
+	public void updateListViewForEnR(ArrayList<Task> items) {
+	    ObservableList<Task> taskList = FXCollections.observableArrayList();
+	    taskList.setAll(items);
+	    eventAndRemainderTaskListView.populateTaskListWithData(taskList);
 	}
-
 }
