@@ -198,4 +198,5 @@ public class UiComponent {
 					+ deadlineTasks.get(i).getDeadline().toString() + "\n";
 		}
 	}
+
 }
