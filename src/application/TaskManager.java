@@ -11,6 +11,10 @@ class TaskManager {
     private ArrayList<Task> list;
     private Task task; // Maybe this can act as "last modified task".
     
+    public TaskManager() { // Maybe singleton this.
+        this.initializeList(new ArrayList<Task>()); // Temporary solution.
+    }
+    
     /**
      * @param uiComponent the view to update
      */
