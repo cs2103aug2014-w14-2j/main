@@ -176,13 +176,13 @@ public class UiComponent {
 		cmdInputBox.requestFocus();
 	}
 	
-	public void updateListViewForTask(ArrayList<Task> items) {
+	public void updateTaskList(ArrayList<Task> items) {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
 	    floatingTaskListView.populateTaskListWithData(taskList);
 	}
 	
-	public void updateListViewForEnR(ArrayList<Task> items) {
+	public void updateReminderList(ArrayList<Task> items) {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
 	    eventAndRemainderTaskListView.populateTaskListWithData(taskList);
