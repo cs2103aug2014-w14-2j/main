@@ -11,8 +11,8 @@ import javafx.stage.Stage;
 public class Controller extends Application {
 
     private static FileManager fileManage;
-
-    private static TaskManager taskManager = new TaskManager();
+    
+    private static TaskManager taskManager;
 
     private static UiComponent uiComponent;
 
@@ -54,7 +54,6 @@ public class Controller extends Application {
     }
 
     @Override
-    // What is this sia?
     public void start(Stage primaryStage) {
         try {
             showStage(primaryStage);
@@ -77,6 +76,9 @@ public class Controller extends Application {
         // deadlineTasks = new DeadlineTaskManager();
         fileManage = new FileManager();
         fileManage.initiateFile();
+        
+        taskManager = new TaskManager();
+        
         launch(args);
     }
 }

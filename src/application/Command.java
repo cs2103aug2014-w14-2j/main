@@ -10,7 +10,6 @@ public class Command {
     private String taskID;
     private String keyword;
     private String taskDesc;
-    private String taskType;
     private Date taskTime;
 
     Command(String commandType) {  // for undo command
@@ -18,7 +17,6 @@ public class Command {
         taskID = null;
         keyword = null;
         taskDesc = null;
-        taskType = null;
         taskTime = null;      
     }
     Command(String commandType, String taskID) {   // for delete, complete and search 
@@ -26,12 +24,6 @@ public class Command {
         this.taskID = taskID;
         this.keyword = taskID;
         taskDesc = null;
-        if (String.valueOf(taskID.charAt(0)).equals("F")) {
-            taskType = "floating";
-        }
-        else {
-            taskType = "deadline";
-        }
         taskTime = null;
     }
     Command(String commandType, String taskDesc, Date taskTime) {   // add command
@@ -39,25 +31,13 @@ public class Command {
         taskID = null;
         keyword = null;
         this.taskDesc = taskDesc;
-        this.taskTime = taskTime;
-        if (taskTime == null ) {
-            taskType = "floating";
-        }
-        else {
-            taskType = "deadline";
-        }
+        this.taskTime = taskTime;    
     }
     Command(String commandType, String taskID, String taskDesc, Date taskTime) {  // edit 
         this.commandType = commandType;
         this.taskID = taskID;
         this.taskDesc = taskDesc;
         this.taskTime = taskTime;
-        if (taskTime == null) {
-            taskType = "floating";
-        }
-        else {
-            taskType = "deadline";
-        }
         keyword = null;
     }
     /**
@@ -74,16 +54,23 @@ public class Command {
     public String getTaskID(){
         return taskID;
     }
+    /**
+     * @return the description of the Task.
+     */
     public String getTaskDesc(){
         return taskDesc;
     }
+    /**
+     * @return the keyword to be searched.
+     */
     public String getKeyword(){
         return keyword;
     }
+    
     public Date getTaskTime(){
         return taskTime;
     }
-    public String getTaskType(){
-        return taskType;
-    }
+    /**
+     * @return the type of the Task.
+     */
 }

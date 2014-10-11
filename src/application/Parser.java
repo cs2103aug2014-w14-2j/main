@@ -21,7 +21,7 @@ public class Parser {
 
     /**
      * This constructs a parser object with an user input 
-     * @param user_input   the one line command statement the user inputs
+     * @param userInput   the one line command statement the user inputs
      */
 
     Parser(String userInput){
@@ -71,6 +71,9 @@ public class Parser {
         String command = input.trim().split("\\s+")[0];
         return command;
     }
+    /**
+     * @return the object of Command class 
+     */
     public Command getCmd() {
         return cmd;
     }
