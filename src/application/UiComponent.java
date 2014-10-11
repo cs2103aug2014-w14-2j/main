@@ -2,6 +2,7 @@ package application;
 
 import java.util.ArrayList;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
@@ -17,17 +18,11 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 
 public class UiComponent {
     
-    private final int CMDINPUT_HEIGHT = 35;
-    private final String CMDINPUT_PROMPT_TEXT = "Ask WaveWave to do something ?";
-    private final String CMDINPUT_STYLESHEET = "cmdBox_outer";
-    
     private final String SUGGESTION_TEXT = "Did you mean this : add ?";
     
-	private final int LISTVIEW_DISPLAY_WIDTH = 300;
 	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
 	private final String LISTVIEW_STYLESHEET = "taskDisplay_outer";
 	
@@ -36,8 +31,8 @@ public class UiComponent {
 	
 	private final String APP_DEFAULT_FONT = "Ariel";
 	private final String APP_DEFAULT_STYLESHEET = "application.css";
+	private final String CMDINPUT_PLACEHOLDER_STYLESHEET = "cmdBox_outer";
 	
-
 	private Scene scene;
 	private BorderPane rootPane;
 	private TextField cmdInputBox;
@@ -60,6 +55,14 @@ public class UiComponent {
 
 	private void setupScene() {
 		scene = new Scene(rootPane, APPLICATION_WIDTH, APPLICATION_HEIGHT);
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override 
+            public void handle(KeyEvent ke) { 
+                if(!cmdInputBox.isFocused() && ke.getText().matches("^[a-zA-Z0-9_]*$")) {
+                    focusCommandInputBox();
+                }
+            } 
+        });
 	}
 
 	private void initializeComponents() {
@@ -110,26 +113,10 @@ public class UiComponent {
 		return textLabel;
 	}
 	
-	private void createCmdInputBox() {
-        cmdInputBox = new TextField();
-        cmdInputBox.setFocusTraversable(false);
-        cmdInputBox.setPrefHeight(CMDINPUT_HEIGHT);
-        cmdInputBox.setPromptText(CMDINPUT_PROMPT_TEXT);
-        
-        cmdInputBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
-             @Override 
-             public void handle(KeyEvent ke) { 
-                 if (ke.getCode().equals(KeyCode.ENTER)) { 
-                     Controller.runCommandInput(cmdInputBox.getText());  
-                 } 
-             } 
-         });
-	}
-	
 	private VBox getUserInputComponentHolder() {
-		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_STYLESHEET);
+		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_PLACEHOLDER_STYLESHEET);
 		Text suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
-		createCmdInputBox();
+		cmdInputBox = new CmdInputBox(suggestionText).getCmdInputBox();
 		userInputComponentHolder.getChildren().addAll(cmdInputBox, suggestionText);
 		return userInputComponentHolder;
 	}
@@ -170,10 +157,10 @@ public class UiComponent {
 
 		return innerBox;
 	}
-
-	public void focusCommandInputBox() {
-		cmdInputBox.requestFocus();
-	}
+	
+    private void focusCommandInputBox() {
+        cmdInputBox.requestFocus();
+    }
 	
 	public void updateTaskList(ArrayList<Task> items) {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
