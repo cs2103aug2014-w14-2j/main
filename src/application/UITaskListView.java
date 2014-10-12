@@ -88,7 +88,14 @@ public class UITaskListView {
             Rectangle contentPlaceHolder = createRectangle(260, 70, 10, 10, Color.WHITE);
             Rectangle priorityIndicator = createRectangle(50, 50, 0, 0, Color.web(colorArray[color_counter]));
             
-            //temporary
+            //TO-BE-DELETED
+            System.out.println((color_counter%2));
+            if((color_counter%2) == 0)
+                this.getStyleClass().add("bigger-list-cell");
+            else 
+                this.getStyleClass().add("smaller-list-cell");
+            
+            //TO-BE-DELETED
             color_counter++;
             if(color_counter == colorArray.length) {
                 color_counter = 0;

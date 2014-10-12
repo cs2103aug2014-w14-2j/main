@@ -10,10 +10,14 @@ public class UICmdInputBox {
     
     private final int CMDINPUT_HEIGHT = 35;
     private final String CMDINPUT_PROMPT_TEXT = "Ask WaveWave to do something ?";
+    private UiComponent component;
     
-    public UICmdInputBox(Text suggestionText) {
+    public UICmdInputBox(Text suggestionText, UiComponent component) {
         this.suggestionText = suggestionText;
         this.cmdInputBox = new TextField();
+        
+        //TO-BE-DELETED
+        this.component = component;
         
         setInputBoxProperty();
         addKeyPressedListener();
@@ -26,7 +30,8 @@ public class UICmdInputBox {
     }
     
     private void addKeyPressedListener() {
-        cmdInputBox.setOnKeyPressed(new UIControllerListener(this.cmdInputBox));
+        //TO-BE-DELETED
+        cmdInputBox.setOnKeyPressed(new UIControllerListener(this.cmdInputBox, component));
     }
     
     private void addKeyTypedListener() {
