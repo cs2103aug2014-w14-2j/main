@@ -1,9 +1,6 @@
 package application;
 
-import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 
 public class CmdInputBox {
@@ -16,9 +13,11 @@ public class CmdInputBox {
     
     public CmdInputBox(Text suggestionText) {
         this.suggestionText = suggestionText;
-        cmdInputBox = new TextField();
+        this.cmdInputBox = new TextField();
+        
         setInputBoxProperty();
-        addEventListener();
+        addKeyPressedListener();
+        addKeyTypedListener();
     }
     
     private void setInputBoxProperty() {
@@ -26,15 +25,16 @@ public class CmdInputBox {
         cmdInputBox.setPromptText(CMDINPUT_PROMPT_TEXT);
     }
     
-    private void addEventListener() {
-        cmdInputBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override 
-            public void handle(KeyEvent ke) { 
-                if (ke.getCode().equals(KeyCode.ENTER)) { 
-                    Controller.runCommandInput(cmdInputBox.getText());  
-                } 
-            } 
-        });
+    private void addKeyPressedListener() {
+        cmdInputBox.setOnKeyPressed(new UIControllerListener(this.cmdInputBox));
+    }
+    
+    private void addKeyTypedListener() {
+        cmdInputBox.setOnKeyReleased(new UIAutoCompleteListener(this.cmdInputBox));
+    }
+    
+    public void setSuggestionText(String output) {
+        suggestionText.setText(output);
     }
     
     public void focusCommandInputBox() {
