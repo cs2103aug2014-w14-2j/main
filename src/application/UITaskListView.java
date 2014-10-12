@@ -16,7 +16,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextBoundsType;
 import javafx.util.Callback;
 
-public class TaskListView {
+public class UITaskListView {
 
     private ListView<Task> taskList;
 
@@ -25,7 +25,7 @@ public class TaskListView {
     
     private final String TASKLIST_DEFAULT_STYLE = "taskList_style";
 
-    public TaskListView() {
+    public UITaskListView() {
         taskList = new ListView<Task>();
         setTaskListProperty();
     }

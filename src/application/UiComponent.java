@@ -35,7 +35,7 @@ public class UiComponent {
 	private Scene scene;
 	private BorderPane rootPane;
 	private TextField cmdInputBox;
-	private TaskListView floatingTaskListView, eventAndRemainderTaskListView;
+	private UITaskListView floatingTaskListView, eventAndRemainderTaskListView;
 
 	public Scene getScene() {
 		return scene;
@@ -140,7 +140,7 @@ public class UiComponent {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		Text taskTitle = createText("Tasks", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 
-		floatingTaskListView = new TaskListView();
+		floatingTaskListView = new UITaskListView();
 		ObservableList<Task> items = FXCollections.observableArrayList();
 		floatingTaskListView.populateTaskListWithData(items);
 		innerBox.getChildren().addAll(taskTitle, floatingTaskListView.getListView());
@@ -152,7 +152,7 @@ public class UiComponent {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		Text taskTitle = createText("Reminder & Events", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 		
-		eventAndRemainderTaskListView = new TaskListView();
+		eventAndRemainderTaskListView = new UITaskListView();
         ObservableList<Task> items = FXCollections.observableArrayList();
         eventAndRemainderTaskListView.populateTaskListWithData(items);
 		innerBox.getChildren().addAll(taskTitle, eventAndRemainderTaskListView.getListView());
