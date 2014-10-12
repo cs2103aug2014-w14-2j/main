@@ -3,7 +3,7 @@ package application;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
-public class CmdInputBox {
+public class UICmdInputBox {
 
     private TextField cmdInputBox;
     private Text suggestionText;
@@ -11,7 +11,7 @@ public class CmdInputBox {
     private final int CMDINPUT_HEIGHT = 35;
     private final String CMDINPUT_PROMPT_TEXT = "Ask WaveWave to do something ?";
     
-    public CmdInputBox(Text suggestionText) {
+    public UICmdInputBox(Text suggestionText) {
         this.suggestionText = suggestionText;
         this.cmdInputBox = new TextField();
         
@@ -30,7 +30,7 @@ public class CmdInputBox {
     }
     
     private void addKeyTypedListener() {
-        cmdInputBox.setOnKeyReleased(new UIAutoCompleteListener(this.cmdInputBox));
+        cmdInputBox.setOnKeyReleased(new UIAutoCompleteListener(this));
     }
     
     public void setSuggestionText(String output) {
