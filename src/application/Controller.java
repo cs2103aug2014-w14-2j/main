@@ -23,13 +23,10 @@ public class Controller extends Application {
      *            The entire command input.
      */
     public static void runCommandInput(String input) {
-
+        // Replace with logger later.
         System.out.println("runCommandInput(input: " + input + ") called");
 
         fileManage.retrieveLists();
-        // floatingTasks.initializeList(fileManage.convertFloatingJSONArrayToArrayList());
-        // deadlineTasks.initializeList(fileManage.convertDeadlineJSONArrayToArrayList());
-        // timedTasks.initializeList(fileManage.convertTimedJSONArrayToArrayList());
 
         Command command = (new Parser(input)).getCmd();
 
@@ -47,9 +44,6 @@ public class Controller extends Application {
             taskManager.updateUi(uiComponent);
         }
 
-        // fileManage.convertFloatingArrayListToJSONArray(floatingTasks.getList());
-        // fileManage.convertDeadlineArrayListToJSONArray(deadlineTasks.getList());
-        // fileManage.convertTimedArrayListToJSONArray(timedTasks.getList());
         fileManage.saveToFiles();
     }
 
@@ -71,9 +65,6 @@ public class Controller extends Application {
     }
 
     public static void main(String[] args) {
-        // floatingTasks = new FloatingTaskManager();
-        // timedTasks = new TimedTaskManager();
-        // deadlineTasks = new DeadlineTaskManager();
         fileManage = new FileManager();
         fileManage.initiateFile();
         
