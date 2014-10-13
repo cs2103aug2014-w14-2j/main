@@ -66,7 +66,7 @@ public class Controller extends Application {
         uiComponent = new UiComponent();
         primaryStage.setScene(uiComponent.getScene());
         primaryStage.setResizable(false);
-        primaryStage.setTitle("WaveWave[0.1]");
+        primaryStage.setTitle("WaveWave[0.2]");
         primaryStage.show();
     }
 
