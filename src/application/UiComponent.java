@@ -181,7 +181,6 @@ public class UiComponent {
 	    eventReminderTaskListView.populateTaskListWithData(taskList);
 	}
 
-
     public void showStage(Stage primaryStage) {
         primaryStage.setScene(this.getScene());
         primaryStage.setResizable(false);

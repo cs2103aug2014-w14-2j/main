@@ -7,13 +7,15 @@ import javafx.scene.control.TextField;
 
 public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
 
-    private TextField cmdInputBox;
+    final private String MSG_DEFAULT_PROMPT = "Ask WaveWave to do something ?";
+    
+    private UICmdInputBox cmdInputBox;
     private UIAutoComplete uiAutoComplete;
     private String nextPossibleCommand;
     
     public UIAutoCompleteListener(UICmdInputBox cmdInputBox) {
         this.uiAutoComplete = new UIAutoComplete(cmdInputBox, this);
-        this.cmdInputBox = cmdInputBox.getCmdInputBox();
+        this.cmdInputBox = cmdInputBox;
         this.nextPossibleCommand = "";
     }
     
@@ -23,12 +25,14 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     
     @Override
     public void handle(KeyEvent event) {
-        this.uiAutoComplete.runAutoComplete(cmdInputBox.getText().trim());  
+        TextField inputBox = cmdInputBox.getCmdInputBox();
+        this.uiAutoComplete.runAutoComplete(inputBox.getText().trim());  
         
         if(event.getCode().equals(KeyCode.SPACE)) {
             if(nextPossibleCommand.length() != 0) {
-                cmdInputBox.setText(nextPossibleCommand);
-                cmdInputBox.positionCaret(cmdInputBox.getText().length());
+                inputBox.setText(nextPossibleCommand);
+                inputBox.positionCaret(inputBox.getText().length());
+                cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
                 nextPossibleCommand = "";
             }
         }

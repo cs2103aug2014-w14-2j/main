@@ -90,7 +90,7 @@ public class UITaskListView {
             Rectangle priorityIndicator = createRectangle(50, 50, 0, 0, Color.web(colorArray[color_counter]));
             
             //TO-BE-DELETED
-            System.out.println((color_counter%2));
+            //System.out.println((color_counter%2));
             if ((color_counter%2) == 0)
                 this.getStyleClass().add("bigger-list-cell");
             else 

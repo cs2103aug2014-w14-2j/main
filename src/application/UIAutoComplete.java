@@ -54,7 +54,7 @@ public class UIAutoComplete {
         
         String output = "";
         for (String command : commandList) {
-           if(command.startsWith(word)) {
+           if(command.startsWith(word) && !command.equals(word)) {
                output += command + " ";
            }
         }
