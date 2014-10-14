@@ -14,6 +14,8 @@ public class Task {
     private DateTime date;
     private DateTime endDate;
     private boolean completed;
+    
+    private int priority;
 
     /**
      * Returns the id of the Task.
@@ -124,5 +126,22 @@ public class Task {
      */
     public void complete() {
         this.setCompleted(true);
+    }
+
+    /**
+     * Returns the priority of the Task.
+     * 
+     * @return int priority of the Task.
+     */
+    public int getPriority() { return this.priority; }
+
+    /**
+     * Sets the priority of the Task.
+     * 
+     * @param priority overwrites the priority of the Task.
+     */
+    public void setPriority(int priority) {
+        // Check if priority is negative.
+        this.priority = priority;
     }
 }

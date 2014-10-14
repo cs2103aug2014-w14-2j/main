@@ -3,6 +3,9 @@ package application;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * The controller logic that integrates UI, Storage and Parser.
@@ -10,6 +13,9 @@ import javafx.stage.Stage;
  * @author Sun Wang Jun
  */
 public class Controller extends Application {
+    
+    private static final Logger logger = Logger.getLogger(Controller.class.getName());
+    private static FileHandler fileHandler = null;
 
     private static DataStorage dataStorage;
     
@@ -24,24 +30,28 @@ public class Controller extends Application {
      *            The entire command input.
      */
     public static void runCommandInput(String input) {
-        // Replace with logger later.
-        System.out.println("runCommandInput(input: " + input + ") called");
+        logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
 
         dataStorage.retrieveTasks();
         taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
 
         Command command = (new Parser(input)).getCmd();
-
-        switch (command.getCommandType()) {
-            case "add":
-                taskManager.add(command);
-                break;
-            case "delete":
-                taskManager.delete(command);
-                break;
-            case "edit":
-                taskManager.edit(command);
-                break;
+        
+        try {
+            switch (command.getCommandType()) {
+                case "add":
+                    taskManager.add(command);
+                    break;
+                case "delete":
+                    taskManager.delete(command);
+                    break;
+                case "edit":
+                    taskManager.edit(command);
+                    break;
+            }
+        } catch (MismatchedCommandException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+            e.printStackTrace();
         }
         uiComponent.updateTaskList(taskManager.getList());
 
@@ -50,8 +60,20 @@ public class Controller extends Application {
     }
 
     public static void main(String[] args) {
+        taskManager = new TaskManager();
         dataStorage = new DataStorage();
         dataStorage.initiateFile();
+        dataStorage.retrieveTasks();
+        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
+        
+        // Temporary logging file handler.
+        try {
+            fileHandler = new FileHandler(Controller.class.getName() + ".log");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+        logger.addHandler(fileHandler);
+        logger.setLevel(Level.FINEST);
         
         launch(args);
     }
@@ -59,7 +81,6 @@ public class Controller extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // TODO Auto-generated method stub
-        taskManager = new TaskManager();
         uiComponent = new UIComponent();
         uiComponent.showStage(primaryStage);
     }
