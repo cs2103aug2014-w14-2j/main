@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.SimpleFormatter;
 
 /**
  * The controller logic that integrates UI, Storage and Parser.
@@ -58,6 +59,13 @@ public class Controller extends Application {
         dataStorage.convertArrayListToJSONArray(taskManager.getList());
         dataStorage.saveTasks();
     }
+    
+    /**
+     * For the UI to retrieve the list of tasks after it is initialized.
+     */
+    public static void getTasks() {
+        uiComponent.updateTaskList(taskManager.getList());       
+    }
 
     public static void main(String[] args) {
         taskManager = new TaskManager();
@@ -69,11 +77,12 @@ public class Controller extends Application {
         // Temporary logging file handler.
         try {
             fileHandler = new FileHandler(Controller.class.getName() + ".log");
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+            logger.setLevel(Level.FINEST);
         } catch (Exception e) {
             logger.log(Level.SEVERE, null, e);
         }
-        logger.addHandler(fileHandler);
-        logger.setLevel(Level.FINEST);
         
         launch(args);
     }
