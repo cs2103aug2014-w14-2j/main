@@ -37,3 +37,7 @@ local.properties
 
 # Json
 *.json
+
+# Logs
+*.log
+*.log.*
