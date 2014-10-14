@@ -16,14 +16,6 @@ class TaskManager {
     }
     
     /**
-     * @param uiComponent
-     *            the view to update
-     */
-    public void updateUi(UiComponent uiComponent) {
-        //uiComponent.updateFloatingTasks(this.list);
-    }
-
-    /**
      * Adds a task to the list.
      * 
      * @param command

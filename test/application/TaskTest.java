@@ -38,7 +38,7 @@ public class TaskTest {
      */
     @Test
     public void testGetId() {
-        assertNull(task.getId());
+        assertNull(task.getID());
     }
 
     /**

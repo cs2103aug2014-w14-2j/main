@@ -195,7 +195,7 @@ public class UiComponent extends Application {
         primaryStage.show();
     }
     
-    public static void launchApplication(String[] args) {
+    public void launchApplication(String[] args) {
         launch(args);
     }
 }

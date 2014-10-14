@@ -7,7 +7,7 @@ package application;
  */
 public class Controller {
 
-    private static FileManager fileManage;
+    private static DataStorage dataStorage;
     
     private static TaskManager taskManager;
 
@@ -23,33 +23,35 @@ public class Controller {
         // Replace with logger later.
         System.out.println("runCommandInput(input: " + input + ") called");
 
-        fileManage.retrieveLists();
+        dataStorage.retrieveTasks();
+        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
 
         Command command = (new Parser(input)).getCmd();
 
         switch (command.getCommandType()) {
-        case "add":
-            taskManager.add(command);
-            taskManager.updateUi(uiComponent);
-            break;
-        case "delete":
-            taskManager.delete(command);
-            taskManager.updateUi(uiComponent);
-            break;
-        case "edit":
-            taskManager.edit(command);
-            taskManager.updateUi(uiComponent);
+            case "add":
+                taskManager.add(command);
+                break;
+            case "delete":
+                taskManager.delete(command);
+                break;
+            case "edit":
+                taskManager.edit(command);
+                break;
         }
+        uiComponent.updateTaskList(taskManager.getList());
 
-        fileManage.saveToFiles();
+        dataStorage.convertArrayListToJSONArray(taskManager.getList());
+        dataStorage.saveTasks();
     }
 
     public static void main(String[] args) {
-        fileManage = new FileManager();
-        fileManage.initiateFile();
+        dataStorage = new DataStorage();
+        dataStorage.initiateFile();
         
         taskManager = new TaskManager();
         
-        UiComponent.launchApplication(args);
+        uiComponent = new UiComponent();
+        uiComponent.launchApplication(args);
     }
 }
