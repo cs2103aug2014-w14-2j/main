@@ -22,7 +22,7 @@ public class Controller extends Application {
     
     private static TaskManager taskManager;
 
-    private static UiComponent uiComponent;
+    private static UIComponent uiComponent;
 
     /**
      * Executes the command entered.
@@ -90,7 +90,7 @@ public class Controller extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // TODO Auto-generated method stub
-        uiComponent = new UiComponent();
+        uiComponent = new UIComponent();
         uiComponent.showStage(primaryStage);
     }
 }
