@@ -35,7 +35,7 @@ public class UiComponent {
 	private Scene scene;
 	private BorderPane rootPane;
 	private TextField cmdInputBox;
-	private UITaskListView floatingTaskListView, eventAndRemainderTaskListView;
+	private UITaskListView floatingTaskListView, eventReminderTaskListView;
 
 	public Scene getScene() {
 		return scene;
@@ -44,14 +44,14 @@ public class UiComponent {
 	public UiComponent() {
 		initializeComponents();
 		setupScene();
-		initializeStyleSheetToComponents();
+		initializeStyleSheet();
 	}
 
-	private void initializeStyleSheetToComponents() {
+	private void initializeStyleSheet() {
 		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
 		rootPane.getStyleClass().add("rootPane");
 	}
-
+	
 	private void setupScene() {
 		scene = new Scene(rootPane, APPLICATION_WIDTH, APPLICATION_HEIGHT);
 		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -154,10 +154,10 @@ public class UiComponent {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		Text taskTitle = createText("Reminder & Events", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 		
-		eventAndRemainderTaskListView = new UITaskListView();
+		eventReminderTaskListView = new UITaskListView();
         ObservableList<Task> items = FXCollections.observableArrayList();
-        eventAndRemainderTaskListView.populateTaskListWithData(items);
-		innerBox.getChildren().addAll(taskTitle, eventAndRemainderTaskListView.getListView());
+        eventReminderTaskListView.populateTaskListWithData(items);
+		innerBox.getChildren().addAll(taskTitle, eventReminderTaskListView.getListView());
 
 		return innerBox;
 	}
@@ -175,6 +175,6 @@ public class UiComponent {
 	public void updateReminderList(ArrayList<Task> items) {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
-	    eventAndRemainderTaskListView.populateTaskListWithData(taskList);
+	    eventReminderTaskListView.populateTaskListWithData(taskList);
 	}
 }

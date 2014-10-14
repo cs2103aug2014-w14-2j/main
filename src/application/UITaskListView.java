@@ -90,7 +90,7 @@ public class UITaskListView {
             
             //TO-BE-DELETED
             System.out.println((color_counter%2));
-            if((color_counter%2) == 0)
+            if ((color_counter%2) == 0)
                 this.getStyleClass().add("bigger-list-cell");
             else 
                 this.getStyleClass().add("smaller-list-cell");
