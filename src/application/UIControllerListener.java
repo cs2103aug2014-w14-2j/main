@@ -27,9 +27,7 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
             Task t = new Task();
             t.setDescription("for testing"); 
             temp.add(t);
-            component.updateTaskList(temp);
-            
-         
+            component.updateTaskList(temp);  
         } 
     }
 

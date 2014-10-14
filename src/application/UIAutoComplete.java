@@ -36,12 +36,14 @@ public class UIAutoComplete {
             String suggestedCmd = getSuggestions(command.toUpperCase());
             if(suggestedCmd.length() == 0) {
                 cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
+                this.acListener.setNextPossibleCmd("");
             } else {
                 cmdInputBox.setSuggestionText(String.format(MSG_COMMAND_SUGGESTION, suggestedCmd));
                 this.acListener.setNextPossibleCmd(suggestedCmd);
             }
         } else {
             cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
+            this.acListener.setNextPossibleCmd("");
         }
     }
 

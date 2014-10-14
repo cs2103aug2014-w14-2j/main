@@ -64,6 +64,7 @@ public class UITaskListView {
         private String COLOR_PINK = "rgba(246, 96, 171, 1)";
           
         private String[] colorArray = {COLOR_PINK, COLOR_BLUE, COLOR_YELLOW, COLOR_RED, COLOR_GREEN};
+        int counter = 0;
         
         private Rectangle createRectangle(int width, int height, int arcWidth, int arcHeight, Color c) {
             Rectangle rect = new Rectangle(width, height);
