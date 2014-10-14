@@ -1,5 +1,8 @@
 package application;
 
+import javafx.application.Application;
+import javafx.stage.Stage;
+
 import java.util.ArrayList;
 
 import javafx.event.EventHandler;
@@ -18,7 +21,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class UiComponent {
+public class UiComponent extends Application {
     
     private final String SUGGESTION_TEXT = "Hello User! I am WaveWave.";
     
@@ -177,4 +180,24 @@ public class UiComponent {
 	    taskList.setAll(items);
 	    eventReminderTaskListView.populateTaskListWithData(taskList);
 	}
+
+    @Override
+    public void start(Stage primaryStage) {
+        try {
+            this.showStage(primaryStage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showStage(Stage primaryStage) {
+        primaryStage.setScene(this.getScene());
+        primaryStage.setResizable(false);
+        primaryStage.setTitle("WaveWave[0.2]");
+        primaryStage.show();
+    }
+    
+    public void launchApplication(String[] args) {
+        launch(args);
+    }
 }

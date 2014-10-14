@@ -3,7 +3,7 @@ package application;
 import java.util.ArrayList;
 
 /**
- * The manager that contains the array list of Tasks.
+ * The manager that manipulates and contains the array list of Tasks.
  * 
  * @author Sun Wang Jun
  */
@@ -15,14 +15,6 @@ class TaskManager {
         this.initializeList(new ArrayList<Task>()); // Temporary solution.
     }
     
-    /**
-     * @param uiComponent
-     *            the view to update
-     */
-    public void updateUi(UiComponent uiComponent) {
-        //uiComponent.updateFloatingTasks(this.list);
-    }
-
     /**
      * Adds a task to the list.
      * 
@@ -67,6 +59,8 @@ class TaskManager {
     }
 
     /**
+     * Returns the list of tasks.
+     * 
      * @return the list of tasks.
      */
     public ArrayList<Task> getList() {
