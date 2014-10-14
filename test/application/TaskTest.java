@@ -97,4 +97,16 @@ public class TaskTest {
         assertFalse("is not completed again", task.isCompleted());
     }
 
+    /**
+     * Test method for {@link application.Task#priority}.
+     */
+    @Test
+    public void testPriority() {
+        assertNull("has no priority", task.getPriority());
+        
+        int priority = 1;
+        task.setPriority(priority);
+        assertEquals("has priority", task.getPriority(), priority);        
+    }
+
 }
