@@ -90,7 +90,6 @@ public class UIComponent {
 	private void initializeComponents() {
 		rootPane = new BorderPane();
 		rootPane.setCenter(getMainComponentHolder());
-		//Controller.getTasks();
 	}
 	
 	private VBox createVBox(int spacing, Insets padding, int prefWidth, int prefHeight, String style) {
@@ -210,6 +209,7 @@ public class UIComponent {
     		primaryStage.setResizable(false);
     		primaryStage.setTitle("WaveWave[0.2]");
     		primaryStage.show();
+    		Controller.getTasks();
         	logger.log(Level.INFO, "UI has been successfully displayed.");
     	} catch (Exception ex) {
     		logger.log(Level.WARNING, "UI failed to initialize", ex);
