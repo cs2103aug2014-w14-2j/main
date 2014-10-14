@@ -15,7 +15,7 @@ public class Controller extends Application {
     
     private static TaskManager taskManager;
 
-    private static UiComponent uiComponent;
+    private static UIComponent uiComponent;
 
     /**
      * Executes the command entered.
@@ -60,7 +60,7 @@ public class Controller extends Application {
     public void start(Stage primaryStage) throws Exception {
         // TODO Auto-generated method stub
         taskManager = new TaskManager();
-        uiComponent = new UiComponent();
+        uiComponent = new UIComponent();
         uiComponent.showStage(primaryStage);
     }
 }
