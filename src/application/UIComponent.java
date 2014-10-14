@@ -2,8 +2,8 @@ package application;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import java.util.logging.*;
 
+import java.util.logging.*;
 import java.util.ArrayList;
 
 import javafx.event.EventHandler;
@@ -25,7 +25,8 @@ import javafx.collections.ObservableList;
 public class UIComponent {
     
     private final String SUGGESTION_TEXT = "Hello User! I am WaveWave.";
-    private static Logger logger = Logger.getLogger("UIComponent");
+    private static Logger logger;
+    private static FileHandler fileHandler;
 
 	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
 	private final String LISTVIEW_STYLESHEET = "taskDisplay_outer";
@@ -48,6 +49,7 @@ public class UIComponent {
 	}
 	
 	public UIComponent() {
+		initializeLoggerFileHandler();
 		initializeComponents();
 		setupScene();
 		initializeStyleSheet();
@@ -56,6 +58,16 @@ public class UIComponent {
 	private void initializeStyleSheet() {
 		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
 		rootPane.getStyleClass().add(ROOTPANE_STYLESHEET);
+	}
+	
+	private void initializeLoggerFileHandler() {
+        try {
+        	logger = Logger.getLogger("UIComponent");
+            fileHandler = new FileHandler(Controller.class.getName() + ".log");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+        logger.addHandler(fileHandler);
 	}
 	
 	private void setupScene() {
@@ -78,6 +90,7 @@ public class UIComponent {
 	private void initializeComponents() {
 		rootPane = new BorderPane();
 		rootPane.setCenter(getMainComponentHolder());
+		Controller.getTasks();
 	}
 	
 	private VBox createVBox(int spacing, Insets padding, int prefWidth, int prefHeight, String style) {
