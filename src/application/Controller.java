@@ -1,5 +1,6 @@
 package application;
 
+
 /**
  * The controller logic that integrates UI, Storage and Parser.
  * 
@@ -50,7 +51,6 @@ public class Controller {
         dataStorage.initiateFile();
         
         taskManager = new TaskManager();
-        
         uiComponent = new UiComponent();
         uiComponent.launchApplication(args);
     }
