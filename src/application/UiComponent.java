@@ -122,8 +122,7 @@ public class UiComponent {
 		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_PLACEHOLDER_STYLESHEET);
 		Text suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
 		
-		//TO-BE-DELETED
-		cmdInputBox = new UICmdInputBox(suggestionText,this).getCmdInputBox();
+		cmdInputBox = new UICmdInputBox(suggestionText).getCmdInputBox();
 		userInputComponentHolder.getChildren().addAll(cmdInputBox, suggestionText);
 		return userInputComponentHolder;
 	}
