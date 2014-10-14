@@ -90,7 +90,7 @@ public class UIComponent {
 	private void initializeComponents() {
 		rootPane = new BorderPane();
 		rootPane.setCenter(getMainComponentHolder());
-		Controller.getTasks();
+		//Controller.getTasks();
 	}
 	
 	private VBox createVBox(int spacing, Insets padding, int prefWidth, int prefHeight, String style) {
