@@ -92,6 +92,9 @@ public class TaskTest {
         
         task.complete();
         assertTrue("is completed", task.isCompleted());
+        
+        task.setCompleted(false);
+        assertFalse("is not completed again", task.isCompleted());
     }
 
 }

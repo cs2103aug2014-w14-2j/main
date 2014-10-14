@@ -31,17 +31,21 @@ public class Controller extends Application {
         taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
 
         Command command = (new Parser(input)).getCmd();
-
-        switch (command.getCommandType()) {
-            case "add":
-                taskManager.add(command);
-                break;
-            case "delete":
-                taskManager.delete(command);
-                break;
-            case "edit":
-                taskManager.edit(command);
-                break;
+        
+        try {
+            switch (command.getCommandType()) {
+                case "add":
+                    taskManager.add(command);
+                    break;
+                case "delete":
+                    taskManager.delete(command);
+                    break;
+                case "edit":
+                    taskManager.edit(command);
+                    break;
+            }
+        } catch (MismatchedCommandException e) {
+            e.printStackTrace();
         }
         uiComponent.updateTaskList(taskManager.getList());
 
