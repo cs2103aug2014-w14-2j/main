@@ -3,7 +3,7 @@ package application;
 import java.util.ArrayList;
 
 /**
- * The manager that contains the array list of Tasks.
+ * The manager that manipulates and contains the array list of Tasks.
  * 
  * @author Sun Wang Jun
  */
@@ -16,22 +16,17 @@ class TaskManager {
     }
     
     /**
-     * @param uiComponent
-     *            the view to update
-     */
-    public void updateUi(UiComponent uiComponent) {
-        //uiComponent.updateFloatingTasks(this.list);
-    }
-
-    /**
      * Adds a task to the list.
      * 
      * @param command
      *            of type "add".
      * @return the updated list of tasks.
      */
-    public ArrayList<Task> add(Command command) {
-        // Throw exception if incorrect command type.
+    public ArrayList<Task> add(Command command) throws MismatchedCommandException {
+        if (!"add".equals(command.getCommandType())) {
+            throw new MismatchedCommandException();
+        }
+        
         this.task = new Task();
         this.task.setDescription(command.getTaskDesc());
         this.list.add(this.task);
@@ -45,7 +40,11 @@ class TaskManager {
      *            of type "edit" and contains task id.
      * @return the updated list of tasks.
      */
-    public ArrayList<Task> edit(Command command) {
+    public ArrayList<Task> edit(Command command) throws MismatchedCommandException {
+        if (!"edit".equals(command.getCommandType())) {
+            throw new MismatchedCommandException();
+        }
+        
         // Throw exception if incorrect command type.
         return this.list;
     }
@@ -57,8 +56,11 @@ class TaskManager {
      *            of type "delete" and contains task id.
      * @return the updated list of tasks.
      */
-    public ArrayList<Task> delete(Command command) {
-        // Throw exception if incorrect command type.
+    public ArrayList<Task> delete(Command command) throws MismatchedCommandException {
+        if (!"delete".equals(command.getCommandType())) {
+            throw new MismatchedCommandException();
+        }
+        
         // Temporary hack to remove via ArrayList index.
         int taskId = Integer.parseInt(command.getTaskID().substring(1)) - 1;
         this.list.remove(taskId);
@@ -67,6 +69,8 @@ class TaskManager {
     }
 
     /**
+     * Returns the list of tasks.
+     * 
      * @return the list of tasks.
      */
     public ArrayList<Task> getList() {

@@ -41,7 +41,7 @@ public class DataStorage {
 	/**
 	 * 
 	 */
-	public void retrieveTasks() {
+	public ArrayList<Task> retrieveTasks() {
 		tasks.clear();
 		JSONParser parser = new JSONParser();
 		try {
@@ -52,9 +52,11 @@ public class DataStorage {
 		} catch (ParseException e) {
 			
 		}
+		return convertJSONArrayToArrayList();
 	}
 	
-	public void saveTasks() {
+	public void saveTasks(ArrayList<Task> array) {
+		convertArrayListToJSONArray(array);
 		try {
 			FileWriter fw = new FileWriter(filename, false);
 			fw.write(tasks.toJSONString());

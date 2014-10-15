@@ -3,18 +3,30 @@ package application;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.SimpleFormatter;
+
 /**
  * The controller logic that integrates UI, Storage and Parser.
  * 
  * @author Sun Wang Jun
  */
 public class Controller extends Application {
+    
+    private static final Logger logger = Logger.getLogger(Controller.class.getName());
+    private static FileHandler fileHandler = null;
 
+<<<<<<< HEAD
     private static DataStorage storage;
+=======
+    private static DataStorage dataStorage;
+>>>>>>> 26c93c410698c57447d473a58439fcea98e99c0e
     
     private static TaskManager taskManager;
 
-    private static UiComponent uiComponent;
+    private static UIComponent uiComponent;
 
     /**
      * Executes the command entered.
@@ -23,7 +35,9 @@ public class Controller extends Application {
      *            The entire command input.
      */
     public static void runCommandInput(String input) {
+        logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
 
+<<<<<<< HEAD
         System.out.println("runCommandInput(input: " + input + ") called");
 
         storage.retrieveTasks();
@@ -55,30 +69,75 @@ public class Controller extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+=======
+        dataStorage.retrieveTasks();
+        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
+
+        Command command = (new Parser(input)).getCmd();
+        
+>>>>>>> 26c93c410698c57447d473a58439fcea98e99c0e
         try {
-            showStage(primaryStage);
-        } catch (Exception e) {
+            switch (command.getCommandType()) {
+                case "add":
+                    taskManager.add(command);
+                    break;
+                case "delete":
+                    taskManager.delete(command);
+                    break;
+                case "edit":
+                    taskManager.edit(command);
+                    break;
+            }
+        } catch (MismatchedCommandException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
             e.printStackTrace();
         }
-    }
+        uiComponent.updateTaskList(taskManager.getList());
 
-    private static void showStage(Stage primaryStage) {
-        uiComponent = new UiComponent();
-        primaryStage.setScene(uiComponent.getScene());
-        primaryStage.setResizable(false);
-        primaryStage.setTitle("WaveWave[0.1]");
-        primaryStage.show();
+        dataStorage.convertArrayListToJSONArray(taskManager.getList());
+        dataStorage.saveTasks();
+    }
+    
+    /**
+     * For the UI to retrieve the list of tasks after it is initialized.
+     */
+    public static void getTasks() {
+        uiComponent.updateTaskList(taskManager.getList());       
     }
 
     public static void main(String[] args) {
+<<<<<<< HEAD
         // floatingTasks = new FloatingTaskManager();
         // timedTasks = new TimedTaskManager();
         // deadlineTasks = new DeadlineTaskManager();
         storage = new DataStorage();
         storage.initiateFile();
         
+=======
+>>>>>>> 26c93c410698c57447d473a58439fcea98e99c0e
         taskManager = new TaskManager();
+        dataStorage = new DataStorage();
+        dataStorage.initiateFile();
+        dataStorage.retrieveTasks();
+        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
+        
+        // Temporary logging file handler.
+        try {
+            fileHandler = new FileHandler(Controller.class.getName() + ".log");
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+            logger.setLevel(Level.FINEST);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
         
         launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        // TODO Auto-generated method stub
+        uiComponent = new UIComponent();
+        uiComponent.showStage(primaryStage);
     }
 }

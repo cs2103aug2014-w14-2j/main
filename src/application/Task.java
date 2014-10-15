@@ -14,11 +14,15 @@ public class Task {
     private DateTime date;
     private DateTime endDate;
     private boolean completed;
+    
+    private int priority;
 
     /**
+     * Returns the id of the Task.
+     * 
      * @return the id of the Task.
      */
-    public String getId() {
+    public String getID() {
         return this.id;
     }
 
@@ -26,6 +30,8 @@ public class Task {
     // public void setId(String id) { this.id = id; }
 
     /**
+     * Returns the description of the Task.
+     * 
      * @return the description of the Task.
      */
     public String getDescription() {
@@ -33,6 +39,8 @@ public class Task {
     }
 
     /**
+     * Sets the description of the Task.
+     * 
      * @param description
      *            overwrites the description of the Task.
      */
@@ -41,14 +49,17 @@ public class Task {
     }
 
     /**
-     * @return the (start) date of the Task. This returns null if there is no
-     *         date.
+     * Returns the (start) date of the Task. Returns null if there is no date.
+     * 
+     * @return the (start) date of the Task. Returns null if there is no date.
      */
     public DateTime getDate() {
         return this.date;
     }
 
     /**
+     * Sets the (start) date of the Task. Set as null to remove the date.
+     * 
      * @param date
      *            sets the (start) date of the Task. Set to null to remove the
      *            date.
@@ -66,13 +77,17 @@ public class Task {
     }
 
     /**
-     * @return the end date of the Task. This returns null if there is no date.
+     * Returns the end date of the Task. Returns null if there is no end date.
+     * 
+     * @return the end date of the Task. Returns null if there is no end date.
      */
     public DateTime getEndDate() {
         return this.endDate;
     }
 
     /**
+     * Sets the end date of the Task. Set as null to remove the date.
+     * 
      * @param endDate
      *            sets the end date of the Task. Set to null to remove the date.
      */
@@ -88,6 +103,8 @@ public class Task {
     }
 
     /**
+     * Returns whether Task is completed.
+     * 
      * @return boolean whether Task is completed.
      */
     public boolean isCompleted() {
@@ -95,6 +112,8 @@ public class Task {
     }
 
     /**
+     * Sets the completed status of the Task.
+     * 
      * @param completed
      *            overwrites the completed status of the Task.
      */
@@ -107,5 +126,22 @@ public class Task {
      */
     public void complete() {
         this.setCompleted(true);
+    }
+
+    /**
+     * Returns the priority of the Task.
+     * 
+     * @return int priority of the Task.
+     */
+    public int getPriority() { return this.priority; }
+
+    /**
+     * Sets the priority of the Task.
+     * 
+     * @param priority overwrites the priority of the Task.
+     */
+    public void setPriority(int priority) {
+        // Check if priority is negative.
+        this.priority = priority;
     }
 }
