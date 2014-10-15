@@ -16,7 +16,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextBoundsType;
 import javafx.util.Callback;
 
-public class TaskListView {
+public class UITaskListView {
 
     private ListView<Task> taskList;
 
@@ -25,7 +25,7 @@ public class TaskListView {
     
     private final String TASKLIST_DEFAULT_STYLE = "taskList_style";
 
-    public TaskListView() {
+    public UITaskListView() {
         taskList = new ListView<Task>();
         setTaskListProperty();
     }
@@ -64,6 +64,7 @@ public class TaskListView {
         private String COLOR_PINK = "rgba(246, 96, 171, 1)";
           
         private String[] colorArray = {COLOR_PINK, COLOR_BLUE, COLOR_YELLOW, COLOR_RED, COLOR_GREEN};
+        int counter = 0;
         
         private Rectangle createRectangle(int width, int height, int arcWidth, int arcHeight, Color c) {
             Rectangle rect = new Rectangle(width, height);
@@ -85,22 +86,28 @@ public class TaskListView {
         @Override
         public void updateItem(Task item, boolean empty) {
             super.updateItem(item, empty);
-            
             Rectangle contentPlaceHolder = createRectangle(260, 70, 10, 10, Color.WHITE);
             Rectangle priorityIndicator = createRectangle(50, 50, 0, 0, Color.web(colorArray[color_counter]));
             
+            //TO-BE-DELETED
+            //System.out.println((color_counter%2));
+            if ((color_counter%2) == 0)
+                this.getStyleClass().add("bigger-list-cell");
+            else 
+                this.getStyleClass().add("smaller-list-cell");
+            
+            //TO-BE-DELETED
             color_counter++;
             if(color_counter == colorArray.length) {
                 color_counter = 0;
             }
             
             if (item != null) {
-                Text text = createText("pending", 150, 12);
-
+                Text text = createText(item.getDescription(), 150, 12);
                 HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
                 taskInnerContentHolder.setPadding(new Insets(10, 0, 0, 15));
                 taskInnerContentHolder.getChildren().addAll(priorityIndicator, text);
-
+                
                 StackPane stack = new StackPane();
                 stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
                 stack.setPrefWidth(TASK_CONTAINER_WIDTH);

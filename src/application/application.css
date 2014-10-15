@@ -37,6 +37,14 @@
  }
 
 
+.bigger-list-cell {
+    -fx-cell-size: 180 ;
+}
+
+.smaller-list-cell {
+    -fx-cell-size: 80 ;
+}
+
  .taskList_style:focused {
   	-fx-background-color: white,-fx-box-border,-fx-control-inner-background;
   	-fx-background-insets: -1.4, 0, 1;

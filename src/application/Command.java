@@ -13,11 +13,14 @@ public class Command {
     private Date taskTime;
 
     Command(String commandType) {  // for undo command
+        if (validateCommand(commandType))
+        {
         this.commandType = commandType;
         taskID = null;
         keyword = null;
         taskDesc = null;
-        taskTime = null;      
+        taskTime = null;
+        }
     }
     Command(String commandType, String taskID) {   // for delete, complete and search 
         this.commandType = commandType;
@@ -40,6 +43,10 @@ public class Command {
         this.taskTime = taskTime;
         keyword = null;
     }
+    private boolean validateCommand(String command) {
+        return true;
+        
+    }
     /**
      * This returns the command type to be executed 
      * @return command type
@@ -55,12 +62,14 @@ public class Command {
         return taskID;
     }
     /**
+     * return the description of the Task
      * @return the description of the Task.
      */
     public String getTaskDesc(){
         return taskDesc;
     }
     /**
+     * return the keyword to be searched
      * @return the keyword to be searched.
      */
     public String getKeyword(){
@@ -71,6 +80,7 @@ public class Command {
         return taskTime;
     }
     /**
+     * return the type of the Task
      * @return the type of the Task.
      */
 }

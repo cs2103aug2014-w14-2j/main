@@ -1,11 +1,14 @@
 package application;
 
+import javafx.application.Application;
+import javafx.stage.Stage;
+
 import java.util.ArrayList;
 
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -17,17 +20,11 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 
 public class UiComponent {
     
-    private final int CMDINPUT_HEIGHT = 35;
-    private final String CMDINPUT_PROMPT_TEXT = "Ask WaveWave to do something ?";
-    private final String CMDINPUT_STYLESHEET = "cmdBox_outer";
+    private final String SUGGESTION_TEXT = "Hello User! I am WaveWave.";
     
-    private final String SUGGESTION_TEXT = "Did you mean this : add ?";
-    
-	private final int LISTVIEW_DISPLAY_WIDTH = 300;
 	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
 	private final String LISTVIEW_STYLESHEET = "taskDisplay_outer";
 	
@@ -36,12 +33,12 @@ public class UiComponent {
 	
 	private final String APP_DEFAULT_FONT = "Ariel";
 	private final String APP_DEFAULT_STYLESHEET = "application.css";
+	private final String CMDINPUT_PLACEHOLDER_STYLESHEET = "cmdBox_outer";
 	
-
 	private Scene scene;
 	private BorderPane rootPane;
 	private TextField cmdInputBox;
-	private TaskListView floatingTaskListView, eventAndRemainderTaskListView;
+	private UITaskListView floatingTaskListView, eventReminderTaskListView;
 
 	public Scene getScene() {
 		return scene;
@@ -50,16 +47,27 @@ public class UiComponent {
 	public UiComponent() {
 		initializeComponents();
 		setupScene();
-		initializeStyleSheetToComponents();
+		initializeStyleSheet();
 	}
 
-	private void initializeStyleSheetToComponents() {
+	private void initializeStyleSheet() {
 		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
 		rootPane.getStyleClass().add("rootPane");
 	}
-
+	
 	private void setupScene() {
 		scene = new Scene(rootPane, APPLICATION_WIDTH, APPLICATION_HEIGHT);
+		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override 
+            public void handle(KeyEvent ke) { 
+                String currentText = cmdInputBox.getText();
+                if(!cmdInputBox.isFocused() && ke.getText().matches("^[a-zA-Z0-9_]*$")) {
+                    focusCommandInputBox();
+                    cmdInputBox.setText(currentText);
+                    cmdInputBox.positionCaret(currentText.length());
+                }
+            } 
+        });
 	}
 
 	private void initializeComponents() {
@@ -110,26 +118,11 @@ public class UiComponent {
 		return textLabel;
 	}
 	
-	private void createCmdInputBox() {
-        cmdInputBox = new TextField();
-        cmdInputBox.setFocusTraversable(false);
-        cmdInputBox.setPrefHeight(CMDINPUT_HEIGHT);
-        cmdInputBox.setPromptText(CMDINPUT_PROMPT_TEXT);
-        
-        cmdInputBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
-             @Override 
-             public void handle(KeyEvent ke) { 
-                 if (ke.getCode().equals(KeyCode.ENTER)) { 
-                     Controller.runCommandInput(cmdInputBox.getText());  
-                 } 
-             } 
-         });
-	}
-	
 	private VBox getUserInputComponentHolder() {
-		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_STYLESHEET);
+		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_PLACEHOLDER_STYLESHEET);
 		Text suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
-		createCmdInputBox();
+		
+		cmdInputBox = new UICmdInputBox(suggestionText).getCmdInputBox();
 		userInputComponentHolder.getChildren().addAll(cmdInputBox, suggestionText);
 		return userInputComponentHolder;
 	}
@@ -151,7 +144,7 @@ public class UiComponent {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		Text taskTitle = createText("Tasks", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 
-		floatingTaskListView = new TaskListView();
+		floatingTaskListView = new UITaskListView();
 		ObservableList<Task> items = FXCollections.observableArrayList();
 		floatingTaskListView.populateTaskListWithData(items);
 		innerBox.getChildren().addAll(taskTitle, floatingTaskListView.getListView());
@@ -163,18 +156,17 @@ public class UiComponent {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		Text taskTitle = createText("Reminder & Events", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 		
-		eventAndRemainderTaskListView = new TaskListView();
+		eventReminderTaskListView = new UITaskListView();
         ObservableList<Task> items = FXCollections.observableArrayList();
-        eventAndRemainderTaskListView.populateTaskListWithData(items);
-		innerBox.getChildren().addAll(taskTitle, eventAndRemainderTaskListView.getListView());
+        eventReminderTaskListView.populateTaskListWithData(items);
+		innerBox.getChildren().addAll(taskTitle, eventReminderTaskListView.getListView());
 
 		return innerBox;
 	}
-
-
-	public void focusCommandInputBox() {
-		cmdInputBox.requestFocus();
-	}
+	
+    private void focusCommandInputBox() {
+        cmdInputBox.requestFocus();
+    }
 	
 	public void updateTaskList(ArrayList<Task> items) {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
@@ -185,6 +177,14 @@ public class UiComponent {
 	public void updateReminderList(ArrayList<Task> items) {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
-	    eventAndRemainderTaskListView.populateTaskListWithData(taskList);
+	    eventReminderTaskListView.populateTaskListWithData(taskList);
 	}
+
+    public void showStage(Stage primaryStage) {
+        primaryStage.setScene(this.getScene());
+        primaryStage.setResizable(false);
+        primaryStage.setTitle("WaveWave[0.2]");
+        primaryStage.show();
+    }
+    
 }
