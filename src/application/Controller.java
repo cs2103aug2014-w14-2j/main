@@ -23,6 +23,8 @@ public class Controller extends Application {
     private static TaskManager taskManager;
 
     private static UIComponent uiComponent;
+    
+    private static Parser parser;
 
     /**
      * Executes the command entered.
@@ -36,7 +38,7 @@ public class Controller extends Application {
         dataStorage.retrieveTasks();
         taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
 
-        Command command = (new Parser(input)).getCmd();
+        Command command = Parser.getCommand(input);
         
         try {
             switch (command.getCommandType()) {
@@ -73,6 +75,7 @@ public class Controller extends Application {
         dataStorage.initiateFile();
         dataStorage.retrieveTasks();
         taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
+        parser = Parser.getInstance();
         
         // Temporary logging file handler.
         try {
