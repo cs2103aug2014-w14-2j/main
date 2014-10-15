@@ -18,11 +18,7 @@ public class Controller extends Application {
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
     private static FileHandler fileHandler = null;
 
-<<<<<<< HEAD
-    private static DataStorage storage;
-=======
     private static DataStorage dataStorage;
->>>>>>> 26c93c410698c57447d473a58439fcea98e99c0e
     
     private static TaskManager taskManager;
 
@@ -36,46 +32,9 @@ public class Controller extends Application {
      */
     public static void runCommandInput(String input) {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
-
-<<<<<<< HEAD
-        System.out.println("runCommandInput(input: " + input + ") called");
-
-        storage.retrieveTasks();
-        // floatingTasks.initializeList(storage.convertFloatingJSONArrayToArrayList());
-        // deadlineTasks.initializeList(storage.convertDeadlineJSONArrayToArrayList());
-        // timedTasks.initializeList(storage.convertTimedJSONArrayToArrayList());
-
         Command command = (new Parser(input)).getCmd();
+        taskManager.initializeList(dataStorage.retrieveTasks());
 
-        switch (command.getCommandType()) {
-        case "add":
-            taskManager.add(command);
-            taskManager.updateUi(uiComponent);
-            break;
-        case "delete":
-            taskManager.delete(command);
-            taskManager.updateUi(uiComponent);
-            break;
-        case "edit":
-            taskManager.edit(command);
-            taskManager.updateUi(uiComponent);
-        }
-
-        // storage.convertFloatingArrayListToJSONArray(floatingTasks.getList());
-        // storage.convertDeadlineArrayListToJSONArray(deadlineTasks.getList());
-        // storage.convertTimedArrayListToJSONArray(timedTasks.getList());
-        storage.saveTasks();
-    }
-
-    @Override
-    public void start(Stage primaryStage) {
-=======
-        dataStorage.retrieveTasks();
-        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
-
-        Command command = (new Parser(input)).getCmd();
-        
->>>>>>> 26c93c410698c57447d473a58439fcea98e99c0e
         try {
             switch (command.getCommandType()) {
                 case "add":
@@ -94,8 +53,7 @@ public class Controller extends Application {
         }
         uiComponent.updateTaskList(taskManager.getList());
 
-        dataStorage.convertArrayListToJSONArray(taskManager.getList());
-        dataStorage.saveTasks();
+        dataStorage.saveTasks(taskManager.getList());
     }
     
     /**
@@ -106,15 +64,6 @@ public class Controller extends Application {
     }
 
     public static void main(String[] args) {
-<<<<<<< HEAD
-        // floatingTasks = new FloatingTaskManager();
-        // timedTasks = new TimedTaskManager();
-        // deadlineTasks = new DeadlineTaskManager();
-        storage = new DataStorage();
-        storage.initiateFile();
-        
-=======
->>>>>>> 26c93c410698c57447d473a58439fcea98e99c0e
         taskManager = new TaskManager();
         dataStorage = new DataStorage();
         dataStorage.initiateFile();
@@ -136,7 +85,6 @@ public class Controller extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // TODO Auto-generated method stub
         uiComponent = new UIComponent();
         uiComponent.showStage(primaryStage);
     }
