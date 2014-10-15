@@ -10,7 +10,7 @@ import javafx.stage.Stage;
  */
 public class Controller extends Application {
 
-    private static FileManager fileManage;
+    private static DataStorage storage;
     
     private static TaskManager taskManager;
 
@@ -26,10 +26,10 @@ public class Controller extends Application {
 
         System.out.println("runCommandInput(input: " + input + ") called");
 
-        fileManage.retrieveLists();
-        // floatingTasks.initializeList(fileManage.convertFloatingJSONArrayToArrayList());
-        // deadlineTasks.initializeList(fileManage.convertDeadlineJSONArrayToArrayList());
-        // timedTasks.initializeList(fileManage.convertTimedJSONArrayToArrayList());
+        storage.retrieveTasks();
+        // floatingTasks.initializeList(storage.convertFloatingJSONArrayToArrayList());
+        // deadlineTasks.initializeList(storage.convertDeadlineJSONArrayToArrayList());
+        // timedTasks.initializeList(storage.convertTimedJSONArrayToArrayList());
 
         Command command = (new Parser(input)).getCmd();
 
@@ -47,10 +47,10 @@ public class Controller extends Application {
             taskManager.updateUi(uiComponent);
         }
 
-        // fileManage.convertFloatingArrayListToJSONArray(floatingTasks.getList());
-        // fileManage.convertDeadlineArrayListToJSONArray(deadlineTasks.getList());
-        // fileManage.convertTimedArrayListToJSONArray(timedTasks.getList());
-        fileManage.saveToFiles();
+        // storage.convertFloatingArrayListToJSONArray(floatingTasks.getList());
+        // storage.convertDeadlineArrayListToJSONArray(deadlineTasks.getList());
+        // storage.convertTimedArrayListToJSONArray(timedTasks.getList());
+        storage.saveTasks();
     }
 
     @Override
@@ -74,8 +74,8 @@ public class Controller extends Application {
         // floatingTasks = new FloatingTaskManager();
         // timedTasks = new TimedTaskManager();
         // deadlineTasks = new DeadlineTaskManager();
-        fileManage = new FileManager();
-        fileManage.initiateFile();
+        storage = new DataStorage();
+        storage.initiateFile();
         
         taskManager = new TaskManager();
         
