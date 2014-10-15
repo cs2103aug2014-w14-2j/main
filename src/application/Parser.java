@@ -10,8 +10,12 @@ import org.ocpsoft.prettytime.shade.org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Parser {
+    
+    private static Logger logger = Logger.getLogger("Foo");
 
 
     private static Command cmd;
@@ -36,6 +40,7 @@ public class Parser {
      * @return the object of Command class 
      */
     public static Command getCommand(String userInput) {
+        logger.log(Level.INFO, "going to return a Command object to Controller");
         assert ( userInput != null );
         String commandType = parseCommandType(userInput);
         String taskID = parseTaskID(userInput);
@@ -51,6 +56,7 @@ public class Parser {
      */
     private static String parseCommandType(String input) {
         String command = input.trim().split("\\s+")[0].toUpperCase();
+        logger.log(Level.INFO, "command keyword parsed");
         return command;      
     }
 
@@ -68,7 +74,7 @@ public class Parser {
         return priority;
     }
 
-    public static Date parseTime(String input) {
+    public Date parseTime(String input) {
         List<Date> dates = new PrettyTimeParser().parse(input);
         Date taskTime;
         if (dates.size()>0) {
