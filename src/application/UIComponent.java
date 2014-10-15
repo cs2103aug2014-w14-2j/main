@@ -3,6 +3,7 @@ package application;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.logging.*;
 import java.util.ArrayList;
 
 import javafx.event.EventHandler;
@@ -21,12 +22,15 @@ import javafx.scene.text.TextAlignment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class UiComponent {
+public class UIComponent {
     
     private final String SUGGESTION_TEXT = "Hello User! I am WaveWave.";
-    
+    private static Logger logger;
+    private static FileHandler fileHandler;
+
 	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
 	private final String LISTVIEW_STYLESHEET = "taskDisplay_outer";
+	private final String ROOTPANE_STYLESHEET = "rootPane";
 	
 	private final int APPLICATION_WIDTH = 650;
 	private final int APPLICATION_HEIGHT = 650;
@@ -44,7 +48,8 @@ public class UiComponent {
 		return scene;
 	}
 	
-	public UiComponent() {
+	public UIComponent() {
+		initializeLoggerFileHandler();
 		initializeComponents();
 		setupScene();
 		initializeStyleSheet();
@@ -52,7 +57,17 @@ public class UiComponent {
 
 	private void initializeStyleSheet() {
 		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
-		rootPane.getStyleClass().add("rootPane");
+		rootPane.getStyleClass().add(ROOTPANE_STYLESHEET);
+	}
+	
+	private void initializeLoggerFileHandler() {
+        try {
+        	logger = Logger.getLogger("UIComponent");
+            fileHandler = new FileHandler(Controller.class.getName() + ".log");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+        logger.addHandler(fileHandler);
 	}
 	
 	private void setupScene() {
@@ -68,6 +83,8 @@ public class UiComponent {
                 }
             } 
         });
+		
+		logger.log(Level.INFO, "The Scene is created.");
 	}
 
 	private void initializeComponents() {
@@ -87,6 +104,7 @@ public class UiComponent {
 			vBox.setFillWidth(true);
 		}
 		
+		logger.log(Level.INFO, "A VBox is created.");
 		return vBox;
 	}
 	
@@ -102,6 +120,7 @@ public class UiComponent {
 			hBox.setFillHeight(true);
 		}
 		
+		logger.log(Level.INFO, "A HBox is created.");
 		return hBox;
 	}
 	
@@ -115,6 +134,8 @@ public class UiComponent {
 		}
 		
 		textLabel.setFill(color);
+		
+		logger.log(Level.INFO, "A Text label is created.");
 		return textLabel;
 	}
 	
@@ -172,19 +193,27 @@ public class UiComponent {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
 	    floatingTaskListView.populateTaskListWithData(taskList);
+	    logger.log(Level.INFO, "Task ListView is updated.");
 	}
 	
 	public void updateReminderList(ArrayList<Task> items) {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
 	    eventReminderTaskListView.populateTaskListWithData(taskList);
+		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
 	}
 
     public void showStage(Stage primaryStage) {
-        primaryStage.setScene(this.getScene());
-        primaryStage.setResizable(false);
-        primaryStage.setTitle("WaveWave[0.2]");
-        primaryStage.show();
+    	try {
+    		primaryStage.setScene(this.getScene());
+    		primaryStage.setResizable(false);
+    		primaryStage.setTitle("WaveWave[0.2]");
+    		primaryStage.show();
+    		Controller.getTasks();
+        	logger.log(Level.INFO, "UI has been successfully displayed.");
+    	} catch (Exception ex) {
+    		logger.log(Level.WARNING, "UI failed to initialize", ex);
+    	}
+
     }
-    
 }

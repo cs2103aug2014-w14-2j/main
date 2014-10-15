@@ -86,15 +86,19 @@ public class UITaskListView {
         @Override
         public void updateItem(Task item, boolean empty) {
             super.updateItem(item, empty);
-            Rectangle contentPlaceHolder = createRectangle(260, 70, 10, 10, Color.WHITE);
+            Rectangle contentPlaceHolder;
             Rectangle priorityIndicator = createRectangle(50, 50, 0, 0, Color.web(colorArray[color_counter]));
             
             //TO-BE-DELETED
             //System.out.println((color_counter%2));
-            if ((color_counter%2) == 0)
+            if ((color_counter%2) == 0) {
                 this.getStyleClass().add("bigger-list-cell");
-            else 
+                contentPlaceHolder = createRectangle(260, 170, 10, 10, Color.WHITE);
+            }
+            else { 
                 this.getStyleClass().add("smaller-list-cell");
+                contentPlaceHolder = createRectangle(260, 70, 10, 10, Color.WHITE);
+            }
             
             //TO-BE-DELETED
             color_counter++;
