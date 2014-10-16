@@ -22,11 +22,21 @@ public class UITaskListView {
 
     private final int DISPLAY_WIDTH = 300;
     private final int DISPLAY_HEIGHT = 500;
+    private final String FLOATING = "Task";
+    private final String EVENT = "Event";
     
     private final String TASKLIST_DEFAULT_STYLE = "taskList_style";
-
-    public UITaskListView() {
+    private UICmdInputBox cmdInputBox;
+    
+	private final String CMD_DELETE_FLOATING_TASK = "DELETE F%d";
+	private final String CMD_DELETE_EVENT_TASK = "DELETE E%d";
+	
+	private String type;
+    
+    public UITaskListView(UICmdInputBox cmdInputBox, String type) {
         taskList = new ListView<Task>();
+        this.cmdInputBox = cmdInputBox;
+        this.type = type;
         setTaskListProperty();
     }
 
@@ -41,8 +51,22 @@ public class UITaskListView {
                 return new TaskListCell();
             }
         });
+        
+        if(type.equals(FLOATING)) {
+        	taskList.setOnKeyPressed(new UITaskListViewListener(CMD_DELETE_FLOATING_TASK, cmdInputBox, this));
+        } else if(type.equals(EVENT)) {
+        	taskList.setOnKeyPressed(new UITaskListViewListener(CMD_DELETE_EVENT_TASK, cmdInputBox, this));
+        }
     }
-
+    
+    public boolean isFocused() {
+    	return taskList.isFocused();
+    }
+    
+    public int getSelectedItemIndex() {
+    	return taskList.getSelectionModel().getSelectedIndex();
+    }
+   
     public void populateTaskListWithData(ObservableList<Task> items) {
         taskList.setItems(items);
     }
