@@ -22,7 +22,7 @@ class TaskManager {
      *            of type "add".
      * @return the updated list of tasks.
      */
-    public ArrayList<Task> add(Command command) throws MismatchedCommandException {
+    public ArrayList<Task> add(CommandInfo command) throws MismatchedCommandException {
         if (!"add".equals(command.getCommandType())) {
             throw new MismatchedCommandException();
         }
@@ -40,7 +40,7 @@ class TaskManager {
      *            of type "edit" and contains task id.
      * @return the updated list of tasks.
      */
-    public ArrayList<Task> edit(Command command) throws MismatchedCommandException {
+    public ArrayList<Task> edit(CommandInfo command) throws MismatchedCommandException {
         if (!"edit".equals(command.getCommandType())) {
             throw new MismatchedCommandException();
         }
@@ -56,13 +56,13 @@ class TaskManager {
      *            of type "delete" and contains task id.
      * @return the updated list of tasks.
      */
-    public ArrayList<Task> delete(Command command) throws MismatchedCommandException {
+    public ArrayList<Task> delete(CommandInfo command) throws MismatchedCommandException {
         if (!"delete".equals(command.getCommandType())) {
             throw new MismatchedCommandException();
         }
         
         // Temporary hack to remove via ArrayList index.
-        int taskId = Integer.parseInt(command.getTaskID().substring(1)) - 1;
+        int taskId = command.getTaskID() - 1;
         this.list.remove(taskId);
 
         return this.list;
