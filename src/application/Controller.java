@@ -16,15 +16,12 @@ import java.util.logging.SimpleFormatter;
 public class Controller extends Application {
     
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
+    
     private static FileHandler fileHandler = null;
 
-    private static DataStorage dataStorage;
-    
+    private static DataStorage dataStorage;    
     private static TaskManager taskManager;
-
     private static UIComponent uiComponent;
-    
-    private static Parser parser;
 
     /**
      * Executes the command entered.
@@ -37,7 +34,7 @@ public class Controller extends Application {
         dataStorage.retrieveTasks();
         taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
 
-        Command command = Parser.getCommand(input);
+        CommandInfo command = (new Parser()).getCommandInfo(input);
         
         try {
             switch (command.getCommandType()) {
@@ -74,7 +71,6 @@ public class Controller extends Application {
         dataStorage.initiateFile();
         dataStorage.retrieveTasks();
         taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
-        parser = Parser.getInstance();
         
         // Temporary logging file handler.
         try {
