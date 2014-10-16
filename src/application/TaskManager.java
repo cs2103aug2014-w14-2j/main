@@ -1,6 +1,7 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * The manager that manipulates and contains the array list of Tasks.
@@ -69,12 +70,46 @@ class TaskManager {
     }
 
     /**
-     * Returns the list of tasks.
+     * Returns the full list of tasks.
      * 
-     * @return the list of tasks.
+     * @return the full list of tasks.
      */
     public ArrayList<Task> getList() {
         return this.list;
+    }
+    
+    /**
+     * Returns the tasks without dates.
+     * 
+     * @return the tasks without dates.
+     */
+    public ArrayList<Task> getTasks() {
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        ListIterator<Task> li = this.list.listIterator();
+        while (li.hasNext()) {
+            Task t = li.next();
+            if (t.getDate() == null) { // There is no date.
+                tasks.add(t);
+            }
+        }
+        return tasks;
+    }
+    
+    /**
+     * Returns the tasks with dates.
+     * 
+     * @return the tasks with dates.
+     */
+    public ArrayList<Task> getReminders() {
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        ListIterator<Task> li = this.list.listIterator();
+        while (li.hasNext()) {
+            Task t = li.next();
+            if (t.getDate() != null) { // There is a date.
+                tasks.add(t);
+            }
+        }
+        return tasks;
     }
 
     /**
