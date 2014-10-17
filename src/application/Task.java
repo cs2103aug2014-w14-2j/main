@@ -1,5 +1,7 @@
 package application;
 
+import java.util.Comparator;
+
 import org.joda.time.DateTime;
 
 /**
@@ -143,5 +145,43 @@ public class Task {
     public void setPriority(int priority) {
         // Check if priority is negative.
         this.priority = priority;
+    }
+}
+
+/**
+ * The comparator class used to sort Tasks by their date.
+ * 
+ * @author Sun Wang Jun
+ *
+ */
+class DateComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        if (a.getDate().isAfter(b.getDate())) {
+            return 1; // a is after b, so a comes after b.
+        } else if (a.getDate().isBefore(b.getDate())) {
+            return -1; // a is before b, so a comes before b.
+        } else {
+            if (a.getEndDate().isAfter(b.getEndDate())) {
+                return 1; // a is after b, so a comes after b.
+            } else if (a.getEndDate().isBefore(b.getEndDate())) {
+                return -1; // a is before b, so a comes before b.
+            }
+        }
+        return 0;
+    }
+}
+
+/**
+ * The comparator class used to sort Tasks by their priority.
+ * 
+ * @author Sun Wang Jun
+ *
+ */
+class PriorityComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        // a is greater priority, a should be before b.
+        return b.getPriority() - a.getPriority();
     }
 }
