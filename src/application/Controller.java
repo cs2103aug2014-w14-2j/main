@@ -33,8 +33,7 @@ public class Controller extends Application {
      */
     public static void runCommandInput(String input) {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
-        dataStorage.retrieveTasks();
-        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
+        taskManager.initializeList(dataStorage.retrieveTasks());
 
         CommandInfo command = Parser.getCommandInfo(input);
         
@@ -49,6 +48,10 @@ public class Controller extends Application {
                 case "edit":
                     taskManager.edit(command);
                     break;
+                case "undo":
+                	taskManager.undo(command, dataStorage.getPastVersion());
+                	break;
+                	
             }
         } catch (MismatchedCommandException e) {
             logger.log(Level.SEVERE, e.toString(), e);
@@ -70,8 +73,7 @@ public class Controller extends Application {
         taskManager = new TaskManager();
         dataStorage = new DataStorage();
         dataStorage.initiateFile();
-        dataStorage.retrieveTasks();
-        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
+        taskManager.initializeList(dataStorage.retrieveTasks());
         parser = Parser.getInstance();
         // Temporary logging file handler.
         try {
