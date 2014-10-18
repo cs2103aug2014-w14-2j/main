@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class UIAutoComplete {
     
     final private String MSG_COMMAND_SUGGESTION = "Do you mean : %s. You can enter <space> key to complete.";
-    final private String MSG_COMMAND_NOT_SUPPORTED = "Are you sure? WaveWave is only support these set of command <add> <delete> <edit>";
+    final private String MSG_COMMAND_NOT_SUPPORTED = "WaveWave would only support these sets of command <add> <delete> <edit>";
     final private String MSG_DEFAULT_PROMPT = "Ask WaveWave to do something ?";
     
     final private String ADD_COMMAND = "ADD";
