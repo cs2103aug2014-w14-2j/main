@@ -1,16 +1,11 @@
 package application;
 
-import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.util.logging.*;
 import java.util.ArrayList;
-
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -41,7 +36,7 @@ public class UIComponent {
 	
 	private Scene scene;
 	private BorderPane rootPane;
-	private TextField cmdInputBox;
+	private UICmdInputBox cmdInputBox;
 	private UITaskListView floatingTaskListView, eventReminderTaskListView;
 
 	public Scene getScene() {
@@ -72,18 +67,7 @@ public class UIComponent {
 	
 	private void setupScene() {
 		scene = new Scene(rootPane, APPLICATION_WIDTH, APPLICATION_HEIGHT);
-		scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override 
-            public void handle(KeyEvent ke) { 
-                String currentText = cmdInputBox.getText();
-                if(!cmdInputBox.isFocused() && ke.getText().matches("^[a-zA-Z0-9_]*$")) {
-                    focusCommandInputBox();
-                    cmdInputBox.setText(currentText);
-                    cmdInputBox.positionCaret(currentText.length());
-                }
-            } 
-        });
-		
+		scene.setOnKeyPressed(new UISceneListener(cmdInputBox));
 		logger.log(Level.INFO, "The Scene is created.");
 	}
 
@@ -143,8 +127,8 @@ public class UIComponent {
 		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_PLACEHOLDER_STYLESHEET);
 		Text suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
 		
-		cmdInputBox = new UICmdInputBox(suggestionText).getCmdInputBox();
-		userInputComponentHolder.getChildren().addAll(cmdInputBox, suggestionText);
+		cmdInputBox = new UICmdInputBox(suggestionText);
+		userInputComponentHolder.getChildren().addAll(cmdInputBox.getCmdInputBox(), suggestionText);
 		return userInputComponentHolder;
 	}
 
@@ -152,10 +136,10 @@ public class UIComponent {
 		HBox taskListViewComponentHolder = createHBox(10, new Insets(10, 0, 10, 0), 0, 0, "");
 		VBox mainComponentHolder = createVBox(5, new Insets(15, 15, 0, 15), 0, 0, "");
 
+		VBox userInputComponentHolder = getUserInputComponentHolder();
 		VBox timedAndDeadlineTaskHolder = getTimedAndDeadlineTaskHolder();
 		VBox floatingTaskListViewHolder = getFloatingTaskListViewHolder();
-		VBox userInputComponentHolder = getUserInputComponentHolder();
-
+		
 		taskListViewComponentHolder.getChildren().addAll(timedAndDeadlineTaskHolder, floatingTaskListViewHolder);
 		mainComponentHolder.getChildren().addAll(userInputComponentHolder, taskListViewComponentHolder);
 		return mainComponentHolder;
@@ -165,7 +149,7 @@ public class UIComponent {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		Text taskTitle = createText("Tasks", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 
-		floatingTaskListView = new UITaskListView();
+		floatingTaskListView = new UITaskListView(cmdInputBox, "Task");
 		ObservableList<Task> items = FXCollections.observableArrayList();
 		floatingTaskListView.populateTaskListWithData(items);
 		innerBox.getChildren().addAll(taskTitle, floatingTaskListView.getListView());
@@ -177,17 +161,13 @@ public class UIComponent {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		Text taskTitle = createText("Reminder & Events", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 		
-		eventReminderTaskListView = new UITaskListView();
+		eventReminderTaskListView = new UITaskListView(cmdInputBox, "Event");
         ObservableList<Task> items = FXCollections.observableArrayList();
         eventReminderTaskListView.populateTaskListWithData(items);
 		innerBox.getChildren().addAll(taskTitle, eventReminderTaskListView.getListView());
 
 		return innerBox;
 	}
-	
-    private void focusCommandInputBox() {
-        cmdInputBox.requestFocus();
-    }
 	
 	public void updateTaskList(ArrayList<Task> items) {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
