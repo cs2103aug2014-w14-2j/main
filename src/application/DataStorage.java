@@ -29,9 +29,7 @@ public class DataStorage {
 		initiateFile();
 	}
 	
-	/**
-	 * @author A0115864B
-	 */
+	//@author A0115864B
 	public void initiateFile() {
 		File file = new File(filename);
 		try {
@@ -42,10 +40,7 @@ public class DataStorage {
 		}
 	}
 	
-	/**
-	 * @author A0115864B
-	 * @return
-	 */
+	//@author A0115864B
 	public ArrayList<Task> retrieveTasks() {
 		tasks.clear();
 		JSONParser parser = new JSONParser();
@@ -60,6 +55,7 @@ public class DataStorage {
 		return convertJSONArrayToArrayList();
 	}
 	
+	//@author A0115864B
 	public void saveTasks(ArrayList<Task> array) {
 		convertArrayListToJSONArray(array);
 		try {
@@ -72,11 +68,7 @@ public class DataStorage {
 		}
 	}
 	
-	/**
-	 * @author A0115864B
-	 * 
-	 * @return
-	 */
+	//@author A0115864B
 	public ArrayList<Task> convertJSONArrayToArrayList() {
 		ArrayList<Task> list = new ArrayList<Task>();
 		for (int i = 0; i < tasks.size(); i++) {
@@ -102,6 +94,7 @@ public class DataStorage {
 		
 	}
 	
+	//@author A0115864B
 	/**
 	 * 
 	 * @param list
@@ -125,6 +118,7 @@ public class DataStorage {
 		}
 	}
 	
+	//@author A0115864B
 	public ArrayList<Task> getPastVersion() {
 		return backup;
 	}

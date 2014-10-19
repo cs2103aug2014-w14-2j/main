@@ -46,7 +46,7 @@ public class CommandInfo {
      * @return command type
      */
     public String getCommandType(){
-        return commandType;
+        return commandType.toLowerCase();
     }
     /**
      * This returns the task ID 
