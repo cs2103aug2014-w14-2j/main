@@ -18,6 +18,31 @@ public class Task {
     private boolean completed;
     
     private int priority;
+    
+    /**
+     * Constructor that creates a Task based on CommandInfo.
+     */
+    public Task(CommandInfo command) {
+        this.description = command.getTaskDesc();
+        if (command.getStartDateTime() != null) {
+            // Temporarily casting to DateTime.
+            this.date = new DateTime(command.getStartDateTime());
+        }
+        if (command.getEndDateTime() != null) {
+            // Temporarily casting to DateTime.
+            this.date = new DateTime(command.getEndDateTime());
+        }
+        if (command.getPriority() != 0) {
+            this.priority = command.getPriority();
+        }
+    }
+    
+    /**
+     * Public default constructor.
+     */
+    public Task() {
+        
+    }
 
     /**
      * Returns the id of the Task.

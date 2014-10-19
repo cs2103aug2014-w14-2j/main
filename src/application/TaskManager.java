@@ -28,8 +28,7 @@ class TaskManager {
             throw new MismatchedCommandException();
         }
         
-        this.task = new Task();
-        this.task.setDescription(command.getTaskDesc());
+        this.task = new Task(command);
         this.list.add(this.task);
         return this.list;
     }

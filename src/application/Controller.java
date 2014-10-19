@@ -55,7 +55,8 @@ public class Controller extends Application {
             logger.log(Level.SEVERE, e.toString(), e);
             e.printStackTrace();
         }
-        uiComponent.updateTaskList(taskManager.getList());
+        uiComponent.updateTaskList(taskManager.getTasks());
+        uiComponent.updateReminderList(taskManager.getReminders());
 
         dataStorage.saveTasks(taskManager.getList());
     }
@@ -64,7 +65,8 @@ public class Controller extends Application {
      * For the UI to retrieve the list of tasks after it is initialized.
      */
     public static void getTasks() {
-        uiComponent.updateTaskList(taskManager.getList());       
+        uiComponent.updateTaskList(taskManager.getTasks());
+        uiComponent.updateReminderList(taskManager.getReminders());
     }
     
     public static void main(String[] args) {
