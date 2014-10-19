@@ -38,7 +38,7 @@ public class Parser {
         parser = new DateTimeParser(parseContent(userInput));
         Date startDateTime = parser.getStartDateTime();
         Date endDateTime = parser.getEndDateTime();
-        String taskDesc = parseTaskDesc(userInput);
+        String taskDesc = parseTaskDesc(parseContent(userInput));
         
         CommandInfo cmdInfo = new CommandInfo(commandType, taskID, taskDesc,startDateTime,endDateTime, priority);
         return cmdInfo;
@@ -47,9 +47,11 @@ public class Parser {
     private String parseContent(String input) {
         String content;
         content = input.replace(parseCommandType(input), "").trim();
+        System.out.println(content);
         if (parseTaskID(input) != 0) {
-            content = input.replace(String.valueOf(parseTaskID(input))+" ","").trim();
+            content = content.replace(String.valueOf(parseTaskID(input))+" ","").trim();
         }
+        System.out.println(content);
         return content;
     }
     
