@@ -173,7 +173,6 @@ public class UIComponent {
 	}
 	
 	public void updateTaskList(ArrayList<Task> items) {
-		System.out.println(items.size());
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
 	    floatingTaskListView.populateTaskListWithData(taskList);
