@@ -36,7 +36,7 @@ public class Controller extends Application {
         dataStorage.retrieveTasks();
         taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
 
-        Command command = (new Parser(input)).getCmd();
+        CommandInfo command = (new Parser()).getCommandInfo(input);
         
         try {
             switch (command.getCommandType()) {
