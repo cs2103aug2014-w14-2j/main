@@ -22,7 +22,7 @@ public class Controller extends Application {
     private static DataStorage dataStorage;    
     private static TaskManager taskManager;
     private static UIComponent uiComponent;
-    private static Parser parser;
+    
     /**
      * Executes the command entered.
      * 
@@ -33,10 +33,8 @@ public class Controller extends Application {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
         taskManager.initializeList(dataStorage.retrieveTasks());
 
+        CommandInfo command = (new Parser()).getCommandInfo(input);
 
-        CommandInfo command = Parser.getCommandInfo(input);
-
-        
         try {
             switch (command.getCommandType()) {
                 case "add":
@@ -68,12 +66,12 @@ public class Controller extends Application {
     public static void getTasks() {
         uiComponent.updateTaskList(taskManager.getList());       
     }
+    
     public static void main(String[] args) {
         taskManager = new TaskManager();
         dataStorage = new DataStorage();
         dataStorage.initiateFile();
         taskManager.initializeList(dataStorage.retrieveTasks());
-        parser = Parser.getInstance();
         
         // Temporary logging file handler.
         try {

@@ -46,7 +46,6 @@ class TaskManager {
             throw new MismatchedCommandException();
         }
         
-        // Throw exception if incorrect command type.
         return this.list;
     }
 
@@ -67,6 +66,15 @@ class TaskManager {
         this.list.remove(taskId);
 
         return this.list;
+    }
+    
+    public ArrayList<Task> undo(CommandInfo command, ArrayList<Task> backup) 
+            throws MismatchedCommandException {
+        if (!"undo".equals(command.getCommandType())) {
+            throw new MismatchedCommandException();
+        }
+        list = backup;
+        return list;
     }
 
     /**
@@ -110,14 +118,6 @@ class TaskManager {
             }
         }
         return tasks;
-        
-    public ArrayList<Task> undo(CommandInfo command, ArrayList<Task> backup) 
-    		throws MismatchedCommandException {
-    	if (!"undo".equals(command.getCommandType())) {
-    		throw new MismatchedCommandException();
-    	}
-    	list = backup;
-    	return list;
     }
 
     /**
@@ -131,7 +131,4 @@ class TaskManager {
         list = storedList;
         return this.list;
     }
-    
-    
-
 }
