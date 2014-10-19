@@ -1,5 +1,8 @@
 package application;
 
+import java.util.ArrayList;
+
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
@@ -72,8 +75,7 @@ public class UITaskListView {
     }
    
     public void populateTaskListWithData(ObservableList<Task> items) {
-    	taskList.setItems(null);
-        taskList.setItems(items);
+    	taskList.setItems(items);
     }
 
     public ListView<Task> getListView() {
@@ -114,39 +116,45 @@ public class UITaskListView {
 
         @Override
         public void updateItem(Task item, boolean empty) {
-            super.updateItem(item, empty);
-            Rectangle contentPlaceHolder;
-            Rectangle priorityIndicator = createRectangle(50, 50, 0, 0, Color.web(colorArray[color_counter]));
+        	super.updateItem(item, empty);
             
-            //TO-BE-DELETED
-            //System.out.println((color_counter%2));
-            if ((color_counter%2) == 0) {
-                this.getStyleClass().add("bigger-list-cell");
-                contentPlaceHolder = createRectangle(260, 170, 10, 10, Color.WHITE);
-            }
-            else { 
-                this.getStyleClass().add("smaller-list-cell");
-                contentPlaceHolder = createRectangle(260, 70, 10, 10, Color.WHITE);
-            }
+        	if(!empty) {
+        	
+        		Rectangle contentPlaceHolder;
+        		Rectangle priorityIndicator = createRectangle(50, 50, 0, 0, Color.web(colorArray[color_counter]));
             
-            //TO-BE-DELETED
-            color_counter++;
-            if(color_counter == colorArray.length) {
-                color_counter = 0;
-            }
+        		//TO-BE-DELETED
+        		//System.out.println((color_counter%2));
+        		if ((color_counter%2) == 0) {
+        			this.getStyleClass().add("bigger-list-cell");
+        			contentPlaceHolder = createRectangle(260, 170, 10, 10, Color.WHITE);
+        		}
+        		else { 
+        			this.getStyleClass().add("smaller-list-cell");
+        			contentPlaceHolder = createRectangle(260, 70, 10, 10, Color.WHITE);
+        		}
             
-            if (item != null) {
-                Text text = createText(item.getDescription(), 150, 12);
-                HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
-                taskInnerContentHolder.setPadding(new Insets(10, 0, 0, 15));
-                taskInnerContentHolder.getChildren().addAll(priorityIndicator, text);
+        		//TO-BE-DELETED
+        		color_counter++;
+        		if(color_counter == colorArray.length) {
+        			color_counter = 0;
+        		}
+            
+        		if (item != null) {
+        			Text text = createText(item.getDescription(), 150, 12);
+        			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
+        			taskInnerContentHolder.setPadding(new Insets(10, 0, 0, 15));
+        			taskInnerContentHolder.getChildren().addAll(priorityIndicator, text);
                 
-                StackPane stack = new StackPane();
-                stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
-                stack.setPrefWidth(TASK_CONTAINER_WIDTH);
-                stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
-                setGraphic(stack);
-            }
+        			StackPane stack = new StackPane();
+        			stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
+        			stack.setPrefWidth(TASK_CONTAINER_WIDTH);
+        			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
+        			setGraphic(stack);
+        		}
+        		}else {
+        			setGraphic(null);
+        		}
         }
     }
 }

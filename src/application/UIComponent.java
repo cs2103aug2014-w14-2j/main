@@ -157,8 +157,6 @@ public class UIComponent {
 		Text taskTitle = createText("Tasks", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 
 		floatingTaskListView = new UITaskListView(cmdInputBox, "Task");
-		ObservableList<Task> items = FXCollections.observableArrayList();
-		floatingTaskListView.populateTaskListWithData(items);
 		innerBox.getChildren().addAll(taskTitle, floatingTaskListView.getListView());
 		
 		return innerBox;
@@ -169,17 +167,17 @@ public class UIComponent {
 		Text taskTitle = createText("Reminder & Events", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 		
 		eventReminderTaskListView = new UITaskListView(cmdInputBox, "Event");
-        ObservableList<Task> items = FXCollections.observableArrayList();
-        eventReminderTaskListView.populateTaskListWithData(items);
 		innerBox.getChildren().addAll(taskTitle, eventReminderTaskListView.getListView());
 
 		return innerBox;
 	}
 	
 	public void updateTaskList(ArrayList<Task> items) {
+		System.out.println(items.size());
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
 	    floatingTaskListView.populateTaskListWithData(taskList);
+	   
 	    logger.log(Level.INFO, "Task ListView is updated.");
 	}
 	
