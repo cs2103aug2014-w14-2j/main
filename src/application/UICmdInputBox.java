@@ -41,6 +41,22 @@ public class UICmdInputBox {
         cmdInputBox.requestFocus();
     }
     
+    public String getText() {
+    	return cmdInputBox.getText();
+    }
+    
+    public void setText(String text) {
+    	cmdInputBox.setText(text);
+    }
+    
+    public void resetPositionCaret() {
+    	cmdInputBox.positionCaret(this.getText().length());
+    }
+    
+    public boolean isFocused() {
+    	return cmdInputBox.isFocused();
+    }
+    
     public TextField getCmdInputBox() {
         return cmdInputBox;
     }
