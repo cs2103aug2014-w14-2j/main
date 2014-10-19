@@ -72,6 +72,7 @@ public class UITaskListView {
     }
    
     public void populateTaskListWithData(ObservableList<Task> items) {
+    	taskList.setItems(null);
         taskList.setItems(items);
     }
 

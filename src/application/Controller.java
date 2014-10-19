@@ -16,14 +16,13 @@ import java.util.logging.SimpleFormatter;
 public class Controller extends Application {
     
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
+    
     private static FileHandler fileHandler = null;
 
-    private static DataStorage dataStorage;
-    
+    private static DataStorage dataStorage;    
     private static TaskManager taskManager;
-
     private static UIComponent uiComponent;
-
+    
     /**
      * Executes the command entered.
      * 
@@ -32,12 +31,10 @@ public class Controller extends Application {
      */
     public static void runCommandInput(String input) {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
+        taskManager.initializeList(dataStorage.retrieveTasks());
 
-        dataStorage.retrieveTasks();
-        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
+        CommandInfo command = (new Parser()).getCommandInfo(input);
 
-        Command command = (new Parser(input)).getCmd();
-        
         try {
             switch (command.getCommandType()) {
                 case "add":
@@ -49,30 +46,34 @@ public class Controller extends Application {
                 case "edit":
                     taskManager.edit(command);
                     break;
+                case "undo":
+                	taskManager.undo(command, dataStorage.getPastVersion());
+                	break;
+                	
             }
         } catch (MismatchedCommandException e) {
             logger.log(Level.SEVERE, e.toString(), e);
             e.printStackTrace();
         }
-        uiComponent.updateTaskList(taskManager.getList());
+        uiComponent.updateTaskList(taskManager.getTasks());
+        uiComponent.updateReminderList(taskManager.getReminders());
 
-        dataStorage.convertArrayListToJSONArray(taskManager.getList());
-        dataStorage.saveTasks();
+        dataStorage.saveTasks(taskManager.getList());
     }
     
     /**
      * For the UI to retrieve the list of tasks after it is initialized.
      */
     public static void getTasks() {
-        uiComponent.updateTaskList(taskManager.getList());       
+        uiComponent.updateTaskList(taskManager.getTasks());
+        uiComponent.updateReminderList(taskManager.getReminders());
     }
-
+    
     public static void main(String[] args) {
         taskManager = new TaskManager();
         dataStorage = new DataStorage();
         dataStorage.initiateFile();
-        dataStorage.retrieveTasks();
-        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
+        taskManager.initializeList(dataStorage.retrieveTasks());
         
         // Temporary logging file handler.
         try {
@@ -89,7 +90,6 @@ public class Controller extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // TODO Auto-generated method stub
         uiComponent = new UIComponent();
         uiComponent.showStage(primaryStage);
     }
