@@ -1,6 +1,5 @@
 package application;
 
-
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
@@ -16,6 +15,11 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextBoundsType;
 import javafx.util.Callback;
 
+/**
+ * Abstracted ListView Class
+ * 
+ * @author Tan Young Sing
+ */
 public class UITaskListView {
 
     private ListView<Task> taskList;

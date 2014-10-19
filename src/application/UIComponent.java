@@ -17,6 +17,13 @@ import javafx.scene.text.TextAlignment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+
+/**
+ * Main Class for the UI, That integrates all components into one and return 
+ * a scene instance back to the Controller for display
+ * 
+ * @author Tan Young Sing
+ */
 public class UIComponent {
     
     private final String SUGGESTION_TEXT = "Hello User! I am WaveWave.";
