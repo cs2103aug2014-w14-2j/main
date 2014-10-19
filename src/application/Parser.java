@@ -2,56 +2,59 @@ package application;
 
 /** This class implements a Parser to parse an input string
  * 
- * @author Jinyu
+ * @author Jinyu   A0090971
  * @version 3.0
  */
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
-import org.ocpsoft.prettytime.shade.org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.lang.StringUtils;
 
 public class Parser {
     
     private static Logger logger = Logger.getLogger("Foo");
+    private DateTimeParser parser;
+    
     /**
      * This constructs a parser object with an user input 
      * @param userInput   the one line command statement the user inputs
      */
     Parser(){
-
     }
 
     /**
-     * return the object of Command class
-     * @return the object of Command class 
+     * return the object of CommandInfo class
+     * @return the object of CommandInfo class 
      */
     public CommandInfo getCommandInfo(String userInput) {
         logger.log(Level.INFO, "going to return a Command object to Controller");
-        assert ( userInput != null );
+        
         String commandType = parseCommandType(userInput);
         int taskID = parseTaskID(userInput);
         int priority = parsePriority(userInput);
-        String startDate= extractDate(parseDateTime(userInput).toString());
-        String startTime = extractTime(parseDateTime(userInput).toString());
+        
+        parser = new DateTimeParser(parseContent(userInput));
+        Date startDateTime = parser.getStartDateTime();
+        Date endDateTime = parser.getEndDateTime();
         String taskDesc = parseTaskDesc(userInput);
         
-        CommandInfo cmdInfo = new CommandInfo(commandType, taskID, taskDesc,startDate,startTime, priority);
+        CommandInfo cmdInfo = new CommandInfo(commandType, taskID, taskDesc,startDateTime,endDateTime, priority);
         return cmdInfo;
     }
     
-    private String parseTaskDesc(String input){
-        String taskDesc;
-        taskDesc = input.replace(parseCommandType(input), "").trim();
+    private String parseContent(String input) {
+        String content;
+        content = input.replace(parseCommandType(input), "").trim();
         if (parseTaskID(input) != 0) {
-            taskDesc = input.replace(String.valueOf(parseTaskID(input)),"").trim();
+            content = input.replace(String.valueOf(parseTaskID(input))+" ","").trim();
         }
-        System.out.printf("taskDesc is %s",taskDesc);
+        return content;
+    }
+    
+    private String parseTaskDesc(String input){
+        String taskDesc = parser.removeDateTime(input);
         return taskDesc;
     }
 
@@ -65,42 +68,27 @@ public class Parser {
         logger.log(Level.INFO, "command keyword parsed");
         return command;      
     }
+    
     /**
      * 
      * @param input
      * @return 0 when taskID is not required, otherwise taskID as integer for edit,complete or delete command keyword
      */
-
     private int parseTaskID(String input) {
         String command = parseCommandType(input); 
         int taskID = 0;
         if ((command.equalsIgnoreCase("edit")) || (command.equalsIgnoreCase("complete")) || (command.equalsIgnoreCase("delete"))) {
-            assert (input.trim().split("\\s+").length>1);
             taskID = Integer.parseInt(input.trim().split("\\s+")[1]);
-            
-            Integer.parseInt("1234");
         }
         return taskID;
     }
+
     private int parsePriority(String input){
-        int priority = StringUtils.countMatches(input, "!");
+        int priority = StringUtils.countMatches(input,"!");
         return priority;
     }
-
-    public Date parseDateTime(String input) {
-        List<Date> dates = new PrettyTimeParser().parse(input);
-        Date taskTime;
-        if (dates.size()>0) {
-            taskTime =  new PrettyTimeParser().parse(input).get(0);
-        }
-        else {
-            taskTime = null;
-        }
-        System.out.println(taskTime.toString());
-
-        return taskTime;
-    }
-
+    
+    /*
     private String extractTime(String dateTime){
         String time =dateTime.trim().split("\\s+")[3];
         return time;
@@ -139,6 +127,7 @@ public class Parser {
             default: return 0;
         }
     }
+    */
 }
 
 
