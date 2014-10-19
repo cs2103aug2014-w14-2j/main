@@ -29,7 +29,7 @@ public class Parser {
      * @return the object of CommandInfo class 
      */
     public CommandInfo getCommandInfo(String userInput) {
-        logger.log(Level.INFO, "going to return a Command object to Controller");
+        logger.log(Level.INFO, "going to return a CommandInfo object to Controller");
         
         String commandType = parseCommandType(userInput);
         int taskID = parseTaskID(userInput);
@@ -38,18 +38,25 @@ public class Parser {
         parser = new DateTimeParser(parseContent(userInput));
         Date startDateTime = parser.getStartDateTime();
         Date endDateTime = parser.getEndDateTime();
-        String taskDesc = parseTaskDesc(userInput);
+        String taskDesc = parseTaskDesc(parseContent(userInput));
         
         CommandInfo cmdInfo = new CommandInfo(commandType, taskID, taskDesc,startDateTime,endDateTime, priority);
         return cmdInfo;
     }
     
+    /**
+     * 
+     * @param input
+     * @return the input by removing the command type word and the taskID.
+     */
     private String parseContent(String input) {
         String content;
-        content = input.replace(parseCommandType(input), "").trim();
+        content = input.replace(parseCommandType(input),"").trim();
+        System.out.println(content);
         if (parseTaskID(input) != 0) {
-            content = input.replace(String.valueOf(parseTaskID(input))+" ","").trim();
+            content = content.replace(String.valueOf(parseTaskID(input))+" ","").trim();
         }
+        System.out.println(content);
         return content;
     }
     
