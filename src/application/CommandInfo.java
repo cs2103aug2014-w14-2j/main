@@ -3,6 +3,8 @@ package application;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 /** This class stores all information that a Command object needs to execute a command 
  * 
  * @author Jinyu  A0090971Y
@@ -59,16 +61,17 @@ public class CommandInfo {
      * This returns the start date time of the task
      * @return the start date time of a task with the type Date, null if there is no start date time
      */
-    public Date getStartDateTime() {
-        return startDateTime;
+    public DateTime getStartDateTime() {
+        return (new DateTime(startDateTime));
     }
     
     /**
      * This returns the end date time of the task
      * @return the start date time of a task with the type Date, null if there is no end date time
      */
-    public Date getEndDateTime() {
-        return endDateTime;
+    public DateTime getEndDateTime() {
+        
+        return (new DateTime(endDateTime));
     }
     
     
