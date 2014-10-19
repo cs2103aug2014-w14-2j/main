@@ -76,6 +76,15 @@ class TaskManager {
     public ArrayList<Task> getList() {
         return this.list;
     }
+    
+    public ArrayList<Task> undo(CommandInfo command, ArrayList<Task> backup) 
+    		throws MismatchedCommandException {
+    	if (!"undo".equals(command.getCommandType())) {
+    		throw new MismatchedCommandException();
+    	}
+    	list = backup;
+    	return list;
+    }
 
     /**
      * Initializes the list of tasks from storage.
@@ -88,5 +97,7 @@ class TaskManager {
         list = storedList;
         return this.list;
     }
+    
+    
 
 }

@@ -23,7 +23,8 @@ public class Controller extends Application {
     private static TaskManager taskManager;
 
     private static UIComponent uiComponent;
-
+    private static Parser parser;
+    
     /**
      * Executes the command entered.
      * 
@@ -32,11 +33,11 @@ public class Controller extends Application {
      */
     public static void runCommandInput(String input) {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
+        taskManager.initializeList(dataStorage.retrieveTasks());
 
-        dataStorage.retrieveTasks();
-        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
 
-        CommandInfo command = (new Parser()).getCommandInfo(input);
+        CommandInfo command = Parser.getCommandInfo(input);
+
         
         try {
             switch (command.getCommandType()) {
@@ -49,6 +50,10 @@ public class Controller extends Application {
                 case "edit":
                     taskManager.edit(command);
                     break;
+                case "undo":
+                	taskManager.undo(command, dataStorage.getPastVersion());
+                	break;
+                	
             }
         } catch (MismatchedCommandException e) {
             logger.log(Level.SEVERE, e.toString(), e);
@@ -56,8 +61,7 @@ public class Controller extends Application {
         }
         uiComponent.updateTaskList(taskManager.getList());
 
-        dataStorage.convertArrayListToJSONArray(taskManager.getList());
-        dataStorage.saveTasks();
+        dataStorage.saveTasks(taskManager.getList());
     }
     
     /**
@@ -66,14 +70,13 @@ public class Controller extends Application {
     public static void getTasks() {
         uiComponent.updateTaskList(taskManager.getList());       
     }
-
+    
     public static void main(String[] args) {
         taskManager = new TaskManager();
         dataStorage = new DataStorage();
         dataStorage.initiateFile();
-        dataStorage.retrieveTasks();
-        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
-        
+        taskManager.initializeList(dataStorage.retrieveTasks());
+        parser = Parser.getInstance();
         // Temporary logging file handler.
         try {
             fileHandler = new FileHandler(Controller.class.getName() + ".log");
@@ -89,7 +92,6 @@ public class Controller extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // TODO Auto-generated method stub
         uiComponent = new UIComponent();
         uiComponent.showStage(primaryStage);
     }
