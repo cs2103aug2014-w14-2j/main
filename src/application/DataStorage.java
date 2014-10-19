@@ -11,9 +11,14 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.util.Date;
 import org.joda.time.DateTime;
 
+/**
+ * 
+ * @author A0115864B
+ * 
+ *
+ */
 public class DataStorage {
 	
 	private final String filename = "Todo.json";
@@ -25,7 +30,7 @@ public class DataStorage {
 	}
 	
 	/**
-	 * 
+	 * @author A0115864B
 	 */
 	public void initiateFile() {
 		File file = new File(filename);
@@ -34,12 +39,12 @@ public class DataStorage {
 				file.createNewFile();
 			}
 		} catch (IOException e) {
-			
 		}
 	}
 	
 	/**
-	 * 
+	 * @author A0115864B
+	 * @return
 	 */
 	public ArrayList<Task> retrieveTasks() {
 		tasks.clear();
@@ -68,6 +73,7 @@ public class DataStorage {
 	}
 	
 	/**
+	 * @author A0115864B
 	 * 
 	 * @return
 	 */
@@ -117,6 +123,10 @@ public class DataStorage {
 			}
 			tasks.add(obj);
 		}
+	}
+	
+	public ArrayList<Task> getPastVersion() {
+		return backup;
 	}
 
 }

@@ -22,7 +22,7 @@ public class Controller extends Application {
     private static DataStorage dataStorage;    
     private static TaskManager taskManager;
     private static UIComponent uiComponent;
-
+    private static Parser parser;
     /**
      * Executes the command entered.
      * 
@@ -31,10 +31,9 @@ public class Controller extends Application {
      */
     public static void runCommandInput(String input) {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
-        dataStorage.retrieveTasks();
-        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
+        taskManager.initializeList(dataStorage.retrieveTasks());
 
-        CommandInfo command = (new Parser()).getCommandInfo(input);
+        CommandInfo command = Parser.getCommandInfo(input);
         
         try {
             switch (command.getCommandType()) {
@@ -47,6 +46,10 @@ public class Controller extends Application {
                 case "edit":
                     taskManager.edit(command);
                     break;
+                case "undo":
+                	taskManager.undo(command, dataStorage.getPastVersion());
+                	break;
+                	
             }
         } catch (MismatchedCommandException e) {
             logger.log(Level.SEVERE, e.toString(), e);
@@ -61,16 +64,14 @@ public class Controller extends Application {
      * For the UI to retrieve the list of tasks after it is initialized.
      */
     public static void getTasks() {
-        uiComponent.updateTaskList(taskManager.getTasks());
-        uiComponent.updateReminderList(taskManager.getReminders());
+        uiComponent.updateTaskList(taskManager.getList());       
     }
-
     public static void main(String[] args) {
         taskManager = new TaskManager();
         dataStorage = new DataStorage();
         dataStorage.initiateFile();
-        dataStorage.retrieveTasks();
-        taskManager.initializeList(dataStorage.convertJSONArrayToArrayList());
+        taskManager.initializeList(dataStorage.retrieveTasks());
+        parser = Parser.getInstance();
         
         // Temporary logging file handler.
         try {

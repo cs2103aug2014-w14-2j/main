@@ -63,7 +63,7 @@ class TaskManager {
         }
         
         // Temporary hack to remove via ArrayList index.
-        int taskId = command.getTaskID();
+        int taskId = command.getTaskID() - 1;
         this.list.remove(taskId);
 
         return this.list;
@@ -110,6 +110,14 @@ class TaskManager {
             }
         }
         return tasks;
+        
+    public ArrayList<Task> undo(CommandInfo command, ArrayList<Task> backup) 
+    		throws MismatchedCommandException {
+    	if (!"undo".equals(command.getCommandType())) {
+    		throw new MismatchedCommandException();
+    	}
+    	list = backup;
+    	return list;
     }
 
     /**
@@ -123,5 +131,7 @@ class TaskManager {
         list = storedList;
         return this.list;
     }
+    
+    
 
 }
