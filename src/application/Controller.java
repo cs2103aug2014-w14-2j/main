@@ -23,6 +23,7 @@ public class Controller extends Application {
     private static TaskManager taskManager;
     private static UIComponent uiComponent;
     
+    //@author A0110546R
     /**
      * Executes the command entered.
      * 
@@ -61,6 +62,8 @@ public class Controller extends Application {
         dataStorage.saveTasks(taskManager.getList());
     }
     
+
+    //@author A0110546R
     /**
      * For the UI to retrieve the list of tasks after it is initialized.
      */
@@ -69,6 +72,7 @@ public class Controller extends Application {
         uiComponent.updateReminderList(taskManager.getReminders());
     }
     
+    //@author A0110546R
     public static void main(String[] args) {
         taskManager = new TaskManager();
         dataStorage = new DataStorage();

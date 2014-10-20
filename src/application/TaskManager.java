@@ -3,6 +3,7 @@ package application;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+//@author A0110546R
 /**
  * The manager that manipulates and contains the array list of Tasks.
  * 
