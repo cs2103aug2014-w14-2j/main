@@ -13,7 +13,7 @@ class TaskManager {
     private Task task; // Maybe this can act as "last modified task".
     
     public TaskManager() { // Maybe singleton this.
-        this.initializeList(new ArrayList<Task>()); // Temporary solution.
+        
     }
     
     /**
@@ -28,8 +28,20 @@ class TaskManager {
             throw new MismatchedCommandException();
         }
         
+        System.out.println("TaskManager: tasks before command");
+        for(int i = 0; i < list.size(); i ++) {
+        	System.out.println((i+1) + ". " + list.get(i).getDescription());
+        }
+        
         this.task = new Task(command);
+        System.out.println("Task added: " + task.getDescription());
         this.list.add(this.task);
+        
+        System.out.println("TaskManager: tasks after command");
+        for(int i = 0; i < list.size(); i ++) {
+        	System.out.println((i+1) + ". " + list.get(i).getDescription());
+        }
+        
         return this.list;
     }
 
@@ -72,7 +84,7 @@ class TaskManager {
         if (!"undo".equals(command.getCommandType())) {
             throw new MismatchedCommandException();
         }
-        list = backup;
+        list = new ArrayList<Task>(backup);
         return list;
     }
 
@@ -91,6 +103,7 @@ class TaskManager {
      * @return the tasks without dates.
      */
     public ArrayList<Task> getTasks() {
+    	/**
         ArrayList<Task> tasks = new ArrayList<Task>();
         ListIterator<Task> li = this.list.listIterator();
         while (li.hasNext()) {
@@ -99,7 +112,8 @@ class TaskManager {
                 tasks.add(t);
             }
         }
-        return tasks;
+        **/
+        return this.list;
     }
     
     /**
@@ -127,7 +141,8 @@ class TaskManager {
      * @return the initialized list of tasks.
      */
     public ArrayList<Task> initializeList(ArrayList<Task> storedList) {
-        list = storedList;
+        list = new ArrayList<Task>(storedList);
+        System.out.println("Number of current tasks = " + list.size());
         return this.list;
     }
 }

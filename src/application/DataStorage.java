@@ -10,8 +10,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 /**
  * 
@@ -24,6 +26,7 @@ public class DataStorage {
 	private final String filename;
 	private JSONArray tasks = new JSONArray();
 	private ArrayList<Task> backup;
+	private DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 	
 	public DataStorage() {
 		filename = "Todo.json";
@@ -52,14 +55,14 @@ public class DataStorage {
 		tasks.clear();
 		JSONParser parser = new JSONParser();
 		try {
-			Object fileRead = parser.parse(new FileReader(filename));
-			tasks = (JSONArray)fileRead;
+			tasks = (JSONArray) parser.parse(new FileReader(filename));
 		} catch (IOException e) {
-			
+			System.out.println("IOException");
 		} catch (ParseException e) {
-			
+			System.out.println("ParseException");
 		}
 		System.out.println("File retrieved successfully");
+		System.out.println("Number of tasks retrieved: " + tasks.size());
 		for(Object obj : tasks) {
 			JSONObject task = (JSONObject)obj;
 			System.out.println(task.get("Description"));
@@ -79,6 +82,7 @@ public class DataStorage {
 		} catch (IOException e) {
 			
 		}
+		System.out.println("One iteration finished\n");
 	}
 	
 	//@author A0115864B
@@ -90,11 +94,13 @@ public class DataStorage {
 			task.setDescription((String) obj.get("Description"));
 			try {
 				if(obj.containsKey("Date")) {
-					DateTime date = (DateTime)obj.get("Date");
+					String dateString = (String)obj.get("Date");
+					DateTime date = fmt.parseDateTime(dateString);
 					task.setDate(date);
 				}
 				if(obj.containsKey("End date")) {
-					DateTime end = (DateTime)obj.get("End date");
+					String endString = (String)obj.get("End date");
+					DateTime end = fmt.parseDateTime(endString);
 					task.setEndDate(end);
 				}
 			} catch (Exception e) {
@@ -114,16 +120,19 @@ public class DataStorage {
 	 */
 	public void convertArrayListToJSONArray(ArrayList<Task> list) {
 		tasks.clear();
+		System.out.println("Converting these tasks to JSON");
 		for (int i = 0; i < list.size(); i++) {
 			JSONObject obj = new JSONObject();
 			obj.put("Description", list.get(i).getDescription());
 			System.out.println(list.get(i).getDescription());
 			try {
 				if (list.get(i).getDate() != null) {
-					obj.put("Date", list.get(i).getDate());
+					String date = fmt.print(list.get(i).getDate());
+					obj.put("Date", date);
 				}
 				if (list.get(i).getEndDate() != null) {
-					obj.put("End date", list.get(i).getEndDate());
+					String end = fmt.print(list.get(i).getEndDate());
+					obj.put("End date", end);
 				}
 			} catch (Exception e) {
 				
