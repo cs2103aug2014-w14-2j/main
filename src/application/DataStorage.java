@@ -21,13 +21,20 @@ import org.joda.time.DateTime;
  */
 public class DataStorage {
 	
-	private final String filename = "Todo.json";
+	private final String filename;
 	private JSONArray tasks = new JSONArray();
 	private ArrayList<Task> backup;
 	
 	public DataStorage() {
+		filename = "Todo.json";
 		initiateFile();
 	}
+	
+	public DataStorage(String name) {
+		filename = name;
+		initiateFile();
+	}
+	
 	
 	//@author A0115864B
 	public void initiateFile() {
@@ -52,6 +59,12 @@ public class DataStorage {
 		} catch (ParseException e) {
 			
 		}
+		System.out.println("File retrieved successfully");
+		for(Object obj : tasks) {
+			JSONObject task = (JSONObject)obj;
+			System.out.println(task.get("Description"));
+		}
+		System.out.println("These are the tasks retrieved\n");
 		return convertJSONArrayToArrayList();
 	}
 	
@@ -104,6 +117,7 @@ public class DataStorage {
 		for (int i = 0; i < list.size(); i++) {
 			JSONObject obj = new JSONObject();
 			obj.put("Description", list.get(i).getDescription());
+			System.out.println(list.get(i).getDescription());
 			try {
 				if (list.get(i).getDate() != null) {
 					obj.put("Date", list.get(i).getDate());
