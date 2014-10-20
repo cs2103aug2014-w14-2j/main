@@ -1,6 +1,7 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ListIterator;
 
 //@author A0110546R
@@ -100,6 +101,7 @@ class TaskManager {
                 tasks.add(t);
             }
         }
+        Collections.sort(tasks, new CreatedAtComparator());
         return tasks;
     }
     
@@ -117,6 +119,7 @@ class TaskManager {
                 tasks.add(t);
             }
         }
+        Collections.sort(tasks, new DateComparator());
         return tasks;
     }
 

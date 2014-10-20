@@ -202,7 +202,6 @@ public class Task {
  * The comparator class used to sort Tasks by their date.
  * 
  * @author Sun Wang Jun
- *
  */
 class DateComparator implements Comparator<Task> {
     @Override
@@ -223,10 +222,26 @@ class DateComparator implements Comparator<Task> {
 }
 
 /**
+ * The comparator class used to sort Tasks by their created at date.
+ * 
+ * @author Sun Wang Jun
+ */
+class CreatedAtComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        if (a.getCreatedAt().isAfter(b.getCreatedAt())) {
+            return 1; // a is after b, so a comes after b.
+        } else if (a.getCreatedAt().isBefore(b.getCreatedAt())) {
+            return -1; // a is before b, so a comes before b.
+        }
+        return 0;
+    }
+}
+
+/**
  * The comparator class used to sort Tasks by their priority.
  * 
  * @author Sun Wang Jun
- *
  */
 class PriorityComparator implements Comparator<Task> {
     @Override
