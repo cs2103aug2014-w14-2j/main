@@ -15,9 +15,11 @@ public class Task {
 
     private DateTime date;
     private DateTime endDate;
-    private boolean completed;
-    
+    private boolean completed;    
     private int priority;
+    
+    private DateTime createdAt;
+    private DateTime modifiedAt;
     
     /**
      * Constructor that creates a Task based on CommandInfo.
@@ -35,13 +37,16 @@ public class Task {
         if (command.getPriority() != 0) {
             this.priority = command.getPriority();
         }
+        this.createdAt = new DateTime();
+        this.modifiedAt = new DateTime();
     }
     
     /**
      * Public default constructor.
      */
     public Task() {
-        
+        this.createdAt = new DateTime();
+        this.modifiedAt = new DateTime();
     }
 
     /**
@@ -73,6 +78,7 @@ public class Task {
      */
     public void setDescription(String description) {
         this.description = description;
+        this.modifiedAt = new DateTime();
     }
 
     /**
@@ -94,6 +100,7 @@ public class Task {
     public void setDate(DateTime date) {
         // We should probably set endDate to null if date is null.
         this.date = date;
+        this.modifiedAt = new DateTime();
     }
 
     /**
@@ -120,6 +127,7 @@ public class Task {
      */
     public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
+        this.modifiedAt = new DateTime();
     }
 
     /**
@@ -146,6 +154,7 @@ public class Task {
      */
     public void setCompleted(boolean completed) {
         this.completed = completed;
+        this.modifiedAt = new DateTime();
     }
 
     /**
@@ -170,7 +179,22 @@ public class Task {
     public void setPriority(int priority) {
         // Check if priority is negative.
         this.priority = priority;
+        this.modifiedAt = new DateTime();
     }
+    
+    /**
+     * Gets the created date of the Task.
+     * 
+     * @return the created date of the Task.
+     */
+    public DateTime getCreatedAt() { return this.createdAt; }
+    
+    /**
+     * Gets the last modified date of the Task.
+     * 
+     * @return the last modified date of the Task.
+     */
+    public DateTime getModifiedAt() { return this.modifiedAt; }
 }
 
 /**
