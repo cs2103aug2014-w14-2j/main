@@ -67,6 +67,10 @@ public class UITaskListView {
     	return taskList.isFocused();
     }
     
+    public void clearSelection() {
+    	taskList.getSelectionModel().clearSelection();
+    }
+    
     public int getSelectedItemIndex() {
     	return taskList.getSelectionModel().getSelectedIndex();
     }
@@ -155,9 +159,9 @@ public class UITaskListView {
         			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
         			setGraphic(stack);
         		}
-        		}else {
-        			setGraphic(null);
-        		}
+            }else {
+        		setGraphic(null);
+        	}
         }
     }
 }

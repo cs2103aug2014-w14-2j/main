@@ -176,7 +176,8 @@ public class UIComponent {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
 	    floatingTaskListView.populateTaskListWithData(taskList);
-	   
+	    floatingTaskListView.clearSelection();
+	    
 	    logger.log(Level.INFO, "Task ListView is updated.");
 	}
 	
@@ -184,6 +185,8 @@ public class UIComponent {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
 	    eventReminderTaskListView.populateTaskListWithData(taskList);
+	    eventReminderTaskListView.clearSelection();
+	    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
 	}
 
