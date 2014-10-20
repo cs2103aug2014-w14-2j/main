@@ -32,8 +32,8 @@ public class UITaskListView {
     private final String TASKLIST_DEFAULT_STYLE = "taskList_style";
     private UICmdInputBox cmdInputBox;
     
-	private final String CMD_DELETE_FLOATING_TASK = "DELETE F%d";
-	private final String CMD_DELETE_EVENT_TASK = "DELETE E%d";
+	private final String CMD_DELETE_FLOATING_TASK = "DELETE %d";
+	private final String CMD_DELETE_EVENT_TASK = "DELETE %d";
 	
 	private String type;
     
