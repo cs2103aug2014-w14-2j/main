@@ -50,6 +50,22 @@ public class UIComponent {
 		return scene;
 	}
 	
+	public BorderPane getRootPane() {
+		return rootPane;
+	}
+
+	public UICmdInputBox getCmdInputBox() {
+		return cmdInputBox;
+	}
+
+	public UITaskListView getFloatingTaskListView() {
+		return floatingTaskListView;
+	}
+
+	public UITaskListView getEventReminderTaskListView() {
+		return eventReminderTaskListView;
+	}
+
 	public UIComponent() {
 		initializeLoggerFileHandler();
 		initializeComponents();
