@@ -13,7 +13,7 @@ public class TestParser {
     private static Logger logger = Logger.getLogger("Foo");
     public static void main(String[] args) {
        
-        String input = "Add eat apple by 1pm to 2pm"; 
+        String input = "Add eat apple now"; 
         Parser p = new Parser();
         CommandInfo cmdInfo = p.getCommandInfo(input);
         DateTime sd = cmdInfo.getStartDateTime();
