@@ -5,6 +5,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.TextField;
 
+/**
+ * UIAutoCompleteListener: ActionHandler acts as a middle man between UIAutoComplete & UIComponent.
+ * 
+ * @author Tan Young Sing
+ */
 public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
 
     final private String MSG_DEFAULT_PROMPT = "Ask WaveWave to do something ?";

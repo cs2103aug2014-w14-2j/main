@@ -62,6 +62,14 @@ public class CommandInfo {
      * @return the start date time of a task with the type Date, null if there is no start date time
      */
     public DateTime getStartDateTime() {
+<<<<<<< HEAD
+=======
+        DateTime dateTime;
+        if (startDateTime == null) {
+            dateTime = null;
+            return dateTime;
+        }
+>>>>>>> master
         return (new DateTime(startDateTime));
     }
     
@@ -69,8 +77,17 @@ public class CommandInfo {
      * This returns the end date time of the task
      * @return the start date time of a task with the type Date, null if there is no end date time
      */
+<<<<<<< HEAD
     public DateTime getEndDateTime() {
         
+=======
+    public DateTime getEndDateTime() { 
+        DateTime dateTime;
+        if (startDateTime == null) {
+            dateTime = null;
+            return dateTime;
+        }
+>>>>>>> master
         return (new DateTime(endDateTime));
     }
     

@@ -2,6 +2,11 @@ package application;
 
 import java.util.ArrayList;
 
+/**
+ * UIAutoComplete: Responsible for all autocomplete operations.
+ * 
+ * @author Tan Young Sing
+ */
 public class UIAutoComplete {
     
     final private String MSG_COMMAND_SUGGESTION = "Do you mean : %s. You can enter <space> key to complete.";

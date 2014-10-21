@@ -29,7 +29,7 @@ public class Parser {
      * @return the object of CommandInfo class 
      */
     public CommandInfo getCommandInfo(String userInput) {
-        logger.log(Level.INFO, "going to return a Command object to Controller");
+        logger.log(Level.INFO, "going to return a CommandInfo object to Controller");
         
         String commandType = parseCommandType(userInput);
         int taskID = parseTaskID(userInput);
@@ -44,9 +44,18 @@ public class Parser {
         return cmdInfo;
     }
     
+    /**
+     * 
+     * @param input
+     * @return the input by removing the command type word and the taskID.
+     */
     private String parseContent(String input) {
         String content;
+<<<<<<< HEAD
         content = input.replace(parseCommandType(input), "").trim();
+=======
+        content = input.replace(parseCommandType(input),"").trim();
+>>>>>>> master
         System.out.println(content);
         if (parseTaskID(input) != 0) {
             content = content.replace(String.valueOf(parseTaskID(input))+" ","").trim();
