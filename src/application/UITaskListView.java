@@ -148,7 +148,7 @@ public class UITaskListView {
         	
         	if(item.getEndDate() != null) {
         		output += "\nEND DATE: " + item.getEndDate().toString("dd/MM/yyyy HH:mm");
-        	}
+        	} 
         	
         	return output;
         }
