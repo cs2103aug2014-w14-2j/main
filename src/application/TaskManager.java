@@ -21,9 +21,9 @@ class TaskManager {
     /**
      * Adds a task to the list.
      * 
-     * @param command
-     *            of type "add".
+     * @param command of type "add".
      * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "add".
      */
     public ArrayList<Task> add(CommandInfo command) throws MismatchedCommandException {
         if (!"add".equals(command.getCommandType())) {
@@ -47,9 +47,9 @@ class TaskManager {
     /**
      * Edits a task in the list.
      * 
-     * @param command
-     *            of type "edit" and contains task id.
+     * @param command of type "edit" and contains task id.
      * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "edit".
      */
     public ArrayList<Task> edit(CommandInfo command) throws MismatchedCommandException {
         if (!"edit".equals(command.getCommandType())) {
@@ -69,9 +69,9 @@ class TaskManager {
     /**
      * Deletes a task in the list.
      * 
-     * @param command
-     *            of type "delete" and contains task id.
+     * @param command of type "delete" and contains task id.
      * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "delete".
      */
     public ArrayList<Task> delete(CommandInfo command) throws MismatchedCommandException {
         if (!"delete".equals(command.getCommandType())) {
@@ -85,6 +85,13 @@ class TaskManager {
         return this.list;
     }
     
+    /**
+     * Completes a task in the list.
+     * 
+     * @param command of type "complete" and contains task id.
+     * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "complete".
+     */
     public ArrayList<Task> complete(CommandInfo command) throws MismatchedCommandException {
         if (!"complete".equals(command.getCommandType())) {
             throw new MismatchedCommandException();
@@ -95,14 +102,22 @@ class TaskManager {
         
         return this.list;
     }
-    
+
+    /**
+     * Undos one previous command.
+     * 
+     * @param command of type "complete" and contains task id.
+     * @param backup the backup task list.
+     * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "undo".
+     */
     public ArrayList<Task> undo(CommandInfo command, ArrayList<Task> backup) 
             throws MismatchedCommandException {
         if (!"undo".equals(command.getCommandType())) {
             throw new MismatchedCommandException();
         }
-        list = new ArrayList<Task>(backup);
-        return list;
+        this.list = new ArrayList<Task>(backup);
+        return this.list;
     }
 
     /**
@@ -154,8 +169,7 @@ class TaskManager {
     /**
      * Initializes the list of tasks from storage.
      * 
-     * @param storedList
-     *            ArrayList of tasks.
+     * @param storedList ArrayList of tasks.
      * @return the initialized list of tasks.
      */
     public ArrayList<Task> initializeList(ArrayList<Task> storedList) {

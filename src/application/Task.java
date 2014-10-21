@@ -24,6 +24,8 @@ public class Task {
     
     /**
      * Constructor that creates a Task based on CommandInfo.
+     * 
+     * @param command the CommandInfo object that contains parsed information.
      */
     public Task(CommandInfo command) {
         this.description = command.getTaskDesc();

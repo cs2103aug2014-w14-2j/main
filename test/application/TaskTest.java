@@ -19,23 +19,13 @@ import org.junit.Test;
 public class TaskTest {
     private Task task;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         task = new Task();
     }
 
     /**
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    /**
-     * Test method for {@link application.Task#getId()}.
+     * Test method for {@link application.Task#getID()}.
      */
     @Test
     public void testGetId() {
