@@ -136,12 +136,16 @@ class TaskManager {
      */
     public ArrayList<Task> getTasks() {
         ArrayList<Task> tasks = new ArrayList<Task>();
+        
+        int i = 0;
         ListIterator<Task> li = this.list.listIterator();
         while (li.hasNext()) {
             Task t = li.next();
             if (t.getDate() == null) { // There is no date.
+                t.setDisplayID("" + i);
                 tasks.add(t);
             }
+            i++;
         }
         
         Collections.sort(tasks, new ModifiedAtComparator());
@@ -155,12 +159,16 @@ class TaskManager {
      */
     public ArrayList<Task> getReminders() {
         ArrayList<Task> tasks = new ArrayList<Task>();
+        
+        int i = 0;
         ListIterator<Task> li = this.list.listIterator();
         while (li.hasNext()) {
             Task t = li.next();
             if (t.getDate() != null) { // There is a date.
+                t.setDisplayID("" + i);
                 tasks.add(t);
             }
+            i++;
         }
         Collections.sort(tasks, new DateComparator());
         return tasks;
