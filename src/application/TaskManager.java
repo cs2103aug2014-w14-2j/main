@@ -89,7 +89,7 @@ class TaskManager {
     }
     
     public ArrayList<Task> complete(CommandInfo command) throws MismatchedCommandException {
-        if (!"command".equals(command.getCommandType())) {
+        if (!"complete".equals(command.getCommandType())) {
             throw new MismatchedCommandException();
         }
         
