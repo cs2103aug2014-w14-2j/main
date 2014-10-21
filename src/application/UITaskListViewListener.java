@@ -4,6 +4,11 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+/**
+ * ListView Event Handler.
+ * 
+ * @author Tan Young Sing
+ */
 public class UITaskListViewListener implements EventHandler<KeyEvent> {
 
 	private String msg;
@@ -19,7 +24,7 @@ public class UITaskListViewListener implements EventHandler<KeyEvent> {
 	@Override
 	public void handle(KeyEvent ke) {
     	if(ke.getCode() == KeyCode.DELETE) {
-    		int index = taskList.getSelectedItemIndex()+1;			
+    		int index = taskList.getSelectedItemIndex()+1;
      		cmdInput.getCmdInputBox().setText(String.format(msg, index));
      		cmdInput.focusCommandInputBox();
      		cmdInput.resetPositionCaret();

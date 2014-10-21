@@ -1,34 +1,43 @@
 package application;
-import org.ocpsoft.prettytime.nlp.PrettyTimeParser;
 
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 /** This class stores all information that a Command object needs to execute a command 
  * 
- * @author Jinyu
- * @version 2.0
+ * @author Jinyu  A0090971Y
  */
+
 public class CommandInfo {
 
     private String commandType;
     private int taskID;
     private String taskDesc;
-    private String startTime;
-    private String startDate;
+    private Date startDateTime;
+    private Date endDateTime;
     private int priority;
     
-    
-    CommandInfo(String commandType, int taskID, String taskDesc, String startDate,String startTime, int priority) {  // edit 
+    /**
+     * constructor for CommandInfo class
+     * @param commandType
+     * @param taskID
+     * @param taskDesc
+     * @param startDateTime
+     * @param endDateTime
+     * @param priority
+     */
+    CommandInfo(String commandType, int taskID, String taskDesc, Date startDateTime,Date endDateTime, int priority) {  // edit 
         this.commandType = commandType;
         this.taskID = taskID;
         this.taskDesc = taskDesc;
-        this.startDate = startDate;
-        this.startTime = startTime;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
         this.priority = priority;
     }
     
-    
+    // not implemented yet
     private boolean validateCommand(String command) {
         return true;        
     }
@@ -37,7 +46,7 @@ public class CommandInfo {
      * @return command type
      */
     public String getCommandType(){
-        return commandType;
+        return commandType.toLowerCase();
     }
     /**
      * This returns the task ID 
@@ -47,33 +56,50 @@ public class CommandInfo {
         return taskID;
     }
  
+
     /**
-     * 
-     * @return the start date in MM/DD/YYYY format
+     * This returns the start date time of the task
+     * @return the start date time of a task with the type Date, null if there is no start date time
      */
-    public String getStartDate() {
-        return startDate;
+    public DateTime getStartDateTime() {
+        DateTime dateTime;
+        if (startDateTime == null) {
+            dateTime = null;
+            return dateTime;
+        }
+        return (new DateTime(startDateTime));
     }
     
     /**
-     * 
-     * @return the start time in 24h, hh:mm:ss.ms format
+     * This returns the end date time of the task
+     * @return the start date time of a task with the type Date, null if there is no end date time
      */
-    public String getStartTime() {
-        return startTime;
+    public DateTime getEndDateTime() { 
+        DateTime dateTime;
+        if (startDateTime == null) {
+            dateTime = null;
+            return dateTime;
+        }
+        return (new DateTime(endDateTime));
     }
     
+    
+    /**
+     * 
+     * @return an integer indicate the level of priority, the larger the integer, the higher the priority
+     */
     public int getPriority(){
         return priority;
     }
+    
     /**
      * return the description of the Task
      * @return the description of the Task.
      */
-  
     public String getTaskDesc(){
         return taskDesc;
     }
+    
     /**
      * return the keyword to be searched
      * @return the keyword to be searched.

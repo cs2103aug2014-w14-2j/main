@@ -3,6 +3,11 @@ package application;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
+/**
+ * Abstracted TextField Class.
+ * 
+ * @author Tan Young Sing
+ */
 public class UICmdInputBox {
 
     private TextField cmdInputBox;

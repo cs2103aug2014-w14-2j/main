@@ -17,6 +17,13 @@ import javafx.scene.text.TextAlignment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+
+/**
+ * Main Class for the UI, That integrates all components into one and return 
+ * a scene instance back to the Controller for display
+ * 
+ * @author Tan Young Sing
+ */
 public class UIComponent {
     
     private final String SUGGESTION_TEXT = "Hello User! I am WaveWave.";
@@ -43,6 +50,22 @@ public class UIComponent {
 		return scene;
 	}
 	
+	public BorderPane getRootPane() {
+		return rootPane;
+	}
+
+	public UICmdInputBox getCmdInputBox() {
+		return cmdInputBox;
+	}
+
+	public UITaskListView getFloatingTaskListView() {
+		return floatingTaskListView;
+	}
+
+	public UITaskListView getEventReminderTaskListView() {
+		return eventReminderTaskListView;
+	}
+
 	public UIComponent() {
 		initializeLoggerFileHandler();
 		initializeComponents();
@@ -150,8 +173,6 @@ public class UIComponent {
 		Text taskTitle = createText("Tasks", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 
 		floatingTaskListView = new UITaskListView(cmdInputBox, "Task");
-		ObservableList<Task> items = FXCollections.observableArrayList();
-		floatingTaskListView.populateTaskListWithData(items);
 		innerBox.getChildren().addAll(taskTitle, floatingTaskListView.getListView());
 		
 		return innerBox;
@@ -162,8 +183,6 @@ public class UIComponent {
 		Text taskTitle = createText("Reminder & Events", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 		
 		eventReminderTaskListView = new UITaskListView(cmdInputBox, "Event");
-        ObservableList<Task> items = FXCollections.observableArrayList();
-        eventReminderTaskListView.populateTaskListWithData(items);
 		innerBox.getChildren().addAll(taskTitle, eventReminderTaskListView.getListView());
 
 		return innerBox;
@@ -173,6 +192,8 @@ public class UIComponent {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
 	    floatingTaskListView.populateTaskListWithData(taskList);
+	    floatingTaskListView.clearSelection();
+	    
 	    logger.log(Level.INFO, "Task ListView is updated.");
 	}
 	
@@ -180,6 +201,8 @@ public class UIComponent {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
 	    eventReminderTaskListView.populateTaskListWithData(taskList);
+	    eventReminderTaskListView.clearSelection();
+	    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
 	}
 

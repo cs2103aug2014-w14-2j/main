@@ -1,6 +1,5 @@
 package application;
 
-
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
@@ -16,6 +15,11 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextBoundsType;
 import javafx.util.Callback;
 
+/**
+ * Abstracted ListView Class
+ * 
+ * @author Tan Young Sing
+ */
 public class UITaskListView {
 
     private ListView<Task> taskList;
@@ -28,8 +32,8 @@ public class UITaskListView {
     private final String TASKLIST_DEFAULT_STYLE = "taskList_style";
     private UICmdInputBox cmdInputBox;
     
-	private final String CMD_DELETE_FLOATING_TASK = "DELETE F%d";
-	private final String CMD_DELETE_EVENT_TASK = "DELETE E%d";
+	private final String CMD_DELETE_FLOATING_TASK = "DELETE %d";
+	private final String CMD_DELETE_EVENT_TASK = "DELETE %d";
 	
 	private String type;
     
@@ -63,12 +67,16 @@ public class UITaskListView {
     	return taskList.isFocused();
     }
     
+    public void clearSelection() {
+    	taskList.getSelectionModel().clearSelection();
+    }
+    
     public int getSelectedItemIndex() {
     	return taskList.getSelectionModel().getSelectedIndex();
     }
    
     public void populateTaskListWithData(ObservableList<Task> items) {
-        taskList.setItems(items);
+    	taskList.setItems(items);
     }
 
     public ListView<Task> getListView() {
@@ -81,13 +89,11 @@ public class UITaskListView {
         static private final int TASK_CONTAINER_SPACING = 15;
         static private int color_counter = 0;
         
-        private String COLOR_GREEN = "rgba(43, 255, 0, 1)";
-        private String COLOR_RED = "rgba(255, 79, 100, 1)";
-        private String COLOR_YELLOW = "rgba(255, 246, 0, 1)";
-        private String COLOR_BLUE = "rgba(0, 131, 255, 1)";
-        private String COLOR_PINK = "rgba(246, 96, 171, 1)";
-          
-        private String[] colorArray = {COLOR_PINK, COLOR_BLUE, COLOR_YELLOW, COLOR_RED, COLOR_GREEN};
+        private final String CONTAINER_HEIGHT = "-fx-cell-size: %s";
+        private String COLOR_DEFAULT_PRIORITY = "rgba(43, 255, 0, 1)";
+        private String COLOR_HIGH_PRIORITY = "rgba(255, 79, 100, 1)";
+        private String COLOR_MEDIUM_PRIORITY = "rgba(255, 246, 0, 1)";
+        private Rectangle contentPlaceHolder;
         int counter = 0;
         
         private Rectangle createRectangle(int width, int height, int arcWidth, int arcHeight, Color c) {
@@ -106,42 +112,56 @@ public class UITaskListView {
             textLabel.setFont(Font.font("Ariel", FontWeight.NORMAL, size));
             return textLabel;
         }
+        
+        private Rectangle getPriorityIndicator(int priority) {
+        	String indicator_color = COLOR_DEFAULT_PRIORITY;
+        	
+        	if(priority > 1 && priority < 4) {
+        		indicator_color = COLOR_MEDIUM_PRIORITY;
+        	} else if (priority >= 5) {
+        		indicator_color = COLOR_HIGH_PRIORITY;
+        	}
+        	
+        	Rectangle priorityIndicator = createRectangle(50, 50, 0, 0, Color.web(indicator_color));
+     
+        	return priorityIndicator;
+        }
+        
+        private int getContentHeight(int length) {
+        	if (length < 50) {
+        		return 80;
+        	} else if (length < 100) {
+        		return 180;
+        	} else {
+        		return 280;
+        	}
+        }
 
         @Override
         public void updateItem(Task item, boolean empty) {
-            super.updateItem(item, empty);
-            Rectangle contentPlaceHolder;
-            Rectangle priorityIndicator = createRectangle(50, 50, 0, 0, Color.web(colorArray[color_counter]));
+        	super.updateItem(item, empty);
             
-            //TO-BE-DELETED
-            //System.out.println((color_counter%2));
-            if ((color_counter%2) == 0) {
-                this.getStyleClass().add("bigger-list-cell");
-                contentPlaceHolder = createRectangle(260, 170, 10, 10, Color.WHITE);
-            }
-            else { 
-                this.getStyleClass().add("smaller-list-cell");
-                contentPlaceHolder = createRectangle(260, 70, 10, 10, Color.WHITE);
-            }
-            
-            //TO-BE-DELETED
-            color_counter++;
-            if(color_counter == colorArray.length) {
-                color_counter = 0;
-            }
-            
-            if (item != null) {
-                Text text = createText(item.getDescription(), 150, 12);
-                HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
-                taskInnerContentHolder.setPadding(new Insets(10, 0, 0, 15));
-                taskInnerContentHolder.getChildren().addAll(priorityIndicator, text);
-                
-                StackPane stack = new StackPane();
-                stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
-                stack.setPrefWidth(TASK_CONTAINER_WIDTH);
-                stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
-                setGraphic(stack);
-            }
+        	if(!empty) {
+        		if (item != null) {
+        			Text text = createText(item.getDescription(), 150, 12);
+        			
+        			int height = getContentHeight(item.getDescription().length());
+        			this.setStyle(String.format(CONTAINER_HEIGHT, height));
+        			contentPlaceHolder = createRectangle(260, height-10, 10, 10, Color.WHITE);
+        			
+        			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
+        			taskInnerContentHolder.setPadding(new Insets(10, 0, 0, 15));
+        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(item.getPriority()), text);
+        			
+        			StackPane stack = new StackPane();
+        			stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
+        			stack.setPrefWidth(TASK_CONTAINER_WIDTH);
+        			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
+        			setGraphic(stack);
+        		}
+            }else {
+        		setGraphic(null);
+        	}
         }
     }
 }

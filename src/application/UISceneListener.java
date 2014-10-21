@@ -3,6 +3,11 @@ package application;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 
+/**
+ * Handles all Scene Events triggered by users.
+ * 
+ * @author Tan Young Sing
+ */
 public class UISceneListener implements EventHandler<KeyEvent>{
 	
 	private UICmdInputBox cmdInputBox;

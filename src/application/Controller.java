@@ -16,14 +16,12 @@ import java.util.logging.SimpleFormatter;
 public class Controller extends Application {
     
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
+    
     private static FileHandler fileHandler = null;
 
-    private static DataStorage dataStorage;
-    
+    private static DataStorage dataStorage;    
     private static TaskManager taskManager;
-
     private static UIComponent uiComponent;
-    private static Parser parser;
     
     /**
      * Executes the command entered.
@@ -35,8 +33,8 @@ public class Controller extends Application {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
         taskManager.initializeList(dataStorage.retrieveTasks());
 
-        CommandInfo command = Parser.getCommandInfo(input);
-        
+        CommandInfo command = (new Parser()).getCommandInfo(input);
+
         try {
             switch (command.getCommandType()) {
                 case "add":
@@ -57,7 +55,8 @@ public class Controller extends Application {
             logger.log(Level.SEVERE, e.toString(), e);
             e.printStackTrace();
         }
-        uiComponent.updateTaskList(taskManager.getList());
+        uiComponent.updateTaskList(taskManager.getTasks());
+        uiComponent.updateReminderList(taskManager.getReminders());
 
         dataStorage.saveTasks(taskManager.getList());
     }
@@ -66,7 +65,8 @@ public class Controller extends Application {
      * For the UI to retrieve the list of tasks after it is initialized.
      */
     public static void getTasks() {
-        uiComponent.updateTaskList(taskManager.getList());       
+        uiComponent.updateTaskList(taskManager.getTasks());
+        uiComponent.updateReminderList(taskManager.getReminders());
     }
     
     public static void main(String[] args) {
@@ -74,7 +74,7 @@ public class Controller extends Application {
         dataStorage = new DataStorage();
         dataStorage.initiateFile();
         taskManager.initializeList(dataStorage.retrieveTasks());
-        parser = Parser.getInstance();
+        
         // Temporary logging file handler.
         try {
             fileHandler = new FileHandler(Controller.class.getName() + ".log");

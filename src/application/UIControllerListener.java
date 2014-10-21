@@ -5,6 +5,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+/**
+ * Middle man between UIComponent and Controller.
+ * 
+ * @author Tan Young Sing
+ */
 public class UIControllerListener implements EventHandler<KeyEvent> {
     
     private TextField cmdInputBox;
