@@ -1,5 +1,7 @@
 package application;
 
+import org.joda.time.format.DateTimeFormat;
+
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
@@ -136,6 +138,20 @@ public class UITaskListView {
         		return 280;
         	}
         }
+        
+        private String generateTaskDescription(Task item) {
+        	String output = item.getDescription();
+        	
+        	if(item.getDate() != null) {
+        		output += "\nDATE: " + item.getDate().toString("dd/MM/yyyy HH:mm");
+        	} 
+        	
+        	if(item.getEndDate() != null) {
+        		output += "\nEND DATE: " + item.getEndDate().toString("dd/MM/yyyy HH:mm");
+        	} 
+        	
+        	return output;
+        }
 
         @Override
         public void updateItem(Task item, boolean empty) {
@@ -143,9 +159,12 @@ public class UITaskListView {
             
         	if(!empty) {
         		if (item != null) {
-        			Text text = createText(item.getDescription(), 150, 12);
         			
-        			int height = getContentHeight(item.getDescription().length());
+        			String output = generateTaskDescription(item);
+        			
+        			Text text = createText(output, 150, 12);
+        			
+        			int height = getContentHeight(output.length());
         			this.setStyle(String.format(CONTAINER_HEIGHT, height));
         			contentPlaceHolder = createRectangle(260, height-10, 10, 10, Color.WHITE);
         			
