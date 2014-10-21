@@ -1,5 +1,7 @@
 package application;
 
+import org.joda.time.format.DateTimeFormat;
+
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
@@ -141,11 +143,11 @@ public class UITaskListView {
         	String output = item.getDescription();
         	
         	if(item.getDate() != null) {
-        		output += "\nSTART DATE: " + item.getDate().toString();
+        		output += "\nDATE: " + item.getDate().toString("dd/MM/yyyy HH:mm");
         	} 
         	
         	if(item.getEndDate() != null) {
-        		output += "\n END DATE: " + item.getEndDate().toString();
+        		output += "\nEND DATE: " + item.getEndDate().toString("dd/MM/yyyy HH:mm");
         	}
         	
         	return output;
