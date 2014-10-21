@@ -51,11 +51,8 @@ public class Parser {
      */
     private String parseContent(String input) {
         String content;
-<<<<<<< HEAD
-        content = input.replace(parseCommandType(input), "").trim();
-=======
+
         content = input.replace(parseCommandType(input),"").trim();
->>>>>>> master
         System.out.println(content);
         if (parseTaskID(input) != 0) {
             content = content.replace(String.valueOf(parseTaskID(input))+" ","").trim();
