@@ -30,16 +30,13 @@ class TaskManager {
             throw new MismatchedCommandException();
         }
         
-        System.out.println("TaskManager: tasks before command");
         for(int i = 0; i < list.size(); i ++) {
         	System.out.println((i+1) + ". " + list.get(i).getDescription());
         }
         
         this.task = new Task(command);
-        System.out.println("Task added: " + task.getDescription());
         this.list.add(this.task);
         
-        System.out.println("TaskManager: tasks after command");
         for(int i = 0; i < list.size(); i ++) {
         	System.out.println((i+1) + ". " + list.get(i).getDescription());
         }
@@ -163,7 +160,6 @@ class TaskManager {
      */
     public ArrayList<Task> initializeList(ArrayList<Task> storedList) {
         list = new ArrayList<Task>(storedList);
-        System.out.println("Number of current tasks = " + list.size());
         return this.list;
     }
 }
