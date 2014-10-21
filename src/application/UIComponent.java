@@ -37,7 +37,7 @@ public class UIComponent {
 	private final int APPLICATION_WIDTH = 650;
 	private final int APPLICATION_HEIGHT = 650;
 	
-	private final String APP_DEFAULT_FONT = "Raleway";
+	private final String APP_DEFAULT_FONT = "Ariel";
 	private final String APP_DEFAULT_STYLESHEET = "application.css";
 	private final String CMDINPUT_PLACEHOLDER_STYLESHEET = "cmdBox_outer";
 	

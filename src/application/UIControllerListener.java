@@ -30,6 +30,10 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
             cmdInputBox.setText("");
         } 
         
+        if (event.getCode().equals(KeyCode.ESCAPE)) {
+        	cmdInputBox.setText("");
+        }
+        
         if (event.getCode().isArrowKey() && !cmdHistory.isEmpty()) {
         	if (cmdIndex >= cmdHistory.size()) {
         		cmdIndex = 0;

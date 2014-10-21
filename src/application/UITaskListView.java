@@ -32,10 +32,10 @@ public class UITaskListView {
     private final String TASKLIST_DEFAULT_STYLE = "taskList_style";
     private UICmdInputBox cmdInputBox;
     
-	private final String CMD_DELETE_FLOATING_TASK = "DELETE %d";
-	private final String CMD_DELETE_EVENT_TASK = "DELETE %d";
+	private final String CMD_DELETE_FLOATING_TASK = "DELETE %s";
+	private final String CMD_DELETE_EVENT_TASK = "DELETE %s";
 	
-	private String type;
+	public String type;
     
     public UITaskListView(UICmdInputBox cmdInputBox, String type) {
         taskList = new ListView<Task>();
@@ -74,6 +74,10 @@ public class UITaskListView {
     public int getSelectedItemIndex() {
     	return taskList.getSelectionModel().getSelectedIndex();
     }
+    
+    public ObservableList<Task> getSelectedItem() {
+    	return taskList.getSelectionModel().getSelectedItems();
+    }
    
     public void populateTaskListWithData(ObservableList<Task> items) {
     	taskList.setItems(items);
@@ -89,10 +93,11 @@ public class UITaskListView {
         static private final int TASK_CONTAINER_SPACING = 15;
         
         private final String CONTAINER_HEIGHT = "-fx-cell-size: %s";
-        private String COLOR_DEFAULT_PRIORITY = "rgba(43, 255, 0, 1)";
-        private String COLOR_HIGH_PRIORITY = "rgba(255, 79, 100, 1)";
-        private String COLOR_MEDIUM_PRIORITY = "rgba(255, 246, 0, 1)";
+        private String COLOR_DEFAULT_PRIORITY = "rgba(37, 232, 154, 1)";
+        private String COLOR_HIGH_PRIORITY = "rgba(249, 104, 114, 1)";
+        private String COLOR_MEDIUM_PRIORITY = "rgba(247, 207, 89, 1)";
         private Rectangle contentPlaceHolder;
+        private Text indexLabel;
         
         private Rectangle createRectangle(int width, int height, int arcWidth, int arcHeight, Color c) {
         	Rectangle rect = new Rectangle(width, height);
@@ -102,16 +107,17 @@ public class UITaskListView {
             return rect;
         }
 
-        private Text createText(String text, int textWidth, int size) {
+        private Text createText(String text, int textWidth, int size, String fontFamily, FontWeight weight, Color color) {
             Text textLabel = new Text(text);
             textLabel.setWrappingWidth(textWidth);
             textLabel.setBoundsType(TextBoundsType.VISUAL);
             textLabel.setTextAlignment(TextAlignment.LEFT);
-            textLabel.setFont(Font.font("Raleway", FontWeight.NORMAL, size));
+            textLabel.setFont(Font.font(fontFamily, weight, size));
+            textLabel.setFill(color);
             return textLabel;
         }
         
-        private Rectangle getPriorityIndicator(int priority) {
+        private StackPane getPriorityIndicator(int priority, String displayID) {
         	String indicator_color = COLOR_DEFAULT_PRIORITY;
         	
         	if(priority > 1 && priority < 4) {
@@ -120,9 +126,21 @@ public class UITaskListView {
         		indicator_color = COLOR_HIGH_PRIORITY;
         	}
         	
-        	Rectangle priorityIndicator = createRectangle(50, 50, 0, 0, Color.web(indicator_color));
+        	Rectangle priorityIndicator = createRectangle(50, 50, 5, 5, Color.web(indicator_color));
+    		
+        	if(type.equals(FLOATING)) {
+        		indexLabel = createText("F" + displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
+        	} else if(type.equals(EVENT)) {
+        		indexLabel = createText("E" + displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
+        	}
+        	
+        	StackPane stack = new StackPane();
+        	stack.setPadding(new Insets(0, 0, 10, 0));
+			stack.setPrefHeight(60);
+			stack.setPrefWidth(60);
+			stack.getChildren().addAll(priorityIndicator, indexLabel);	
      
-        	return priorityIndicator;
+        	return stack;
         }
         
         private int getContentHeight(int length) {
@@ -136,7 +154,7 @@ public class UITaskListView {
         }
         
         private String generateTaskDescription(Task item) {
-        	String output = item.getDescription() + " " + item.getDisplayID();
+        	String output = item.getDescription();
         	
         	if(item.getDate() != null) {
         		output += "\nDATE: " + item.getDate().toString("dd/MM/yyyy HH:mm");
@@ -157,14 +175,14 @@ public class UITaskListView {
         		if (item != null) {
         			String output = generateTaskDescription(item);
         			
-        			Text text = createText(output, 150, 12);
+        			Text text = createText(output, 150, 12, "raleway", FontWeight.NORMAL, Color.BLACK);
         			int height = getContentHeight(output.length());
         			this.setStyle(String.format(CONTAINER_HEIGHT, height));
         			contentPlaceHolder = createRectangle(260, height-10, 10, 10, Color.WHITE);
         			
         			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
         			taskInnerContentHolder.setPadding(new Insets(10, 0, 0, 15));
-        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(item.getPriority()), text);
+        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(item.getPriority(), item.getDisplayID()), text);
         			
         			StackPane stack = new StackPane();
         			stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
