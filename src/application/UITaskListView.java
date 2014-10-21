@@ -107,7 +107,7 @@ public class UITaskListView {
             textLabel.setWrappingWidth(textWidth);
             textLabel.setBoundsType(TextBoundsType.VISUAL);
             textLabel.setTextAlignment(TextAlignment.LEFT);
-            textLabel.setFont(Font.font("Ariel", FontWeight.NORMAL, size));
+            textLabel.setFont(Font.font("Raleway", FontWeight.NORMAL, size));
             return textLabel;
         }
         
