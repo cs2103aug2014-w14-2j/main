@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
  * 
  * @author Sun Wang Jun
  */
-public class Task {
+public class Task {    
     private String id;
     private String description;
 
@@ -33,7 +33,7 @@ public class Task {
         }
         if (command.getEndDateTime() != null) {
             // Temporarily casting to DateTime.
-            this.date = new DateTime(command.getEndDateTime());
+            this.endDate = new DateTime(command.getEndDateTime());
         }
         if (command.getPriority() != 0) {
             this.priority = command.getPriority();

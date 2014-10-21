@@ -61,6 +61,7 @@ public class Controller extends Application {
             logger.log(Level.SEVERE, e.toString(), e);
             e.printStackTrace();
         }
+
         uiComponent.updateTaskList(taskManager.getTasks());
         uiComponent.updateReminderList(taskManager.getReminders());
         System.out.println("Displaying all tasks after command");
