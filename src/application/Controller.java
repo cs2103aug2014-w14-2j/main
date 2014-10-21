@@ -29,6 +29,7 @@ public class Controller extends Application {
         logger.log(Level.INFO, "runCommandInput(input: {0} )", input);
         taskManager.initializeList(dataStorage.retrieveTasks());
 
+
         CommandInfo command = (new Parser()).getCommandInfo(input);
 
         try {
