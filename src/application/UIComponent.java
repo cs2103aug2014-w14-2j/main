@@ -50,6 +50,22 @@ public class UIComponent {
 		return scene;
 	}
 	
+	public BorderPane getRootPane() {
+		return rootPane;
+	}
+
+	public UICmdInputBox getCmdInputBox() {
+		return cmdInputBox;
+	}
+
+	public UITaskListView getFloatingTaskListView() {
+		return floatingTaskListView;
+	}
+
+	public UITaskListView getEventReminderTaskListView() {
+		return eventReminderTaskListView;
+	}
+
 	public UIComponent() {
 		initializeLoggerFileHandler();
 		initializeComponents();
@@ -173,11 +189,11 @@ public class UIComponent {
 	}
 	
 	public void updateTaskList(ArrayList<Task> items) {
-		System.out.println(items.size());
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
 	    floatingTaskListView.populateTaskListWithData(taskList);
-	   
+	    floatingTaskListView.clearSelection();
+	    
 	    logger.log(Level.INFO, "Task ListView is updated.");
 	}
 	
@@ -185,6 +201,8 @@ public class UIComponent {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
 	    eventReminderTaskListView.populateTaskListWithData(taskList);
+	    eventReminderTaskListView.clearSelection();
+	    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
 	}
 
