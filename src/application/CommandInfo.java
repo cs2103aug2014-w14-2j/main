@@ -76,7 +76,7 @@ public class CommandInfo {
      */
     public DateTime getEndDateTime() { 
         DateTime dateTime;
-        if (startDateTime == null) {
+        if (endDateTime == null) {
             dateTime = null;
             return dateTime;
         }
