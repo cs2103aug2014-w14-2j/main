@@ -28,24 +28,24 @@ public class Controller extends Application {
     public static void runCommandInput(String input) {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
 
-        CommandInfo command = (new Parser()).getCommandInfo(input);
+        CommandInfo commandInfo = (new Parser()).getCommandInfo(input);
         
         try {
-            switch (command.getCommandType()) {
+            switch (commandInfo.getCommandType()) {
                 case "add":
-                    taskManager.add(command);
+                    taskManager.add(commandInfo);
                     break;
                 case "delete":
-                    taskManager.delete(command);
+                    taskManager.delete(commandInfo);
                     break;
                 case "edit":
-                    taskManager.edit(command);
+                    taskManager.edit(commandInfo);
                     break;
                 case "undo":
-                	taskManager.undo(command, dataStorage.getPastVersion());
+                	taskManager.undo(commandInfo, dataStorage.getPastVersion());
                 	break;
                 case "complete":
-                    taskManager.complete(command);
+                    taskManager.complete(commandInfo);
                     break;
                 	
             }

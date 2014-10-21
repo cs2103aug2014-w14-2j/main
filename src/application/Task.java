@@ -25,20 +25,20 @@ public class Task {
     /**
      * Constructor that creates a Task based on CommandInfo.
      * 
-     * @param command the CommandInfo object that contains parsed information.
+     * @param commandInfo the CommandInfo object that contains parsed information.
      */
-    public Task(CommandInfo command) {
-        this.description = command.getTaskDesc();
-        if (command.getStartDateTime() != null) {
+    public Task(CommandInfo commandInfo) {
+        this.description = commandInfo.getTaskDesc();
+        if (commandInfo.getStartDateTime() != null) {
             // Temporarily casting to DateTime.
-            this.date = new DateTime(command.getStartDateTime());
+            this.date = new DateTime(commandInfo.getStartDateTime());
         }
-        if (command.getEndDateTime() != null) {
+        if (commandInfo.getEndDateTime() != null) {
             // Temporarily casting to DateTime.
-            this.endDate = new DateTime(command.getEndDateTime());
+            this.endDate = new DateTime(commandInfo.getEndDateTime());
         }
-        if (command.getPriority() != 0) {
-            this.priority = command.getPriority();
+        if (commandInfo.getPriority() != 0) {
+            this.priority = commandInfo.getPriority();
         }
         this.createdAt = new DateTime();
         this.modifiedAt = new DateTime();

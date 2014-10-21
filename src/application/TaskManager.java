@@ -21,12 +21,12 @@ class TaskManager {
     /**
      * Adds a task to the list.
      * 
-     * @param command of type "add".
+     * @param commandInfo of type "add".
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "add".
      */
-    public ArrayList<Task> add(CommandInfo command) throws MismatchedCommandException {
-        if (!"add".equals(command.getCommandType())) {
+    public ArrayList<Task> add(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"add".equals(commandInfo.getCommandType())) {
             throw new MismatchedCommandException();
         }
         
@@ -34,7 +34,7 @@ class TaskManager {
         	System.out.println((i+1) + ". " + list.get(i).getDescription());
         }
         
-        this.task = new Task(command);
+        this.task = new Task(commandInfo);
         this.list.add(this.task);
         
         for(int i = 0; i < list.size(); i ++) {
@@ -47,21 +47,21 @@ class TaskManager {
     /**
      * Edits a task in the list.
      * 
-     * @param command of type "edit" and contains task id.
+     * @param commandInfo of type "edit" and contains task id.
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "edit".
      */
-    public ArrayList<Task> edit(CommandInfo command) throws MismatchedCommandException {
-        if (!"edit".equals(command.getCommandType())) {
+    public ArrayList<Task> edit(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"edit".equals(commandInfo.getCommandType())) {
             throw new MismatchedCommandException();
         }
         
         // Waiting for proper sequence flow.
-//        int id = command.getTaskID(); // Temporary id use.
+//        int id = commandInfo.getTaskID(); // Temporary id use.
 //        this.task = this.list.get(id - 1); // Get the appropriate task.
 //        
 //        // Check which fields are modified, and edit.
-//        if (command.getPriority() != 0)
+//        if (commandInfo.getPriority() != 0)
         
         return this.list;
     }
@@ -69,17 +69,17 @@ class TaskManager {
     /**
      * Deletes a task in the list.
      * 
-     * @param command of type "delete" and contains task id.
+     * @param commandInfo of type "delete" and contains task id.
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "delete".
      */
-    public ArrayList<Task> delete(CommandInfo command) throws MismatchedCommandException {
-        if (!"delete".equals(command.getCommandType())) {
+    public ArrayList<Task> delete(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"delete".equals(commandInfo.getCommandType())) {
             throw new MismatchedCommandException();
         }
         
         // Temporary hack to remove via ArrayList index.
-        int taskId = command.getTaskID() - 1;
+        int taskId = commandInfo.getTaskID() - 1;
         this.list.remove(taskId);
 
         return this.list;
@@ -88,32 +88,32 @@ class TaskManager {
     /**
      * Completes a task in the list.
      * 
-     * @param command of type "complete" and contains task id.
+     * @param commandInfo of type "complete" and contains task id.
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "complete".
      */
-    public ArrayList<Task> complete(CommandInfo command) throws MismatchedCommandException {
-        if (!"complete".equals(command.getCommandType())) {
+    public ArrayList<Task> complete(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"complete".equals(commandInfo.getCommandType())) {
             throw new MismatchedCommandException();
         }
         
-        int taskId = command.getTaskID() - 1;
+        int taskId = commandInfo.getTaskID() - 1;
         this.list.get(taskId).complete();
         
         return this.list;
     }
 
     /**
-     * Undos one previous command.
+     * Undos one previous commandInfo.
      * 
-     * @param command of type "complete" and contains task id.
+     * @param commandInfo of type "complete" and contains task id.
      * @param backup the backup task list.
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "undo".
      */
-    public ArrayList<Task> undo(CommandInfo command, ArrayList<Task> backup) 
+    public ArrayList<Task> undo(CommandInfo commandInfo, ArrayList<Task> backup) 
             throws MismatchedCommandException {
-        if (!"undo".equals(command.getCommandType())) {
+        if (!"undo".equals(commandInfo.getCommandType())) {
             throw new MismatchedCommandException();
         }
         this.list = new ArrayList<Task>(backup);
