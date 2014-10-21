@@ -131,8 +131,9 @@ class TaskManager {
                 tasks.add(t);
             }
         }
-      
-        return this.list;
+        
+        Collections.sort(tasks, new CreatedAtComparator());
+        return tasks;
     }
     
     /**
