@@ -45,6 +45,9 @@ public class Controller extends Application {
                 case "undo":
                 	taskManager.undo(command, dataStorage.getPastVersion());
                 	break;
+                case "complete":
+                    taskManager.complete(command);
+                    break;
                 	
             }
         } catch (MismatchedCommandException e) {

@@ -47,6 +47,13 @@ class TaskManager {
             throw new MismatchedCommandException();
         }
         
+        // Waiting for proper sequence flow.
+//        int id = command.getTaskID(); // Temporary id use.
+//        this.task = this.list.get(id - 1); // Get the appropriate task.
+//        
+//        // Check which fields are modified, and edit.
+//        if (command.getPriority() != 0)
+        
         return this.list;
     }
 
@@ -66,6 +73,17 @@ class TaskManager {
         int taskId = command.getTaskID() - 1;
         this.list.remove(taskId);
 
+        return this.list;
+    }
+    
+    public ArrayList<Task> complete(CommandInfo command) throws MismatchedCommandException {
+        if (!"command".equals(command.getCommandType())) {
+            throw new MismatchedCommandException();
+        }
+        
+        int taskId = command.getTaskID() - 1;
+        this.list.get(taskId).complete();
+        
         return this.list;
     }
     
