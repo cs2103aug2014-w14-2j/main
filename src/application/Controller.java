@@ -3,10 +3,7 @@ package application;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.util.logging.SimpleFormatter;
 
 /**
  * The controller logic that integrates UI, Storage and Parser.
@@ -15,10 +12,8 @@ import java.util.logging.SimpleFormatter;
  */
 public class Controller extends Application {
     
-    private static final Logger logger = Logger.getLogger(Controller.class.getName());
+    private static final WaveLogger logger = new WaveLogger("Controller");
     
-    private static FileHandler fileHandler = null;
-
     private static DataStorage dataStorage;    
     private static TaskManager taskManager;
     private static UIComponent uiComponent;
@@ -31,7 +26,7 @@ public class Controller extends Application {
      *            The entire command input.
      */
     public static void runCommandInput(String input) {
-        logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
+        logger.log(Level.INFO, "runCommandInput(input: {0} )", input);
         taskManager.initializeList(dataStorage.retrieveTasks());
 
         CommandInfo command = (new Parser()).getCommandInfo(input);
@@ -78,16 +73,6 @@ public class Controller extends Application {
         dataStorage = new DataStorage();
         dataStorage.initiateFile();
         taskManager.initializeList(dataStorage.retrieveTasks());
-        
-        // Temporary logging file handler.
-        try {
-            fileHandler = new FileHandler(Controller.class.getName() + ".log");
-            fileHandler.setFormatter(new SimpleFormatter());
-            logger.addHandler(fileHandler);
-            logger.setLevel(Level.FINEST);
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, null, e);
-        }
         
         launch(args);
     }
