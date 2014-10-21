@@ -1,7 +1,5 @@
 package application;
 
-import org.joda.time.format.DateTimeFormat;
-
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
@@ -85,21 +83,19 @@ public class UITaskListView {
         return taskList;
     }
 
-    static class TaskListCell extends ListCell<Task> { 
+    class TaskListCell extends ListCell<Task> { 
         static private final int TASK_CONTAINER_WIDTH = 260;
         static private final int TASK_CONTAINER_HEIGHT = 70;
         static private final int TASK_CONTAINER_SPACING = 15;
-        static private int color_counter = 0;
         
         private final String CONTAINER_HEIGHT = "-fx-cell-size: %s";
         private String COLOR_DEFAULT_PRIORITY = "rgba(43, 255, 0, 1)";
         private String COLOR_HIGH_PRIORITY = "rgba(255, 79, 100, 1)";
         private String COLOR_MEDIUM_PRIORITY = "rgba(255, 246, 0, 1)";
         private Rectangle contentPlaceHolder;
-        int counter = 0;
         
         private Rectangle createRectangle(int width, int height, int arcWidth, int arcHeight, Color c) {
-            Rectangle rect = new Rectangle(width, height);
+        	Rectangle rect = new Rectangle(width, height);
             rect.setArcHeight(arcHeight);
             rect.setArcWidth(arcWidth);
             rect.setFill(c);
@@ -156,14 +152,12 @@ public class UITaskListView {
         @Override
         public void updateItem(Task item, boolean empty) {
         	super.updateItem(item, empty);
-            
+        	
         	if(!empty) {
         		if (item != null) {
-        			
         			String output = generateTaskDescription(item);
         			
         			Text text = createText(output, 150, 12);
-        			
         			int height = getContentHeight(output.length());
         			this.setStyle(String.format(CONTAINER_HEIGHT, height));
         			contentPlaceHolder = createRectangle(260, height-10, 10, 10, Color.WHITE);
