@@ -31,6 +31,12 @@ public class Controller extends Application {
 
 
         CommandInfo command = (new Parser()).getCommandInfo(input);
+        
+        System.out.println("Command received");
+        System.out.println("Displaying all tasks before command");
+        for(Task task : taskManager.getTasks()) {
+        	System.out.println(task.getDescription());
+        }
 
         try {
             switch (command.getCommandType()) {
@@ -57,6 +63,10 @@ public class Controller extends Application {
         }
         uiComponent.updateTaskList(taskManager.getTasks());
         uiComponent.updateReminderList(taskManager.getReminders());
+        System.out.println("Displaying all tasks after command");
+        for(Task task : taskManager.getList()) {
+        	System.out.println(task.getDescription());
+        }
 
         dataStorage.saveTasks(taskManager.getList());
     }
@@ -76,6 +86,7 @@ public class Controller extends Application {
         taskManager = new TaskManager();
         dataStorage = new DataStorage();
         dataStorage.initiateFile();
+        System.out.println("Initializing TaskManager");
         taskManager.initializeList(dataStorage.retrieveTasks());
         
         launch(args);
