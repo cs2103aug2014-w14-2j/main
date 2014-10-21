@@ -226,13 +226,13 @@ class DateComparator implements Comparator<Task> {
  * 
  * @author Sun Wang Jun
  */
-class CreatedAtComparator implements Comparator<Task> {
+class ModifiedAtComparator implements Comparator<Task> {
     @Override
     public int compare(Task a, Task b) {
-        if (a.getCreatedAt().isAfter(b.getCreatedAt())) {
-            return 1; // a is after b, so a comes after b.
-        } else if (a.getCreatedAt().isBefore(b.getCreatedAt())) {
-            return -1; // a is before b, so a comes before b.
+        if (a.getModifiedAt().isAfter(b.getModifiedAt())) {
+            return -1; // a is after b, so a comes after b.
+        } else if (a.getModifiedAt().isBefore(b.getModifiedAt())) {
+            return 1; // a is before b, so a comes before b.
         }
         return 0;
     }

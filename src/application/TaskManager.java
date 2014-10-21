@@ -132,7 +132,7 @@ class TaskManager {
             }
         }
         
-        Collections.sort(tasks, new CreatedAtComparator());
+        Collections.sort(tasks, new ModifiedAtComparator());
         return tasks;
     }
     
