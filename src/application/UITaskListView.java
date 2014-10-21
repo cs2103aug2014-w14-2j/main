@@ -136,7 +136,7 @@ public class UITaskListView {
         }
         
         private String generateTaskDescription(Task item) {
-        	String output = item.getDescription();
+        	String output = item.getDescription() + " " + item.getDisplayID();
         	
         	if(item.getDate() != null) {
         		output += "\nDATE: " + item.getDate().toString("dd/MM/yyyy HH:mm");

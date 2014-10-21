@@ -26,34 +26,26 @@ public class Controller extends Application {
      *            The entire command input.
      */
     public static void runCommandInput(String input) {
-        logger.log(Level.INFO, "runCommandInput(input: {0} )", input);
-        //taskManager.initializeList(dataStorage.retrieveTasks());
+        logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
 
-
-        CommandInfo command = (new Parser()).getCommandInfo(input);
+        CommandInfo commandInfo = (new Parser()).getCommandInfo(input);
         
-        System.out.println("Command received");
-        System.out.println("Displaying all tasks before command");
-        for(Task task : taskManager.getTasks()) {
-        	System.out.println(task.getDescription());
-        }
-
         try {
-            switch (command.getCommandType()) {
+            switch (commandInfo.getCommandType()) {
                 case "add":
-                    taskManager.add(command);
+                    taskManager.add(commandInfo);
                     break;
                 case "delete":
-                    taskManager.delete(command);
+                    taskManager.delete(commandInfo);
                     break;
                 case "edit":
-                    taskManager.edit(command);
+                    taskManager.edit(commandInfo);
                     break;
                 case "undo":
-                	taskManager.undo(command, dataStorage.getPastVersion());
+                	taskManager.undo(commandInfo, dataStorage.getPastVersion());
                 	break;
                 case "complete":
-                    taskManager.complete(command);
+                    taskManager.complete(commandInfo);
                     break;
                 	
             }
@@ -64,11 +56,7 @@ public class Controller extends Application {
 
         uiComponent.updateTaskList(taskManager.getTasks());
         uiComponent.updateReminderList(taskManager.getReminders());
-        System.out.println("Displaying all tasks after command");
-        for(Task task : taskManager.getList()) {
-        	System.out.println(task.getDescription());
-        }
-
+        
         dataStorage.saveTasks(taskManager.getList());
     }
     
@@ -87,7 +75,7 @@ public class Controller extends Application {
         taskManager = new TaskManager();
         dataStorage = new DataStorage();
         dataStorage.initiateFile();
-        System.out.println("Initializing TaskManager");
+        
         taskManager.initializeList(dataStorage.retrieveTasks());
         
         launch(args);

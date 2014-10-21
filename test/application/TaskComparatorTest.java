@@ -78,5 +78,21 @@ public class TaskComparatorTest {
         assertEquals("b is now in front", b, tasks.get(0));
         assertEquals("a is now behind", a, tasks.get(1));        
     }
+    
+    @Test
+    public void testModifiedAtComparator() {
+        try {
+            Thread.sleep(100);
+        } catch (Exception e) {
+            // ???
+        }
+        
+        b.setPriority(0);
+        
+        Collections.sort(tasks, new ModifiedAtComparator());
+        
+        assertEquals("b is now in front", b, tasks.get(0));
+        assertEquals("a is now behind", a, tasks.get(1));        
+    }
 
 }

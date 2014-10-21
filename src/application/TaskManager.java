@@ -21,25 +21,22 @@ class TaskManager {
     /**
      * Adds a task to the list.
      * 
-     * @param command
-     *            of type "add".
+     * @param commandInfo of type "add".
      * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "add".
      */
-    public ArrayList<Task> add(CommandInfo command) throws MismatchedCommandException {
-        if (!"add".equals(command.getCommandType())) {
+    public ArrayList<Task> add(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"add".equals(commandInfo.getCommandType())) {
             throw new MismatchedCommandException();
         }
         
-        System.out.println("TaskManager: tasks before command");
         for(int i = 0; i < list.size(); i ++) {
         	System.out.println((i+1) + ". " + list.get(i).getDescription());
         }
         
-        this.task = new Task(command);
-        System.out.println("Task added: " + task.getDescription());
+        this.task = new Task(commandInfo);
         this.list.add(this.task);
         
-        System.out.println("TaskManager: tasks after command");
         for(int i = 0; i < list.size(); i ++) {
         	System.out.println((i+1) + ". " + list.get(i).getDescription());
         }
@@ -50,21 +47,21 @@ class TaskManager {
     /**
      * Edits a task in the list.
      * 
-     * @param command
-     *            of type "edit" and contains task id.
+     * @param commandInfo of type "edit" and contains task id.
      * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "edit".
      */
-    public ArrayList<Task> edit(CommandInfo command) throws MismatchedCommandException {
-        if (!"edit".equals(command.getCommandType())) {
+    public ArrayList<Task> edit(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"edit".equals(commandInfo.getCommandType())) {
             throw new MismatchedCommandException();
         }
         
         // Waiting for proper sequence flow.
-//        int id = command.getTaskID(); // Temporary id use.
+//        int id = commandInfo.getTaskID(); // Temporary id use.
 //        this.task = this.list.get(id - 1); // Get the appropriate task.
 //        
 //        // Check which fields are modified, and edit.
-//        if (command.getPriority() != 0)
+//        if (commandInfo.getPriority() != 0)
         
         return this.list;
     }
@@ -72,40 +69,55 @@ class TaskManager {
     /**
      * Deletes a task in the list.
      * 
-     * @param command
-     *            of type "delete" and contains task id.
+     * @param commandInfo of type "delete" and contains task id.
      * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "delete".
      */
-    public ArrayList<Task> delete(CommandInfo command) throws MismatchedCommandException {
-        if (!"delete".equals(command.getCommandType())) {
+    public ArrayList<Task> delete(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"delete".equals(commandInfo.getCommandType())) {
             throw new MismatchedCommandException();
         }
         
         // Temporary hack to remove via ArrayList index.
-        int taskId = command.getTaskID() - 1;
+        int taskId = commandInfo.getTaskID() - 1;
         this.list.remove(taskId);
 
         return this.list;
     }
     
-    public ArrayList<Task> complete(CommandInfo command) throws MismatchedCommandException {
-        if (!"complete".equals(command.getCommandType())) {
+    /**
+     * Completes a task in the list.
+     * 
+     * @param commandInfo of type "complete" and contains task id.
+     * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "complete".
+     */
+    public ArrayList<Task> complete(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"complete".equals(commandInfo.getCommandType())) {
             throw new MismatchedCommandException();
         }
         
-        int taskId = command.getTaskID() - 1;
+        int taskId = commandInfo.getTaskID() - 1;
         this.list.get(taskId).complete();
         
         return this.list;
     }
-    
-    public ArrayList<Task> undo(CommandInfo command, ArrayList<Task> backup) 
+
+    /**
+     * Undos one previous commandInfo.
+     * 
+     * @param commandInfo of type "complete" and contains task id.
+     * @param backup the backup task list.
+     * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "undo".
+     */
+    public ArrayList<Task> undo(CommandInfo commandInfo, ArrayList<Task> backup) 
             throws MismatchedCommandException {
-        if (!"undo".equals(command.getCommandType())) {
+        if (!"undo".equals(commandInfo.getCommandType())) {
             throw new MismatchedCommandException();
         }
-        list = new ArrayList<Task>(backup);
-        return list;
+        this.list = new ArrayList<Task>(backup);
+        return this.list;
     }
 
     /**
@@ -124,15 +136,19 @@ class TaskManager {
      */
     public ArrayList<Task> getTasks() {
         ArrayList<Task> tasks = new ArrayList<Task>();
+        
+        int i = 0;
         ListIterator<Task> li = this.list.listIterator();
         while (li.hasNext()) {
             Task t = li.next();
             if (t.getDate() == null) { // There is no date.
+                t.setDisplayID("" + i);
                 tasks.add(t);
             }
+            i++;
         }
         
-        Collections.sort(tasks, new CreatedAtComparator());
+        Collections.sort(tasks, new ModifiedAtComparator());
         return tasks;
     }
     
@@ -143,12 +159,16 @@ class TaskManager {
      */
     public ArrayList<Task> getReminders() {
         ArrayList<Task> tasks = new ArrayList<Task>();
+        
+        int i = 0;
         ListIterator<Task> li = this.list.listIterator();
         while (li.hasNext()) {
             Task t = li.next();
             if (t.getDate() != null) { // There is a date.
+                t.setDisplayID("" + i);
                 tasks.add(t);
             }
+            i++;
         }
         Collections.sort(tasks, new DateComparator());
         return tasks;
@@ -157,13 +177,11 @@ class TaskManager {
     /**
      * Initializes the list of tasks from storage.
      * 
-     * @param storedList
-     *            ArrayList of tasks.
+     * @param storedList ArrayList of tasks.
      * @return the initialized list of tasks.
      */
     public ArrayList<Task> initializeList(ArrayList<Task> storedList) {
         list = new ArrayList<Task>(storedList);
-        System.out.println("Number of current tasks = " + list.size());
         return this.list;
     }
 }
