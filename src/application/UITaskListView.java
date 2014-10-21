@@ -136,6 +136,20 @@ public class UITaskListView {
         		return 280;
         	}
         }
+        
+        private String generateTaskDescription(Task item) {
+        	String output = item.getDescription();
+        	
+        	if(item.getDate() != null) {
+        		output += "\nSTART DATE: " + item.getDate().toString();
+        	} 
+        	
+        	if(item.getEndDate() != null) {
+        		output += "\n END DATE: " + item.getEndDate().toString();
+        	}
+        	
+        	return output;
+        }
 
         @Override
         public void updateItem(Task item, boolean empty) {
@@ -143,9 +157,12 @@ public class UITaskListView {
             
         	if(!empty) {
         		if (item != null) {
-        			Text text = createText(item.getDescription(), 150, 12);
         			
-        			int height = getContentHeight(item.getDescription().length());
+        			String output = generateTaskDescription(item);
+        			
+        			Text text = createText(output, 150, 12);
+        			
+        			int height = getContentHeight(output.length());
         			this.setStyle(String.format(CONTAINER_HEIGHT, height));
         			contentPlaceHolder = createRectangle(260, height-10, 10, 10, Color.WHITE);
         			
