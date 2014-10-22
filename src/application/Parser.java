@@ -85,7 +85,7 @@ public class Parser {
      */
     private int parseTaskID(String input) {
         String command = parseCommandType(input); 
-        int taskID = 0;
+        int taskID = -1;
         if ((command.equalsIgnoreCase("edit")) || (command.equalsIgnoreCase("complete")) || (command.equalsIgnoreCase("delete"))) {
             taskID = Integer.parseInt(input.trim().split("\\s+")[1]);
         }
