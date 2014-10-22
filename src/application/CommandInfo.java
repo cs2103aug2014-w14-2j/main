@@ -1,24 +1,26 @@
 package application;
 
 import java.util.Date;
-import java.util.List;
-
 import org.joda.time.DateTime;
 
 /** This class stores all information that a Command object needs to execute a command 
  * 
- * @author Jinyu  A0090971Y
+ * @author A0090971Y
  */
+
 
 public class CommandInfo {
 
+    private boolean isValid;
     private String commandType;
     private int taskID;
     private String taskDesc;
     private Date startDateTime;
     private Date endDateTime;
     private int priority;
-    
+    private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","quit","search","undo"};
+
+    //@author A0090971Y
     /**
      * constructor for CommandInfo class
      * @param commandType
@@ -29,18 +31,43 @@ public class CommandInfo {
      * @param priority
      */
     CommandInfo(String commandType, int taskID, String taskDesc, Date startDateTime,Date endDateTime, int priority) {  // edit 
+        this.isValid = validateCommandType(commandType);
         this.commandType = commandType;
         this.taskID = taskID;
         this.taskDesc = taskDesc;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.priority = priority;
+
+
     }
-    
-    // not implemented yet
-    private boolean validateCommand(String command) {
-        return true;        
+
+    //@author A0090971Y
+    /**
+     * 
+     * @param command
+     * @return true if the command type is valid, else return false
+     */
+    private boolean validateCommandType(String command) {
+        for (int i = 0; i<CommandInfo.getValidCommandTypes().length; i++) {
+            if (command.equalsIgnoreCase(CommandInfo.getValidCommandTypes()[i])) {
+                System.out.println("testing");
+                return true;
+            }
+        }
+        return false;        
     }
+
+    //@author A0090971Y
+    /**
+     * 
+     * @return the boolean value indicating the validity of the user input. True if the command is valid, false if invalid
+     */
+    public boolean getIsValid() {
+        return this.isValid;
+    }
+
+    //@author A0090971Y
     /**
      * This returns the command type to be executed 
      * @return command type
@@ -48,6 +75,8 @@ public class CommandInfo {
     public String getCommandType(){
         return commandType.toLowerCase();
     }
+
+    //@author A0090971Y
     /**
      * This returns the task ID 
      * @return task ID
@@ -55,8 +84,8 @@ public class CommandInfo {
     public int getTaskID(){
         return taskID;
     }
- 
 
+    //@author A0090971Y
     /**
      * This returns the start date time of the task
      * @return the start date time of a task with the type Date, null if there is no start date time
@@ -68,12 +97,12 @@ public class CommandInfo {
         }
         return (new DateTime(startDateTime));
     }
-    
+
+    //@author A0090971Y
     /**
      * This returns the end date time of the task
      * @return the start date time of a task with the type Date, null if there is no end date time
      */
-
     public DateTime getEndDateTime() {
         DateTime dateTime = null;
         if (endDateTime == null) {
@@ -81,8 +110,8 @@ public class CommandInfo {
         }
         return (new DateTime(endDateTime));
     }
-    
-    
+
+    //@author A0090971Y
     /**
      * 
      * @return an integer indicate the level of priority, the larger the integer, the higher the priority
@@ -90,7 +119,8 @@ public class CommandInfo {
     public int getPriority(){
         return priority;
     }
-    
+
+    //@author A0090971Y
     /**
      * return the description of the Task
      * @return the description of the Task.
@@ -98,7 +128,8 @@ public class CommandInfo {
     public String getTaskDesc(){
         return taskDesc;
     }
-    
+
+    //@author A0090971Y
     /**
      * return the keyword to be searched
      * @return the keyword to be searched.
@@ -106,6 +137,14 @@ public class CommandInfo {
     public String getKeyword(){
         return taskDesc;
     }
-    
-   
+
+    public static String[] getValidCommandTypes() {
+        return validCommandTypes;
+    }
+
+    public static void setValidCommandTypes(String[] validCommandTypes) {
+        CommandInfo.validCommandTypes = validCommandTypes;
+    }
+
+
 }
