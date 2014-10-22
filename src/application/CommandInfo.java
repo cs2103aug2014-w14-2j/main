@@ -1,9 +1,6 @@
 package application;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import org.joda.time.DateTime;
 
 /** This class stores all information that a Command object needs to execute a command 
@@ -21,7 +18,7 @@ public class CommandInfo {
     private Date startDateTime;
     private Date endDateTime;
     private int priority;
-    private static String validCommandTypes[] = new String[] {"add","complete","edit","delete","quit","search","undo"};
+    private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","quit","search","undo"};
 
     //@author A0090971Y
     /**
@@ -52,8 +49,8 @@ public class CommandInfo {
      * @return true if the command type is valid, else return false
      */
     private boolean validateCommandType(String command) {
-        for (int i = 0; i<this.validCommandTypes.length; i++) {
-            if (command.equalsIgnoreCase(this.validCommandTypes[i])) {
+        for (int i = 0; i<CommandInfo.getValidCommandTypes().length; i++) {
+            if (command.equalsIgnoreCase(CommandInfo.getValidCommandTypes()[i])) {
                 System.out.println("testing");
                 return true;
             }
@@ -139,6 +136,14 @@ public class CommandInfo {
      */
     public String getKeyword(){
         return taskDesc;
+    }
+
+    public static String[] getValidCommandTypes() {
+        return validCommandTypes;
+    }
+
+    public static void setValidCommandTypes(String[] validCommandTypes) {
+        CommandInfo.validCommandTypes = validCommandTypes;
     }
 
 

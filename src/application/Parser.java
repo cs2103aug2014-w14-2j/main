@@ -16,10 +16,11 @@ public class Parser {
 
     private static Logger logger = Logger.getLogger("Foo");
     private DateTimeParser parser;
+    private static String[] timePrepositions = new String[] {"at","by","from","on","till","until"};
 
-  //  validCommandTypes.add("complete");
-  //  validCommandTypes.add("delete");
-    
+    //  validCommandTypes.add("complete");
+    //  validCommandTypes.add("delete");
+
     //@author A0090971Y
     /**
      * This constructs a parser object with an user input 
@@ -43,10 +44,46 @@ public class Parser {
         parser = new DateTimeParser(parseContent(userInput));
         Date startDateTime = parser.getStartDateTime();
         Date endDateTime = parser.getEndDateTime();
+        // remove prepositions identifying time
         String taskDesc = parser.removeDateTime((parseContent(userInput)));
+        taskDesc = removePrepositions(userInput,taskDesc);
 
         CommandInfo cmdInfo = new CommandInfo(commandType, taskID, taskDesc,startDateTime,endDateTime, priority);
         return cmdInfo;
+    }
+
+    private String removePrepositions(String input, String taskDesc){
+        String[] inputArray = input.trim().split("\\s+");
+        String[] descArray = taskDesc.trim().split("\\s+");
+        int indexInput = -1;
+        String preposition = null;
+        for (int j = 0; j<inputArray.length;j++)
+            for (int i = 0; i<Parser.getTimePrepositions().length;i++) {
+                if (inputArray[j].equals(Parser.getTimePrepositions()[i])) {
+                    indexInput = j;
+                    preposition = Parser.getTimePrepositions()[i];
+                    break;
+                }
+            }
+
+        for (int i = 0; i<descArray.length;i++){
+            if (descArray[i].equals(preposition)) {
+                if ((i+1)!= descArray.length){
+                    String nextWordDesc = descArray[i+1];
+                    String nextWordInput = inputArray[i+1];
+                    if (!nextWordInput.equals(nextWordDesc)) {
+                        taskDesc = taskDesc.replace(preposition, "");
+                    }
+                }
+                else {
+                    if ((indexInput+1)!=inputArray.length) {
+                        taskDesc = taskDesc.replace(preposition,"");
+                    }
+                }
+            }
+        }
+
+        return taskDesc;
     }
 
     //@author A0090971Y
@@ -100,6 +137,14 @@ public class Parser {
     private int parsePriority(String input){
         int priority = StringUtils.countMatches(input,"!");
         return priority;
+    }
+
+    public static String[] getTimePrepositions() {
+        return timePrepositions;
+    }
+
+    public static void setTimePrepositions(String[] timePrepositions) {
+        Parser.timePrepositions = timePrepositions;
     }
 
     /*
