@@ -75,7 +75,7 @@ public class UIComponent {
 
 	private void initializeStyleSheet() {
 		Font.loadFont(UIComponent.class.getResource("Raleway-Regular.TTF").toExternalForm(), 10);
-		Font.loadFont(UIComponent.class.getResource("Raleway-Bold.TTF").toExternalForm(), 10);
+		Font.loadFont(UIComponent.class.getResource("Bemio.otf").toExternalForm(), 10);
 		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
 		rootPane.getStyleClass().add(ROOTPANE_STYLESHEET);
 	}
