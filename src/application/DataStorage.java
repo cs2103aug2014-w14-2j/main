@@ -36,7 +36,7 @@ public class DataStorage {
 	private static final String STRING_END = "End date";
 	private static final String STRING_PRIORITY = "Priority";
 	
-	private static Logger logger = Logger.getLogger("DataStorage");
+	private static WaveLogger logger = new WaveLogger("DataStorage");
 	
 	//@author A0115864B
 	/**
