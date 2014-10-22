@@ -6,7 +6,6 @@ package application;
 import static org.junit.Assert.*;
 
 import org.joda.time.DateTime;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,27 +18,33 @@ import org.junit.Test;
 public class TaskTest {
     private Task task;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         task = new Task();
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     /**
-     * Test method for {@link application.Task#getId()}.
+     * Test method for {@link application.Task#getID()}.
      */
     @Test
     public void testGetId() {
-        assertNull(task.getID());
+        assertNotNull(task.getID());
+    }
+    
+    /**
+     * Test method for {@link application.Task#displayID()}.
+     */
+    @Test
+    public void testDisplayId() {
+        assertNull("has null displayID", task.getDisplayID());
+        
+        String displayID = "F1";
+        task.setDisplayID(displayID);
+        assertEquals("has set displayID", displayID, task.getDisplayID());
     }
 
     /**
@@ -51,7 +56,7 @@ public class TaskTest {
         
         String description = "description";
         task.setDescription(description);
-        assertEquals("has set description", task.getDescription(), description);
+        assertEquals("has set description", description, task.getDescription());
     }
 
     /**
@@ -63,7 +68,7 @@ public class TaskTest {
         
         DateTime date = new DateTime(2014, 10, 11, 12, 44, 0);
         task.setDate(date);
-        assertEquals("has set date", task.getDate(), date);
+        assertEquals("has set date", date, task.getDate());
         
         task.setDate(null);
         assertNull("has set null date", task.getDate());
@@ -78,7 +83,7 @@ public class TaskTest {
         
         DateTime endDate = new DateTime(2014, 10, 11, 12, 44, 0);
         task.setEndDate(endDate);
-        assertEquals("has set endDate", task.getEndDate(), endDate);
+        assertEquals("has set endDate", endDate, task.getEndDate());
         
         task.setEndDate(null);
         assertNull("has set null endDate", task.getEndDate());
@@ -107,7 +112,7 @@ public class TaskTest {
         
         int priority = 1;
         task.setPriority(priority);
-        assertEquals("has priority", task.getPriority(), priority);        
+        assertEquals("has priority", priority, task.getPriority());        
     }
 
 }

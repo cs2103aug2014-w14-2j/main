@@ -11,7 +11,9 @@ import org.joda.time.DateTime;
  * @author Sun Wang Jun
  */
 public class Task {    
-    private String id;
+    private int id;
+    private String displayID;
+    
     private String description;
 
     private DateTime date;
@@ -22,30 +24,33 @@ public class Task {
     private DateTime createdAt;
     private DateTime modifiedAt;
     
+    private static int idCounter = 0;
+    
     /**
      * Constructor that creates a Task based on CommandInfo.
+     * 
+     * @param commandInfo the CommandInfo object that contains parsed information.
      */
-    public Task(CommandInfo command) {
-        this.description = command.getTaskDesc();
-        if (command.getStartDateTime() != null) {
-            // Temporarily casting to DateTime.
-            this.date = new DateTime(command.getStartDateTime());
+    public Task(CommandInfo commandInfo) {
+        this(); // Calls default constructor first.
+        
+        this.description = commandInfo.getTaskDesc();
+        if (commandInfo.getStartDateTime() != null) {
+            this.date = commandInfo.getStartDateTime();
         }
-        if (command.getEndDateTime() != null) {
-            // Temporarily casting to DateTime.
-            this.endDate = new DateTime(command.getEndDateTime());
+        if (commandInfo.getEndDateTime() != null) {
+            this.endDate = commandInfo.getEndDateTime();
         }
-        if (command.getPriority() != 0) {
-            this.priority = command.getPriority();
+        if (commandInfo.getPriority() != 0) {
+            this.priority = commandInfo.getPriority();
         }
-        this.createdAt = new DateTime();
-        this.modifiedAt = new DateTime();
     }
     
     /**
      * Public default constructor.
      */
     public Task() {
+        this.id = ++Task.idCounter;
         this.createdAt = new DateTime();
         this.modifiedAt = new DateTime();
     }
@@ -55,9 +60,7 @@ public class Task {
      * 
      * @return the id of the Task.
      */
-    public String getID() {
-        return this.id;
-    }
+    public int getID() { return this.id; }
 
     // We may not want to expose any setting of ids.
     // public void setId(String id) { this.id = id; }
@@ -67,19 +70,33 @@ public class Task {
      * 
      * @return the description of the Task.
      */
-    public String getDescription() {
-        return this.description;
-    }
+    public String getDescription() { return this.description; }
 
     /**
      * Sets the description of the Task.
      * 
-     * @param description
-     *            overwrites the description of the Task.
+     * @param description overwrites the description of the Task.
      */
     public void setDescription(String description) {
         this.description = description;
         this.modifiedAt = new DateTime();
+    }    
+    
+    /**
+     * Returns the displayID of the Task.
+     * 
+     * @return the displayID of the Task.
+     */
+    public String getDisplayID() { return this.displayID; }
+
+    /**
+     * Sets the displayID of the Task.
+     * 
+     * @param description overwrites the displayID of the Task.
+     */
+    public void setDisplayID(String displayID) {
+        this.displayID = displayID;
+        // this.modifiedAt = new DateTime(); // This does not modify the task. 
     }
 
     /**
@@ -87,16 +104,13 @@ public class Task {
      * 
      * @return the (start) date of the Task. Returns null if there is no date.
      */
-    public DateTime getDate() {
-        return this.date;
-    }
+    public DateTime getDate() { return this.date; }
 
     /**
      * Sets the (start) date of the Task. Set as null to remove the date.
      * 
-     * @param date
-     *            sets the (start) date of the Task. Set to null to remove the
-     *            date.
+     * @param date sets the (start) date of the Task.
+     *     Set to null to remove the date.
      */
     public void setDate(DateTime date) {
         // We should probably set endDate to null if date is null.
@@ -107,24 +121,19 @@ public class Task {
     /**
      * Removes the (start) date of the Task.
      */
-    public void removeDate() {
-        this.setDate(null);
-    }
+    public void removeDate() { this.setDate(null); }
 
     /**
      * Returns the end date of the Task. Returns null if there is no end date.
      * 
      * @return the end date of the Task. Returns null if there is no end date.
      */
-    public DateTime getEndDate() {
-        return this.endDate;
-    }
+    public DateTime getEndDate() { return this.endDate; }
 
     /**
      * Sets the end date of the Task. Set as null to remove the date.
      * 
-     * @param endDate
-     *            sets the end date of the Task. Set to null to remove the date.
+     * @param endDate sets the end date of the Task. Set to null to remove the date.
      */
     public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
@@ -134,24 +143,19 @@ public class Task {
     /**
      * Removes the end date of the Task.
      */
-    public void removeEndDate() {
-        this.setEndDate(null);
-    }
+    public void removeEndDate() { this.setEndDate(null); }
 
     /**
      * Returns whether Task is completed.
      * 
      * @return boolean whether Task is completed.
      */
-    public boolean isCompleted() {
-        return completed;
-    }
+    public boolean isCompleted() { return completed; }
 
     /**
      * Sets the completed status of the Task.
      * 
-     * @param completed
-     *            overwrites the completed status of the Task.
+     * @param completed overwrites the completed status of the Task.
      */
     public void setCompleted(boolean completed) {
         this.completed = completed;
@@ -161,9 +165,7 @@ public class Task {
     /**
      * Completes the task.
      */
-    public void complete() {
-        this.setCompleted(true);
-    }
+    public void complete() { this.setCompleted(true); }
 
     /**
      * Returns the priority of the Task.
@@ -211,7 +213,11 @@ class DateComparator implements Comparator<Task> {
         } else if (a.getDate().isBefore(b.getDate())) {
             return -1; // a is before b, so a comes before b.
         } else {
-            if (a.getEndDate().isAfter(b.getEndDate())) {
+            if (a.getEndDate() == null && b.getEndDate() == null) { // Untested.
+                return 0; // both a and b has no end date, do nothing.
+            } else if (a.getEndDate() == null) { // Untested.
+                return 1; // a has no end date, b has end date, so a comes after b. 
+            } else if (a.getEndDate().isAfter(b.getEndDate())) {
                 return 1; // a is after b, so a comes after b.
             } else if (a.getEndDate().isBefore(b.getEndDate())) {
                 return -1; // a is before b, so a comes before b.
@@ -226,13 +232,13 @@ class DateComparator implements Comparator<Task> {
  * 
  * @author Sun Wang Jun
  */
-class CreatedAtComparator implements Comparator<Task> {
+class ModifiedAtComparator implements Comparator<Task> {
     @Override
     public int compare(Task a, Task b) {
-        if (a.getCreatedAt().isAfter(b.getCreatedAt())) {
-            return 1; // a is after b, so a comes after b.
-        } else if (a.getCreatedAt().isBefore(b.getCreatedAt())) {
-            return -1; // a is before b, so a comes before b.
+        if (a.getModifiedAt().isAfter(b.getModifiedAt())) {
+            return -1; // a is after b, so a comes after b.
+        } else if (a.getModifiedAt().isBefore(b.getModifiedAt())) {
+            return 1; // a is before b, so a comes before b.
         }
         return 0;
     }
