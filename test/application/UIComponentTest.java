@@ -5,6 +5,11 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * 
+ * 
+ * @author Tan Young Sing
+ */
 public class UIComponentTest {
 
 	public static UIComponent ui;
@@ -16,14 +21,11 @@ public class UIComponentTest {
 	
 	@Test
 	public void test() {
-		
 		assertNotNull(ui.getCmdInputBox());
 		assertNotNull(ui.getEventReminderTaskListView());
 		assertNotNull(ui.getFloatingTaskListView());
 		assertNotNull(ui.getRootPane());
 		assertNotNull(ui.getScene());
-		
-		fail("Not yet implemented");
 	}
 
 }
