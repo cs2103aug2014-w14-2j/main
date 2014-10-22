@@ -1,9 +1,16 @@
 .rootPane {
     /*-fx-background-color: rgb(243, 244, 246, 0.2);*/
     -fx-background-color: rgb(102, 102, 102, 0.8);
+    -fx-font-family: Raleway-Regular;
 }
 
 .root_style {
+	-fx-font-family: Raleway-Regular;
+}
+
+.Raleway {
+    -fx-font-family: Raleway-Regular;
+    -fx-font-size: 20;
 }
  
  .display {
@@ -73,8 +80,8 @@
 }
 
 .list-cell:filled:selected:focused, .list-cell:filled:selected {
--fx-background-color: lightgray;
--fx-text-fill: -fx-selection-bar-text;
+	-fx-background-color: lightgray;
+	-fx-text-fill: -fx-selection-bar-text;
 }
  
  

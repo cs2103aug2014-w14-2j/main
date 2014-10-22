@@ -4,6 +4,7 @@ import javafx.stage.Stage;
 
 import java.util.logging.*;
 import java.util.ArrayList;
+
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -16,7 +17,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 
 /**
  * Main Class for the UI, That integrates all components into one and return 
@@ -45,7 +45,7 @@ public class UIComponent {
 	private BorderPane rootPane;
 	private UICmdInputBox cmdInputBox;
 	private UITaskListView floatingTaskListView, eventReminderTaskListView;
-
+	
 	public Scene getScene() {
 		return scene;
 	}
@@ -74,6 +74,8 @@ public class UIComponent {
 	}
 
 	private void initializeStyleSheet() {
+		Font.loadFont(UIComponent.class.getResource("Raleway-Regular.TTF").toExternalForm(), 10);
+		Font.loadFont(UIComponent.class.getResource("Raleway-Bold.TTF").toExternalForm(), 10);
 		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
 		rootPane.getStyleClass().add(ROOTPANE_STYLESHEET);
 	}
@@ -205,7 +207,7 @@ public class UIComponent {
 	    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
 	}
-
+	
     public void showStage(Stage primaryStage) {
     	try {
     		primaryStage.setScene(this.getScene());

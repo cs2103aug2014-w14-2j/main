@@ -31,7 +31,7 @@ public class UICmdInputBox {
     }
     
     private void addKeyPressedListener() {
-        cmdInputBox.setOnKeyPressed(new UIControllerListener(this.cmdInputBox));
+        cmdInputBox.setOnKeyPressed(new UIControllerListener(this));
     }
     
     private void addKeyTypedListener() {
