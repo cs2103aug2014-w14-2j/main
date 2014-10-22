@@ -4,12 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.FileWriter;
+
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -27,12 +31,12 @@ public class DataStorage {
 	private ArrayList<Task> backup;
 	private DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 	
-	
 	private static final String STRING_DESC = "Description";
 	private static final String STRING_DATE = "Date";
 	private static final String STRING_END = "End date";
 	private static final String STRING_PRIORITY = "Priority";
 	
+	private static Logger logger = Logger.getLogger("DataStorage");
 	
 	//@author A0115864B
 	/**
@@ -64,8 +68,9 @@ public class DataStorage {
 			if(!file.exists()) {
 				file.createNewFile();
 			}
+			logger.log(Level.INFO, "Storage file ready");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, e.toString(), e);
 		}
 	}
 	
@@ -79,10 +84,11 @@ public class DataStorage {
 		JSONParser parser = new JSONParser();
 		try {
 			tasks = (JSONArray) parser.parse(new FileReader(filename));
+			logger.log(Level.INFO, "Contents of storage file retrieved");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, e.toString(), e);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, e.toString(), e);
 		}
 		return getTasks();
 	}
@@ -99,8 +105,9 @@ public class DataStorage {
 			fw.write(tasks.toJSONString());
 			fw.flush();
 			fw.close();
+			logger.log(Level.INFO, "Tasks written to external file");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, e.toString(), e);
 		}
 	}
 	
@@ -139,9 +146,9 @@ public class DataStorage {
 				if(obj.containsKey(STRING_PRIORITY)) {
 					task.setPriority(((Long)obj.get(STRING_PRIORITY)).intValue());
 				}
-				
+				logger.log(Level.INFO, "JSONArray converted to ArrayList of tasks");
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.log(Level.SEVERE, e.toString(), e);
 			}
 			list.add(task);
 		}
@@ -172,8 +179,9 @@ public class DataStorage {
 					String end = fmt.print(list.get(i).getEndDate());
 					obj.put(STRING_END, end);
 				}
+				logger.log(Level.INFO, "ArrayList of tasks converted to JSONArray");
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.log(Level.SEVERE, e.toString(), e);
 			}
 			tasks.add(obj);
 		}
