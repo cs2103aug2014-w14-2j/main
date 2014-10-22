@@ -13,10 +13,14 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 
 public class Parser {
-    
+
     private static Logger logger = Logger.getLogger("Foo");
     private DateTimeParser parser;
+
+  //  validCommandTypes.add("complete");
+  //  validCommandTypes.add("delete");
     
+    //@author A0090971Y
     /**
      * This constructs a parser object with an user input 
      * @param userInput   the one line command statement the user inputs
@@ -24,26 +28,28 @@ public class Parser {
     Parser(){
     }
 
+    //@author A0090971Y
     /**
      * return the object of CommandInfo class
      * @return the object of CommandInfo class 
      */
     public CommandInfo getCommandInfo(String userInput) {
         logger.log(Level.INFO, "going to return a CommandInfo object to Controller");
-        
+
         String commandType = parseCommandType(userInput);
         int taskID = parseTaskID(userInput);
         int priority = parsePriority(userInput);
-        
+
         parser = new DateTimeParser(parseContent(userInput));
         Date startDateTime = parser.getStartDateTime();
         Date endDateTime = parser.getEndDateTime();
-        String taskDesc = parseTaskDesc(parseContent(userInput));
-        
+        String taskDesc = parser.removeDateTime((parseContent(userInput)));
+
         CommandInfo cmdInfo = new CommandInfo(commandType, taskID, taskDesc,startDateTime,endDateTime, priority);
         return cmdInfo;
     }
-    
+
+    //@author A0090971Y
     /**
      * 
      * @param input
@@ -58,12 +64,8 @@ public class Parser {
         }
         return content;
     }
-    
-    private String parseTaskDesc(String input){
-        String taskDesc = parser.removeDateTime(input);
-        return taskDesc;
-    }
 
+    //@author A0090971Y
     /**
      * 
      * @param input
@@ -74,7 +76,8 @@ public class Parser {
         logger.log(Level.INFO, "command keyword parsed");
         return command;      
     }
-    
+
+    //@author A0090971Y
     /**
      * 
      * @param input
@@ -88,34 +91,39 @@ public class Parser {
         }
         return taskID;
     }
-
+    //@author A0090971Y
+    /**
+     * 
+     * @param input
+     * @return the priority of the task by counting the number of exclamation marks in user input
+     */
     private int parsePriority(String input){
         int priority = StringUtils.countMatches(input,"!");
         return priority;
     }
-    
+
     /*
     private String extractTime(String dateTime){
         String time =dateTime.trim().split("\\s+")[3];
         return time;
     }
-    
+
     private String extractDate(String dateTime){
         logger.log(Level.INFO, "starting to extract date");
         int day,month,year;
-      
+
         String[] dateTimes = dateTime.trim().split("\\s+");
         year =Integer.parseInt(dateTimes[dateTimes.length-1]);
         month = matchMonth(dateTimes[1]);
         day = Integer.parseInt(dateTimes[2]);
-        
+
         LocalDate localDate = new LocalDate(year, month, day);
         DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
         String formattedDate = formatter.print(localDate);
         return formattedDate;
-       
+
     }
-    
+
     private int matchMonth(String month) {
         switch (month) {
             case "Jan" : return 1; 
@@ -133,7 +141,7 @@ public class Parser {
             default: return 0;
         }
     }
-    */
+     */
 }
 
 
