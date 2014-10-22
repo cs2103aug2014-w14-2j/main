@@ -84,13 +84,6 @@ public class DataStorage {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		System.out.println("File retrieved successfully");
-		System.out.println("Number of tasks retrieved: " + tasks.size());
-		for(Object obj : tasks) {
-			JSONObject task = (JSONObject)obj;
-			System.out.println(task.get("Description"));
-		}
-		System.out.println("These are the tasks retrieved\n");
 		return getTasks();
 	}
 	
@@ -99,7 +92,7 @@ public class DataStorage {
 	 * Store tasks to external json file
 	 * @param array ArrayList of tasks
 	 */
-	public String saveTasks(ArrayList<Task> array) {
+	public void saveTasks(ArrayList<Task> array) {
 		convertArrayListToJSONArray(array);
 		try {
 			FileWriter fw = new FileWriter(filename, false);
@@ -109,8 +102,6 @@ public class DataStorage {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("One iteration finished\n");
-		return "Saved to" + filename;
 	}
 	
 	//@author A0115864B
@@ -146,7 +137,7 @@ public class DataStorage {
 				}
 				// Currently priority is not fully supported. May have to update later.
 				if(obj.containsKey(STRING_PRIORITY)) {
-					task.setPriority(((Integer)obj.get(STRING_PRIORITY)));
+					task.setPriority(((Long)obj.get(STRING_PRIORITY)).intValue());
 				}
 				
 			} catch (Exception e) {
@@ -168,11 +159,9 @@ public class DataStorage {
 	 */
 	public JSONArray convertArrayListToJSONArray(ArrayList<Task> list) {
 		tasks.clear();
-		System.out.println("Converting these tasks to JSON");
 		for (int i = 0; i < list.size(); i++) {
 			JSONObject obj = new JSONObject();
 			obj.put(STRING_DESC, list.get(i).getDescription());
-			System.out.println(list.get(i).getDescription());
 			obj.put(STRING_PRIORITY, list.get(i).getPriority());
 			try {
 				if (list.get(i).getDate() != null) {
