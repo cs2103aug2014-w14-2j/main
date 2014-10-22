@@ -213,7 +213,11 @@ class DateComparator implements Comparator<Task> {
         } else if (a.getDate().isBefore(b.getDate())) {
             return -1; // a is before b, so a comes before b.
         } else {
-            if (a.getEndDate().isAfter(b.getEndDate())) {
+            if (a.getEndDate() == null && b.getEndDate() == null) { // Untested.
+                return 0; // both a and b has no end date, do nothing.
+            } else if (a.getEndDate() == null) { // Untested.
+                return 1; // a has no end date, b has end date, so a comes after b. 
+            } else if (a.getEndDate().isAfter(b.getEndDate())) {
                 return 1; // a is after b, so a comes after b.
             } else if (a.getEndDate().isBefore(b.getEndDate())) {
                 return -1; // a is before b, so a comes before b.
