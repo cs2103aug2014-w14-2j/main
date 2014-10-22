@@ -20,8 +20,8 @@ import org.junit.Test;
  * @author Kim Hyung Jon (matric number: A0115864B)
  * JUnit test file for test-driven development of DataStorage class
  * One test for each method in DataStorage
- * Note: As of V0.2, priority and completion setting is not fully implemented.
- * Therefore this test also excludes those settings.
+ * Note: As of V0.2, priority and completion setting are not fully implemented.
+ * Therefore this test also excludes those settings for now.
  *
  */
 
@@ -52,15 +52,18 @@ public class DataTest {
 		test.initiateFile();
 		ArrayList<Task> arrayList = test.retrieveTasks();
 		
+		// Deadline task
 		Task task1 = arrayList.get(0);
 		assertEquals(task1.getDescription(), "Birthday party preparation");
 		assertEquals(task1.getDate().toString(), "2015-01-16T01:34:23.000+08:00");
 		
+		// Timed task
 		Task task2 = arrayList.get(1);
 		assertEquals(task2.getDescription(), "CS2103T tutorial");
 		assertEquals(task2.getDate().toString(), "2014-10-15T14:00:00.000+08:00");
 		assertEquals(task2.getEndDate().toString(), "2014-10-15T15:00:00.000+08:00");
 		
+		// Floating task
 		Task task3 = arrayList.get(2);
 		assertEquals(task3.getDescription(), "Remember to feed dog");
 		
@@ -73,16 +76,22 @@ public class DataTest {
 		test.initiateFile();
 		
 		ArrayList<Task> testArrayList = new ArrayList<Task>();
+		
+		// Deadline task
 		Task task1 = new Task();
 		task1.setDescription("Birthday party preparation");
 		DateTime date1 = formatter.parseDateTime("16/01/2015 01:34:23");
 		task1.setDate(date1);
+		
+		// Timed task
 		Task task2 = new Task();
 		task2.setDescription("CS2103T tutorial");
 		DateTime date2 = formatter.parseDateTime("15/10/2014 14:00:00");
 		task2.setDate(date2);
 		DateTime end2 = formatter.parseDateTime("15/10/2014 15:00:00");
 		task2.setEndDate(end2);
+		
+		// Floating task
 		Task task3 = new Task();
 		task3.setDescription("Remember to feed dog");
 		testArrayList.add(task1);
@@ -90,6 +99,7 @@ public class DataTest {
 		testArrayList.add(task3);
 		
 		test.saveTasks(testArrayList);
+		// Comparing the contents of output file with those of expected output file
 		byte b1 = 0;
 		byte b2 = 1;
 		try {
@@ -113,6 +123,7 @@ public class DataTest {
 	public void testConvert1() {
 		test = new DataStorage();
 		
+		// Original ArrayList of tasks
 		ArrayList<Task> testArrayList = new ArrayList<Task>();
 		Task task1 = new Task();
 		task1.setDescription("Buy Civilization: Beyond Earth");
@@ -151,6 +162,7 @@ public class DataTest {
 	public void testConvert2() {
 		test = new DataStorage();
 		
+		// Original JSONArray of tasks
 		JSONArray jsonArray = new JSONArray();
 		JSONObject obj1 = new JSONObject();
 		obj1.put("Description", "submit CS2103T code");
