@@ -52,6 +52,13 @@ public class Parser {
         return cmdInfo;
     }
 
+    //@author A0090971Y
+    /**
+     * 
+     * @param input
+     * @param taskDesc
+     * @return a string of the task description by removing the prepositions in front of time
+     */
     private String removePrepositions(String input, String taskDesc){
         String[] inputArray = input.trim().split("\\s+");
         String[] descArray = taskDesc.trim().split("\\s+");
@@ -95,10 +102,13 @@ public class Parser {
     private String parseContent(String input) {
         String content;
         String firstWord = input.trim().split("\\s+")[0];
+        System.out.println("first word is "+firstWord);
         content = input.replace(firstWord,"").trim();
-        if (parseTaskID(input) != 0) {
+        System.out.println("content after trim is "+content);
+        if (parseTaskID(input) != -1) {
             content = content.replace(String.valueOf(parseTaskID(input))+" ","").trim();
         }
+        System.out.println("content is "+content);
         return content;
     }
 
@@ -124,7 +134,9 @@ public class Parser {
         String command = parseCommandType(input); 
         int taskID = -1;
         if ((command.equalsIgnoreCase("edit")) || (command.equalsIgnoreCase("complete")) || (command.equalsIgnoreCase("delete"))) {
-            taskID = Integer.parseInt(input.trim().split("\\s+")[1]);
+            if (input.trim().split("\\s+").length>1) {
+                taskID = Integer.parseInt(input.trim().split("\\s+")[1]);
+            }
         }
         return taskID;
     }
