@@ -57,11 +57,10 @@ class TaskManager {
         }
         
         // Waiting for proper sequence flow.
-//        int id = commandInfo.getTaskID(); // Temporary id use.
-//        this.task = this.list.get(id - 1); // Get the appropriate task.
-//        
-//        // Check which fields are modified, and edit.
-//        if (commandInfo.getPriority() != 0)
+        int id = commandInfo.getTaskID(); // Temporary id use.        
+        this.task = new Task(commandInfo, id);
+        
+        this.list.set(id - 1, this.task); // Replaces the task.
         
         return this.list;
     }

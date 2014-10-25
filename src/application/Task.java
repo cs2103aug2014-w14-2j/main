@@ -45,6 +45,17 @@ public class Task {
             this.priority = commandInfo.getPriority();
         }
     }
+
+    /**
+     * Constructor that edits an existing Task based on CommandInfo and assigns the same id.
+     * 
+     * @param commandInfo the CommandInfo object that contains parsed information.
+     * @param id an existing Task id.
+     */
+    public Task(CommandInfo commandInfo, int id) {
+        this(commandInfo); // Calls commandInfo constructor first.
+        this.id = id;
+    }
     
     /**
      * Public default constructor.
