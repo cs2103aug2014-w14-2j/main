@@ -13,10 +13,15 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.StringUtils;
 
 public class Parser {
-    
+
     private static Logger logger = Logger.getLogger("Foo");
     private DateTimeParser parser;
-    
+    private static String[] timePrepositions = new String[] {"at","by","from","on","till","until"};
+
+    //  validCommandTypes.add("complete");
+    //  validCommandTypes.add("delete");
+
+    //@author A0090971Y
     /**
      * This constructs a parser object with an user input 
      * @param userInput   the one line command statement the user inputs
@@ -24,26 +29,71 @@ public class Parser {
     Parser(){
     }
 
+    //@author A0090971Y
     /**
      * return the object of CommandInfo class
      * @return the object of CommandInfo class 
      */
     public CommandInfo getCommandInfo(String userInput) {
         logger.log(Level.INFO, "going to return a CommandInfo object to Controller");
-        
+
         String commandType = parseCommandType(userInput);
         int taskID = parseTaskID(userInput);
         int priority = parsePriority(userInput);
-        
+
         parser = new DateTimeParser(parseContent(userInput));
         Date startDateTime = parser.getStartDateTime();
         Date endDateTime = parser.getEndDateTime();
-        String taskDesc = parseTaskDesc(parseContent(userInput));
-        
+        // remove prepositions identifying time
+        String taskDesc = parser.removeDateTime((parseContent(userInput)));
+        taskDesc = removePrepositions(userInput,taskDesc);
+
         CommandInfo cmdInfo = new CommandInfo(commandType, taskID, taskDesc,startDateTime,endDateTime, priority);
         return cmdInfo;
     }
-    
+
+    //@author A0090971Y
+    /**
+     * 
+     * @param input
+     * @param taskDesc
+     * @return a string of the task description by removing the prepositions in front of time
+     */
+    private String removePrepositions(String input, String taskDesc){
+        String[] inputArray = input.trim().split("\\s+");
+        String[] descArray = taskDesc.trim().split("\\s+");
+        int indexInput = -1;
+        String preposition = null;
+        for (int j = 0; j<inputArray.length;j++)
+            for (int i = 0; i<Parser.getTimePrepositions().length;i++) {
+                if (inputArray[j].equals(Parser.getTimePrepositions()[i])) {
+                    indexInput = j;
+                    preposition = Parser.getTimePrepositions()[i];
+                    break;
+                }
+            }
+
+        for (int i = 0; i<descArray.length;i++){
+            if (descArray[i].equals(preposition)) {
+                if ((i+1)!= descArray.length){
+                    String nextWordDesc = descArray[i+1];
+                    String nextWordInput = inputArray[i+1];
+                    if (!nextWordInput.equals(nextWordDesc)) {
+                        taskDesc = taskDesc.replace(preposition, "");
+                    }
+                }
+                else {
+                    if ((indexInput+1)!=inputArray.length) {
+                        taskDesc = taskDesc.replace(preposition,"");
+                    }
+                }
+            }
+        }
+
+        return taskDesc;
+    }
+
+    //@author A0090971Y
     /**
      * 
      * @param input
@@ -52,18 +102,17 @@ public class Parser {
     private String parseContent(String input) {
         String content;
         String firstWord = input.trim().split("\\s+")[0];
+        System.out.println("first word is "+firstWord);
         content = input.replace(firstWord,"").trim();
-        if (parseTaskID(input) != 0) {
+        System.out.println("content after trim is "+content);
+        if (parseTaskID(input) != -1) {
             content = content.replace(String.valueOf(parseTaskID(input))+" ","").trim();
         }
+        System.out.println("content is "+content);
         return content;
     }
-    
-    private String parseTaskDesc(String input){
-        String taskDesc = parser.removeDateTime(input);
-        return taskDesc;
-    }
 
+    //@author A0090971Y
     /**
      * 
      * @param input
@@ -74,7 +123,8 @@ public class Parser {
         logger.log(Level.INFO, "command keyword parsed");
         return command;      
     }
-    
+
+    //@author A0090971Y
     /**
      * 
      * @param input
@@ -82,40 +132,55 @@ public class Parser {
      */
     private int parseTaskID(String input) {
         String command = parseCommandType(input); 
-        int taskID = 0;
+        int taskID = -1;
         if ((command.equalsIgnoreCase("edit")) || (command.equalsIgnoreCase("complete")) || (command.equalsIgnoreCase("delete"))) {
-            taskID = Integer.parseInt(input.trim().split("\\s+")[1]);
+            if (input.trim().split("\\s+").length>1) {
+                taskID = Integer.parseInt(input.trim().split("\\s+")[1]);
+            }
         }
         return taskID;
     }
-
+    //@author A0090971Y
+    /**
+     * 
+     * @param input
+     * @return the priority of the task by counting the number of exclamation marks in user input
+     */
     private int parsePriority(String input){
         int priority = StringUtils.countMatches(input,"!");
         return priority;
     }
-    
+
+    public static String[] getTimePrepositions() {
+        return timePrepositions;
+    }
+
+    public static void setTimePrepositions(String[] timePrepositions) {
+        Parser.timePrepositions = timePrepositions;
+    }
+
     /*
     private String extractTime(String dateTime){
         String time =dateTime.trim().split("\\s+")[3];
         return time;
     }
-    
+
     private String extractDate(String dateTime){
         logger.log(Level.INFO, "starting to extract date");
         int day,month,year;
-      
+
         String[] dateTimes = dateTime.trim().split("\\s+");
         year =Integer.parseInt(dateTimes[dateTimes.length-1]);
         month = matchMonth(dateTimes[1]);
         day = Integer.parseInt(dateTimes[2]);
-        
+
         LocalDate localDate = new LocalDate(year, month, day);
         DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
         String formattedDate = formatter.print(localDate);
         return formattedDate;
-       
+
     }
-    
+
     private int matchMonth(String month) {
         switch (month) {
             case "Jan" : return 1; 
@@ -133,7 +198,7 @@ public class Parser {
             default: return 0;
         }
     }
-    */
+     */
 }
 
 

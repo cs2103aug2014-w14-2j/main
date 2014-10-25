@@ -30,16 +30,8 @@ class TaskManager {
             throw new MismatchedCommandException();
         }
         
-        for(int i = 0; i < list.size(); i ++) {
-        	System.out.println((i+1) + ". " + list.get(i).getDescription());
-        }
-        
         this.task = new Task(commandInfo);
         this.list.add(this.task);
-        
-        for(int i = 0; i < list.size(); i ++) {
-        	System.out.println((i+1) + ". " + list.get(i).getDescription());
-        }
         
         return this.list;
     }
