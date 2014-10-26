@@ -14,7 +14,6 @@ import org.apache.commons.lang.StringUtils;
 
 public class Parser {
 
-    private static Logger logger = Logger.getLogger("Foo");
     private DateTimeParser parser;
     private static String[] timePrepositions = new String[] {"at","by","from","on","till","until"};
 
@@ -35,18 +34,16 @@ public class Parser {
      * @return the object of CommandInfo class 
      */
     public CommandInfo getCommandInfo(String userInput) {
-        logger.log(Level.INFO, "going to return a CommandInfo object to Controller");
 
         String commandType = parseCommandType(userInput);
         int taskID = parseTaskID(userInput);
-        int priority = parsePriority(userInput);
 
-        parser = new DateTimeParser(parseContent(userInput));
+        String taskDesc = parseTaskDesc(userInput,commandType);
+        int priority = parsePriority(userInput,taskDesc);
+        String content = parseContent(userInput,taskDesc);
+        parser = new DateTimeParser(content);
         Date startDateTime = parser.getStartDateTime();
         Date endDateTime = parser.getEndDateTime();
-        // remove prepositions identifying time
-        String taskDesc = parser.removeDateTime((parseContent(userInput)));
-        taskDesc = removePrepositions(userInput,taskDesc);
 
         CommandInfo cmdInfo = new CommandInfo(commandType, taskID, taskDesc,startDateTime,endDateTime, priority);
         return cmdInfo;
@@ -56,59 +53,32 @@ public class Parser {
     /**
      * 
      * @param input
-     * @param taskDesc
-     * @return a string of the task description by removing the prepositions in front of time
-     */
-    private String removePrepositions(String input, String taskDesc){
-        String[] inputArray = input.trim().split("\\s+");
-        String[] descArray = taskDesc.trim().split("\\s+");
-        int indexInput = -1;
-        String preposition = null;
-        for (int j = 0; j<inputArray.length;j++)
-            for (int i = 0; i<Parser.getTimePrepositions().length;i++) {
-                if (inputArray[j].equals(Parser.getTimePrepositions()[i])) {
-                    indexInput = j;
-                    preposition = Parser.getTimePrepositions()[i];
-                    break;
-                }
-            }
-
-        for (int i = 0; i<descArray.length;i++){
-            if (descArray[i].equals(preposition)) {
-                if ((i+1)!= descArray.length){
-                    String nextWordDesc = descArray[i+1];
-                    String nextWordInput = inputArray[i+1];
-                    if (!nextWordInput.equals(nextWordDesc)) {
-                        taskDesc = taskDesc.replace(preposition, "");
-                    }
-                }
-                else {
-                    if ((indexInput+1)!=inputArray.length) {
-                        taskDesc = taskDesc.replace(preposition,"");
-                    }
-                }
-            }
-        }
-
-        return taskDesc;
-    }
-
-    //@author A0090971Y
-    /**
-     * 
-     * @param input
      * @return the input by removing the command type word and the taskID.
      */
-    private String parseContent(String input) {
+    private String parseTaskDesc(String input,String cmdType) {
+        if ((cmdType.equalsIgnoreCase("add")) || (cmdType.equalsIgnoreCase("edit"))){
+            int startIndex = input.indexOf("[");
+            int endIndex = input.indexOf("]");
+            return input.substring(startIndex+1, endIndex);
+        }
+        else {
+            cmdType = input.trim().split("\\s+")[0];
+            input = input.replaceFirst(cmdType+" ", "");
+            return input;
+        }
+    }
+
+    private String parseContent(String input,String desc) {
         String content;
         String firstWord = input.trim().split("\\s+")[0];
-        System.out.println("first word is "+firstWord);
         content = input.replace(firstWord,"").trim();
-        System.out.println("content after trim is "+content);
         if (parseTaskID(input) != -1) {
             content = content.replace(String.valueOf(parseTaskID(input))+" ","").trim();
         }
-        System.out.println("content is "+content);
+        content = content.replaceAll(desc, "");
+        content = content.replace("[","");
+        content = content.replace("]", "");
+        content = content.replace("!", "");
         return content;
     }
 
@@ -119,8 +89,13 @@ public class Parser {
      * @return the command type , all letters capitalized
      */
     private String parseCommandType(String input) {
-        String command = input.trim().split("\\s+")[0].toUpperCase();
-        logger.log(Level.INFO, "command keyword parsed");
+        String[] array = input.trim().split("\\s+");
+        String command = array[0].toUpperCase();
+        if ((command.equalsIgnoreCase("search")) || (array.length==2)){
+            if (array[1].equals("complete")) {
+                command = command+" "+array[1].toUpperCase();
+            }
+        }
         return command;      
     }
 
@@ -146,18 +121,12 @@ public class Parser {
      * @param input
      * @return the priority of the task by counting the number of exclamation marks in user input
      */
-    private int parsePriority(String input){
+    private int parsePriority(String input,String desc){
+        input = input.replaceAll(desc, "");
         int priority = StringUtils.countMatches(input,"!");
         return priority;
     }
 
-    public static String[] getTimePrepositions() {
-        return timePrepositions;
-    }
-
-    public static void setTimePrepositions(String[] timePrepositions) {
-        Parser.timePrepositions = timePrepositions;
-    }
 
     /*
     private String extractTime(String dateTime){
@@ -199,6 +168,58 @@ public class Parser {
         }
     }
      */
+
+    //@author A0090971Y
+    /**
+     * 
+     * @param input
+     * @param taskDesc
+     * @return a string of the task description by removing the prepositions in front of time
+     */
+    /*
+    private String removePrepositions(String input, String taskDesc){
+        String[] inputArray = input.trim().split("\\s+");
+        String[] descArray = taskDesc.trim().split("\\s+");
+        int indexInput = -1;
+        String preposition = null;
+        for (int j = 0; j<inputArray.length;j++)
+            for (int i = 0; i<Parser.getTimePrepositions().length;i++) {
+                if (inputArray[j].equals(Parser.getTimePrepositions()[i])) {
+                    indexInput = j;
+                    preposition = Parser.getTimePrepositions()[i];
+                    break;
+                }
+            }
+
+        for (int i = 0; i<descArray.length;i++){
+            if (descArray[i].equals(preposition)) {
+                if ((i+1)!= descArray.length){
+                    String nextWordDesc = descArray[i+1];
+                    String nextWordInput = inputArray[i+1];
+                    if (!nextWordInput.equals(nextWordDesc)) {
+                        taskDesc = taskDesc.replace(preposition, "");
+                    }
+                }
+                else {
+                    if ((indexInput+1)!=inputArray.length) {
+                        taskDesc = taskDesc.replace(preposition,"");
+                    }
+                }
+            }
+        }
+
+        return taskDesc;
+    }
+     public static String[] getTimePrepositions() {
+        return timePrepositions;
+    }
+
+    public static void setTimePrepositions(String[] timePrepositions) {
+        Parser.timePrepositions = timePrepositions;
+    }
+
+     */
+
 }
 
 

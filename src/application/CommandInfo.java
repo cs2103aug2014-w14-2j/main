@@ -18,7 +18,7 @@ public class CommandInfo {
     private Date startDateTime;
     private Date endDateTime;
     private int priority;
-    private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","quit","search","undo"};
+    private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","quit","search","search complete","undo"};
 
     //@author A0090971Y
     /**
@@ -51,7 +51,6 @@ public class CommandInfo {
     private boolean validateCommandType(String command) {
         for (int i = 0; i<CommandInfo.getValidCommandTypes().length; i++) {
             if (command.equalsIgnoreCase(CommandInfo.getValidCommandTypes()[i])) {
-                System.out.println("testing");
                 return true;
             }
         }
