@@ -18,6 +18,8 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     private UIAutoComplete uiAutoComplete;
     private String nextPossibleCommand;
     
+    private String ADD_COMMAND = "ADD";
+    
     public UIAutoCompleteListener(UICmdInputBox cmdInputBox) {
         this.uiAutoComplete = new UIAutoComplete(cmdInputBox, this);
         this.cmdInputBox = cmdInputBox;
@@ -28,6 +30,13 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         this.nextPossibleCommand = cmd;
     }
     
+    private boolean isAddCommand(String next) {
+    	if(next.trim().equals(ADD_COMMAND)) {
+    		return true;
+    	}
+    	return false;
+    }
+    
     @Override
     public void handle(KeyEvent event) {
         TextField inputBox = cmdInputBox.getCmdInputBox();
@@ -35,12 +44,22 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         
         if(event.getCode().equals(KeyCode.SPACE)) {
             if(nextPossibleCommand.length() != 0) {
-                inputBox.setText(nextPossibleCommand);
+            	
+            	if(isAddCommand(nextPossibleCommand)) {
+            		inputBox.setText(nextPossibleCommand + "[]");
+            	} else {
+            		inputBox.setText(nextPossibleCommand);
+            	}
+            	
                 inputBox.positionCaret(inputBox.getText().length());
+
+            	if(isAddCommand(nextPossibleCommand)) {
+            		 inputBox.positionCaret(inputBox.getText().length()-1);
+            	}
+            	
                 cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
                 nextPossibleCommand = "";
             }
-        }
-        
+        }   
     }
 }
