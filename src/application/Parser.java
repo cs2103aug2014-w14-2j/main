@@ -7,15 +7,17 @@ package application;
  */
 
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 
 public class Parser {
 
     private DateTimeParser parser;
-    private static String[] timePrepositions = new String[] {"at","by","from","on","till","until"};
+ //   private static String[] timePrepositions = new String[] {"at","by","from","on","till","until"};
+    private static String[] escapeSequences = new String[]{"\t","\b","\n","\r","\f","\'","\"","\\"};
+    private static String[] addSlashes = new String[] {"\\t","\\b","\\n","\\r","\\f","\\'","\"","\\"};
+    
+            
 
     //  validCommandTypes.add("complete");
     //  validCommandTypes.add("delete");
@@ -56,16 +58,34 @@ public class Parser {
      * @return the input by removing the command type word and the taskID.
      */
     private String parseTaskDesc(String input,String cmdType) {
+        String desc = null;
         if ((cmdType.equalsIgnoreCase("add")) || (cmdType.equalsIgnoreCase("edit"))){
             int startIndex = input.indexOf("[");
             int endIndex = input.indexOf("]");
-            return input.substring(startIndex+1, endIndex);
+            desc = input.substring(startIndex+1, endIndex);
+            desc = dealEscapeSequences(desc);
         }
         else {
             cmdType = input.trim().split("\\s+")[0];
-            input = input.replaceFirst(cmdType+" ", "");
-            return input;
+            desc = input.replaceFirst(cmdType+" ", "");
         }
+        return desc;
+    }
+    
+    //@author A0090971Y
+    /**
+     * 
+     * @param desc
+     * @return task description without the escape sequences
+     */
+    private String dealEscapeSequences(String desc) {
+        for (int i = 0; i<escapeSequences.length;i++) {
+            if (desc.indexOf(escapeSequences[i])>=0) { 
+                desc = desc.replace(escapeSequences[i],addSlashes[i]);
+                break;
+            }
+        }
+        return desc;
     }
 
     private String parseContent(String input,String desc) {
