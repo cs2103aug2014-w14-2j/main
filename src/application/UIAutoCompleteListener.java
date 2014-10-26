@@ -19,6 +19,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     private String nextPossibleCommand;
     
     private String ADD_COMMAND = "ADD";
+    private String EDIT_COMMAND = "EDIT"; 
     
     public UIAutoCompleteListener(UICmdInputBox cmdInputBox) {
         this.uiAutoComplete = new UIAutoComplete(cmdInputBox, this);
@@ -32,6 +33,13 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     
     private boolean isAddCommand(String next) {
     	if(next.trim().equals(ADD_COMMAND)) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    private boolean isEditCommand(String next) {
+    	if(next.trim().equals(EDIT_COMMAND)) {
     		return true;
     	}
     	return false;
