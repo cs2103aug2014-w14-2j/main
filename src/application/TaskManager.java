@@ -23,15 +23,14 @@ class TaskManager {
         this.idMapping = new Hashtable<String, Integer>();
     }
     
+    /**
+     * Used to map displayID to actual taskID.
+     * @param displayID
+     * @return taskID
+     */
     private int mapDisplayIDtoActualID(String displayID) {
         return this.idMapping.get(displayID);
     }
-    
-    // Temporary workaround until Command returns String displayID. 
-    private int mapDisplayIDtoActualID(int displayID) {
-        return displayID;
-    }
-    
     
     /**
      * Adds a task to the list.
