@@ -156,7 +156,9 @@ class TaskManager {
             }
         }
         
+        // Sort by modified at date first, then priority.
         Collections.sort(tasks, new ModifiedAtComparator());
+        Collections.sort(tasks, new PriorityComparator());
         return tasks;
     }
     
@@ -180,7 +182,7 @@ class TaskManager {
                 i++;
             }
         }
-        Collections.sort(tasks, new DateComparator());
+        Collections.sort(tasks, new DayPriorityComparator());
         return tasks;
     }
 

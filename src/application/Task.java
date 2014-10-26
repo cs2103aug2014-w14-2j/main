@@ -3,6 +3,7 @@ package application;
 import java.util.Comparator;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 //@author A0110546R
 /**
@@ -265,5 +266,46 @@ class PriorityComparator implements Comparator<Task> {
     public int compare(Task a, Task b) {
         // a is greater priority, a should be before b.
         return b.getPriority() - a.getPriority();
+    }
+}
+
+
+/**
+ * The comparator class used to sort Tasks by days and within each day, by priority.
+ * 
+ * @author Sun Wang Jun
+ */
+class DayPriorityComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        LocalDate ldtA = a.getDate().toLocalDate();
+        LocalDate ldtB = b.getDate().toLocalDate();
+        
+        if (ldtA.isAfter(ldtB)) {
+            return 1; // a is after b, so a comes after b.
+        } else if (ldtA.isBefore(ldtB)) {
+            return -1; // a is before b, so a comes before b.
+        }
+
+        else { // Same day, so sort by priority:
+            
+            if (a.getPriority() > b.getPriority()) {
+                return -1; // a has greater priority, so a comes before b.
+            } else if (a.getPriority() < b.getPriority()) {
+                return 1; // a has smaller priority, so a comes after b.
+            }
+            
+            // Else, priority is equal, so sort by end date:
+            else if (a.getEndDate() == null && b.getEndDate() == null) {
+                return 0; // both a and b has no end date, do nothing.
+            } else if (a.getEndDate() == null) { // Untested.
+                return 1; // a has no end date, b has end date, so a comes after b. 
+            } else if (a.getEndDate().isAfter(b.getEndDate())) {
+                return 1; // a is after b, so a comes after b.
+            } else if (a.getEndDate().isBefore(b.getEndDate())) {
+                return -1; // a is before b, so a comes before b.
+            }
+        }
+        return 0;        
     }
 }
