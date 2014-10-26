@@ -129,9 +129,9 @@ public class UITaskListView {
         	Rectangle priorityIndicator = createRectangle(50, 50, 5, 5, Color.web(indicator_color));
     		
         	if(type.equals(FLOATING)) {
-        		indexLabel = createText("F" + displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
+        		indexLabel = createText(displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
         	} else if(type.equals(EVENT)) {
-        		indexLabel = createText("E" + displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
+        		indexLabel = createText(displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
         	}
         	
         	StackPane stack = new StackPane();
