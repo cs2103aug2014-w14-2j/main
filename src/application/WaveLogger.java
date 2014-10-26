@@ -55,7 +55,7 @@ public class WaveLogger {
             Scanner sc = new Scanner(new FileReader(consoleOutputList));
             while (sc.hasNext()) {
                 String nameInList = sc.nextLine();
-                System.out.println(nameInList + " " + name);
+                
                 if (name.equals(nameInList)) {
                     sc.close();
                     return true;

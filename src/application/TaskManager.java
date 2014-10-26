@@ -2,6 +2,7 @@ package application;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.ListIterator;
 
 //@author A0110546R
@@ -11,12 +12,26 @@ import java.util.ListIterator;
  * @author Sun Wang Jun
  */
 class TaskManager {
+    private static final char NORMAL_TASK_PREFIX = 'F';
+    private static final char DATED_TASK_PREFIX = 'E';
+    
     private ArrayList<Task> list;
     private Task task; // Maybe this can act as "last modified task".
+    private Hashtable<String, Integer> idMapping;
     
     public TaskManager() { // Maybe singleton this.
-        
+        this.idMapping = new Hashtable<String, Integer>();
     }
+    
+    private int mapDisplayIDtoActualID(String displayID) {
+        return this.idMapping.get(displayID);
+    }
+    
+    // Temporary workaround until Command returns String displayID. 
+    private int mapDisplayIDtoActualID(int displayID) {
+        return displayID;
+    }
+    
     
     /**
      * Adds a task to the list.
@@ -49,11 +64,10 @@ class TaskManager {
         }
         
         // Waiting for proper sequence flow.
-//        int id = commandInfo.getTaskID(); // Temporary id use.
-//        this.task = this.list.get(id - 1); // Get the appropriate task.
-//        
-//        // Check which fields are modified, and edit.
-//        if (commandInfo.getPriority() != 0)
+        int id = this.mapDisplayIDtoActualID(commandInfo.getTaskID()); // Temporary id use.        
+        this.task = new Task(commandInfo, id);
+        
+        this.list.set(id - 1, this.task); // Replaces the task.
         
         return this.list;
     }
@@ -71,7 +85,7 @@ class TaskManager {
         }
         
         // Temporary hack to remove via ArrayList index.
-        int taskId = commandInfo.getTaskID() - 1;
+        int taskId = this.mapDisplayIDtoActualID(commandInfo.getTaskID());
         this.list.remove(taskId);
 
         return this.list;
@@ -89,7 +103,7 @@ class TaskManager {
             throw new MismatchedCommandException();
         }
         
-        int taskId = commandInfo.getTaskID() - 1;
+        int taskId = this.mapDisplayIDtoActualID(commandInfo.getTaskID());
         this.list.get(taskId).complete();
         
         return this.list;
@@ -129,18 +143,22 @@ class TaskManager {
     public ArrayList<Task> getTasks() {
         ArrayList<Task> tasks = new ArrayList<Task>();
         
-        int i = 0;
+        int i = 1;
         ListIterator<Task> li = this.list.listIterator();
         while (li.hasNext()) {
             Task t = li.next();
             if (t.getDate() == null) { // There is no date.
-                t.setDisplayID("" + i);
+                String displayID = NORMAL_TASK_PREFIX + "" + i;
+                this.idMapping.put(displayID, t.getID());
+                t.setDisplayID(displayID);
                 tasks.add(t);
+                i++;
             }
-            i++;
         }
         
+        // Sort by modified at date first, then priority.
         Collections.sort(tasks, new ModifiedAtComparator());
+        Collections.sort(tasks, new PriorityComparator());
         return tasks;
     }
     
@@ -152,17 +170,19 @@ class TaskManager {
     public ArrayList<Task> getReminders() {
         ArrayList<Task> tasks = new ArrayList<Task>();
         
-        int i = 0;
+        int i = 1;
         ListIterator<Task> li = this.list.listIterator();
         while (li.hasNext()) {
             Task t = li.next();
             if (t.getDate() != null) { // There is a date.
-                t.setDisplayID("" + i);
+                String displayID = DATED_TASK_PREFIX + "" + i;
+                this.idMapping.put(displayID, t.getID());
+                t.setDisplayID(displayID);
                 tasks.add(t);
+                i++;
             }
-            i++;
         }
-        Collections.sort(tasks, new DateComparator());
+        Collections.sort(tasks, new DayPriorityComparator());
         return tasks;
     }
 

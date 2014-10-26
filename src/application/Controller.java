@@ -1,6 +1,7 @@
 package application;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.util.logging.Level;
@@ -46,6 +47,9 @@ public class Controller extends Application {
                 	break;
                 case "complete":
                     taskManager.complete(commandInfo);
+                    break;
+                case "quit":
+                    Platform.exit();
                     break;
                 	
             }
