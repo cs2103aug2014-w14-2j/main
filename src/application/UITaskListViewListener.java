@@ -29,9 +29,9 @@ public class UITaskListViewListener implements EventHandler<KeyEvent> {
 		String output = "";
 		for (Task item : items) {
 			if(taskList.type.equals(FLOATING)){
-				output += "F" + item.getDisplayID() + " ";
+				output += item.getDisplayID() + " ";
 			} else if(taskList.type.equals(EVENT)){
-				output += "E" + item.getDisplayID() + " ";
+				output += item.getDisplayID() + " ";
 			}
 		}
 		return output.trim();
