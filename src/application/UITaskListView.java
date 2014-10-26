@@ -1,5 +1,8 @@
 package application;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;
@@ -36,11 +39,13 @@ public class UITaskListView {
 	private final String CMD_DELETE_EVENT_TASK = "DELETE %s";
 	
 	public String type;
+    private Timer animTimer;
     
     public UITaskListView(UICmdInputBox cmdInputBox, String type) {
         taskList = new ListView<Task>();
         this.cmdInputBox = cmdInputBox;
         this.type = type;
+        this.animTimer = new Timer();
         setTaskListProperty();
     }
 
@@ -78,8 +83,35 @@ public class UITaskListView {
     public ObservableList<Task> getSelectedItem() {
     	return taskList.getSelectionModel().getSelectedItems();
     }
+    
+    private void shrinkList() {
+	    animTimer.scheduleAtFixedRate(new TimerTask() {
+	    	@Override
+	        public void run() {
+	            while (true) {
+	            	double newHeight = taskList.getHeight() - 3;
+	              	if(newHeight <= 0) {
+	              		this.cancel();
+	              	} else {
+	              		taskList.setPrefHeight(newHeight);
+	              	}
+	            }
+	        }
+	    }, 2000, 20);
+	    
+    }
+    
+    private void expandList() {
+    	
+    }
    
     public void populateTaskListWithData(ObservableList<Task> items) {
+    	if(items.isEmpty()) {
+    		shrinkList();
+    	} else {
+    		
+    	}
+    
     	taskList.setItems(items);
     }
 

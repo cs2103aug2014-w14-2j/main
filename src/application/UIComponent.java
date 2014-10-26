@@ -4,6 +4,8 @@ import javafx.stage.Stage;
 
 import java.util.logging.*;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -137,6 +139,7 @@ public class UIComponent {
 		Text textLabel = new Text(text);
 		textLabel.setTextAlignment(TextAlignment.JUSTIFY);
 		textLabel.setFont(Font.font(fontFamily, weight, size));
+		textLabel.setWrappingWidth(290);
 		
 		if(color == null) {
 			color = Color.WHITE;
