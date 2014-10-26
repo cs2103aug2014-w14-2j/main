@@ -13,7 +13,7 @@ public class CommandInfo {
 
     private boolean isValid;
     private String commandType;
-    private int taskID;
+    private String taskID;
     private String taskDesc;
     private Date startDateTime;
     private Date endDateTime;
@@ -30,7 +30,7 @@ public class CommandInfo {
      * @param endDateTime
      * @param priority
      */
-    CommandInfo(String commandType, int taskID, String taskDesc, Date startDateTime,Date endDateTime, int priority) {  // edit 
+    CommandInfo(String commandType, String taskID, String taskDesc, Date startDateTime,Date endDateTime, int priority) {  // edit 
         this.isValid = validateCommandType(commandType);
         this.commandType = commandType;
         this.taskID = taskID;
@@ -80,7 +80,7 @@ public class CommandInfo {
      * This returns the task ID 
      * @return task ID
      */
-    public int getTaskID(){
+    public String getTaskID(){
         return taskID;
     }
 

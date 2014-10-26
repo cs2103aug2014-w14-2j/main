@@ -36,7 +36,7 @@ public class Parser {
     public CommandInfo getCommandInfo(String userInput) {
 
         String commandType = parseCommandType(userInput);
-        int taskID = parseTaskID(userInput);
+        String taskID = parseTaskID(userInput);
 
         String taskDesc = parseTaskDesc(userInput,commandType);
         int priority = parsePriority(userInput,taskDesc);
@@ -72,8 +72,8 @@ public class Parser {
         String content;
         String firstWord = input.trim().split("\\s+")[0];
         content = input.replace(firstWord,"").trim();
-        if (parseTaskID(input) != -1) {
-            content = content.replace(String.valueOf(parseTaskID(input))+" ","").trim();
+        if (parseTaskID(input) != null) {
+            content = content.replace(parseTaskID(input)+" ","").trim();
         }
         content = content.replaceAll(desc, "");
         content = content.replace("[","");
@@ -105,12 +105,12 @@ public class Parser {
      * @param input
      * @return 0 when taskID is not required, otherwise taskID as integer for edit,complete or delete command keyword
      */
-    private int parseTaskID(String input) {
+    private String parseTaskID(String input) {
         String command = parseCommandType(input); 
-        int taskID = -1;
+        String taskID = null;
         if ((command.equalsIgnoreCase("edit")) || (command.equalsIgnoreCase("complete")) || (command.equalsIgnoreCase("delete"))) {
             if (input.trim().split("\\s+").length>1) {
-                taskID = Integer.parseInt(input.trim().split("\\s+")[1]);
+                taskID = input.trim().split("\\s+")[1];
             }
         }
         return taskID;
