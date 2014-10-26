@@ -30,8 +30,14 @@ public class Controller extends Application {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
 
         CommandInfo commandInfo = (new Parser()).getCommandInfo(input);
-        
+
         try {
+            // Maybe this check can be placed better elsewhere.
+            if ((commandInfo.getTaskID() != null) &&
+                    (!taskManager.ensureValidDisplayID(commandInfo.getTaskID()))) {
+                return; // Add error message here?
+            }
+            
             switch (commandInfo.getCommandType()) {
                 case "add":
                     taskManager.add(commandInfo);

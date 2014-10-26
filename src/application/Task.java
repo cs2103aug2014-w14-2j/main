@@ -62,7 +62,7 @@ public class Task {
      * Public default constructor.
      */
     public Task() {
-        this.id = ++Task.idCounter;
+        this.id = Task.idCounter++;
         this.createdAt = new DateTime();
         this.modifiedAt = new DateTime();
     }
