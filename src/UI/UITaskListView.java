@@ -1,5 +1,6 @@
-package application;
+package UI;
 
+import application.Task;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.ListCell;

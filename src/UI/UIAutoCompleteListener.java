@@ -1,4 +1,4 @@
-package application;
+package UI;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -41,6 +41,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     
     private boolean isEditCommand(String next) {
     	String[] cmdRetrieval = next.split(" ");
+    	
     	if(cmdRetrieval[0].equals(EDIT_COMMAND) && cmdRetrieval.length == 3) {
     		return true;
     	}

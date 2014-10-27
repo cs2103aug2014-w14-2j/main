@@ -1,10 +1,13 @@
-package application;
+package UI;
 
 import javafx.stage.Stage;
 
 import java.util.logging.*;
 import java.util.ArrayList;
 
+import application.Controller;
+import application.Task;
+import application.WaveLogger;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
