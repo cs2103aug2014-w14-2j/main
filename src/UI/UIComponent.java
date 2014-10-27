@@ -203,18 +203,18 @@ public class UIComponent {
 	}
 
 	public void updateTaskList(ArrayList<Task> items) {
-	    ObservableList<Task> taskList = FXCollections.observableArrayList();
-	    taskList.setAll(items);
-	    floatingTaskListView.populateTaskListWithData(taskList);
+	    //ObservableList<Task> taskList = FXCollections.observableArrayList();
+	    //taskList.setAll(items);
+	    floatingTaskListView.populateTaskListWithData(items);
 	    floatingTaskListView.clearSelection();
 	    
 	    logger.log(Level.INFO, "Task ListView is updated.");
 	}
 	
 	public void updateReminderList(ArrayList<Task> items) {
-	    ObservableList<Task> taskList = FXCollections.observableArrayList();
-	    taskList.setAll(items);
-	    eventReminderTaskListView.populateTaskListWithData(taskList);
+	    //ObservableList<Task> taskList = FXCollections.observableArrayList();
+	    //taskList.setAll(items);
+	    eventReminderTaskListView.populateTaskListWithData(items);
 	    eventReminderTaskListView.clearSelection();
 	    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");

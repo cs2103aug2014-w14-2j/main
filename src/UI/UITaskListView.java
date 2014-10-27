@@ -1,6 +1,11 @@
 package UI;
 
+import java.util.ArrayList;
+
+import org.joda.time.DateTime;
+
 import application.Task;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,7 +29,7 @@ import javafx.util.Callback;
  */
 public class UITaskListView {
 
-    private ListView<Task> taskList;
+    private ListView<UITaskListItem> taskList;
 
     private final int DISPLAY_WIDTH = 300;
     private final int DISPLAY_HEIGHT = 500;
@@ -36,11 +41,13 @@ public class UITaskListView {
     
 	private final String CMD_DELETE_FLOATING_TASK = "DELETE %s";
 	private final String CMD_DELETE_EVENT_TASK = "DELETE %s";
+	private ObservableList<UITaskListItem> listItems;
 	
 	public String type;
     
     public UITaskListView(UICmdInputBox cmdInputBox, String type) {
-        taskList = new ListView<Task>();
+        taskList = new ListView<UITaskListItem>();
+        listItems = FXCollections.observableArrayList();
         this.cmdInputBox = cmdInputBox;
         this.type = type;
         setTaskListProperty();
@@ -51,9 +58,9 @@ public class UITaskListView {
         taskList.setPrefWidth(DISPLAY_WIDTH);
         taskList.getStyleClass().add(TASKLIST_DEFAULT_STYLE);
 
-        taskList.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+        taskList.setCellFactory(new Callback<ListView<UITaskListItem>, ListCell<UITaskListItem>>() {
             @Override
-            public ListCell<Task> call(ListView<Task> list) {
+            public ListCell<UITaskListItem> call(ListView<UITaskListItem> list) {
                 return new TaskListCell();
             }
         });
@@ -63,6 +70,42 @@ public class UITaskListView {
         } else if(type.equals(EVENT)) {
         	taskList.setOnKeyPressed(new UITaskListViewListener(CMD_DELETE_EVENT_TASK, cmdInputBox, this));
         }
+    }
+    
+    private ArrayList<UITaskListItem> generateFloatingList(ArrayList<Task> items) {
+    	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+    	
+    	for(Task listItem : items) {
+    		listItems.add(new UITaskListItem(listItem, listItem.getDate()));
+    	}
+    	
+    	return listItems;
+    }
+    
+    
+    private ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items) {
+    	DateTime currentDate = null;
+    	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+    	
+    	for(int i = 0; i<items.size(); i++) {
+    		Task t = items.get(i);
+    		if(i == 0) {
+        		currentDate = t.getDate();
+        		listItems.add(new UITaskListItem(null, t.getDate()));
+    		} else {
+    			if(currentDate.toString("y").equals(t.getDate().toString("y"))) {
+    				if(!currentDate.toString("D").equals(t.getDate().toString("D"))) {
+    					listItems.add(new UITaskListItem(null, t.getDate()));
+    				}
+    			} else {
+    				currentDate = t.getDate();
+    				listItems.add(new UITaskListItem(null, t.getDate()));
+    			}
+    		}	
+    		listItems.add(new UITaskListItem(t, t.getDate()));
+    	}
+    	
+    	return listItems;
     }
     
     public boolean isFocused() {
@@ -77,19 +120,27 @@ public class UITaskListView {
     	return taskList.getSelectionModel().getSelectedIndex();
     }
     
-    public ObservableList<Task> getSelectedItem() {
+    public ObservableList<UITaskListItem> getSelectedItem() {
     	return taskList.getSelectionModel().getSelectedItems();
     }
    
-    public void populateTaskListWithData(ObservableList<Task> items) {
-    	taskList.setItems(items);
+    public void populateTaskListWithData(ArrayList<Task> items) {
+    	ObservableList<UITaskListItem> convertedList = FXCollections.observableArrayList();
+    	
+    	if(this.type.equals(EVENT)) {
+    		convertedList.setAll(generateListItems(items));
+    	} else if (this.type.equals(FLOATING)){
+    		convertedList.setAll(generateFloatingList(items));
+    	}
+    	
+    	taskList.setItems(convertedList);
     }
 
-    public ListView<Task> getListView() {
+    public ListView<UITaskListItem> getListView() {
         return taskList;
     }
 
-    class TaskListCell extends ListCell<Task> { 
+    class TaskListCell extends ListCell<UITaskListItem> { 
         static private final int TASK_CONTAINER_WIDTH = 260;
         static private final int TASK_CONTAINER_HEIGHT = 70;
         static private final int TASK_CONTAINER_SPACING = 15;
@@ -166,13 +217,14 @@ public class UITaskListView {
         }
 
         @Override
-        public void updateItem(Task item, boolean empty) {
+        public void updateItem(UITaskListItem item, boolean empty) {
         	super.updateItem(item, empty);
         	
         	if(!empty) {
-        		if (item != null) {
-        			String output = generateTaskDescription(item);
-        			
+        		if (item != null && item.getType().equals("default")) {
+        			Task taskItem = item.getTask();
+        			String output = generateTaskDescription(taskItem);
+        			System.out.println(output);
         			Text text = createText(output, 150, 12, "raleway", FontWeight.NORMAL, Color.BLACK);
         			int height = getContentHeight(output.length());
         			this.setStyle(String.format(CONTAINER_HEIGHT, height));
@@ -180,7 +232,7 @@ public class UITaskListView {
         			
         			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
         			taskInnerContentHolder.setPadding(new Insets(10, 0, 0, 15));
-        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(item.getPriority(), item.getDisplayID()), text);
+        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID()), text);
         			
         			StackPane stack = new StackPane();
         			stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
@@ -189,6 +241,7 @@ public class UITaskListView {
         			setGraphic(stack);
         		}
             }else {
+            	System.out.println("heheh");
         		setGraphic(null);
         	}
         }
