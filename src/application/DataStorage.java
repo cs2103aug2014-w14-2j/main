@@ -28,13 +28,17 @@ public class DataStorage {
 	
 	private final String filename;
 	private JSONArray tasks = new JSONArray();
-	private ArrayList<Task> backup;
 	private DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+	private ArrayList<ArrayList<Task>> undoQueue = new ArrayList<ArrayList<Task>>();
 	
 	private static final String STRING_DESC = "Description";
 	private static final String STRING_DATE = "Date";
 	private static final String STRING_END = "End date";
 	private static final String STRING_PRIORITY = "Priority";
+	private static final String STRING_COMPLETED = "Completed";
+	private static final String STATIC_COMPLETED_DATE = "Completed date";
+	
+	private static final Integer undoQueue_MAX_SIZE = 2;
 	
 	private static WaveLogger logger = new WaveLogger("DataStorage");
 	
@@ -99,6 +103,11 @@ public class DataStorage {
 	 * @param array ArrayList of tasks
 	 */
 	public void saveTasks(ArrayList<Task> array) {
+
+        undoQueue.add(new ArrayList<Task>(array));
+        logger.log(Level.INFO, "Current version stored as backup");
+        manageundoQueueSize();
+	    
 		convertArrayListToJSONArray(array);
 		try {
 			FileWriter fw = new FileWriter(filename, false);
@@ -152,11 +161,21 @@ public class DataStorage {
 			}
 			list.add(task);
 		}
-		// Before sending ArrayList of tasks to Controller,
-		// keep a backup of the current state of ArrayLists
-		// so that it can be returned if an undo command is given
+		undoQueue.add(list);
 		return list;
 		
+	}
+	
+	/**
+	 * Maintain maximum undo queue size as 2
+	 */
+	public void manageundoQueueSize() {
+	    if(undoQueue.size() > undoQueue_MAX_SIZE) {
+	        logger.log(Level.INFO, "Deleting older saved versions");
+	        for (int i = undoQueue.size() ; i > undoQueue_MAX_SIZE ; i--) {
+	            undoQueue.remove(0);
+	        }
+	    }
 	}
 	
 	//@author A0115864B
@@ -192,10 +211,11 @@ public class DataStorage {
 	/**
 	 * Support for undo command
 	 * @return backup ArrayList of tasks that was saved before last operation
-	 * (Currently not implemented)
 	 */
 	public ArrayList<Task> getPastVersion() {
-		return backup;
+	    ArrayList<Task> pastVersion = undoQueue.remove(0);
+	    logger.log(Level.INFO, "Backup version retrieved");
+		return pastVersion;
 	}
 
 }
