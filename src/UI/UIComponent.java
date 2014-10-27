@@ -47,6 +47,11 @@ public class UIComponent {
 	private UICmdInputBox cmdInputBox;
 	private UITaskListView floatingTaskListView, eventReminderTaskListView;
 	
+	private final String LISTVIEW_HEADING_REMINDER = "Reminder & Events";
+	private final String LISTVIEW_HEADING_TASK = "Tasks";
+	
+	private Text reminderTaskTitle,floatingTaskTitle;
+	
 	public Scene getScene() {
 		return scene;
 	}
@@ -171,24 +176,32 @@ public class UIComponent {
 
 	private VBox getFloatingTaskListViewHolder() {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
-		Text taskTitle = createText("Tasks", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
+		floatingTaskTitle = createText(LISTVIEW_HEADING_TASK, 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 
 		floatingTaskListView = new UITaskListView(cmdInputBox, "Task");
-		innerBox.getChildren().addAll(taskTitle, floatingTaskListView.getListView());
+		innerBox.getChildren().addAll(floatingTaskTitle, floatingTaskListView.getListView());
 		
 		return innerBox;
 	}
 
 	private VBox getTimedAndDeadlineTaskHolder() {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
-		Text taskTitle = createText("Reminder & Events", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
+		reminderTaskTitle = createText(LISTVIEW_HEADING_REMINDER, 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 		
 		eventReminderTaskListView = new UITaskListView(cmdInputBox, "Event");
-		innerBox.getChildren().addAll(taskTitle, eventReminderTaskListView.getListView());
+		innerBox.getChildren().addAll(reminderTaskTitle, eventReminderTaskListView.getListView());
 
 		return innerBox;
 	}
 	
+	public void setFloatingTaskHeading(String title) {
+		floatingTaskTitle.setText(title);
+	}
+	
+	public void setReminderTaskHeading(String title) {
+		reminderTaskTitle.setText(title);
+	}
+
 	public void updateTaskList(ArrayList<Task> items) {
 	    ObservableList<Task> taskList = FXCollections.observableArrayList();
 	    taskList.setAll(items);
