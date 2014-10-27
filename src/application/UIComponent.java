@@ -27,9 +27,7 @@ import javafx.collections.ObservableList;
 public class UIComponent {
     
     private final String SUGGESTION_TEXT = "Hello User! I am WaveWave.";
-    private static Logger logger;
-    private static FileHandler fileHandler;
-
+    private WaveLogger logger;
 	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
 	private final String LISTVIEW_STYLESHEET = "taskDisplay_outer";
 	private final String ROOTPANE_STYLESHEET = "rootPane";
@@ -82,12 +80,10 @@ public class UIComponent {
 	
 	private void initializeLoggerFileHandler() {
         try {
-        	logger = Logger.getLogger("UIComponent");
-            fileHandler = new FileHandler(Controller.class.getName() + ".log");
+        	logger = new WaveLogger("UIComponent");
         } catch (Exception e) {
             logger.log(Level.SEVERE, null, e);
         }
-        logger.addHandler(fileHandler);
 	}
 	
 	private void setupScene() {
