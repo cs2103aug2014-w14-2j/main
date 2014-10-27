@@ -23,15 +23,28 @@ class TaskManager {
         this.idMapping = new Hashtable<String, Integer>();
     }
     
+    /**
+     * Checks if the task displayID entered is valid.
+     * 
+     * @param displayID the task displayID the user entered.
+     * @return whether it exists in idMapping
+     */
+    public boolean ensureValidDisplayID(String displayID) {
+        displayID = displayID.toUpperCase();
+        return this.idMapping.containsKey(displayID);
+    }
+    
+    /**
+     * Used to map displayID to actual taskID.
+     * 
+     * @param displayID
+     * @return taskID
+     */
     private int mapDisplayIDtoActualID(String displayID) {
+        displayID = displayID.toUpperCase(); // Hopefully parser will do this, yay.
+        assert(this.idMapping.containsKey(displayID) == true);
         return this.idMapping.get(displayID);
     }
-    
-    // Temporary workaround until Command returns String displayID. 
-    private int mapDisplayIDtoActualID(int displayID) {
-        return displayID;
-    }
-    
     
     /**
      * Adds a task to the list.
@@ -64,10 +77,10 @@ class TaskManager {
         }
         
         // Waiting for proper sequence flow.
-        int id = this.mapDisplayIDtoActualID(commandInfo.getTaskID()); // Temporary id use.        
-        this.task = new Task(commandInfo, id);
+        int taskId = this.mapDisplayIDtoActualID(commandInfo.getTaskID()); // Temporary id use.        
+        this.task = new Task(commandInfo, taskId);
         
-        this.list.set(id - 1, this.task); // Replaces the task.
+        this.list.set(taskId, this.task); // Replaces the task.
         
         return this.list;
     }
@@ -86,7 +99,8 @@ class TaskManager {
         
         // Temporary hack to remove via ArrayList index.
         int taskId = this.mapDisplayIDtoActualID(commandInfo.getTaskID());
-        this.list.remove(taskId);
+        this.list.set(taskId, null); // "Soft-delete" in the ArrayList.
+        this.idMapping.remove(commandInfo.getTaskID().toUpperCase()); // Temporary uppercase fix before parser.
 
         return this.list;
     }
@@ -132,7 +146,7 @@ class TaskManager {
      * @return the full list of tasks.
      */
     public ArrayList<Task> getList() {
-        return this.list;
+        return filterTaskListNotNull(this.list); // Need to filter out nulls.
     }
     
     /**
@@ -141,24 +155,23 @@ class TaskManager {
      * @return the tasks without dates.
      */
     public ArrayList<Task> getTasks() {
-        ArrayList<Task> tasks = new ArrayList<Task>();
-        
-        int i = 1;
-        ListIterator<Task> li = this.list.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            if (t.getDate() == null) { // There is no date.
-                String displayID = NORMAL_TASK_PREFIX + "" + i;
-                this.idMapping.put(displayID, t.getID());
-                t.setDisplayID(displayID);
-                tasks.add(t);
-                i++;
-            }
-        }
+        ArrayList<Task> tasks = filterTasksWithDates(this.list, false); // Display those without dates.
+        tasks = filterTasksCompleted(tasks, false); // Display only uncompleted.
         
         // Sort by modified at date first, then priority.
         Collections.sort(tasks, new ModifiedAtComparator());
         Collections.sort(tasks, new PriorityComparator());
+        
+        int i = 1;
+        ListIterator<Task> li = tasks.listIterator();
+        while (li.hasNext()) {
+            Task t = li.next();
+            String displayID = NORMAL_TASK_PREFIX + "" + i;
+            this.idMapping.put(displayID, t.getID());
+            t.setDisplayID(displayID);
+            i++;
+        }
+        
         return tasks;
     }
     
@@ -168,21 +181,21 @@ class TaskManager {
      * @return the tasks with dates.
      */
     public ArrayList<Task> getReminders() {
-        ArrayList<Task> tasks = new ArrayList<Task>();
+        ArrayList<Task> tasks = filterTasksWithDates(this.list, true); // Display those with dates.
+        tasks = filterTasksCompleted(tasks, false); // Display only uncompleted.
+
+        Collections.sort(tasks, new DayPriorityComparator());
         
         int i = 1;
-        ListIterator<Task> li = this.list.listIterator();
+        ListIterator<Task> li = tasks.listIterator();
         while (li.hasNext()) {
             Task t = li.next();
-            if (t.getDate() != null) { // There is a date.
-                String displayID = DATED_TASK_PREFIX + "" + i;
-                this.idMapping.put(displayID, t.getID());
-                t.setDisplayID(displayID);
-                tasks.add(t);
-                i++;
-            }
+            String displayID = DATED_TASK_PREFIX + "" + i;
+            this.idMapping.put(displayID, t.getID());
+            t.setDisplayID(displayID);
+            i++;
         }
-        Collections.sort(tasks, new DayPriorityComparator());
+        
         return tasks;
     }
 
@@ -196,4 +209,51 @@ class TaskManager {
         list = new ArrayList<Task>(storedList);
         return this.list;
     }
+    
+    
+    private static ArrayList<Task> filterTasksWithDates(ArrayList<Task> tasks, boolean dated) {
+        ArrayList<Task> filteredTasks = new ArrayList<Task>();
+        
+        ListIterator<Task> li = tasks.listIterator();
+        boolean hasDate = false;
+        while (li.hasNext()) {
+            Task t = li.next();
+            if (t == null) { continue; }
+            hasDate = t.getDate() != null; // True if has date.
+            if (hasDate == dated) { 
+                // If has date, and we want dated, add.
+                // If has no date, and we want no date, add.
+                filteredTasks.add(t);
+            }
+        }
+        return filteredTasks;
+    }
+    
+    private static ArrayList<Task> filterTasksCompleted(ArrayList<Task> tasks, boolean completed) {
+        ArrayList<Task> filteredTasks = new ArrayList<Task>();
+        
+        ListIterator<Task> li = tasks.listIterator();
+        while (li.hasNext()) {
+            Task t = li.next();
+            if (t == null) { continue; }
+            if (t.isCompleted() == completed) {
+                filteredTasks.add(t);
+            }
+        }
+        return filteredTasks;
+    }
+    
+    private static ArrayList<Task> filterTaskListNotNull(ArrayList<Task> tasks) {
+        ArrayList<Task> filteredTasks = new ArrayList<Task>();
+        
+        ListIterator<Task> li = tasks.listIterator();
+        while (li.hasNext()) {
+            Task t = li.next();
+            if (t != null) {
+                filteredTasks.add(t);
+            }
+        }
+        return filteredTasks;
+    }
+    
 }
