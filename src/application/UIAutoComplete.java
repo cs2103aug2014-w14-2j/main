@@ -17,7 +17,8 @@ public class UIAutoComplete {
     final private String DELETE_COMMAND = "DELETE";
     final private String EDIT_COMMAND = "EDIT";
     
-    final private int SPACE_CHAR_NOT_FOUND = 1;
+    final private int FIRST_WORD_IN_CMD = 1;
+    final private int SECOND_WORD_IN_CMD = 2;
     
     private UICmdInputBox cmdInputBox;
     private ArrayList<String> commandList;
@@ -38,7 +39,8 @@ public class UIAutoComplete {
     }
     
     public void runAutoComplete(String command) {
-    	if (isTheFirstWord(command)) {       
+    	String cmdUsed = getCommandText(command).trim();
+    	if (isTheNWord(command, FIRST_WORD_IN_CMD)) {       
             String suggestedCmd = getSuggestions(command.toUpperCase());
             
             //case 1 : suggestedCmd returns empty strings 
@@ -57,6 +59,9 @@ public class UIAutoComplete {
                 cmdInputBox.setSuggestionText(String.format(MSG_COMMAND_SUGGESTION, suggestedCmd));
                 this.acListener.setNextPossibleCmd(suggestedCmd);
             }
+        } else if (isTheNWord(command, SECOND_WORD_IN_CMD) && cmdUsed.equals(EDIT_COMMAND)) {
+        	 String suggestedCmd = cmdInputBox.getText() + "[]";
+        	 this.acListener.setNextPossibleCmd(suggestedCmd);
         } else {
             cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
             this.acListener.setNextPossibleCmd("");
@@ -77,9 +82,15 @@ public class UIAutoComplete {
         return output;
     }
     
-    private boolean isTheFirstWord(String cmd) {
+    private String getCommandText(String cmd) {
+    	String[] cmdRetrieval = cmd.split(" ");
+    	return cmdRetrieval[0];
+    }
+
+    
+    private boolean isTheNWord(String cmd, int n) {
         String[] oneWordChecker = cmd.split(" ");
-        return (oneWordChecker.length == SPACE_CHAR_NOT_FOUND);
+        return (oneWordChecker.length == n);
     }
     
 }
