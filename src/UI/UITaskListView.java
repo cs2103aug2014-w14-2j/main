@@ -3,6 +3,7 @@ package UI;
 import application.Task;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
@@ -97,6 +98,7 @@ public class UITaskListView {
         private String COLOR_DEFAULT_PRIORITY = "rgba(37, 232, 154, 1)";
         private String COLOR_HIGH_PRIORITY = "rgba(249, 104, 114, 1)";
         private String COLOR_MEDIUM_PRIORITY = "rgba(247, 207, 89, 1)";
+        
         private Rectangle contentPlaceHolder;
         private Text indexLabel;
         
@@ -111,8 +113,6 @@ public class UITaskListView {
         private Text createText(String text, int textWidth, int size, String fontFamily, FontWeight weight, Color color) {
             Text textLabel = new Text(text);
             textLabel.setWrappingWidth(textWidth);
-            textLabel.setBoundsType(TextBoundsType.VISUAL);
-            textLabel.setTextAlignment(TextAlignment.LEFT);
             textLabel.setFont(Font.font(fontFamily, weight, size));
             textLabel.setFill(color);
             return textLabel;
@@ -127,27 +127,24 @@ public class UITaskListView {
         		indicator_color = COLOR_HIGH_PRIORITY;
         	}
         	
-        	Rectangle priorityIndicator = createRectangle(50, 50, 5, 5, Color.web(indicator_color));
-    		
-        	if(type.equals(FLOATING)) {
-        		indexLabel = createText(displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
-        	} else if(type.equals(EVENT)) {
-        		indexLabel = createText(displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
-        	}
-        	
+        	Rectangle priorityIndicator = createRectangle(35, 35, 5, 5, Color.web(indicator_color));
+        	indexLabel = createText(displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
+
         	StackPane stack = new StackPane();
-        	stack.setPadding(new Insets(0, 0, 10, 0));
-			stack.setPrefHeight(60);
-			stack.setPrefWidth(60);
+        	stack.setPadding(new Insets(0, 0, 10, 3));
+			stack.setMaxHeight(35);
+			stack.setMaxWidth(35);
+        	StackPane.setAlignment(priorityIndicator, Pos.TOP_LEFT);
+        	StackPane.setAlignment(indexLabel, Pos.CENTER);
 			stack.getChildren().addAll(priorityIndicator, indexLabel);	
      
         	return stack;
         }
         
         private int getContentHeight(int length) {
-        	if (length < 50) {
+        	if (length < 150) {
         		return 80;
-        	} else if (length < 100) {
+        	} else if (length < 200) {
         		return 180;
         	} else {
         		return 280;
@@ -158,11 +155,11 @@ public class UITaskListView {
         	String output = item.getDescription();
         	
         	if(item.getDate() != null) {
-        		output += "\nDATE: " + item.getDate().toString("dd/MM/yyyy HH:mm");
+        		output += "\n" + item.getDate().toString("EE HH:mm");
         	} 
         	
         	if(item.getEndDate() != null) {
-        		output += "\nEND DATE: " + item.getEndDate().toString("dd/MM/yyyy HH:mm");
+        		output += "\n" + item.getEndDate().toString("EE HH:mm");
         	} 
         	
         	return output;
