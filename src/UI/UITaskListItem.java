@@ -12,6 +12,7 @@ public class UITaskListItem {
 	private Task task;
 	private DateTime date;
 	private String type;
+	private int numOfTasks;
 
 	public UITaskListItem(Task task, DateTime date) {
 		if (task == null) {
@@ -21,7 +22,16 @@ public class UITaskListItem {
 			this.type = LISTITEM_DEFAULT;
 		}
 		
+		this.numOfTasks = 0;
 		this.task = task;
+	}
+	
+	public int getNumberTask() {
+		return this.numOfTasks;
+	}
+	
+	public void incrementNumOfTask() {
+		numOfTasks++;
 	}
 
 	public Task getTask() {

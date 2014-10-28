@@ -3,6 +3,8 @@ package UI;
 import java.util.ArrayList;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.Period;
 
 import application.Task;
 import javafx.collections.FXCollections;
@@ -76,11 +78,7 @@ public class UITaskListView {
     	for(Task listItem : items) {
     		listItems.add(new UITaskListItem(listItem, listItem.getDate()));
     	}
-    	
-    	for(UITaskListItem i : listItems) {
-    		System.out.println(i.getType());
-    	}
-    	
+    
     	return listItems;
     }
     
@@ -88,23 +86,29 @@ public class UITaskListView {
     private ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items) {
     	DateTime currentDate = null;
     	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+    	UITaskListItem currentHeader = null;
     	
     	for(int i = 0; i<items.size(); i++) {
     		Task t = items.get(i);
-    		if(i == 0) {
+    		if(currentHeader == null) {
         		currentDate = t.getDate();
-        		listItems.add(new UITaskListItem(null, t.getDate()));
+        		currentHeader = new UITaskListItem(null, t.getDate());
+        		listItems.add(currentHeader);
     		} else {
     			if(currentDate.toString("y").equals(t.getDate().toString("y"))) {
     				if(!currentDate.toString("D").equals(t.getDate().toString("D"))) {
-    					listItems.add(new UITaskListItem(null, t.getDate()));
+    					currentDate = t.getDate();
+    					currentHeader = new UITaskListItem(null, t.getDate());
+    					listItems.add(currentHeader);
     				}
     			} else {
     				currentDate = t.getDate();
-    				listItems.add(new UITaskListItem(null, t.getDate()));
+    				currentHeader = new UITaskListItem(null, t.getDate());
+    				listItems.add(currentHeader);
     			}
     		}	
     		listItems.add(new UITaskListItem(t, t.getDate()));
+    		currentHeader.incrementNumOfTask();
     	}
     	
     	return listItems;
@@ -194,6 +198,23 @@ public class UITaskListView {
         	return stack;
         }
         
+        private String getDateString(DateTime currentDate) {
+        	String output = "";
+        	DateTime systemTime = new DateTime();
+        	
+        	DateTime start = new DateTime(systemTime.getYear(), systemTime.getMonthOfYear(), systemTime.getDayOfMonth(), 0, 0);
+        	DateTime end = start.plus(Period.days(7));
+        	Interval interval = new Interval(start, end);
+        	
+        	if(interval.contains(currentDate)) {
+        		output = currentDate.dayOfWeek().getAsText();
+        	} else {
+        		output = currentDate.toString("dd MMMM yyyy");
+        	}
+        	
+        	return output;
+        }
+        
         private int getContentHeight(int length) {
         	if (length < 150) {
         		return 80;
@@ -208,11 +229,12 @@ public class UITaskListView {
         	String output = item.getDescription();
         	
         	if(item.getDate() != null) {
-        		output += "\n" + item.getDate().toString("EE HH:mm");
+        		output += "\n" + item.getDate().toString("dd MMMM yyyy HH:mm");
+        		
         	} 
         	
         	if(item.getEndDate() != null) {
-        		output += "\n" + item.getEndDate().toString("EE HH:mm");
+        		output += "\n" + item.getEndDate().toString("dd MMMM yyyy HH:mm");
         	} 
         	
         	return output;
@@ -241,12 +263,17 @@ public class UITaskListView {
         			stack.setPrefWidth(TASK_CONTAINER_WIDTH);
         			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
         			setGraphic(stack);
-        		} else if(item != null && item.getType().equals("date")) {
-        			String cellHeight = String.format(CONTAINER_HEIGHT, "10");
-        			this.setStyle("-fx-background-color: rgb(255, 255, 255, 0.1);" + cellHeight);
         			
-        			Text text = createText(item.getDate().toString("dd-MM-yyyy"), 100, 12, "raleway", FontWeight.NORMAL, Color.BLACK);
+        		} else if(item != null && item.getType().equals("date")) {	
+        			
+        			String cellHeight = String.format(CONTAINER_HEIGHT, "10");
+        			this.setStyle("-fx-background-color: #bcbbb9;" + cellHeight);
+        			
+        			String output = getDateString(item.getDate());
+        			
+        			Text text = createText(output, 220, 15, "raleway", FontWeight.BOLD, Color.WHITE);
         			StackPane stack = new StackPane();
+        			StackPane.setAlignment(text, Pos.TOP_LEFT);
         			stack.getChildren().addAll(text);
         			setGraphic(stack);
         		}
