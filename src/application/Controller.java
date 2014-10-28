@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import UI.UIComponent;
@@ -34,15 +35,17 @@ public class Controller extends Application {
 
         CommandInfo commandInfo = (new Parser()).getCommandInfo(input);
         Message feedback = null;
+        
+        // Check for invalid IDs.
+        ArrayList<String> invalidIDs = taskManager.getInvalidDisplayIDs(commandInfo.getTaskIDs());
+        if (invalidIDs != null) {
+            feedback = new MessageWarningInvalidID(invalidIDs);
+            logger.log(messageManager.getMessage(feedback));
+            return;
+        }
 
-        try {
-            // Maybe this check can be placed better elsewhere.
-            if ((commandInfo.getTaskID() != null) &&
-                    (!taskManager.ensureValidDisplayID(commandInfo.getTaskID()))) {
-                
-                return; // Add error message here?
-            }
-            
+        // Run the command.
+        try {            
             switch (commandInfo.getCommandType()) {
                 case "add":
                     taskManager.add(commandInfo);
@@ -53,6 +56,7 @@ public class Controller extends Application {
                     break;
                 case "edit":
                     taskManager.edit(commandInfo);
+                    feedback = new MessageNotifyEdit(taskManager.getLastModifiedTask().getID() + "");
                     break;
                 case "undo":
                     taskManager.undo(commandInfo, dataStorage.getPastVersion());
@@ -72,15 +76,16 @@ public class Controller extends Application {
                     break;
                 	
             }
-            
-            if (feedback != null) {
-                logger.log(messageManager.getMessage(feedback));
-            }
         } catch (MismatchedCommandException e) {
             logger.log(Level.SEVERE, e.toString(), e);
             e.printStackTrace();
         }
-
+        
+        if (feedback != null) {
+            logger.log(messageManager.getMessage(feedback));
+        }
+        
+        taskManager.clearIDMapping();
         uiComponent.updateTaskList(taskManager.getTasks());
         uiComponent.updateReminderList(taskManager.getReminders());
         
