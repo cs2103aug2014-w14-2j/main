@@ -33,7 +33,7 @@ public class WaveLogger {
     public WaveLogger(String name) {
         this.logger = Logger.getLogger(name);
         try {
-            this.fileHandler = new FileHandler(name + ".log");
+            this.fileHandler = new FileHandler("log\\" + name + ".log");
             this.fileHandler.setFormatter(new SimpleFormatter());
             this.logger.addHandler(this.fileHandler);
         }
