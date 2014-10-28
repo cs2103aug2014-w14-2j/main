@@ -15,7 +15,7 @@ import org.joda.time.DateTimeComparator;
 
 public class CommandInfo {
 
-    private boolean isValid;
+    private boolean isValidCommandType;
     private boolean isValidID;
     private String commandType;
     private ArrayList<String> taskIDs = new ArrayList<String>();
@@ -38,7 +38,7 @@ public class CommandInfo {
 
     CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority) {  // edit 
 
-        this.isValid = validateCommandType(commandType);
+        this.isValidCommandType = validateCommandType(commandType);
    //     this.isValidID = validateTaskID(taskID);
         this.commandType = commandType;
         this.taskIDs = taskIDs;
@@ -107,8 +107,8 @@ public class CommandInfo {
      * 
      * @return the boolean value indicating the validity of the user input. True if the command is valid, false if invalid
      */
-    public boolean getIsValid() {
-        return this.isValid;
+    public boolean getIsValidCommandType() {
+        return this.isValidCommandType;
     }
 
     //@author A0090971Y
@@ -191,7 +191,7 @@ public class CommandInfo {
         return taskDesc;
     }
 
-    public static String[] getValidCommandTypes() {
+    private static String[] getValidCommandTypes() {
         return validCommandTypes;
     }
 

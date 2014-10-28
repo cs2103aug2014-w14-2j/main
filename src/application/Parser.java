@@ -68,12 +68,14 @@ public class Parser {
         if ((cmdType.equalsIgnoreCase("add")) || (cmdType.equalsIgnoreCase("edit"))){
             int startIndex = input.indexOf("[");
             int endIndex = input.indexOf("]");
+            if ((startIndex>0) && (endIndex>0)) {
             desc = input.substring(startIndex+1, endIndex);
             //      desc = dealEscapeSequences(desc);
+            }
         }
         else {
             cmdType = input.trim().split("\\s+")[0];
-            desc = input.replaceFirst(cmdType+" ", "");
+            desc = input.replaceFirst(cmdType+"", "");
         }
         return desc;
     }
