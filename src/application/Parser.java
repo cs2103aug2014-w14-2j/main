@@ -106,7 +106,7 @@ public class Parser {
         String content;
         String firstWord = input.trim().split("\\s+")[0];
         content = input.replace(firstWord,"").trim();
-        if (parseTaskIDs(input) != null) {
+        if (parseTaskIDs(input).size()!=0) {
             content = content.replace(parseTaskIDs(input).get(0)+" ","").trim();
         }
         content = content.replaceAll(desc, "");
