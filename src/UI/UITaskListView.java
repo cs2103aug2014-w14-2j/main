@@ -175,7 +175,7 @@ public class UITaskListView {
             return textLabel;
         }
         
-        private StackPane getPriorityIndicator(int priority, String displayID) {
+        private StackPane getPriorityIndicator(int priority, String displayID, int height) {
         	String indicator_color = COLOR_DEFAULT_PRIORITY;
         	
         	if(priority > 1 && priority < 4) {
@@ -184,13 +184,13 @@ public class UITaskListView {
         		indicator_color = COLOR_HIGH_PRIORITY;
         	}
         	
-        	Rectangle priorityIndicator = createRectangle(35, 35, 5, 5, Color.web(indicator_color));
+        	Rectangle priorityIndicator = createRectangle(40, height-10, 0, 0, Color.web(indicator_color));
         	indexLabel = createText(displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
 
         	StackPane stack = new StackPane();
-        	stack.setPadding(new Insets(0, 0, 10, 3));
-			stack.setMaxHeight(35);
-			stack.setMaxWidth(35);
+        	stack.setPadding(new Insets(0, 0, 0, 0));
+			stack.setMaxHeight(height-10);
+			stack.setMaxWidth(40);
         	StackPane.setAlignment(priorityIndicator, Pos.TOP_LEFT);
         	StackPane.setAlignment(indexLabel, Pos.CENTER);
 			stack.getChildren().addAll(priorityIndicator, indexLabel);	
@@ -202,12 +202,22 @@ public class UITaskListView {
         	String output = "";
         	DateTime systemTime = new DateTime();
         	
-        	DateTime start = new DateTime(systemTime.getYear(), systemTime.getMonthOfYear(), systemTime.getDayOfMonth(), 0, 0);
-        	DateTime end = start.plus(Period.days(7));
-        	Interval interval = new Interval(start, end);
+        	DateTime taskDate = new DateTime(currentDate.getYear(), currentDate.getMonthOfYear(), currentDate.getDayOfMonth(), 0, 0);
+        	DateTime today = new DateTime(systemTime.getYear(), systemTime.getMonthOfYear(), systemTime.getDayOfMonth(), 0, 0);
+        	DateTime tomorrow = today.plus(Period.days(1));
+        	
+        	DateTime end = today.plus(Period.days(7));
+        	
+        	Interval interval = new Interval(today, end);
         	
         	if(interval.contains(currentDate)) {
-        		output = currentDate.dayOfWeek().getAsText();
+        		if(taskDate.equals(today)) {
+        			output = "Today";
+        		} else if (taskDate.equals(tomorrow)) {
+        			output = "Tomorrow";
+        		} else {
+            		output = currentDate.dayOfWeek().getAsText();
+        		}
         	} else {
         		output = currentDate.toString("dd MMMM yyyy");
         	}
@@ -230,7 +240,6 @@ public class UITaskListView {
         	
         	if(item.getDate() != null) {
         		output += "\n" + item.getDate().toString("dd MMMM yyyy HH:mm");
-        		
         	} 
         	
         	if(item.getEndDate() != null) {
@@ -255,8 +264,8 @@ public class UITaskListView {
         			contentPlaceHolder = createRectangle(260, height-10, 10, 10, Color.WHITE);
         			
         			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
-        			taskInnerContentHolder.setPadding(new Insets(10, 0, 0, 15));
-        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID()), text);
+        			HBox.setMargin(text, new Insets(5, 0, 0, 0));
+        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height), text);
         			
         			StackPane stack = new StackPane();
         			stack.setPrefHeight(TASK_CONTAINER_HEIGHT);

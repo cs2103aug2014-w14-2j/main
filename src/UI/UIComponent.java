@@ -212,8 +212,7 @@ public class UIComponent {
 	
 	public void updateReminderList(ArrayList<Task> items) {
 	    eventReminderTaskListView.populateTaskListWithData(items);
-	    eventReminderTaskListView.clearSelection();
-	    
+	    eventReminderTaskListView.clearSelection();    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
 	}
 	
