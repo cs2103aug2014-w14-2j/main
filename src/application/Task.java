@@ -24,6 +24,7 @@ public class Task {
     
     private DateTime createdAt;
     private DateTime modifiedAt;
+    private DateTime completedAt;
     
     private static int idCounter = 0;
     
@@ -172,6 +173,12 @@ public class Task {
     public void setCompleted(boolean completed) {
         this.completed = completed;
         this.modifiedAt = new DateTime();
+        if (completed) {
+            this.completedAt = new DateTime(this.modifiedAt);
+        }
+        else {
+            this.completedAt = null;
+        }
     }
 
     /**
@@ -210,6 +217,15 @@ public class Task {
      * @return the last modified date of the Task.
      */
     public DateTime getModifiedAt() { return this.modifiedAt; }
+    
+    /**
+     * Gets the completed date of the Task.
+     * 
+     * @return the last completed date of the Task.
+     */
+    public DateTime getCompletedAt() { return this.completedAt; }
+    
+    
 }
 
 /**

@@ -146,17 +146,17 @@ class TaskManager {
      * @return the full list of tasks.
      */
     public ArrayList<Task> getList() {
-        return filterTaskListNotNull(this.list); // Need to filter out nulls.
+        return TaskListFilter.filterOutNullTasks(this.list); // Need to filter out nulls, because they are soft-deleted.
     }
     
     /**
-     * Returns the tasks without dates.
+     * Returns the tasks without start dates.
      * 
-     * @return the tasks without dates.
+     * @return the tasks without start dates.
      */
     public ArrayList<Task> getTasks() {
-        ArrayList<Task> tasks = filterTasksWithDates(this.list, false); // Display those without dates.
-        tasks = filterTasksCompleted(tasks, false); // Display only uncompleted.
+        ArrayList<Task> tasks = TaskListFilter.filterOutTasksWithStartDates(this.list); // Kick out tasks with start dates.
+        tasks = TaskListFilter.filterOutCompletedTasks(tasks); // Kick out completed tasks.
         
         // Sort by modified at date first, then priority.
         Collections.sort(tasks, new ModifiedAtComparator());
@@ -176,13 +176,13 @@ class TaskManager {
     }
     
     /**
-     * Returns the tasks with dates.
+     * Returns the tasks with start dates.
      * 
-     * @return the tasks with dates.
+     * @return the tasks with start dates.
      */
     public ArrayList<Task> getReminders() {
-        ArrayList<Task> tasks = filterTasksWithDates(this.list, true); // Display those with dates.
-        tasks = filterTasksCompleted(tasks, false); // Display only uncompleted.
+        ArrayList<Task> tasks = TaskListFilter.filterOutTasksWithoutStartDates(this.list); // Kick out tasks without start dates.
+        tasks = TaskListFilter.filterOutCompletedTasks(tasks); // Kick out completed tasks.
 
         Collections.sort(tasks, new DayPriorityComparator());
         
@@ -210,50 +210,5 @@ class TaskManager {
         return this.list;
     }
     
-    
-    private static ArrayList<Task> filterTasksWithDates(ArrayList<Task> tasks, boolean dated) {
-        ArrayList<Task> filteredTasks = new ArrayList<Task>();
-        
-        ListIterator<Task> li = tasks.listIterator();
-        boolean hasDate = false;
-        while (li.hasNext()) {
-            Task t = li.next();
-            if (t == null) { continue; }
-            hasDate = t.getDate() != null; // True if has date.
-            if (hasDate == dated) { 
-                // If has date, and we want dated, add.
-                // If has no date, and we want no date, add.
-                filteredTasks.add(t);
-            }
-        }
-        return filteredTasks;
-    }
-    
-    private static ArrayList<Task> filterTasksCompleted(ArrayList<Task> tasks, boolean completed) {
-        ArrayList<Task> filteredTasks = new ArrayList<Task>();
-        
-        ListIterator<Task> li = tasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            if (t == null) { continue; }
-            if (t.isCompleted() == completed) {
-                filteredTasks.add(t);
-            }
-        }
-        return filteredTasks;
-    }
-    
-    private static ArrayList<Task> filterTaskListNotNull(ArrayList<Task> tasks) {
-        ArrayList<Task> filteredTasks = new ArrayList<Task>();
-        
-        ListIterator<Task> li = tasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            if (t != null) {
-                filteredTasks.add(t);
-            }
-        }
-        return filteredTasks;
-    }
     
 }

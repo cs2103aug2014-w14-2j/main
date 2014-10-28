@@ -51,7 +51,9 @@ public class Parser {
             startDateTime = null;
         }
 
+
         CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority);
+
         return cmdInfo;
     }
 
@@ -85,7 +87,6 @@ public class Parser {
     private String dealEscapeSequences(String desc) {
         for (int i = 0; i<escapeSequences.length;i++) {
             if (desc.indexOf(escapeSequences[i])>=0) { 
-                System.out.println(escapeSequences[i]);
                 desc = desc.replace(escapeSequences[i],addSlashes[i]);
                 break;
             }

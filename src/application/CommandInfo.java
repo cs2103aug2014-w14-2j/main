@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 
 /** This class stores all information that a Command object needs to execute a command 
  * 
@@ -19,8 +20,8 @@ public class CommandInfo {
     private String commandType;
     private ArrayList<String> taskIDs = new ArrayList<String>();
     private String taskDesc;
-    private Date startDateTime;
-    private Date endDateTime;
+    private DateTime startDateTime;
+    private DateTime endDateTime;
     private int priority;
     private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","quit","search","search complete","undo"};
 
@@ -34,18 +35,44 @@ public class CommandInfo {
      * @param endDateTime
      * @param priority
      */
+
     CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDateTime,Date endDateTime, int priority) {  // edit 
+
         this.isValid = validateCommandType(commandType);
    //     this.isValidID = validateTaskID(taskID);
         this.commandType = commandType;
         this.taskIDs = taskIDs;
         this.taskDesc = taskDesc;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
+        this.startDateTime = getStartDateTime(startDT);
+        this.endDateTime = getEndDateTime(endDT);
+        this.startDateTime = adjustStartDateTime(startDateTime);
+        this.endDateTime = adjustEndDateTime(endDateTime);
         this.priority = priority;
 
 
     }
+    private DateTime adjustStartDateTime(DateTime dateTime) {
+        if (dateTime != null ) {
+            DateTime currentDT = new DateTime();
+            int result = DateTimeComparator.getInstance().compare(currentDT,dateTime);
+            if (result == 1) {   //currentDT is less than dateTime
+                dateTime = dateTime.plusDays(1);
+            }
+        }
+        return dateTime;
+    }
+
+    private DateTime adjustEndDateTime(DateTime dateTime) {
+        if (dateTime != null ) {
+            int result = DateTimeComparator.getInstance().compare(this.startDateTime,dateTime);
+            if (result == 1) {   //currentDT is less than dateTime
+                dateTime = dateTime.plusDays(1);
+            }
+        }
+        return dateTime;
+    }
+
+
     private boolean validateTaskID(String ID) {
         if (ID != null) {
             if ((Character.compare(ID.charAt(0),TaskManager.NORMAL_TASK_PREFIX)==0) || 
@@ -107,12 +134,12 @@ public class CommandInfo {
      * This returns the start date time of the task
      * @return the start date time of a task with the type Date, null if there is no start date time
      */
-    public DateTime getStartDateTime() {
+    public DateTime getStartDateTime(Date startDT) {
         DateTime dateTime = null;
-        if (startDateTime == null) {
+        if (startDT == null) {
             return dateTime;
         }
-        return (new DateTime(startDateTime));
+        return (new DateTime(startDT));
     }
 
     //@author A0090971Y
@@ -120,13 +147,22 @@ public class CommandInfo {
      * This returns the end date time of the task
      * @return the start date time of a task with the type Date, null if there is no end date time
      */
-    public DateTime getEndDateTime() {
+    private DateTime getEndDateTime(Date endDT) {
         DateTime dateTime = null;
-        if (endDateTime == null) {
+        if (endDT == null) {
             return dateTime;
         }
-        return (new DateTime(endDateTime));
+        return (new DateTime(endDT));
     }
+
+    public DateTime getStartDateTime() {
+        return this.startDateTime;
+    }
+    public DateTime getEndDateTime() {
+        return this.endDateTime;
+    }
+
+
 
     //@author A0090971Y
     /**
@@ -162,8 +198,12 @@ public class CommandInfo {
     public static void setValidCommandTypes(String[] validCommandTypes) {
         CommandInfo.validCommandTypes = validCommandTypes;
     }
+
     
   /*  public boolean getIsValidID() {
+
+
+
         return isValidID;
     }
    */
