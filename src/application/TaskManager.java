@@ -86,7 +86,7 @@ class TaskManager {
     /**
      * Deletes a task in the list.
      * 
-     * @param commandInfo of type "delete" and contains task id.
+     * @param commandInfo of type "delete" and contains task id(s).
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "delete".
      */
@@ -108,7 +108,7 @@ class TaskManager {
     /**
      * Completes a task in the list.
      * 
-     * @param commandInfo of type "complete" and contains task id.
+     * @param commandInfo of type "complete" and contains task id(s).
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "complete".
      */
@@ -130,7 +130,7 @@ class TaskManager {
     /**
      * Undos one previous commandInfo.
      * 
-     * @param commandInfo of type "complete" and contains task id.
+     * @param commandInfo of type "undo".
      * @param backup the backup task list.
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "undo".
@@ -141,6 +141,21 @@ class TaskManager {
             throw new MismatchedCommandException();
         }
         this.list = new ArrayList<Task>(backup);
+        return this.list;
+    }
+    
+    /**
+     * Displays completed tasks. (temporary)
+     * 
+     * @param commandInfo of type "search complete" and contains task id.
+     * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "search complete"
+     */
+    public ArrayList<Task> display(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"search complete".equals(commandInfo.getCommandType())) {
+            throw new MismatchedCommandException();
+        }
+        
         return this.list;
     }
 
@@ -187,6 +202,56 @@ class TaskManager {
     public ArrayList<Task> getReminders() {
         ArrayList<Task> tasks = TaskListFilter.filterOutTasksWithoutStartDates(this.list); // Kick out tasks without start dates.
         tasks = TaskListFilter.filterOutCompletedTasks(tasks); // Kick out completed tasks.
+
+        Collections.sort(tasks, new DayPriorityComparator());
+        
+        int i = 1;
+        ListIterator<Task> li = tasks.listIterator();
+        while (li.hasNext()) {
+            Task t = li.next();
+            String displayID = DATED_TASK_PREFIX + "" + i;
+            this.idMapping.put(displayID, t.getID());
+            t.setDisplayID(displayID);
+            i++;
+        }
+        
+        return tasks;
+    }
+    
+    /**
+     * Returns the completed tasks without start dates.
+     * 
+     * @return the completed tasks without start dates.
+     */
+    public ArrayList<Task> getCompletedTasks() {
+        ArrayList<Task> tasks = TaskListFilter.filterOutTasksWithStartDates(this.list); // Kick out tasks with start dates.
+        tasks = TaskListFilter.filterOutNotCompletedTasks(tasks); // Kick out not completed tasks.
+        
+        // Sort by modified at date first, then priority.
+        Collections.sort(tasks, new ModifiedAtComparator());
+        Collections.sort(tasks, new PriorityComparator());
+        
+        int i = 1;
+        ListIterator<Task> li = tasks.listIterator();
+        while (li.hasNext()) {
+            Task t = li.next();
+            String displayID = NORMAL_TASK_PREFIX + "" + i;
+            this.idMapping.put(displayID, t.getID());
+            t.setDisplayID(displayID);
+            i++;
+        }
+        
+        return tasks;
+    }
+    
+    /**
+     * Returns the completed tasks with start dates.
+     * 
+     * @return the completed tasks with start dates.
+     */
+    public ArrayList<Task> getCompletedReminders() {
+        ArrayList<Task> tasks = TaskListFilter.filterOutTasksWithoutStartDates(this.list); // Kick out tasks without start dates.
+        tasks = TaskListFilter.filterOutNotCompletedTasks(tasks); // Kick out not completed tasks.
 
         Collections.sort(tasks, new DayPriorityComparator());
         
