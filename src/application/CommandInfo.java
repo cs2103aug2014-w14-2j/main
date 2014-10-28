@@ -1,6 +1,8 @@
 package application;
 
 import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
 /** This class stores all information that a Command object needs to execute a command 
@@ -12,6 +14,7 @@ import org.joda.time.DateTime;
 public class CommandInfo {
 
     private boolean isValid;
+    private boolean isValidID;
     private String commandType;
     private String taskID;
     private String taskDesc;
@@ -32,6 +35,7 @@ public class CommandInfo {
      */
     CommandInfo(String commandType, String taskID, String taskDesc, Date startDateTime,Date endDateTime, int priority) {  // edit 
         this.isValid = validateCommandType(commandType);
+        this.isValidID = validateTaskID(taskID);
         this.commandType = commandType;
         this.taskID = taskID;
         this.taskDesc = taskDesc;
@@ -40,6 +44,19 @@ public class CommandInfo {
         this.priority = priority;
 
 
+    }
+    private boolean validateTaskID(String ID) {
+        if (ID != null) {
+            if ((Character.compare(ID.charAt(0),TaskManager.NORMAL_TASK_PREFIX)==0) || 
+                    (Character.compare(ID.charAt(0),TaskManager.DATED_TASK_PREFIX)==0))
+            {
+                ID = ID.substring(1);
+                if ((StringUtils.isNumeric(ID)) && (!ID.equals("0"))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     //@author A0090971Y
@@ -143,6 +160,10 @@ public class CommandInfo {
 
     public static void setValidCommandTypes(String[] validCommandTypes) {
         CommandInfo.validCommandTypes = validCommandTypes;
+    }
+    
+    public boolean getIsValidID() {
+        return isValidID;
     }
 
 

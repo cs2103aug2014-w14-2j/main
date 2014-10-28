@@ -145,6 +145,7 @@ public class Parser {
         if ((command.equalsIgnoreCase("edit")) || (command.equalsIgnoreCase("complete")) || (command.equalsIgnoreCase("delete"))) {
             if (input.trim().split("\\s+").length>1) {
                 taskID = input.trim().split("\\s+")[1];
+                taskID = taskID.toUpperCase();
             }
         }
         return taskID;

@@ -3,7 +3,7 @@ package application;
 public class TestParser {
     public static void main(String[] args) {
     Parser parser = new Parser();
-    CommandInfo cmd = parser.getCommandInfo("ADD [go]  4pm");
+    CommandInfo cmd = parser.getCommandInfo("EDIT t-3 [go] 4pm");
     System.out.println(cmd.getCommandType());
     boolean isValid = cmd.getIsValid();
     System.out.println(isValid);
@@ -13,13 +13,6 @@ public class TestParser {
     System.out.println("start time is " + cmd.getStartDateTime());
     System.out.println("end time is " + cmd.getEndDateTime());
     System.out.println("keyword is "+cmd.getTaskDesc());
-    /*
-    if (isValid) {
-        System.out.println("true");
-    }
-    else {
-        System.out.println("false");
-    }
-    */
+    System.out.println(cmd.getIsValidID());
 }
 }

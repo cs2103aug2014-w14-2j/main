@@ -12,8 +12,8 @@ import java.util.ListIterator;
  * @author Sun Wang Jun
  */
 class TaskManager {
-    private static final char NORMAL_TASK_PREFIX = 'F';
-    private static final char DATED_TASK_PREFIX = 'E';
+    public static final char NORMAL_TASK_PREFIX = 'T';
+    public static final char DATED_TASK_PREFIX = 'E';
     
     private ArrayList<Task> list;
     private Task task; // Maybe this can act as "last modified task".
