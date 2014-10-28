@@ -110,7 +110,6 @@ public class IntegrationSimpleTest extends Application {
     public void start(Stage primaryStage) throws Exception {
         ControllerReflector.fields.get("uiComponent").set(null, new UIComponent());
         uiComponent = (UIComponent) ControllerReflector.fields.get("uiComponent").get(null);
-        uiComponent.showStage(primaryStage);
     }
 
     //@author A0110546R
