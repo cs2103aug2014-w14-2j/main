@@ -7,6 +7,7 @@ import java.io.FileWriter;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -23,19 +24,24 @@ import org.joda.time.format.ISODateTimeFormat;
  * 
  *
  */
-public class DataStorage {    
+public class DataStorage {
+
     private final String filename;
     private JSONArray tasks = new JSONArray();
-    private ArrayList<Task> backup;
     private DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-    
+    private ArrayList<ArrayList<Task>> undoQueue = new ArrayList<ArrayList<Task>>();
+
     private static final String STRING_DESC = "Description";
     private static final String STRING_DATE = "Date";
     private static final String STRING_END = "End date";
     private static final String STRING_PRIORITY = "Priority";
-    
+    private static final String STRING_COMPLETED = "Completed";
+    private static final String STATIC_COMPLETED_DATE = "Completed date";
+
+    private static final Integer undoQueue_MAX_SIZE = 2;
+
     private static WaveLogger logger = new WaveLogger("DataStorage");
-    
+
     //@author A0115864B
     /**
      * Constructor.
@@ -44,7 +50,7 @@ public class DataStorage {
         filename = "Todo.json";
         initiateFile();
     }
-    
+
     //@author A0115864B
     /**
      * Constructor when filename for external json storage is provided. For unit testing.
@@ -54,8 +60,7 @@ public class DataStorage {
         filename = name;
         initiateFile();
     }
-    
-    
+
     //@author A0115864B
     /**
      * Confirm that the external json file exists. If not, create it.
@@ -63,7 +68,7 @@ public class DataStorage {
     public void initiateFile() {
         File file = new File(filename);
         try {
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.createNewFile();
             }
             logger.log(Level.INFO, "Storage file ready");
@@ -71,11 +76,11 @@ public class DataStorage {
             logger.log(Level.SEVERE, e.toString(), e);
         }
     }
-    
+
     //@author A0115864B
     /**
      * Read json file. Retrieve all tasks and store them in JSONArray.
-     * @return ArrayList of tasks 
+     * @return ArrayList of tasks
      */
     public ArrayList<Task> retrieveTasks() {
         tasks.clear();
@@ -90,13 +95,18 @@ public class DataStorage {
         }
         return getTasks();
     }
-    
+
     //@author A0115864B
     /**
      * Store tasks to external json file
      * @param array ArrayList of tasks
      */
     public void saveTasks(ArrayList<Task> array) {
+
+        undoQueue.add(new ArrayList<Task>(array));
+        logger.log(Level.INFO, "Current version stored as backup");
+        manageundoQueueSize();
+
         convertArrayListToJSONArray(array);
         try {
             FileWriter fw = new FileWriter(filename, false);
@@ -108,7 +118,7 @@ public class DataStorage {
             logger.log(Level.SEVERE, e.toString(), e);
         }
     }
-    
+
     //@author A0115864B
     /**
      * 
@@ -117,7 +127,7 @@ public class DataStorage {
     public ArrayList<Task> getTasks() {
         return convertJSONArrayToArrayList(tasks);
     }
-    
+
     //@author A0115864B
     /**
      * Converts JSONArray containing the tasks to a form that other components can understand
@@ -130,33 +140,46 @@ public class DataStorage {
             JSONObject obj = (JSONObject) array.get(i);
             task.setDescription((String) obj.get(STRING_DESC));
             try {
-                if(obj.containsKey(STRING_DATE)) {
-                    String dateString = (String)obj.get(STRING_DATE);
+                if (obj.containsKey(STRING_DATE)) {
+                    String dateString = (String) obj.get(STRING_DATE);
                     DateTime date = fmt.parseDateTime(dateString);
                     task.setDate(date);
                 }
-                if(obj.containsKey(STRING_END)) {
-                    String endString = (String)obj.get(STRING_END);
+                if (obj.containsKey(STRING_END)) {
+                    String endString = (String) obj.get(STRING_END);
                     DateTime end = fmt.parseDateTime(endString);
                     task.setEndDate(end);
                 }
-                // Currently priority is not fully supported. May have to update later.
-                if(obj.containsKey(STRING_PRIORITY)) {
-                    task.setPriority(((Long)obj.get(STRING_PRIORITY)).intValue());
+                // Currently priority is not fully supported. May have to update
+                // later.
+                if (obj.containsKey(STRING_PRIORITY)) {
+                    task.setPriority(((Long) obj.get(STRING_PRIORITY))
+                            .intValue());
                 }
-                logger.log(Level.INFO, "JSONArray converted to ArrayList of tasks");
+                logger.log(Level.INFO,
+                        "JSONArray converted to ArrayList of tasks");
             } catch (Exception e) {
                 logger.log(Level.SEVERE, e.toString(), e);
             }
             list.add(task);
         }
-        // Before sending ArrayList of tasks to Controller,
-        // keep a backup of the current state of ArrayLists
-        // so that it can be returned if an undo command is given
+        undoQueue.add(list);
         return list;
-        
+
     }
-    
+
+    /**
+     * Maintain maximum undo queue size as 2
+     */
+    public void manageundoQueueSize() {
+        if (undoQueue.size() > undoQueue_MAX_SIZE) {
+            logger.log(Level.INFO, "Deleting older saved versions");
+            for (int i = undoQueue.size(); i > undoQueue_MAX_SIZE; i--) {
+                undoQueue.remove(0);
+            }
+        }
+    }
+
     //@author A0115864B
     /**
      * Converts ArrayList to JSONArray that can be saved to external json file
@@ -177,7 +200,8 @@ public class DataStorage {
                     String end = fmt.print(list.get(i).getEndDate());
                     obj.put(STRING_END, end);
                 }
-                logger.log(Level.INFO, "ArrayList of tasks converted to JSONArray");
+                logger.log(Level.INFO,
+                        "ArrayList of tasks converted to JSONArray");
             } catch (Exception e) {
                 logger.log(Level.SEVERE, e.toString(), e);
             }
@@ -185,15 +209,16 @@ public class DataStorage {
         }
         return tasks;
     }
-    
+
     //@author A0115864B
     /**
      * Support for undo command
      * @return backup ArrayList of tasks that was saved before last operation
-     * (Currently not implemented)
      */
     public ArrayList<Task> getPastVersion() {
-        return backup;
+        ArrayList<Task> pastVersion = undoQueue.remove(0);
+        logger.log(Level.INFO, "Backup version retrieved");
+        return pastVersion;
     }
 
 }
