@@ -26,7 +26,6 @@ public class TestParser {
     System.out.println("end time is " + cmd.getEndDateTime());
     System.out.println("keyword is "+cmd.getTaskDesc());
 
-    System.out.println(cmd.getIsValidID());
  
 }
 }

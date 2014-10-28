@@ -36,7 +36,7 @@ public class CommandInfo {
      * @param priority
      */
 
-    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDateTime,Date endDateTime, int priority) {  // edit 
+    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority) {  // edit 
 
         this.isValid = validateCommandType(commandType);
    //     this.isValidID = validateTaskID(taskID);
