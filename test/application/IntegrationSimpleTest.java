@@ -123,6 +123,10 @@ public class IntegrationSimpleTest extends Application {
 
         FIXTURES_SIZE = fixtures.size();
         
+        // The following lines readies the hashtable.
+        taskManager.getTasks();
+        taskManager.getReminders();
+        
         /**
          * The fixture contains:
          * ****
