@@ -245,7 +245,7 @@ public class UITaskListView {
         			String cellHeight = String.format(CONTAINER_HEIGHT, "10");
         			this.setStyle("-fx-background-color: rgb(255, 255, 255, 0.1);" + cellHeight);
         			
-        			Text text = createText(item.getDate().toString("dd/MM/yyyy"), 100, 12, "raleway", FontWeight.NORMAL, Color.BLACK);
+        			Text text = createText(item.getDate().toString("dd-MM-yyyy"), 100, 12, "raleway", FontWeight.NORMAL, Color.BLACK);
         			StackPane stack = new StackPane();
         			stack.getChildren().addAll(text);
         			setGraphic(stack);
