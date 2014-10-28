@@ -51,12 +51,13 @@ public class Controller extends Application {
                     taskManager.edit(commandInfo);
                     break;
                 case "undo":
-                	taskManager.undo(commandInfo, dataStorage.getPastVersion());
-                	break;
+                    taskManager.undo(commandInfo, dataStorage.getPastVersion());
+                    break;
                 case "complete":
                     taskManager.complete(commandInfo);
                     break;
                 case "quit":
+                case "exit":
                     Platform.exit();
                     break;
                 	
