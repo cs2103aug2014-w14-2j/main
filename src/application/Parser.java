@@ -13,9 +13,9 @@ import org.apache.commons.lang.StringUtils;
 public class Parser {
 
     private DateTimeParser parser;
- //   private static String[] timePrepositions = new String[] {"at","by","from","on","till","until"};
-    private static String[] escapeSequences = new String[]{"\t","\b","\n","\r","\f","\'","\"","\\"};
-    private static String[] addSlashes = new String[] {"\\t","\\b","\\n","\\r","\\f","\\'","\"","\\"};
+    private static String[] timePrepositions = new String[] {"by","till","until"};
+    private static String[] escapeSequences = new String[]{"\\"};
+    private static String[] addSlashes = new String[] {"\\\\"};
     
             
 
@@ -46,6 +46,10 @@ public class Parser {
         parser = new DateTimeParser(content);
         Date startDateTime = parser.getStartDateTime();
         Date endDateTime = parser.getEndDateTime();
+        if (isDeadline(content,startDateTime,endDateTime)) {
+            endDateTime = startDateTime;
+            startDateTime = null;
+        }
 
         CommandInfo cmdInfo = new CommandInfo(commandType, taskID, taskDesc,startDateTime,endDateTime, priority);
         return cmdInfo;
@@ -63,7 +67,7 @@ public class Parser {
             int startIndex = input.indexOf("[");
             int endIndex = input.indexOf("]");
             desc = input.substring(startIndex+1, endIndex);
-            desc = dealEscapeSequences(desc);
+      //      desc = dealEscapeSequences(desc);
         }
         else {
             cmdType = input.trim().split("\\s+")[0];
@@ -81,6 +85,7 @@ public class Parser {
     private String dealEscapeSequences(String desc) {
         for (int i = 0; i<escapeSequences.length;i++) {
             if (desc.indexOf(escapeSequences[i])>=0) { 
+                System.out.println(escapeSequences[i]);
                 desc = desc.replace(escapeSequences[i],addSlashes[i]);
                 break;
             }
@@ -88,6 +93,15 @@ public class Parser {
         return desc;
     }
 
+    private boolean isDeadline(String content,Date startDT, Date endDT) {
+        for (int i = 0; i<timePrepositions.length;i++) {
+            if (content.indexOf(timePrepositions[i])>=0){
+                if (endDT == null)
+                return true;
+            }
+        }
+        return false;
+    }
     private String parseContent(String input,String desc) {
         String content;
         String firstWord = input.trim().split("\\s+")[0];

@@ -3,7 +3,7 @@ package application;
 public class TestParser {
     public static void main(String[] args) {
     Parser parser = new Parser();
-    CommandInfo cmd = parser.getCommandInfo("ADD [go home\t testing]");
+    CommandInfo cmd = parser.getCommandInfo("ADD [go]  4pm");
     System.out.println(cmd.getCommandType());
     boolean isValid = cmd.getIsValid();
     System.out.println(isValid);
