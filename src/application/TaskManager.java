@@ -210,5 +210,13 @@ class TaskManager {
         return this.list;
     }
     
+    /**
+     * Returns the last task modified.
+     * @return the last task modified.
+     */    
+    public Task getLastModifiedTask() {
+        return this.task;
+    }
+    
     
 }

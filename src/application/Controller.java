@@ -18,6 +18,7 @@ public class Controller extends Application {
     private static DataStorage dataStorage;    
     private static TaskManager taskManager;
     private static UIComponent uiComponent;
+    private static MessageManager messageManager;
     
     //@author A0110546R
     /**
@@ -30,17 +31,20 @@ public class Controller extends Application {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
 
         CommandInfo commandInfo = (new Parser()).getCommandInfo(input);
+        Message feedback = null;
 
         try {
             // Maybe this check can be placed better elsewhere.
             if ((commandInfo.getTaskID() != null) &&
                     (!taskManager.ensureValidDisplayID(commandInfo.getTaskID()))) {
+                
                 return; // Add error message here?
             }
             
             switch (commandInfo.getCommandType()) {
                 case "add":
                     taskManager.add(commandInfo);
+                    feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getID() + "");
                     break;
                 case "delete":
                     taskManager.delete(commandInfo);
@@ -54,11 +58,21 @@ public class Controller extends Application {
                 case "complete":
                     taskManager.complete(commandInfo);
                     break;
+                case "search complete": // Temporary.
+                case "search":
+                case "display":
+                case "show":
+                    
+                    break;
                 case "quit":
                 case "exit":
                     Platform.exit();
                     break;
                 	
+            }
+            
+            if (feedback != null) {
+                logger.log(messageManager.getMessage(feedback));
             }
         } catch (MismatchedCommandException e) {
             logger.log(Level.SEVERE, e.toString(), e);
@@ -85,6 +99,8 @@ public class Controller extends Application {
     public static void main(String[] args) {
         taskManager = new TaskManager();
         dataStorage = new DataStorage();
+        messageManager = new MessageManager();
+        
         dataStorage.initiateFile();
         
         taskManager.initializeList(dataStorage.retrieveTasks());
