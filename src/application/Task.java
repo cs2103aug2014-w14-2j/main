@@ -211,6 +211,10 @@ public class Task {
      */
     public DateTime getCreatedAt() { return this.createdAt; }
     
+    public void setCreatedAt(DateTime createdDate) {
+        this.createdAt = createdDate;
+    }
+    
     /**
      * Gets the last modified date of the Task.
      * 
@@ -219,11 +223,24 @@ public class Task {
     public DateTime getModifiedAt() { return this.modifiedAt; }
     
     /**
+     * 
+     * Used only when retrieving tasks list from external file
+     * @param modDate
+     */
+    public void setModifiedAt(DateTime modDate) {
+        this.modifiedAt = modDate;
+    }
+    
+    /**
      * Gets the completed date of the Task.
      * 
      * @return the last completed date of the Task.
      */
     public DateTime getCompletedAt() { return this.completedAt; }
+    
+    public void setCompletedAt(DateTime completedDate) {
+        this.completedAt = completedDate;
+    }
     
     
 }
