@@ -57,6 +57,7 @@ public class Task {
     public Task(CommandInfo commandInfo, int id) {
         this(commandInfo); // Calls commandInfo constructor first.
         this.id = id;
+        Task.idCounter--; // Because we are editing, so do not increment the counter.
     }
     
     /**

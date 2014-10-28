@@ -1,7 +1,14 @@
-package application;
+package UI;
 
+import java.util.ArrayList;
+
+import org.joda.time.DateTime;
+
+import application.Task;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
@@ -11,8 +18,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextBoundsType;
 import javafx.util.Callback;
 
 /**
@@ -22,7 +27,7 @@ import javafx.util.Callback;
  */
 public class UITaskListView {
 
-    private ListView<Task> taskList;
+    private ListView<UITaskListItem> taskList;
 
     private final int DISPLAY_WIDTH = 300;
     private final int DISPLAY_HEIGHT = 500;
@@ -34,11 +39,13 @@ public class UITaskListView {
     
 	private final String CMD_DELETE_FLOATING_TASK = "DELETE %s";
 	private final String CMD_DELETE_EVENT_TASK = "DELETE %s";
+	private ObservableList<UITaskListItem> listItems;
 	
 	public String type;
     
     public UITaskListView(UICmdInputBox cmdInputBox, String type) {
-        taskList = new ListView<Task>();
+        taskList = new ListView<UITaskListItem>();
+        listItems = FXCollections.observableArrayList();
         this.cmdInputBox = cmdInputBox;
         this.type = type;
         setTaskListProperty();
@@ -49,9 +56,9 @@ public class UITaskListView {
         taskList.setPrefWidth(DISPLAY_WIDTH);
         taskList.getStyleClass().add(TASKLIST_DEFAULT_STYLE);
 
-        taskList.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
+        taskList.setCellFactory(new Callback<ListView<UITaskListItem>, ListCell<UITaskListItem>>() {
             @Override
-            public ListCell<Task> call(ListView<Task> list) {
+            public ListCell<UITaskListItem> call(ListView<UITaskListItem> list) {
                 return new TaskListCell();
             }
         });
@@ -61,6 +68,46 @@ public class UITaskListView {
         } else if(type.equals(EVENT)) {
         	taskList.setOnKeyPressed(new UITaskListViewListener(CMD_DELETE_EVENT_TASK, cmdInputBox, this));
         }
+    }
+    
+    private ArrayList<UITaskListItem> generateFloatingList(ArrayList<Task> items) {
+    	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+    	
+    	for(Task listItem : items) {
+    		listItems.add(new UITaskListItem(listItem, listItem.getDate()));
+    	}
+    	
+    	for(UITaskListItem i : listItems) {
+    		System.out.println(i.getType());
+    	}
+    	
+    	return listItems;
+    }
+    
+    
+    private ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items) {
+    	DateTime currentDate = null;
+    	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+    	
+    	for(int i = 0; i<items.size(); i++) {
+    		Task t = items.get(i);
+    		if(i == 0) {
+        		currentDate = t.getDate();
+        		listItems.add(new UITaskListItem(null, t.getDate()));
+    		} else {
+    			if(currentDate.toString("y").equals(t.getDate().toString("y"))) {
+    				if(!currentDate.toString("D").equals(t.getDate().toString("D"))) {
+    					listItems.add(new UITaskListItem(null, t.getDate()));
+    				}
+    			} else {
+    				currentDate = t.getDate();
+    				listItems.add(new UITaskListItem(null, t.getDate()));
+    			}
+    		}	
+    		listItems.add(new UITaskListItem(t, t.getDate()));
+    	}
+    	
+    	return listItems;
     }
     
     public boolean isFocused() {
@@ -75,19 +122,27 @@ public class UITaskListView {
     	return taskList.getSelectionModel().getSelectedIndex();
     }
     
-    public ObservableList<Task> getSelectedItem() {
+    public ObservableList<UITaskListItem> getSelectedItem() {
     	return taskList.getSelectionModel().getSelectedItems();
     }
    
-    public void populateTaskListWithData(ObservableList<Task> items) {
-    	taskList.setItems(items);
+    public void populateTaskListWithData(ArrayList<Task> items) {
+    	ObservableList<UITaskListItem> convertedList = FXCollections.observableArrayList();
+    	
+    	if(this.type.equals(EVENT)) {
+    		convertedList.setAll(generateListItems(items));
+    	} else if (this.type.equals(FLOATING)){
+    		convertedList.setAll(generateFloatingList(items));
+    	}
+    	
+    	taskList.setItems(convertedList);
     }
 
-    public ListView<Task> getListView() {
+    public ListView<UITaskListItem> getListView() {
         return taskList;
     }
 
-    class TaskListCell extends ListCell<Task> { 
+    class TaskListCell extends ListCell<UITaskListItem> { 
         static private final int TASK_CONTAINER_WIDTH = 260;
         static private final int TASK_CONTAINER_HEIGHT = 70;
         static private final int TASK_CONTAINER_SPACING = 15;
@@ -96,6 +151,7 @@ public class UITaskListView {
         private String COLOR_DEFAULT_PRIORITY = "rgba(37, 232, 154, 1)";
         private String COLOR_HIGH_PRIORITY = "rgba(249, 104, 114, 1)";
         private String COLOR_MEDIUM_PRIORITY = "rgba(247, 207, 89, 1)";
+        
         private Rectangle contentPlaceHolder;
         private Text indexLabel;
         
@@ -110,8 +166,6 @@ public class UITaskListView {
         private Text createText(String text, int textWidth, int size, String fontFamily, FontWeight weight, Color color) {
             Text textLabel = new Text(text);
             textLabel.setWrappingWidth(textWidth);
-            textLabel.setBoundsType(TextBoundsType.VISUAL);
-            textLabel.setTextAlignment(TextAlignment.LEFT);
             textLabel.setFont(Font.font(fontFamily, weight, size));
             textLabel.setFill(color);
             return textLabel;
@@ -126,27 +180,24 @@ public class UITaskListView {
         		indicator_color = COLOR_HIGH_PRIORITY;
         	}
         	
-        	Rectangle priorityIndicator = createRectangle(50, 50, 5, 5, Color.web(indicator_color));
-    		
-        	if(type.equals(FLOATING)) {
-        		indexLabel = createText(displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
-        	} else if(type.equals(EVENT)) {
-        		indexLabel = createText(displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
-        	}
-        	
+        	Rectangle priorityIndicator = createRectangle(35, 35, 5, 5, Color.web(indicator_color));
+        	indexLabel = createText(displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
+
         	StackPane stack = new StackPane();
-        	stack.setPadding(new Insets(0, 0, 10, 0));
-			stack.setPrefHeight(60);
-			stack.setPrefWidth(60);
+        	stack.setPadding(new Insets(0, 0, 10, 3));
+			stack.setMaxHeight(35);
+			stack.setMaxWidth(35);
+        	StackPane.setAlignment(priorityIndicator, Pos.TOP_LEFT);
+        	StackPane.setAlignment(indexLabel, Pos.CENTER);
 			stack.getChildren().addAll(priorityIndicator, indexLabel);	
      
         	return stack;
         }
         
         private int getContentHeight(int length) {
-        	if (length < 50) {
+        	if (length < 150) {
         		return 80;
-        	} else if (length < 100) {
+        	} else if (length < 200) {
         		return 180;
         	} else {
         		return 280;
@@ -157,23 +208,24 @@ public class UITaskListView {
         	String output = item.getDescription();
         	
         	if(item.getDate() != null) {
-        		output += "\nDATE: " + item.getDate().toString("dd/MM/yyyy HH:mm");
+        		output += "\n" + item.getDate().toString("EE HH:mm");
         	} 
         	
         	if(item.getEndDate() != null) {
-        		output += "\nEND DATE: " + item.getEndDate().toString("dd/MM/yyyy HH:mm");
+        		output += "\n" + item.getEndDate().toString("EE HH:mm");
         	} 
         	
         	return output;
         }
 
         @Override
-        public void updateItem(Task item, boolean empty) {
+        public void updateItem(UITaskListItem item, boolean empty) {
         	super.updateItem(item, empty);
         	
         	if(!empty) {
-        		if (item != null) {
-        			String output = generateTaskDescription(item);
+        		if (item != null && item.getType().equals("default")) {
+        			Task taskItem = item.getTask();
+        			String output = generateTaskDescription(taskItem);
         			
         			Text text = createText(output, 150, 12, "raleway", FontWeight.NORMAL, Color.BLACK);
         			int height = getContentHeight(output.length());
@@ -182,15 +234,23 @@ public class UITaskListView {
         			
         			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
         			taskInnerContentHolder.setPadding(new Insets(10, 0, 0, 15));
-        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(item.getPriority(), item.getDisplayID()), text);
+        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID()), text);
         			
         			StackPane stack = new StackPane();
         			stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
         			stack.setPrefWidth(TASK_CONTAINER_WIDTH);
         			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
         			setGraphic(stack);
+        		} else if(item != null && item.getType().equals("date")) {
+        			String cellHeight = String.format(CONTAINER_HEIGHT, "10");
+        			this.setStyle("-fx-background-color: rgb(255, 255, 255, 0.1);" + cellHeight);
+        			
+        			Text text = createText(item.getDate().toString("dd-MM-yyyy"), 100, 12, "raleway", FontWeight.NORMAL, Color.BLACK);
+        			StackPane stack = new StackPane();
+        			stack.getChildren().addAll(text);
+        			setGraphic(stack);
         		}
-            }else {
+            } else {
         		setGraphic(null);
         	}
         }

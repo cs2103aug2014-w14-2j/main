@@ -30,7 +30,6 @@ class TaskManager {
      * @return whether it exists in idMapping
      */
     public boolean ensureValidDisplayID(String displayID) {
-        displayID = displayID.toUpperCase();
         return this.idMapping.containsKey(displayID);
     }
     
@@ -41,7 +40,6 @@ class TaskManager {
      * @return taskID
      */
     private int mapDisplayIDtoActualID(String displayID) {
-        displayID = displayID.toUpperCase(); // Hopefully parser will do this, yay.
         assert(this.idMapping.containsKey(displayID) == true);
         return this.idMapping.get(displayID);
     }
@@ -77,7 +75,7 @@ class TaskManager {
         }
         
         // Waiting for proper sequence flow.
-        int taskId = this.mapDisplayIDtoActualID(commandInfo.getTaskID()); // Temporary id use.        
+        int taskId = this.mapDisplayIDtoActualID(commandInfo.getTaskIDs().get(0));       
         this.task = new Task(commandInfo, taskId);
         
         this.list.set(taskId, this.task); // Replaces the task.
@@ -97,10 +95,12 @@ class TaskManager {
             throw new MismatchedCommandException();
         }
         
-        // Temporary hack to remove via ArrayList index.
-        int taskId = this.mapDisplayIDtoActualID(commandInfo.getTaskID());
-        this.list.set(taskId, null); // "Soft-delete" in the ArrayList.
-        this.idMapping.remove(commandInfo.getTaskID().toUpperCase()); // Temporary uppercase fix before parser.
+        ListIterator<String> li = commandInfo.getTaskIDs().listIterator();
+        while (li.hasNext()) {
+            String displayID = li.next();
+            int taskId = this.mapDisplayIDtoActualID(displayID);
+            this.list.set(taskId, null); // "Soft-delete" in the ArrayList.
+        }
 
         return this.list;
     }
@@ -117,8 +117,12 @@ class TaskManager {
             throw new MismatchedCommandException();
         }
         
-        int taskId = this.mapDisplayIDtoActualID(commandInfo.getTaskID());
-        this.list.get(taskId).complete();
+        ListIterator<String> li = commandInfo.getTaskIDs().listIterator();
+        while (li.hasNext()) {
+            String displayID = li.next();
+            int taskId = this.mapDisplayIDtoActualID(displayID);
+            this.list.get(taskId).complete(); // "Soft-delete" in the ArrayList.
+        }
         
         return this.list;
     }
@@ -210,5 +214,39 @@ class TaskManager {
         return this.list;
     }
     
+    /**
+     * Returns the last task modified.
+     * @return the last task modified.
+     */    
+    public Task getLastModifiedTask() {
+        return this.task;
+    }
+    
+    
+    /**
+     * Returns a list of invalid display IDs.
+     * @return a list of invalid display IDs, or null if none.
+     */
+    public ArrayList<String> getInvalidDisplayIDs(ArrayList<String> taskIDs) {
+        if (taskIDs == null) { return null; }
+        
+        ArrayList<String> invalidIDs = new ArrayList<String>();
+
+        ListIterator<String> li = taskIDs.listIterator();
+        while (li.hasNext()) {
+            String taskID = li.next();
+            if (!this.idMapping.containsKey(taskID)) { // Invalid id...
+                invalidIDs.add(taskID);
+            }
+        }
+        
+        if (invalidIDs.size() == 0) { return null; }
+        return invalidIDs;
+    }
+    
+    /**
+     * Clears the ID mapping hashtable.
+     */
+    public void clearIDMapping() { this.idMapping.clear(); }
     
 }
