@@ -27,8 +27,7 @@ public class Controller extends Application {
     /**
      * Executes the command entered.
      * 
-     * @param input
-     *            The entire command input.
+     * @param input The entire command input.
      */
     public static void runCommandInput(String input) {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
@@ -53,6 +52,7 @@ public class Controller extends Application {
                     break;
                 case "delete":
                     taskManager.delete(commandInfo);
+                    feedback = new MessageNotifyDelete(commandInfo.getTaskIDs());
                     break;
                 case "edit":
                     taskManager.edit(commandInfo);
@@ -60,9 +60,11 @@ public class Controller extends Application {
                     break;
                 case "undo":
                     taskManager.undo(commandInfo, dataStorage.getPastVersion());
+                    feedback = new MessageNotifyUndo();
                     break;
                 case "complete":
                     taskManager.complete(commandInfo);
+                    feedback = new MessageNotifyComplete(commandInfo.getTaskIDs());
                     break;
                 case "search complete": // Temporary.
                 case "search":

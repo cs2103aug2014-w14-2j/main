@@ -97,8 +97,8 @@ class TaskManager {
         
         ListIterator<String> li = commandInfo.getTaskIDs().listIterator();
         while (li.hasNext()) {
-            String taskID = li.next();
-            int taskId = this.mapDisplayIDtoActualID(taskID);
+            String displayID = li.next();
+            int taskId = this.mapDisplayIDtoActualID(displayID);
             this.list.set(taskId, null); // "Soft-delete" in the ArrayList.
         }
 
@@ -119,8 +119,8 @@ class TaskManager {
         
         ListIterator<String> li = commandInfo.getTaskIDs().listIterator();
         while (li.hasNext()) {
-            String taskID = li.next();
-            int taskId = this.mapDisplayIDtoActualID(taskID);
+            String displayID = li.next();
+            int taskId = this.mapDisplayIDtoActualID(displayID);
             this.list.get(taskId).complete(); // "Soft-delete" in the ArrayList.
         }
         
