@@ -275,6 +275,7 @@ class TaskManager {
      * @return the initialized list of tasks.
      */
     public ArrayList<Task> initializeList(ArrayList<Task> storedList) {
+        Task.resetIDCounter();
         list = new ArrayList<Task>(storedList);
         return this.list;
     }

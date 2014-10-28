@@ -226,6 +226,7 @@ public class Task {
      */
     public DateTime getCompletedAt() { return this.completedAt; }
     
+    public static void resetIDCounter() { idCounter = 0; }
     
 }
 
