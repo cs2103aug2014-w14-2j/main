@@ -1,4 +1,4 @@
-package application;
+package UI;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -18,8 +18,10 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     private UIAutoComplete uiAutoComplete;
     private String nextPossibleCommand;
     
-    private String ADD_COMMAND = "ADD";
-    
+    final public String ADD_COMMAND = "ADD";
+    final private String DELETE_COMMAND = "DELETE";
+    final private String EDIT_COMMAND = "EDIT";
+      
     public UIAutoCompleteListener(UICmdInputBox cmdInputBox) {
         this.uiAutoComplete = new UIAutoComplete(cmdInputBox, this);
         this.cmdInputBox = cmdInputBox;
@@ -37,6 +39,15 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     	return false;
     }
     
+    private boolean isEditCommand(String next) {
+    	String[] cmdRetrieval = next.split(" ");
+    	
+    	if(cmdRetrieval[0].equals(EDIT_COMMAND) && cmdRetrieval.length == 3) {
+    		return true;
+    	}
+    	return false;
+    }
+    
     @Override
     public void handle(KeyEvent event) {
         TextField inputBox = cmdInputBox.getCmdInputBox();
@@ -44,7 +55,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         
         if(event.getCode().equals(KeyCode.SPACE)) {
             if(nextPossibleCommand.length() != 0) {
-            	
+
             	if(isAddCommand(nextPossibleCommand)) {
             		inputBox.setText(nextPossibleCommand + "[]");
             	} else {
@@ -53,7 +64,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
             	
                 inputBox.positionCaret(inputBox.getText().length());
 
-            	if(isAddCommand(nextPossibleCommand)) {
+            	if(isAddCommand(nextPossibleCommand) || isEditCommand(nextPossibleCommand)) {
             		 inputBox.positionCaret(inputBox.getText().length()-1);
             	}
             	

@@ -6,6 +6,8 @@ import javafx.stage.Stage;
 
 import java.util.logging.Level;
 
+import UI.UIComponent;
+
 /**
  * The controller logic that integrates UI, Storage and Parser.
  * 

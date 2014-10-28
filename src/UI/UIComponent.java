@@ -1,10 +1,13 @@
-package application;
+package UI;
 
 import javafx.stage.Stage;
 
 import java.util.logging.*;
 import java.util.ArrayList;
 
+import application.Controller;
+import application.Task;
+import application.WaveLogger;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -27,9 +30,7 @@ import javafx.collections.ObservableList;
 public class UIComponent {
     
     private final String SUGGESTION_TEXT = "Hello User! I am WaveWave.";
-    private static Logger logger;
-    private static FileHandler fileHandler;
-
+    private WaveLogger logger;
 	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
 	private final String LISTVIEW_STYLESHEET = "taskDisplay_outer";
 	private final String ROOTPANE_STYLESHEET = "rootPane";
@@ -43,8 +44,14 @@ public class UIComponent {
 	
 	private Scene scene;
 	private BorderPane rootPane;
+	private Text suggestionText;
 	private UICmdInputBox cmdInputBox;
 	private UITaskListView floatingTaskListView, eventReminderTaskListView;
+	
+	private final String LISTVIEW_HEADING_REMINDER = "Reminder & Events";
+	private final String LISTVIEW_HEADING_TASK = "Tasks";
+	
+	private Text reminderTaskTitle,floatingTaskTitle;
 	
 	public Scene getScene() {
 		return scene;
@@ -82,12 +89,10 @@ public class UIComponent {
 	
 	private void initializeLoggerFileHandler() {
         try {
-        	logger = Logger.getLogger("UIComponent");
-            fileHandler = new FileHandler(Controller.class.getName() + ".log");
+        	logger = new WaveLogger("UIComponent");
         } catch (Exception e) {
             logger.log(Level.SEVERE, null, e);
         }
-        logger.addHandler(fileHandler);
 	}
 	
 	private void setupScene() {
@@ -150,7 +155,7 @@ public class UIComponent {
 	
 	private VBox getUserInputComponentHolder() {
 		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_PLACEHOLDER_STYLESHEET);
-		Text suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
+		suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
 		
 		cmdInputBox = new UICmdInputBox(suggestionText);
 		userInputComponentHolder.getChildren().addAll(cmdInputBox.getCmdInputBox(), suggestionText);
@@ -172,40 +177,52 @@ public class UIComponent {
 
 	private VBox getFloatingTaskListViewHolder() {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
-		Text taskTitle = createText("Tasks", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
+		floatingTaskTitle = createText(LISTVIEW_HEADING_TASK, 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 
 		floatingTaskListView = new UITaskListView(cmdInputBox, "Task");
-		innerBox.getChildren().addAll(taskTitle, floatingTaskListView.getListView());
+		innerBox.getChildren().addAll(floatingTaskTitle, floatingTaskListView.getListView());
 		
 		return innerBox;
 	}
 
 	private VBox getTimedAndDeadlineTaskHolder() {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
-		Text taskTitle = createText("Reminder & Events", 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
+		reminderTaskTitle = createText(LISTVIEW_HEADING_REMINDER, 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 		
 		eventReminderTaskListView = new UITaskListView(cmdInputBox, "Event");
-		innerBox.getChildren().addAll(taskTitle, eventReminderTaskListView.getListView());
+		innerBox.getChildren().addAll(reminderTaskTitle, eventReminderTaskListView.getListView());
 
 		return innerBox;
 	}
 	
+	public void setFloatingTaskHeading(String title) {
+		floatingTaskTitle.setText(title);
+	}
+	
+	public void setReminderTaskHeading(String title) {
+		reminderTaskTitle.setText(title);
+	}
+
 	public void updateTaskList(ArrayList<Task> items) {
-	    ObservableList<Task> taskList = FXCollections.observableArrayList();
-	    taskList.setAll(items);
-	    floatingTaskListView.populateTaskListWithData(taskList);
+	    //ObservableList<Task> taskList = FXCollections.observableArrayList();
+	    //taskList.setAll(items);
+	    floatingTaskListView.populateTaskListWithData(items);
 	    floatingTaskListView.clearSelection();
 	    
 	    logger.log(Level.INFO, "Task ListView is updated.");
 	}
 	
 	public void updateReminderList(ArrayList<Task> items) {
-	    ObservableList<Task> taskList = FXCollections.observableArrayList();
-	    taskList.setAll(items);
-	    eventReminderTaskListView.populateTaskListWithData(taskList);
+	    //ObservableList<Task> taskList = FXCollections.observableArrayList();
+	    //taskList.setAll(items);
+	    eventReminderTaskListView.populateTaskListWithData(items);
 	    eventReminderTaskListView.clearSelection();
 	    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
+	}
+	
+	public void setSuggestionText(String text) {
+		suggestionText.setText(text);
 	}
 	
     public void showStage(Stage primaryStage) {

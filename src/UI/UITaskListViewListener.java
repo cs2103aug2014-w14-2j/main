@@ -1,4 +1,4 @@
-package application;
+package UI;
 
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -25,13 +25,13 @@ public class UITaskListViewListener implements EventHandler<KeyEvent> {
 		this.taskList = lv;
 	}
 
-	private String formatIndexIntoCmd(ObservableList<Task> items) {
+	private String formatIndexIntoCmd(ObservableList<UITaskListItem> items) {
 		String output = "";
-		for (Task item : items) {
+		for (UITaskListItem item : items) {
 			if(taskList.type.equals(FLOATING)){
-				output += item.getDisplayID() + " ";
+				output += item.getTask().getDisplayID() + " ";
 			} else if(taskList.type.equals(EVENT)){
-				output += item.getDisplayID() + " ";
+				output += item.getTask().getDisplayID() + " ";
 			}
 		}
 		return output.trim();
