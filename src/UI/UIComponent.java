@@ -204,8 +204,6 @@ public class UIComponent {
 	}
 
 	public void updateTaskList(ArrayList<Task> items) {
-	    //ObservableList<Task> taskList = FXCollections.observableArrayList();
-	    //taskList.setAll(items);
 	    floatingTaskListView.populateTaskListWithData(items);
 	    floatingTaskListView.clearSelection();
 	    
@@ -213,8 +211,6 @@ public class UIComponent {
 	}
 	
 	public void updateReminderList(ArrayList<Task> items) {
-	    //ObservableList<Task> taskList = FXCollections.observableArrayList();
-	    //taskList.setAll(items);
 	    eventReminderTaskListView.populateTaskListWithData(items);
 	    eventReminderTaskListView.clearSelection();
 	    
