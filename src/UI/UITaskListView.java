@@ -18,8 +18,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextBoundsType;
 import javafx.util.Callback;
 
 /**
@@ -77,6 +75,10 @@ public class UITaskListView {
     	
     	for(Task listItem : items) {
     		listItems.add(new UITaskListItem(listItem, listItem.getDate()));
+    	}
+    	
+    	for(UITaskListItem i : listItems) {
+    		System.out.println(i.getType());
     	}
     	
     	return listItems;
@@ -224,7 +226,7 @@ public class UITaskListView {
         		if (item != null && item.getType().equals("default")) {
         			Task taskItem = item.getTask();
         			String output = generateTaskDescription(taskItem);
-        			System.out.println(output);
+        			
         			Text text = createText(output, 150, 12, "raleway", FontWeight.NORMAL, Color.BLACK);
         			int height = getContentHeight(output.length());
         			this.setStyle(String.format(CONTAINER_HEIGHT, height));
@@ -239,9 +241,16 @@ public class UITaskListView {
         			stack.setPrefWidth(TASK_CONTAINER_WIDTH);
         			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
         			setGraphic(stack);
+        		} else if(item != null && item.getType().equals("date")) {
+        			String cellHeight = String.format(CONTAINER_HEIGHT, "10");
+        			this.setStyle("-fx-background-color: rgb(255, 255, 255, 0.1);" + cellHeight);
+        			
+        			Text text = createText(item.getDate().toString("dd/MM/yyyy"), 100, 12, "raleway", FontWeight.NORMAL, Color.BLACK);
+        			StackPane stack = new StackPane();
+        			stack.getChildren().addAll(text);
+        			setGraphic(stack);
         		}
-            }else {
-            	System.out.println("heheh");
+            } else {
         		setGraphic(null);
         	}
         }

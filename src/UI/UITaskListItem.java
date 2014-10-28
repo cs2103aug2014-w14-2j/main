@@ -13,7 +13,7 @@ public class UITaskListItem {
 	private DateTime date;
 	private String type;
 
-	public UITaskListItem(Task t, DateTime date) {
+	public UITaskListItem(Task task, DateTime date) {
 		if (task == null) {
 			this.type = LISTITEM_DATE;
 			this.date = date;
@@ -21,7 +21,7 @@ public class UITaskListItem {
 			this.type = LISTITEM_DEFAULT;
 		}
 		
-		this.task = t;
+		this.task = task;
 	}
 
 	public Task getTask() {
