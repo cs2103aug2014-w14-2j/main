@@ -275,7 +275,7 @@ public class UITaskListView {
         			
         		} else if(item != null && item.getType().equals("date")) {	
         			
-        			String cellHeight = String.format(CONTAINER_HEIGHT, "10");
+        			String cellHeight = String.format(CONTAINER_HEIGHT, "1");
         			this.setStyle("-fx-background-color: #bcbbb9;" + cellHeight);
         			
         			String output = getDateString(item.getDate());

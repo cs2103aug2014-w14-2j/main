@@ -1,16 +1,5 @@
 .rootPane {
-    /*-fx-background-color: rgb(243, 244, 246, 0.2);*/
     -fx-background-color: rgb(102, 102, 102, 0.8);
-    -fx-font-family: Raleway-Regular;
-}
-
-.root_style {
-	-fx-font-family: Raleway-Regular;
-}
-
-.Raleway {
-    -fx-font-family: Raleway-Regular;
-    -fx-font-size: 20;
 }
  
  .display {
@@ -36,21 +25,11 @@
  }
  
  .list-cell {
- 	-fx-cell-size: 80 ;
-    -fx-padding: 10 5 10 5; /* 3 */
+    -fx-padding: 10 5 10 5;
     -fx-text-fill: -fx-text-inner-color;
     -fx-opacity: 1;
     -fx-background-color: rgb(227, 227, 227, 1);
  }
-
-
-.bigger-list-cell {
-    -fx-cell-size: 180 ;
-}
-
-.smaller-list-cell {
-    -fx-cell-size: 80 ;
-}
 
  .taskList_style:focused {
   	-fx-background-color: white,-fx-box-border,-fx-control-inner-background;
@@ -69,7 +48,6 @@
 }
 
 .list-view:focused .list-cell:filled:selected, .list-view:focused .list-cell:filled:selected:hover {
-	-fx-background: -fx-accent;
 	-fx-background-color: -fx-cell-hover-color;
 	-fx-text-fill: -fx-selection-bar-text;
 }
