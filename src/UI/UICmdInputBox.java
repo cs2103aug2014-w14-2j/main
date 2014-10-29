@@ -55,6 +55,7 @@ public class UICmdInputBox {
     }
     
     public void resetPositionCaret() {
+    	
     	cmdInputBox.positionCaret(this.getText().length());
     }
     
