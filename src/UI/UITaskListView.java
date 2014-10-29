@@ -3,6 +3,8 @@ package UI;
 import java.util.ArrayList;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.Period;
 
 import application.Task;
 import javafx.collections.FXCollections;
@@ -18,8 +20,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextBoundsType;
 import javafx.util.Callback;
 
 /**
@@ -78,7 +78,7 @@ public class UITaskListView {
     	for(Task listItem : items) {
     		listItems.add(new UITaskListItem(listItem, listItem.getDate()));
     	}
-    	
+    
     	return listItems;
     }
     
@@ -86,23 +86,29 @@ public class UITaskListView {
     private ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items) {
     	DateTime currentDate = null;
     	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+    	UITaskListItem currentHeader = null;
     	
     	for(int i = 0; i<items.size(); i++) {
     		Task t = items.get(i);
-    		if(i == 0) {
+    		if(currentHeader == null) {
         		currentDate = t.getDate();
-        		listItems.add(new UITaskListItem(null, t.getDate()));
+        		currentHeader = new UITaskListItem(null, t.getDate());
+        		listItems.add(currentHeader);
     		} else {
     			if(currentDate.toString("y").equals(t.getDate().toString("y"))) {
     				if(!currentDate.toString("D").equals(t.getDate().toString("D"))) {
-    					listItems.add(new UITaskListItem(null, t.getDate()));
+    					currentDate = t.getDate();
+    					currentHeader = new UITaskListItem(null, t.getDate());
+    					listItems.add(currentHeader);
     				}
     			} else {
     				currentDate = t.getDate();
-    				listItems.add(new UITaskListItem(null, t.getDate()));
+    				currentHeader = new UITaskListItem(null, t.getDate());
+    				listItems.add(currentHeader);
     			}
     		}	
     		listItems.add(new UITaskListItem(t, t.getDate()));
+    		currentHeader.incrementNumOfTask();
     	}
     	
     	return listItems;
@@ -169,7 +175,7 @@ public class UITaskListView {
             return textLabel;
         }
         
-        private StackPane getPriorityIndicator(int priority, String displayID) {
+        private StackPane getPriorityIndicator(int priority, String displayID, int height) {
         	String indicator_color = COLOR_DEFAULT_PRIORITY;
         	
         	if(priority > 1 && priority < 4) {
@@ -178,18 +184,45 @@ public class UITaskListView {
         		indicator_color = COLOR_HIGH_PRIORITY;
         	}
         	
-        	Rectangle priorityIndicator = createRectangle(35, 35, 5, 5, Color.web(indicator_color));
+        	Rectangle priorityIndicator = createRectangle(40, height-10, 0, 0, Color.web(indicator_color));
         	indexLabel = createText(displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
 
         	StackPane stack = new StackPane();
-        	stack.setPadding(new Insets(0, 0, 10, 3));
-			stack.setMaxHeight(35);
-			stack.setMaxWidth(35);
+        	stack.setPadding(new Insets(0, 0, 0, 0));
+			stack.setMaxHeight(height-10);
+			stack.setMaxWidth(40);
         	StackPane.setAlignment(priorityIndicator, Pos.TOP_LEFT);
         	StackPane.setAlignment(indexLabel, Pos.CENTER);
 			stack.getChildren().addAll(priorityIndicator, indexLabel);	
      
         	return stack;
+        }
+        
+        private String getDateString(DateTime currentDate) {
+        	String output = "";
+        	DateTime systemTime = new DateTime();
+        	
+        	DateTime taskDate = new DateTime(currentDate.getYear(), currentDate.getMonthOfYear(), currentDate.getDayOfMonth(), 0, 0);
+        	DateTime today = new DateTime(systemTime.getYear(), systemTime.getMonthOfYear(), systemTime.getDayOfMonth(), 0, 0);
+        	DateTime tomorrow = today.plus(Period.days(1));
+        	
+        	DateTime end = today.plus(Period.days(7));
+        	
+        	Interval interval = new Interval(today, end);
+        	
+        	if(interval.contains(currentDate)) {
+        		if(taskDate.equals(today)) {
+        			output = "Today";
+        		} else if (taskDate.equals(tomorrow)) {
+        			output = "Tomorrow";
+        		} else {
+            		output = currentDate.dayOfWeek().getAsText();
+        		}
+        	} else {
+        		output = currentDate.toString("dd MMMM yyyy");
+        	}
+        	
+        	return output;
         }
         
         private int getContentHeight(int length) {
@@ -206,11 +239,11 @@ public class UITaskListView {
         	String output = item.getDescription();
         	
         	if(item.getDate() != null) {
-        		output += "\n" + item.getDate().toString("EE HH:mm");
+        		output += "\n" + item.getDate().toString("dd MMMM yyyy HH:mm");
         	} 
         	
         	if(item.getEndDate() != null) {
-        		output += "\n" + item.getEndDate().toString("EE HH:mm");
+        		output += "\n" + item.getEndDate().toString("dd MMMM yyyy HH:mm");
         	} 
         	
         	return output;
@@ -224,24 +257,36 @@ public class UITaskListView {
         		if (item != null && item.getType().equals("default")) {
         			Task taskItem = item.getTask();
         			String output = generateTaskDescription(taskItem);
-        			System.out.println(output);
+        			
         			Text text = createText(output, 150, 12, "raleway", FontWeight.NORMAL, Color.BLACK);
         			int height = getContentHeight(output.length());
         			this.setStyle(String.format(CONTAINER_HEIGHT, height));
         			contentPlaceHolder = createRectangle(260, height-10, 10, 10, Color.WHITE);
         			
         			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
-        			taskInnerContentHolder.setPadding(new Insets(10, 0, 0, 15));
-        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID()), text);
+        			HBox.setMargin(text, new Insets(5, 0, 0, 0));
+        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height), text);
         			
         			StackPane stack = new StackPane();
         			stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
         			stack.setPrefWidth(TASK_CONTAINER_WIDTH);
         			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
         			setGraphic(stack);
+        			
+        		} else if(item != null && item.getType().equals("date")) {	
+        			
+        			String cellHeight = String.format(CONTAINER_HEIGHT, "10");
+        			this.setStyle("-fx-background-color: #bcbbb9;" + cellHeight);
+        			
+        			String output = getDateString(item.getDate());
+        			
+        			Text text = createText(output, 220, 15, "raleway", FontWeight.BOLD, Color.WHITE);
+        			StackPane stack = new StackPane();
+        			StackPane.setAlignment(text, Pos.TOP_LEFT);
+        			stack.getChildren().addAll(text);
+        			setGraphic(stack);
         		}
-            }else {
-            	System.out.println("heheh");
+            } else {
         		setGraphic(null);
         	}
         }

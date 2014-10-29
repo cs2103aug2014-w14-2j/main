@@ -44,6 +44,7 @@ public class UIComponent {
 	
 	private Scene scene;
 	private BorderPane rootPane;
+	private Text suggestionText;
 	private UICmdInputBox cmdInputBox;
 	private UITaskListView floatingTaskListView, eventReminderTaskListView;
 	
@@ -154,7 +155,7 @@ public class UIComponent {
 	
 	private VBox getUserInputComponentHolder() {
 		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_PLACEHOLDER_STYLESHEET);
-		Text suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
+		suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
 		
 		cmdInputBox = new UICmdInputBox(suggestionText);
 		userInputComponentHolder.getChildren().addAll(cmdInputBox.getCmdInputBox(), suggestionText);
@@ -203,8 +204,6 @@ public class UIComponent {
 	}
 
 	public void updateTaskList(ArrayList<Task> items) {
-	    //ObservableList<Task> taskList = FXCollections.observableArrayList();
-	    //taskList.setAll(items);
 	    floatingTaskListView.populateTaskListWithData(items);
 	    floatingTaskListView.clearSelection();
 	    
@@ -212,12 +211,13 @@ public class UIComponent {
 	}
 	
 	public void updateReminderList(ArrayList<Task> items) {
-	    //ObservableList<Task> taskList = FXCollections.observableArrayList();
-	    //taskList.setAll(items);
 	    eventReminderTaskListView.populateTaskListWithData(items);
-	    eventReminderTaskListView.clearSelection();
-	    
+	    eventReminderTaskListView.clearSelection();    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
+	}
+	
+	public void setSuggestionText(String text) {
+		suggestionText.setText(text);
 	}
 	
     public void showStage(Stage primaryStage) {

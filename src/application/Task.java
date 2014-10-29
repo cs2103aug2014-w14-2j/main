@@ -24,6 +24,7 @@ public class Task {
     
     private DateTime createdAt;
     private DateTime modifiedAt;
+    private DateTime completedAt;
     
     private static int idCounter = 0;
     
@@ -56,6 +57,7 @@ public class Task {
     public Task(CommandInfo commandInfo, int id) {
         this(commandInfo); // Calls commandInfo constructor first.
         this.id = id;
+        Task.idCounter--; // Because we are editing, so do not increment the counter.
     }
     
     /**
@@ -172,6 +174,12 @@ public class Task {
     public void setCompleted(boolean completed) {
         this.completed = completed;
         this.modifiedAt = new DateTime();
+        if (completed) {
+            this.completedAt = new DateTime(this.modifiedAt);
+        }
+        else {
+            this.completedAt = null;
+        }
     }
 
     /**
@@ -205,11 +213,50 @@ public class Task {
     public DateTime getCreatedAt() { return this.createdAt; }
     
     /**
+     * Sets the created date of the Task.
+     * 
+     * Used only when retrieving tasks list from external file
+     * @param createdDate
+     */
+    public void setCreatedAt(DateTime createdDate) {
+        this.createdAt = createdDate;
+    }
+    
+    /**
      * Gets the last modified date of the Task.
      * 
      * @return the last modified date of the Task.
      */
     public DateTime getModifiedAt() { return this.modifiedAt; }
+    
+    /**
+     * Sets the last modified date of the Task.
+     * 
+     * Used only when retrieving tasks list from external file
+     * @param modDate
+     */
+    public void setModifiedAt(DateTime modDate) {
+        this.modifiedAt = modDate;
+    }
+    
+    /**
+     * Gets the completed date of the Task.
+     * 
+     * @return the last completed date of the Task.
+     */
+    public DateTime getCompletedAt() { return this.completedAt; }
+    
+    /**
+     * Sets the completed date of the Task.
+     * 
+     * Used only when retrieving tasks list from external file
+     * @param completedDate
+     */
+    public void setCompletedAt(DateTime completedDate) {
+        this.completedAt = completedDate;
+    }
+    
+    
 }
 
 /**

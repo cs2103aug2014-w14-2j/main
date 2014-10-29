@@ -16,6 +16,12 @@ public class UIAutoComplete {
     final public String ADD_COMMAND = "ADD";
     final private String DELETE_COMMAND = "DELETE";
     final private String EDIT_COMMAND = "EDIT";
+    final private String UNDO_COMMAND = "UNDO";
+    final private String QUIT_COMMAND = "QUIT";
+    final private String COMPLETE_COMMAND = "COMPLETE";
+    final private String SEARCH_COMMAND = "SEARCH";
+    final private String SHOW_COMMAND = "SHOW";
+    final private String DISPLAY_COMMAND = "DISPLAY";
     
     final private int FIRST_WORD_IN_CMD = 1;
     final private int SECOND_WORD_IN_CMD = 2;
@@ -35,6 +41,12 @@ public class UIAutoComplete {
         cmdList.add(ADD_COMMAND);
         cmdList.add(DELETE_COMMAND);
         cmdList.add(EDIT_COMMAND);
+        cmdList.add(UNDO_COMMAND);
+        cmdList.add(COMPLETE_COMMAND);
+        cmdList.add(QUIT_COMMAND);
+        cmdList.add(DISPLAY_COMMAND);
+        cmdList.add(SHOW_COMMAND);
+        cmdList.add(SEARCH_COMMAND);
         return cmdList;
     }
     
