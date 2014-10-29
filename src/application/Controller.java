@@ -109,7 +109,7 @@ public class Controller extends Application {
     }
     
     //@author A0110546R
-    public static void main(String[] args) {
+    private static void setup() {
         taskManager = new TaskManager();
         dataStorage = new DataStorage();
         messageManager = new MessageManager();
@@ -117,7 +117,11 @@ public class Controller extends Application {
         dataStorage.initiateFile();
         
         taskManager.initializeList(dataStorage.retrieveTasks());
-        
+    }
+    
+    //@author A0110546R
+    public static void main(String[] args) {
+        setup();
         launch(args);
     }
 

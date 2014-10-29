@@ -235,8 +235,8 @@ public class Task {
      * Used only when retrieving tasks list from external file
      * @param modDate
      */
-    public void setModifiedAt(DateTime modDate) {
-        this.modifiedAt = modDate;
+    public void setModifiedAt(DateTime modifiedDate) {
+        this.modifiedAt = modifiedDate;
     }
     
     /**
@@ -256,6 +256,7 @@ public class Task {
         this.completedAt = completedDate;
     }
     
+    public static void resetIDCounter() { idCounter = 0; }
     
 }
 
