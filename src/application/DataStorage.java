@@ -226,8 +226,8 @@ public class DataStorage {
                 }
                 
                 boolean isCompleted = list.get(i).isCompleted();
-                obj.put(KEY_ISCOMPLETED, true);
-                if (isCompleted == true) {
+                obj.put(KEY_ISCOMPLETED, isCompleted);
+                if (isCompleted) {
                     obj.put(KEY_COMPLETED_DATE, list.get(i).getCompletedAt());
                 }
                 
