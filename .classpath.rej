@@ -1,8 +1,0 @@
-diff a/.classpath b/.classpath	(rejected hunks)
-@@ -19,5 +19,5 @@
- 		</attributes>
- 	</classpathentry>
- 	<classpathentry kind="output" path="target/classes"/>
-->>>>>>> 565f2a92db194f9e7e1218234ebb6736ff2eaddc
-+
- </classpath>
