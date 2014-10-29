@@ -283,10 +283,12 @@ public class UITaskListView {
         			Text text = createText(output, 220, 15, "raleway", FontWeight.BOLD, Color.WHITE);
         			StackPane stack = new StackPane();
         			StackPane.setAlignment(text, Pos.TOP_LEFT);
+        			
         			stack.getChildren().addAll(text);
         			setGraphic(stack);
         		}
             } else {
+            	this.setStyle("-fx-background-color: rgb(227, 227, 227, 1);");
         		setGraphic(null);
         	}
         }
