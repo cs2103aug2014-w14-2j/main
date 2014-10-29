@@ -191,7 +191,8 @@ public class UITaskListView {
         	stack.setPadding(new Insets(0, 0, 0, 0));
 			stack.setMaxHeight(height-10);
 			stack.setMaxWidth(40);
-        	StackPane.setAlignment(priorityIndicator, Pos.TOP_LEFT);
+        	
+			StackPane.setAlignment(priorityIndicator, Pos.TOP_LEFT);
         	StackPane.setAlignment(indexLabel, Pos.CENTER);
 			stack.getChildren().addAll(priorityIndicator, indexLabel);	
      
@@ -226,10 +227,14 @@ public class UITaskListView {
         }
         
         private int getContentHeight(int length) {
-        	if (length < 150) {
+        	if (length < 140) {
         		return 80;
-        	} else if (length < 200) {
+        	} else if (length > 140 && length < 200) {
+        		return 130;
+        	} else if (length > 200 && length < 260){
         		return 180;
+        	} else if (length > 260 && length < 320) {
+        		return 230;
         	} else {
         		return 280;
         	}
@@ -258,7 +263,7 @@ public class UITaskListView {
         			Task taskItem = item.getTask();
         			String output = generateTaskDescription(taskItem);
         			
-        			Text text = createText(output, 150, 12, "", FontWeight.NORMAL, Color.BLACK);
+        			Text text = createText(output, 190, 12, "", FontWeight.NORMAL, Color.BLACK);
         			int height = getContentHeight(output.length());
         			this.setStyle(String.format(CONTAINER_HEIGHT, height));
         			contentPlaceHolder = createRectangle(260, height-10, 10, 10, Color.WHITE);
@@ -276,15 +281,11 @@ public class UITaskListView {
         		} else if(item != null && item.getType().equals("date")) {	
         			
         			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
-        			this.setStyle("-fx-background-color: #bcbbb9;" + cellHeight);
+        			this.setStyle(" -fx-padding: 0 0 0 0; -fx-background-color: #bcbbb9;" + cellHeight);
         			String output = getDateString(item.getDate());
         			
-        			Text text = createText(output, 220, 15, "raleway", FontWeight.BOLD, Color.WHITE);
-        			StackPane stack = new StackPane();
-        			StackPane.setAlignment(text, Pos.TOP_LEFT);
-        			
-        			stack.getChildren().addAll(text);
-        			setGraphic(stack);
+        			Text text = createText(output, 0, 15, "raleway", FontWeight.BOLD, Color.WHITE);
+        			setGraphic(text);
         		}
             } else {
             	this.setStyle("-fx-background-color: rgb(227, 227, 227, 1);");
