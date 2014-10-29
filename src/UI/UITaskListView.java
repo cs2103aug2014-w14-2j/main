@@ -235,8 +235,10 @@ public class UITaskListView {
         		return 180;
         	} else if (length > 260 && length < 320) {
         		return 230;
-        	} else {
+        	} else if (length > 320 && length < 380){
         		return 280;
+        	} else {
+        		return 320;
         	}
         }
         
