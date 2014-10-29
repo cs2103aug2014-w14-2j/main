@@ -39,6 +39,7 @@ public class Controller extends Application {
         ArrayList<String> invalidIDs = taskManager.getInvalidDisplayIDs(commandInfo.getTaskIDs());
         if (invalidIDs != null) {
             feedback = new MessageWarningInvalidID(invalidIDs);
+            uiComponent.setSuggestionText(messageManager.getMessage(feedback));
             logger.log(messageManager.getMessage(feedback));
             return;
         }
@@ -88,6 +89,7 @@ public class Controller extends Application {
         }
         
         if (feedback != null) {
+            uiComponent.setSuggestionText(messageManager.getMessage(feedback));
             logger.log(messageManager.getMessage(feedback));
         }
         

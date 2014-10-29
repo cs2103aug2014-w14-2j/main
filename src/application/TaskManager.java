@@ -99,7 +99,7 @@ class TaskManager {
         while (li.hasNext()) {
             String displayID = li.next();
             int taskId = this.mapDisplayIDtoActualID(displayID);
-            this.list.set(taskId, null); // "Soft-delete" in the ArrayList.
+            this.list.get(taskId).setDeleted(true);
         }
 
         return this.list;
@@ -160,12 +160,15 @@ class TaskManager {
     }
 
     /**
-     * Returns the full list of tasks.
+     * Returns the full list of tasks, ignoring the deleted tasks.
      * 
-     * @return the full list of tasks.
+     * @return the full list of tasks, ignoring the deleted tasks.
      */
     public ArrayList<Task> getList() {
-        return TaskListFilter.filterOutNullTasks(this.list); // Need to filter out nulls, because they are soft-deleted.
+        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
+        filter.add(new IgnoreTasksDeleted());
+        return filter.apply();
+        // return TaskListFilter.filterOutNullTasks(this.list); // Need to filter out nulls, because they are soft-deleted.
     }
     
     /**
@@ -174,15 +177,22 @@ class TaskManager {
      * @return the tasks without start dates.
      */
     public ArrayList<Task> getTasks() {
-        ArrayList<Task> tasks = TaskListFilter.filterOutTasksWithStartDates(this.list); // Kick out tasks with start dates.
-        tasks = TaskListFilter.filterOutCompletedTasks(tasks); // Kick out completed tasks.
+        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
+        filter.add(new IgnoreTasksDeleted()); // and,
+        filter.add(new KeepTasksWithoutStartDate());
+        ArrayList<Task> filteredTasks = filter.apply();
         
+        filter = new TaskListFilter(filteredTasks, false); // Does a OR/|| filtering.
+        filter.add(new KeepTasksCompletedToday()); // or,
+        filter.add(new KeepTasksNotCompleted());
+        filteredTasks = filter.apply();
+                
         // Sort by modified at date first, then priority.
-        Collections.sort(tasks, new ModifiedAtComparator());
-        Collections.sort(tasks, new PriorityComparator());
+        Collections.sort(filteredTasks, new ModifiedAtComparator());
+        Collections.sort(filteredTasks, new PriorityComparator());
         
         int i = 1;
-        ListIterator<Task> li = tasks.listIterator();
+        ListIterator<Task> li = filteredTasks.listIterator();
         while (li.hasNext()) {
             Task t = li.next();
             String displayID = NORMAL_TASK_PREFIX + "" + i;
@@ -191,7 +201,7 @@ class TaskManager {
             i++;
         }
         
-        return tasks;
+        return filteredTasks;
     }
     
     /**
@@ -200,13 +210,20 @@ class TaskManager {
      * @return the tasks with start dates.
      */
     public ArrayList<Task> getReminders() {
-        ArrayList<Task> tasks = TaskListFilter.filterOutTasksWithoutStartDates(this.list); // Kick out tasks without start dates.
-        tasks = TaskListFilter.filterOutCompletedTasks(tasks); // Kick out completed tasks.
+        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
+        filter.add(new IgnoreTasksDeleted()); // and,
+        filter.add(new KeepTasksWithStartDate());
+        ArrayList<Task> filteredTasks = filter.apply();
+        
+        filter = new TaskListFilter(filteredTasks, false); // Does a OR/|| filtering.
+        filter.add(new KeepTasksCompletedToday()); // or,
+        filter.add(new KeepTasksToShowToday());
+        filteredTasks = filter.apply();
 
-        Collections.sort(tasks, new DayPriorityComparator());
+        Collections.sort(filteredTasks, new DayPriorityComparator());
         
         int i = 1;
-        ListIterator<Task> li = tasks.listIterator();
+        ListIterator<Task> li = filteredTasks.listIterator();
         while (li.hasNext()) {
             Task t = li.next();
             String displayID = DATED_TASK_PREFIX + "" + i;
@@ -215,7 +232,7 @@ class TaskManager {
             i++;
         }
         
-        return tasks;
+        return filteredTasks;
     }
     
     /**
@@ -224,15 +241,18 @@ class TaskManager {
      * @return the completed tasks without start dates.
      */
     public ArrayList<Task> getCompletedTasks() {
-        ArrayList<Task> tasks = TaskListFilter.filterOutTasksWithStartDates(this.list); // Kick out tasks with start dates.
-        tasks = TaskListFilter.filterOutNotCompletedTasks(tasks); // Kick out not completed tasks.
+        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
+        filter.add(new IgnoreTasksDeleted()); // and,
+        filter.add(new KeepTasksWithoutStartDate()); // and,
+        filter.add(new KeepTasksCompleted());
+        ArrayList<Task> filteredTasks = filter.apply();
         
         // Sort by modified at date first, then priority.
-        Collections.sort(tasks, new ModifiedAtComparator());
-        Collections.sort(tasks, new PriorityComparator());
+        Collections.sort(filteredTasks, new ModifiedAtComparator());
+        Collections.sort(filteredTasks, new PriorityComparator());
         
         int i = 1;
-        ListIterator<Task> li = tasks.listIterator();
+        ListIterator<Task> li = filteredTasks.listIterator();
         while (li.hasNext()) {
             Task t = li.next();
             String displayID = NORMAL_TASK_PREFIX + "" + i;
@@ -241,7 +261,7 @@ class TaskManager {
             i++;
         }
         
-        return tasks;
+        return filteredTasks;
     }
     
     /**
@@ -250,13 +270,16 @@ class TaskManager {
      * @return the completed tasks with start dates.
      */
     public ArrayList<Task> getCompletedReminders() {
-        ArrayList<Task> tasks = TaskListFilter.filterOutTasksWithoutStartDates(this.list); // Kick out tasks without start dates.
-        tasks = TaskListFilter.filterOutNotCompletedTasks(tasks); // Kick out not completed tasks.
+        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
+        filter.add(new IgnoreTasksDeleted()); // and, 
+        filter.add(new KeepTasksWithStartDate()); // and,
+        filter.add(new KeepTasksCompleted());
+        ArrayList<Task> filteredTasks = filter.apply();
 
-        Collections.sort(tasks, new DayPriorityComparator());
+        Collections.sort(filteredTasks, new DayPriorityComparator());
         
         int i = 1;
-        ListIterator<Task> li = tasks.listIterator();
+        ListIterator<Task> li = filteredTasks.listIterator();
         while (li.hasNext()) {
             Task t = li.next();
             String displayID = DATED_TASK_PREFIX + "" + i;
@@ -265,7 +288,7 @@ class TaskManager {
             i++;
         }
         
-        return tasks;
+        return filteredTasks;
     }
 
     /**
@@ -275,7 +298,6 @@ class TaskManager {
      * @return the initialized list of tasks.
      */
     public ArrayList<Task> initializeList(ArrayList<Task> storedList) {
-        Task.resetIDCounter();
         list = new ArrayList<Task>(storedList);
         return this.list;
     }
