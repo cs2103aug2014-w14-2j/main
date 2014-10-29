@@ -55,7 +55,6 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         
         if(event.getCode().equals(KeyCode.SPACE)) {
             if(nextPossibleCommand.length() != 0) {
-
             	if(isAddCommand(nextPossibleCommand)) {
             		inputBox.setText(nextPossibleCommand + "[]");
             	} else {
