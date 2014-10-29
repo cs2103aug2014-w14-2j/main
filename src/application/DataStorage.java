@@ -228,7 +228,8 @@ public class DataStorage {
                 boolean isCompleted = list.get(i).isCompleted();
                 obj.put(KEY_ISCOMPLETED, isCompleted);
                 if (isCompleted) {
-                    obj.put(KEY_COMPLETED_DATE, list.get(i).getCompletedAt());
+                    String comp = fmt.print(list.get(i).getCompletedAt());
+                    obj.put(KEY_COMPLETED_DATE, comp);
                 }
                 
                 String mod = fmt.print(list.get(i).getModifiedAt());
