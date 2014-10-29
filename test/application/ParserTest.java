@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.NoSuchMethodException;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
@@ -14,72 +15,88 @@ public class ParserTest {
     
   //@author A0090971Y
     @Test  
-    public void testParseContent() throws NoSuchMethodException,     
+    public void testParseTaskDesc() throws NoSuchMethodException,     
     InvocationTargetException, IllegalAccessException {
        
-        Method method = Parser.class.getDeclaredMethod("parseContent", String.class);
+        Method method = Parser.class.getDeclaredMethod("parseTaskDesc", String.class,String.class);
         method.setAccessible(true);
         
-        Object input1 = "Add drink tea";
-        Object input2 = "EDIT 2 make cakes";
-        //invalid command, no taskID after Edit
-        Object input3 = "Edit";
-        // invalid command
-        Object input4 = "exit";
+        Object input1_1 = "Add [drink tea]";
+        Object input1_2 = "ADD";
+        Object input2_1 = "EDIT T2 [make cakes]";
+        Object input2_2 = "EDIT";
+        Object input3_1 = "Edit";
+        Object input3_2 = "EDIT";
+        Object input4_1 = "exit";
+        Object input4_2 = "EXIT";
         
-        String output1 = (String)method.invoke(test,input1); 
-        String output2 = (String)method.invoke(test,input2);
-        String output3 = (String)method.invoke(test, input3);
-        String output4 = (String)method.invoke(test, input4);
+        String output1 = (String)method.invoke(test,input1_1,input1_2); 
+        String output2 = (String)method.invoke(test,input2_1,input2_2);
+        String output3 = (String)method.invoke(test, input3_1,input3_2);
+        String output4 = (String)method.invoke(test, input4_1,input4_2);
         
         assertEquals("drink tea",output1);
         assertEquals("make cakes",output2);
-        assertEquals("",output3);
+        assertEquals(null,output3);
         assertEquals("",output4);
         
     }
+  
     
   //@author A0090971Y    
     @Test
     public void testParsePriority() throws NoSuchMethodException,
     IllegalAccessException, InvocationTargetException {
-        Method method = Parser.class.getDeclaredMethod("parsePriority", String.class);
+        Method method = Parser.class.getDeclaredMethod("parsePriority", String.class,String.class);
         method.setAccessible(true);
         
-        Object input1 = "Add drink tea !!!";
-        //test case without priority
-        Object input2 = "Edit write responses ";
-        Object input3 = "Add !!! book tickets !!!!!!!!!!";
+        Object input1_1 = "Add [drink tea] !!!";
+        Object input1_2 = "drink tea";
+        Object input2_1 = "Edit [write responses!!] ";
+        Object input2_2 = "write responses!!";
+        Object input3_1 = "Add [!!! book tickets] !!!!!!!!!!";
+        Object input3_2 = "!!! book tickets";
         
-        int output1 = (int)method.invoke(test,input1);
-        int output2 = (int)method.invoke(test,input2);
-        int output3 = (int)method.invoke(test, input3);
+        int output1 = (int)method.invoke(test,input1_1,input1_2);
+        int output2 = (int)method.invoke(test,input2_1,input2_2);
+        int output3 = (int)method.invoke(test, input3_1,input3_2);
         assertEquals(3,output1);
         assertEquals(0,output2);
-        assertEquals(13,output3);
+        assertEquals(10,output3);
     }
-    
+   
   //@author A0090971Y
     @Test
-    public void testParseTaskID() throws NoSuchMethodException,
+    public void testParseTaskIDs() throws NoSuchMethodException,
     IllegalAccessException, InvocationTargetException {
-        Method method = Parser.class.getDeclaredMethod("parseTaskID", String.class);
+        Method method = Parser.class.getDeclaredMethod("parseTaskIDs", String.class);
         method.setAccessible(true);
         
-        Object input1 = "DELETE 2";
-        Object input2 = "Edit 4 write responses 2pm";
-        Object input3 = "ADD do laundry";
+        Object input1 = "DELETE e2 t1";
+        Object input2 = "Edit T4 [write responses] 2pm";
+        Object input3 = "ADD [do laundry]";
         // test case for invalid command
         Object input4 = "go home";
         
-        int output1 = (int)method.invoke(test,input1);
-        int output2 = (int)method.invoke(test,input2);
-        int output3 = (int)method.invoke(test, input3);
-        int output4 = (int)method.invoke(test, input4);
+        ArrayList<String> output1 = (ArrayList<String>)method.invoke(test,input1);
+        ArrayList<String> output2 = (ArrayList<String>)method.invoke(test,input2);
+        ArrayList<String> output3 = (ArrayList<String>)method.invoke(test, input3);
+        ArrayList<String> output4 = (ArrayList<String>)method.invoke(test, input4);
         
-        assertEquals(2,output1);
-        assertEquals(4,output2);
-        assertEquals(-1,output3);
-        assertEquals(-1,output3);
+        ArrayList<String> expectedOutput1 =new ArrayList<String>();
+        expectedOutput1.add("E2");
+        expectedOutput1.add("T1");
+        
+        ArrayList<String> expectedOutput2 =new ArrayList<String>();
+        expectedOutput2.add("T4");
+        
+        ArrayList<String> expectedOutput3 =new ArrayList<String>();
+        ArrayList<String> expectedOutput4 =new ArrayList<String>();
+        
+        assertEquals(expectedOutput1,output1);
+        assertEquals(expectedOutput2,output2);
+        assertEquals(expectedOutput3,output3);
+        assertEquals(expectedOutput4,output3);
     }
+    
 }
