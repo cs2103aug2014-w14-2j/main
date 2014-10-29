@@ -178,7 +178,7 @@ public class UITaskListView {
         private StackPane getPriorityIndicator(int priority, String displayID, int height) {
         	String indicator_color = COLOR_DEFAULT_PRIORITY;
         	
-        	if(priority > 1 && priority < 4) {
+        	if(priority > 1 && priority <= 4) {
         		indicator_color = COLOR_MEDIUM_PRIORITY;
         	} else if (priority >= 5) {
         		indicator_color = COLOR_HIGH_PRIORITY;
