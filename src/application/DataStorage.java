@@ -231,8 +231,10 @@ public class DataStorage {
                     obj.put(KEY_COMPLETED_DATE, list.get(i).getCompletedAt());
                 }
                 
-                obj.put(KEY_LAST_MODIFIED_DATE, list.get(i).getModifiedAt());
-                obj.put(KEY_CREATED_DATE, list.get(i).getCreatedAt());
+                String mod = fmt.print(list.get(i).getModifiedAt());
+                obj.put(KEY_LAST_MODIFIED_DATE, mod);
+                String cr = fmt.print(list.get(i).getCreatedAt());
+                obj.put(KEY_CREATED_DATE, cr);
                 
                 logger.log(Level.INFO,
                         "ArrayList of tasks converted to JSONArray");
