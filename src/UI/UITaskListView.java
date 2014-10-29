@@ -239,11 +239,11 @@ public class UITaskListView {
         	String output = item.getDescription();
         	
         	if(item.getDate() != null) {
-        		output += "\n" + item.getDate().toString("dd MMMM yyyy HH:mm");
+        		output += "\n" + item.getDate().toString("dd MMM yyyy, hh:mm a");
         	} 
         	
         	if(item.getEndDate() != null) {
-        		output += "\n" + item.getEndDate().toString("dd MMMM yyyy HH:mm");
+        		output += "\n" + item.getEndDate().toString("dd MMM yyyy, hh:mm a");
         	} 
         	
         	return output;
