@@ -168,7 +168,6 @@ class TaskManager {
         TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
         filter.add(new IgnoreTasksDeleted());
         return filter.apply();
-        // return TaskListFilter.filterOutNullTasks(this.list); // Need to filter out nulls, because they are soft-deleted.
     }
     
     /**
