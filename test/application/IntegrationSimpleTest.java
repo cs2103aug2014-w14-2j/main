@@ -57,10 +57,12 @@ class ControllerReflector {
  *
  */
 public class IntegrationSimpleTest extends Application {
+    private static final String TODO_TEST_JSON_FILENAME = "Todo.test.json"; // To be used in tests.
+    private static final String SAMPLE_TEST_JSON_FILENAME = "SampleTodo.test.json"; // To be loaded in tests.
     private static final Object[] EMPTY = {};
     static UIComponent uiComponent;
     static TaskManager taskManager = new TaskManager();
-    static DataStorage dataStorage = new DataStorage("Todo.test.json");
+    static DataStorage dataStorage = new DataStorage(TODO_TEST_JSON_FILENAME);
     static int FIXTURES_SIZE;
   
     //@author A0110546R
@@ -116,7 +118,7 @@ public class IntegrationSimpleTest extends Application {
     // This method will be run once before each test.
     @Before
     public void readyTasks() {
-        DataStorage fixtureStorage = new DataStorage("SampleTodo.test.json");
+        DataStorage fixtureStorage = new DataStorage(SAMPLE_TEST_JSON_FILENAME);
         ArrayList<Task> fixtures = fixtureStorage.retrieveTasks();
         taskManager.initializeList(fixtures);
         dataStorage.saveTasks(fixtures);    
@@ -169,8 +171,13 @@ public class IntegrationSimpleTest extends Application {
     public void testAdd() {
         String commandInput = "add [first wavewave]";
         Controller.runCommandInput(commandInput);
-
+        
+        DataStorage checkStorage = new DataStorage(TODO_TEST_JSON_FILENAME);
+        
+        assertEquals(FIXTURES_SIZE + 1, checkStorage.retrieveTasks().size());
         assertEquals(FIXTURES_SIZE + 1, taskManager.getList().size());
+        assertEquals(5 + 1, taskManager.getTasks().size());
+        assertEquals(4, taskManager.getReminders().size());
     }
 
     //@author A0110546R
@@ -180,7 +187,7 @@ public class IntegrationSimpleTest extends Application {
         Controller.runCommandInput(commandInput);
         
         // We have not fixed this, since empty task should not be added.
-//        assertEquals(taskManager.getList().size(), FIXTURES_SIZE);
+        // assertEquals(taskManager.getList().size(), FIXTURES_SIZE);
     }
 
     //@author A0110546R
@@ -191,6 +198,18 @@ public class IntegrationSimpleTest extends Application {
         
         assertEquals(4, taskManager.getTasks().size());
         assertEquals(1, taskManager.getCompletedTasks().size());
+    }
+    
+    //@author A0110546R
+    @Test
+    public void testDeleteTask() {
+        String commandInput = "delete T1";
+        Controller.runCommandInput(commandInput);
+        
+        DataStorage checkStorage = new DataStorage(TODO_TEST_JSON_FILENAME);
+        
+        assertEquals(FIXTURES_SIZE - 1, checkStorage.retrieveTasks().size());        
+        assertEquals(FIXTURES_SIZE - 1, taskManager.getList().size());        
     }
 
 }
