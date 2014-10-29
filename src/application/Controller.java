@@ -43,6 +43,7 @@ public class Controller extends Application {
             return;
         }
 
+        // Really should command pattern this now!
         // Run the command.
         try {            
             switch (commandInfo.getCommandType()) {
@@ -67,10 +68,13 @@ public class Controller extends Application {
                     feedback = new MessageNotifyComplete(commandInfo.getTaskIDs());
                     break;
                 case "search complete": // Temporary.
+                    taskManager.clearIDMapping();
+                    uiComponent.updateTaskList(taskManager.getCompletedTasks());
+                    uiComponent.updateReminderList(taskManager.getCompletedReminders());
+                    return;
                 case "search":
                 case "display":
                 case "show":
-                    
                     break;
                 case "quit":
                 case "exit":
