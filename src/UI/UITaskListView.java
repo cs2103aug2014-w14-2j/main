@@ -151,7 +151,7 @@ public class UITaskListView {
         static private final int TASK_CONTAINER_HEIGHT = 70;
         static private final int TASK_CONTAINER_SPACING = 15;
         
-        private final String CONTAINER_HEIGHT = "-fx-cell-size: %s";
+        private final String CONTAINER_HEIGHT = "-fx-cell-size: %s;";
         private String COLOR_DEFAULT_PRIORITY = "rgba(37, 232, 154, 1)";
         private String COLOR_HIGH_PRIORITY = "rgba(249, 104, 114, 1)";
         private String COLOR_MEDIUM_PRIORITY = "rgba(247, 207, 89, 1)";
@@ -258,7 +258,7 @@ public class UITaskListView {
         			Task taskItem = item.getTask();
         			String output = generateTaskDescription(taskItem);
         			
-        			Text text = createText(output, 150, 12, "raleway", FontWeight.NORMAL, Color.BLACK);
+        			Text text = createText(output, 150, 12, "", FontWeight.NORMAL, Color.BLACK);
         			int height = getContentHeight(output.length());
         			this.setStyle(String.format(CONTAINER_HEIGHT, height));
         			contentPlaceHolder = createRectangle(260, height-10, 10, 10, Color.WHITE);
@@ -275,9 +275,8 @@ public class UITaskListView {
         			
         		} else if(item != null && item.getType().equals("date")) {	
         			
-        			String cellHeight = String.format(CONTAINER_HEIGHT, "1");
+        			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
         			this.setStyle("-fx-background-color: #bcbbb9;" + cellHeight);
-        			
         			String output = getDateString(item.getDate());
         			
         			Text text = createText(output, 220, 15, "raleway", FontWeight.BOLD, Color.WHITE);
