@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.FileWriter;
-
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,6 +12,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -112,7 +114,9 @@ public class DataStorage {
         convertArrayListToJSONArray(array);
         try {
             FileWriter fw = new FileWriter(filename, false);
-            fw.write(tasks.toJSONString());
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String output = gson.toJson(tasks);
+            fw.write(output);
             fw.flush();
             fw.close();
             logger.log(Level.INFO, "Tasks written to external file");
