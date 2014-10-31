@@ -151,7 +151,7 @@ public class UITaskListView {
         static private final int TASK_CONTAINER_HEIGHT = 70;
         static private final int TASK_CONTAINER_SPACING = 15;
         
-        private final String CONTAINER_HEIGHT = "-fx-cell-size: %s";
+        private final String CONTAINER_HEIGHT = "-fx-cell-size: %s !important";
         private String COLOR_DEFAULT_PRIORITY = "rgba(37, 232, 154, 1)";
         private String COLOR_HIGH_PRIORITY = "rgba(249, 104, 114, 1)";
         private String COLOR_MEDIUM_PRIORITY = "rgba(247, 207, 89, 1)";
@@ -178,7 +178,7 @@ public class UITaskListView {
         private StackPane getPriorityIndicator(int priority, String displayID, int height) {
         	String indicator_color = COLOR_DEFAULT_PRIORITY;
         	
-        	if(priority > 1 && priority < 4) {
+        	if(priority > 1 && priority <= 4) {
         		indicator_color = COLOR_MEDIUM_PRIORITY;
         	} else if (priority >= 5) {
         		indicator_color = COLOR_HIGH_PRIORITY;
