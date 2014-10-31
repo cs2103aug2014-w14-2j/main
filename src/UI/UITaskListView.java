@@ -13,13 +13,17 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 
 /**
@@ -150,8 +154,9 @@ public class UITaskListView {
         static private final int TASK_CONTAINER_WIDTH = 260;
         static private final int TASK_CONTAINER_HEIGHT = 70;
         static private final int TASK_CONTAINER_SPACING = 15;
-        
-        private final String CONTAINER_HEIGHT = "-fx-cell-size: %s !important";
+
+        private final String CONTAINER_HEIGHT = "-fx-cell-size: %s;";
+
         private String COLOR_DEFAULT_PRIORITY = "rgba(37, 232, 154, 1)";
         private String COLOR_HIGH_PRIORITY = "rgba(249, 104, 114, 1)";
         private String COLOR_MEDIUM_PRIORITY = "rgba(247, 207, 89, 1)";
@@ -191,7 +196,8 @@ public class UITaskListView {
         	stack.setPadding(new Insets(0, 0, 0, 0));
 			stack.setMaxHeight(height-10);
 			stack.setMaxWidth(40);
-        	StackPane.setAlignment(priorityIndicator, Pos.TOP_LEFT);
+        	
+			StackPane.setAlignment(priorityIndicator, Pos.TOP_LEFT);
         	StackPane.setAlignment(indexLabel, Pos.CENTER);
 			stack.getChildren().addAll(priorityIndicator, indexLabel);	
      
@@ -226,12 +232,18 @@ public class UITaskListView {
         }
         
         private int getContentHeight(int length) {
-        	if (length < 150) {
+        	if (length < 140) {
         		return 80;
-        	} else if (length < 200) {
+        	} else if (length > 140 && length < 200) {
+        		return 130;
+        	} else if (length > 200 && length < 260){
         		return 180;
-        	} else {
+        	} else if (length > 260 && length < 320) {
+        		return 230;
+        	} else if (length > 320 && length < 380){
         		return 280;
+        	} else {
+        		return 320;
         	}
         }
         
@@ -239,11 +251,11 @@ public class UITaskListView {
         	String output = item.getDescription();
         	
         	if(item.getDate() != null) {
-        		output += "\n" + item.getDate().toString("dd MMMM yyyy HH:mm");
+        		output += "\n" + item.getDate().toString("dd MMM yyyy, hh:mm a");
         	} 
         	
         	if(item.getEndDate() != null) {
-        		output += "\n" + item.getEndDate().toString("dd MMMM yyyy HH:mm");
+        		output += "\n" + item.getEndDate().toString("dd MMM yyyy, hh:mm a");
         	} 
         	
         	return output;
@@ -258,16 +270,67 @@ public class UITaskListView {
         			Task taskItem = item.getTask();
         			String output = generateTaskDescription(taskItem);
         			
-        			Text text = createText(output, 150, 12, "raleway", FontWeight.NORMAL, Color.BLACK);
+        			Text text = createText(output, 190, 12, "", FontWeight.NORMAL, Color.BLACK);
         			int height = getContentHeight(output.length());
-        			this.setStyle(String.format(CONTAINER_HEIGHT, height));
-        			contentPlaceHolder = createRectangle(260, height-10, 10, 10, Color.WHITE);
+        			this.setStyle(" -fx-padding: 0 5 0 5;" + String.format(CONTAINER_HEIGHT, height));
+        			contentPlaceHolder = createRectangle(270, height-10, 5, 5, Color.WHITE);
         			
         			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
-        			HBox.setMargin(text, new Insets(5, 0, 0, 0));
-        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height), text);
+        			HBox.setMargin(text, new Insets(10, 10, 10, 10));
+        			
+        			//Requires Refractor
+        			VBox vbox = new VBox(10);
+        			HBox hbox = new HBox(-10);
+        			
+        			//Outstanding
+        			if(item.getTask().getEndDate() != null && !item.getTask().isCompleted()) {	
+        				if(item.getTask().getEndDate().isBeforeNow()) {
+        					Text labelText = createText("OUTSTANDING", 90, 10, "", FontWeight.BOLD, Color.WHITE);
+        					labelText.setTextAlignment(TextAlignment.LEFT);
+        					Rectangle labelRect = createRectangle(90, 15, 5, 5, Color.web("rgba(231, 76, 60, 1)"));
+        		
+        					StackPane labelStack = new StackPane();
+        					StackPane.setMargin(labelText, new Insets(0, 8, 0, 8));
+        					StackPane.setAlignment(labelRect, Pos.TOP_LEFT);
+        					StackPane.setAlignment(labelText, Pos.TOP_LEFT);
+        					labelStack.getChildren().addAll(labelRect, labelText);
+        					hbox.getChildren().addAll(labelStack);
+        				}
+        			} else if(item.getTask().getDate() != null && !item.getTask().isCompleted()){
+        				if(item.getTask().getDate().isBeforeNow()) {
+        					Text labelText = createText("OUTSTANDING", 90, 10, "", FontWeight.BOLD, Color.WHITE);
+        					labelText.setTextAlignment(TextAlignment.LEFT);
+        					Rectangle labelRect = createRectangle(90, 15, 5, 5, Color.web("rgba(231, 76, 60, 1)"));
+        		
+        					StackPane labelStack = new StackPane();
+        					StackPane.setMargin(labelText, new Insets(0, 8, 0, 8));
+        					StackPane.setAlignment(labelRect, Pos.TOP_LEFT);
+        					StackPane.setAlignment(labelText, Pos.TOP_LEFT);
+        					labelStack.getChildren().addAll(labelRect, labelText);
+        					hbox.getChildren().addAll(labelStack);
+        				}
+        			}
+        			
+        			//Complete
+        			if(item.getTask().isCompleted()) {
+        				Text completeText = createText("COMPLETED", 60, 10, "", FontWeight.BOLD, Color.WHITE);
+        				completeText.setTextAlignment(TextAlignment.LEFT);
+        				Rectangle completeRect = createRectangle(80, 15, 5, 5, Color.web("rgba(243, 156, 18, 1)"));
+        		
+        				StackPane completeStack = new StackPane();
+        				StackPane.setMargin(completeText, new Insets(0, 10, 0, 10));
+        				StackPane.setAlignment(completeRect, Pos.TOP_CENTER);
+        				StackPane.setAlignment(completeText, Pos.TOP_CENTER);
+        				completeStack.getChildren().addAll(completeRect, completeText);
+        				hbox.getChildren().addAll(completeStack);
+        			}
+        			
+        			vbox.getChildren().addAll(text, hbox);
+        			
+        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height), vbox);
         			
         			StackPane stack = new StackPane();
+        			StackPane.setMargin(taskInnerContentHolder, new Insets(5, 0, 0, 0));
         			stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
         			stack.setPrefWidth(TASK_CONTAINER_WIDTH);
         			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
@@ -275,18 +338,19 @@ public class UITaskListView {
         			
         		} else if(item != null && item.getType().equals("date")) {	
         			
-        			String cellHeight = String.format(CONTAINER_HEIGHT, "10");
-        			this.setStyle("-fx-background-color: #bcbbb9;" + cellHeight);
-        			
+        			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
+        			this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;" + cellHeight);
         			String output = getDateString(item.getDate());
+        			Text text = createText(output, 0, 15, "Ariel", FontWeight.BOLD, Color.WHITE);
         			
-        			Text text = createText(output, 220, 15, "raleway", FontWeight.BOLD, Color.WHITE);
         			StackPane stack = new StackPane();
-        			StackPane.setAlignment(text, Pos.TOP_LEFT);
         			stack.getChildren().addAll(text);
+        			StackPane.setAlignment(text, Pos.TOP_LEFT);
+        			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
         			setGraphic(stack);
         		}
             } else {
+            	this.setStyle("-fx-background-color: rgb(227, 227, 227, 1);");
         		setGraphic(null);
         	}
         }

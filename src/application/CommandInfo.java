@@ -1,5 +1,6 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,10 +15,10 @@ import org.joda.time.DateTimeComparator;
 
 public class CommandInfo {
 
-    private boolean isValid;
+    private boolean isValidCommandType;
     private boolean isValidID;
     private String commandType;
-    private String taskID;
+    private ArrayList<String> taskIDs = new ArrayList<String>();
     private String taskDesc;
     private DateTime startDateTime;
     private DateTime endDateTime;
@@ -34,11 +35,13 @@ public class CommandInfo {
      * @param endDateTime
      * @param priority
      */
-    CommandInfo(String commandType, String taskID, String taskDesc, Date startDT,Date endDT, int priority) {  // edit 
-        this.isValid = validateCommandType(commandType);
-        this.isValidID = validateTaskID(taskID);
+
+    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority) {  // edit 
+
+        this.isValidCommandType = validateCommandType(commandType);
+   //     this.isValidID = validateTaskID(taskID);
         this.commandType = commandType;
-        this.taskID = taskID;
+        this.taskIDs = taskIDs;
         this.taskDesc = taskDesc;
         this.startDateTime = getStartDateTime(startDT);
         this.endDateTime = getEndDateTime(endDT);
@@ -104,8 +107,8 @@ public class CommandInfo {
      * 
      * @return the boolean value indicating the validity of the user input. True if the command is valid, false if invalid
      */
-    public boolean getIsValid() {
-        return this.isValid;
+    public boolean getIsValidCommandType() {
+        return this.isValidCommandType;
     }
 
     //@author A0090971Y
@@ -122,10 +125,10 @@ public class CommandInfo {
      * This returns the task ID 
      * @return task ID
      */
-    public String getTaskID(){
+  /*  public String getTaskID(){
         return taskID;
     }
-
+   */
     //@author A0090971Y
     /**
      * This returns the start date time of the task
@@ -188,7 +191,7 @@ public class CommandInfo {
         return taskDesc;
     }
 
-    public static String[] getValidCommandTypes() {
+    private static String[] getValidCommandTypes() {
         return validCommandTypes;
     }
 
@@ -196,9 +199,17 @@ public class CommandInfo {
         CommandInfo.validCommandTypes = validCommandTypes;
     }
 
-    public boolean getIsValidID() {
+    
+  /*  public boolean getIsValidID() {
+
+
+
         return isValidID;
     }
-
+   */
+    public ArrayList<String> getTaskIDs() {
+        return taskIDs;
+    }
+ 
 
 }

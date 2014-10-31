@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.FileWriter;
-
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,6 +12,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -31,12 +33,14 @@ public class DataStorage {
     private DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
     private ArrayList<ArrayList<Task>> undoQueue = new ArrayList<ArrayList<Task>>();
 
-    private static final String STRING_DESC = "Description";
-    private static final String STRING_DATE = "Date";
-    private static final String STRING_END = "End date";
-    private static final String STRING_PRIORITY = "Priority";
-    private static final String STRING_COMPLETED = "Completed";
-    private static final String STATIC_COMPLETED_DATE = "Completed date";
+    private static final String KEY_DESCRIPTION = "Description";
+    private static final String KEY_DATE = "Date";
+    private static final String KEY_END = "End date";
+    private static final String KEY_PRIORITY = "Priority";
+    private static final String KEY_ISCOMPLETED = "Completed";
+    private static final String KEY_COMPLETED_DATE = "Completed date";
+    private static final String KEY_CREATED_DATE = "Created date";
+    private static final String KEY_LAST_MODIFIED_DATE = "Last modified date";
 
     private static final Integer undoQueue_MAX_SIZE = 2;
 
@@ -110,7 +114,9 @@ public class DataStorage {
         convertArrayListToJSONArray(array);
         try {
             FileWriter fw = new FileWriter(filename, false);
-            fw.write(tasks.toJSONString());
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String output = gson.toJson(tasks);
+            fw.write(output);
             fw.flush();
             fw.close();
             logger.log(Level.INFO, "Tasks written to external file");
@@ -138,24 +144,43 @@ public class DataStorage {
         for (int i = 0; i < array.size(); i++) {
             Task task = new Task();
             JSONObject obj = (JSONObject) array.get(i);
-            task.setDescription((String) obj.get(STRING_DESC));
             try {
-                if (obj.containsKey(STRING_DATE)) {
-                    String dateString = (String) obj.get(STRING_DATE);
+                task.setDescription((String) obj.get(KEY_DESCRIPTION));
+                
+                if (obj.containsKey(KEY_DATE)) {
+                    String dateString = (String) obj.get(KEY_DATE);
                     DateTime date = fmt.parseDateTime(dateString);
                     task.setDate(date);
                 }
-                if (obj.containsKey(STRING_END)) {
-                    String endString = (String) obj.get(STRING_END);
+                
+                if (obj.containsKey(KEY_END)) {
+                    String endString = (String) obj.get(KEY_END);
                     DateTime end = fmt.parseDateTime(endString);
                     task.setEndDate(end);
                 }
-                // Currently priority is not fully supported. May have to update
-                // later.
-                if (obj.containsKey(STRING_PRIORITY)) {
-                    task.setPriority(((Long) obj.get(STRING_PRIORITY))
+                
+                
+                if (obj.containsKey(KEY_PRIORITY)) {
+                    task.setPriority(((Long) obj.get(KEY_PRIORITY))
                             .intValue());
                 }
+                
+                boolean isCompleted = (boolean) obj.get(KEY_ISCOMPLETED);
+                task.setCompleted(isCompleted);
+                if (isCompleted) {
+                    String compString = (String) obj.get(KEY_COMPLETED_DATE);
+                    DateTime completedTime = fmt.parseDateTime(compString);
+                    task.setCompletedAt(completedTime);
+                }
+                
+                String modString = (String) obj.get(KEY_LAST_MODIFIED_DATE);
+                DateTime modTime = fmt.parseDateTime(modString);
+                task.setModifiedAt(modTime);
+                
+                String createdString = (String) obj.get(KEY_CREATED_DATE);
+                DateTime createdTime = fmt.parseDateTime(createdString);
+                task.setCreatedAt(createdTime);
+                
                 logger.log(Level.INFO,
                         "JSONArray converted to ArrayList of tasks");
             } catch (Exception e) {
@@ -189,17 +214,33 @@ public class DataStorage {
         tasks.clear();
         for (int i = 0; i < list.size(); i++) {
             JSONObject obj = new JSONObject();
-            obj.put(STRING_DESC, list.get(i).getDescription());
-            obj.put(STRING_PRIORITY, list.get(i).getPriority());
+            
             try {
+                obj.put(KEY_DESCRIPTION, list.get(i).getDescription());
+                obj.put(KEY_PRIORITY, list.get(i).getPriority());
+                
                 if (list.get(i).getDate() != null) {
                     String date = fmt.print(list.get(i).getDate());
-                    obj.put(STRING_DATE, date);
+                    obj.put(KEY_DATE, date);
                 }
+                
                 if (list.get(i).getEndDate() != null) {
                     String end = fmt.print(list.get(i).getEndDate());
-                    obj.put(STRING_END, end);
+                    obj.put(KEY_END, end);
                 }
+                
+                boolean isCompleted = list.get(i).isCompleted();
+                obj.put(KEY_ISCOMPLETED, isCompleted);
+                if (isCompleted) {
+                    String comp = fmt.print(list.get(i).getCompletedAt());
+                    obj.put(KEY_COMPLETED_DATE, comp);
+                }
+                
+                String mod = fmt.print(list.get(i).getModifiedAt());
+                obj.put(KEY_LAST_MODIFIED_DATE, mod);
+                String cr = fmt.print(list.get(i).getCreatedAt());
+                obj.put(KEY_CREATED_DATE, cr);
+                
                 logger.log(Level.INFO,
                         "ArrayList of tasks converted to JSONArray");
             } catch (Exception e) {

@@ -63,7 +63,7 @@ public class UIAutoComplete {
                     this.acListener.setNextPossibleCmd("");
             	} else {
             		//case 1b : the command typed in is the right command so do nothing as of now
-                    cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
+                    //cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
                     this.acListener.setNextPossibleCmd("");
             	}
             } else {
@@ -75,7 +75,6 @@ public class UIAutoComplete {
         	 String suggestedCmd = cmdInputBox.getText() + "[]";
         	 this.acListener.setNextPossibleCmd(suggestedCmd);
         } else {
-            cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
             this.acListener.setNextPossibleCmd("");
         }
     }

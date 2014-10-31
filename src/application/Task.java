@@ -11,17 +11,18 @@ import org.joda.time.LocalDate;
  * 
  * @author Sun Wang Jun
  */
-public class Task {    
+public class Task {
+    /* The following fields are not stored. */
     private int id;
     private String displayID;
+    private boolean deleted = false;
     
+    /* The following attributes are stored. */
     private String description;
-
     private DateTime date;
     private DateTime endDate;
-    private boolean completed;    
-    private int priority;
-    
+    private boolean completed;
+    private int priority;    
     private DateTime createdAt;
     private DateTime modifiedAt;
     private DateTime completedAt;
@@ -57,6 +58,7 @@ public class Task {
     public Task(CommandInfo commandInfo, int id) {
         this(commandInfo); // Calls commandInfo constructor first.
         this.id = id;
+        Task.idCounter--; // Because we are editing, so do not increment the counter.
     }
     
     /**
@@ -205,26 +207,73 @@ public class Task {
     }
     
     /**
-     * Gets the created date of the Task.
+     * Returns the created date of the Task.
      * 
      * @return the created date of the Task.
      */
     public DateTime getCreatedAt() { return this.createdAt; }
     
     /**
-     * Gets the last modified date of the Task.
+     * Sets the created date of the Task.
+     * Used only when retrieving tasks list from external file.
+     * 
+     * @param createdDate the created DateTime of the Task.
+     */
+    public void setCreatedAt(DateTime createdDate) {
+        this.createdAt = createdDate;
+    }
+    
+    /**
+     * Returns the last modified date of the Task.
      * 
      * @return the last modified date of the Task.
      */
     public DateTime getModifiedAt() { return this.modifiedAt; }
     
     /**
-     * Gets the completed date of the Task.
+     * Sets the last modified date of the Task. 
+     * Used only when retrieving tasks list from external file.
      * 
-     * @return the last completed date of the Task.
+     * @param modifiedDate the last modified DateTime of the Task.
+     */
+    public void setModifiedAt(DateTime modifiedDate) {
+        this.modifiedAt = modifiedDate;
+    }
+    
+    /**
+     * Returns the completed date of the Task.
+     * 
+     * @return the completed date of the Task.
      */
     public DateTime getCompletedAt() { return this.completedAt; }
     
+    /**
+     * Sets the completed date of the Task.
+     * Used only when retrieving tasks list from external file.
+     * 
+     * @param completedDate the completed DateTime of the Task.
+     */
+    public void setCompletedAt(DateTime completedDate) {
+        this.completedAt = completedDate;
+    }
+    
+    /**
+     * Used to reset the internal ID counter back to 0.
+     */
+    public static void resetIDCounter() { idCounter = 0; }
+    
+    /**
+     * Returns whether this task is deleted.
+     * 
+     * @return whether this task is deleted.
+     */
+    public boolean isDeleted() { return this.deleted; }
+    
+    /**
+     * Sets whether the Task is deleted.
+     * @param deleted boolean whether to delete the Task.
+     */
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }   
     
 }
 

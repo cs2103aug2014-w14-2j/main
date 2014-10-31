@@ -6,6 +6,7 @@ package application;
  * @version 3.0
  */
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
@@ -16,11 +17,9 @@ public class Parser {
     private static String[] timePrepositions = new String[] {"by","till","until"};
     private static String[] escapeSequences = new String[]{"\\"};
     private static String[] addSlashes = new String[] {"\\\\"};
-    
-            
 
-    //  validCommandTypes.add("complete");
-    //  validCommandTypes.add("delete");
+
+
 
     //@author A0090971Y
     /**
@@ -38,7 +37,8 @@ public class Parser {
     public CommandInfo getCommandInfo(String userInput) {
 
         String commandType = parseCommandType(userInput);
-        String taskID = parseTaskID(userInput);
+        ArrayList<String> taskIDs = new ArrayList<String>();
+        taskIDs = parseTaskIDs(userInput);
 
         String taskDesc = parseTaskDesc(userInput,commandType);
         int priority = parsePriority(userInput,taskDesc);
@@ -50,8 +50,10 @@ public class Parser {
             endDateTime = startDateTime;
             startDateTime = null;
         }
-       
-        CommandInfo cmdInfo = new CommandInfo(commandType, taskID, taskDesc,startDateTime,endDateTime, priority);
+
+
+        CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority);
+
         return cmdInfo;
     }
 
@@ -66,16 +68,18 @@ public class Parser {
         if ((cmdType.equalsIgnoreCase("add")) || (cmdType.equalsIgnoreCase("edit"))){
             int startIndex = input.indexOf("[");
             int endIndex = input.indexOf("]");
+            if ((startIndex>0) && (endIndex>0)) {
             desc = input.substring(startIndex+1, endIndex);
-      //      desc = dealEscapeSequences(desc);
+            //      desc = dealEscapeSequences(desc);
+            }
         }
         else {
             cmdType = input.trim().split("\\s+")[0];
-            desc = input.replaceFirst(cmdType+" ", "");
+            desc = input.replaceFirst(cmdType+"", "");
         }
         return desc;
     }
-    
+
     //@author A0090971Y
     /**
      * 
@@ -96,7 +100,7 @@ public class Parser {
         for (int i = 0; i<timePrepositions.length;i++) {
             if (content.indexOf(timePrepositions[i])>=0){
                 if (endDT == null)
-                return true;
+                    return true;
             }
         }
         return false;
@@ -105,8 +109,8 @@ public class Parser {
         String content;
         String firstWord = input.trim().split("\\s+")[0];
         content = input.replace(firstWord,"").trim();
-        if (parseTaskID(input) != null) {
-            content = content.replace(parseTaskID(input)+" ","").trim();
+        if (parseTaskIDs(input).size()!=0) {
+            content = content.replace(parseTaskIDs(input).get(0)+" ","").trim();
         }
         content = content.replaceAll(desc, "");
         content = content.replace("[","");
@@ -136,18 +140,24 @@ public class Parser {
     /**
      * 
      * @param input
-     * @return 0 when taskID is not required, otherwise taskID as integer for edit,complete or delete command keyword
+     * @return null when taskID is not required, otherwise taskID as an ArrayList of String for edit,complete or delete command keyword
      */
-    private String parseTaskID(String input) {
-        String command = parseCommandType(input); 
+    private ArrayList<String> parseTaskIDs(String input) {
+        String command = parseCommandType(input);
+        ArrayList<String> IDs = new ArrayList<String>();
         String taskID = null;
-        if ((command.equalsIgnoreCase("edit")) || (command.equalsIgnoreCase("complete")) || (command.equalsIgnoreCase("delete"))) {
-            if (input.trim().split("\\s+").length>1) {
-                taskID = input.trim().split("\\s+")[1];
-                taskID = taskID.toUpperCase();
+        if (command.equalsIgnoreCase("edit")) {
+            taskID = input.trim().split("\\s+")[1];
+            IDs.add(taskID.toUpperCase());
+        }
+        else if ((command.equalsIgnoreCase("complete")) || (command.equalsIgnoreCase("delete"))) {
+            String[] array = input.trim().split("\\s+");
+            for (int i = 1; i<array.length; i++) {
+                taskID = array[i];
+                IDs.add(taskID.toUpperCase());
             }
         }
-        return taskID;
+        return IDs;
     }
     //@author A0090971Y
     /**
