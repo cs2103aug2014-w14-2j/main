@@ -191,8 +191,8 @@ class TaskManager {
                 
         // Sort by modified at date first, then priority.
         Collections.sort(filteredTasks, new ModifiedAtComparator());
-        Collections.sort(filteredTasks, new EndDateComparator());
         Collections.sort(filteredTasks, new PriorityComparator());
+        Collections.sort(filteredTasks, new EndDateComparator());
         Collections.sort(filteredTasks, new CompletedAtComparator());
         
         int i = 1;
