@@ -161,6 +161,10 @@ class TaskManager {
         
         return this.list;
     }
+    
+    public ArrayList<Task> getAll() {
+        return this.list;
+    }
 
     /**
      * Returns the full list of tasks, ignoring the deleted tasks.

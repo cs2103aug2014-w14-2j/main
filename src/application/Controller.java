@@ -22,6 +22,7 @@ public class Controller extends Application {
     private static TaskManager taskManager;
     private static UIComponent uiComponent;
     private static MessageManager messageManager;
+    private static Backup backup;
     
     //@author A0110546R
     /**
@@ -61,7 +62,7 @@ public class Controller extends Application {
                     feedback = new MessageNotifyEdit(taskManager.getLastModifiedTask().getID() + "");
                     break;
                 case "undo":
-                    taskManager.undo(commandInfo, dataStorage.getPastVersion());
+                    taskManager.undo(commandInfo, backup.getPastVersion());
                     feedback = new MessageNotifyUndo();
                     break;
                 case "complete":
@@ -97,6 +98,7 @@ public class Controller extends Application {
         uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
         uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
         
+        backup.storeBackup(taskManager.getAll());
         dataStorage.saveTasks(taskManager.getList());
     }
     
@@ -115,10 +117,12 @@ public class Controller extends Application {
         taskManager = new TaskManager();
         dataStorage = new DataStorage();
         messageManager = new MessageManager();
+        backup = new Backup();
         
         dataStorage.initiateFile();
         
         taskManager.initializeList(dataStorage.retrieveTasks());
+        backup.storeBackup(taskManager.getAll());
     }
     
     //@author A0110546R
