@@ -10,7 +10,7 @@ public class TestParser {
     public static void main(String[] args) {
     Parser parser = new Parser();
 
-    CommandInfo cmd = parser.getCommandInfo("show [go home] 2pm complete");
+    CommandInfo cmd = parser.getCommandInfo("x []");
 
   //  System.out.println(cmd.getCommandType());
 
@@ -18,6 +18,7 @@ public class TestParser {
     cmd.validateUserInput();
     }
     catch (MismatchedCommandException e) {
+        System.out.println("21");
         System.out.println(e);
     }
     
