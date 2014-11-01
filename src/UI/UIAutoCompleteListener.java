@@ -14,6 +14,9 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
 
     final private String MSG_DEFAULT_PROMPT = "Ask WaveWave to do something ?";
     
+    private static KeyCode previousKey;
+    private boolean isDouble;
+    
     private UICmdInputBox cmdInputBox;
     private UIAutoComplete uiAutoComplete;
     private String nextPossibleCommand;
@@ -26,6 +29,8 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         this.uiAutoComplete = new UIAutoComplete(cmdInputBox, this);
         this.cmdInputBox = cmdInputBox;
         this.nextPossibleCommand = "";
+        this.previousKey = null;
+        this.isDouble = false;
     }
     
     public void setNextPossibleCmd(String cmd) {
@@ -54,8 +59,25 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         this.uiAutoComplete.runAutoComplete(inputBox.getText().trim());  
         
         if(event.getCode().equals(KeyCode.SPACE)) {
+        	
+        	if( previousKey != null ) {
+        		if(previousKey.equals(KeyCode.SPACE)) {
+        			int indexToShift = inputBox.getText().lastIndexOf("]");
+        			if(indexToShift != -1) {
+        				String currentText = inputBox.getText();
+        				String extract = " [" + currentText.substring(currentText.indexOf("[") + 1, currentText.indexOf("]")).trim() + "]";
+        				String front = currentText.substring(0, currentText.indexOf("[")-1);
+        				String replaceString = front + extract;
+        				
+        				inputBox.setText(replaceString);
+        				inputBox.positionCaret(replaceString.length()+1);
+        			}
+        				
+        			isDouble = true;
+        		} 
+        	}
+        	
             if(nextPossibleCommand.length() != 0) {
-
             	if(isAddCommand(nextPossibleCommand)) {
             		inputBox.setText(nextPossibleCommand + "[]");
             	} else {
@@ -70,7 +92,16 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
             	
                 cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
                 nextPossibleCommand = "";
+                
+                isDouble = true;
             }
-        }   
+        }
+        
+        if(!isDouble) {
+        	previousKey = event.getCode();
+        } else {
+        	previousKey = null;
+        	isDouble = false;
+        }
     }
 }

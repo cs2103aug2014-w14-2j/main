@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.FileWriter;
-
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,6 +12,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -105,14 +107,16 @@ public class DataStorage {
      */
     public void saveTasks(ArrayList<Task> array) {
 
-        undoQueue.add(new ArrayList<Task>(array));
+        undoQueue.add(backupTasks(array));
         logger.log(Level.INFO, "Current version stored as backup");
         manageundoQueueSize();
 
         convertArrayListToJSONArray(array);
         try {
             FileWriter fw = new FileWriter(filename, false);
-            fw.write(tasks.toJSONString());
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String output = gson.toJson(tasks);
+            fw.write(output);
             fw.flush();
             fw.close();
             logger.log(Level.INFO, "Tasks written to external file");
@@ -249,13 +253,29 @@ public class DataStorage {
 
     //@author A0115864B
     /**
-     * Support for undo command
+     * Returns a past saved version when "undo" command is received
+     * 
      * @return backup ArrayList of tasks that was saved before last operation
      */
     public ArrayList<Task> getPastVersion() {
         ArrayList<Task> pastVersion = undoQueue.remove(0);
         logger.log(Level.INFO, "Backup version retrieved");
         return pastVersion;
+    }
+    
+    //@author A0115864B
+    /**
+     * Stores a copy of the ArrayList of Tasks in current state. Deep copies everything.
+     * 
+     * @param tasks
+     * @return
+     */
+    public ArrayList<Task> backupTasks(ArrayList<Task> originalTasks) {
+        ArrayList<Task> backup = new ArrayList<Task>();
+        for (Task task : originalTasks) {
+            backup.add(new Task(task));
+        }
+        return backup;
     }
 
 }

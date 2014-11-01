@@ -18,10 +18,12 @@ public class UIAutoComplete {
     final private String EDIT_COMMAND = "EDIT";
     final private String UNDO_COMMAND = "UNDO";
     final private String QUIT_COMMAND = "QUIT";
+    final private String EXIT_COMMAND = "EXIT";
     final private String COMPLETE_COMMAND = "COMPLETE";
     final private String SEARCH_COMMAND = "SEARCH";
     final private String SHOW_COMMAND = "SHOW";
     final private String DISPLAY_COMMAND = "DISPLAY";
+    final private String HOME_COMMAND = "HOME";
     
     final private int FIRST_WORD_IN_CMD = 1;
     final private int SECOND_WORD_IN_CMD = 2;
@@ -47,6 +49,8 @@ public class UIAutoComplete {
         cmdList.add(DISPLAY_COMMAND);
         cmdList.add(SHOW_COMMAND);
         cmdList.add(SEARCH_COMMAND);
+        cmdList.add(EXIT_COMMAND);
+        cmdList.add(HOME_COMMAND);
         return cmdList;
     }
     
@@ -63,7 +67,7 @@ public class UIAutoComplete {
                     this.acListener.setNextPossibleCmd("");
             	} else {
             		//case 1b : the command typed in is the right command so do nothing as of now
-                    cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
+                    //cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
                     this.acListener.setNextPossibleCmd("");
             	}
             } else {
@@ -75,7 +79,6 @@ public class UIAutoComplete {
         	 String suggestedCmd = cmdInputBox.getText() + "[]";
         	 this.acListener.setNextPossibleCmd(suggestedCmd);
         } else {
-            cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
             this.acListener.setNextPossibleCmd("");
         }
     }
@@ -89,6 +92,7 @@ public class UIAutoComplete {
         for (String command : commandList) {
            if(command.startsWith(word)) {
                output += command + " ";
+               break;
            }
         }
         return output;

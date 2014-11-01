@@ -30,13 +30,15 @@ import javafx.collections.ObservableList;
 public class UIComponent {
     
     private final String SUGGESTION_TEXT = "Hello User! I am WaveWave.";
+    private final String GUIDE_TEXT = "WaveWave is here to help you :D.";
+    
     private WaveLogger logger;
 	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
 	private final String LISTVIEW_STYLESHEET = "taskDisplay_outer";
 	private final String ROOTPANE_STYLESHEET = "rootPane";
 	
 	private final int APPLICATION_WIDTH = 650;
-	private final int APPLICATION_HEIGHT = 650;
+	private final int APPLICATION_HEIGHT = 700;
 	
 	private final String APP_DEFAULT_FONT = "Ariel";
 	private final String APP_DEFAULT_STYLESHEET = "application.css";
@@ -44,7 +46,7 @@ public class UIComponent {
 	
 	private Scene scene;
 	private BorderPane rootPane;
-	private Text suggestionText;
+	private Text suggestionText, guideMsgText;
 	private UICmdInputBox cmdInputBox;
 	private UITaskListView floatingTaskListView, eventReminderTaskListView;
 	
@@ -81,8 +83,6 @@ public class UIComponent {
 	}
 
 	private void initializeStyleSheet() {
-		Font.loadFont(UIComponent.class.getResource("Raleway-Regular.TTF").toExternalForm(), 10);
-		Font.loadFont(UIComponent.class.getResource("Bemio.otf").toExternalForm(), 10);
 		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
 		rootPane.getStyleClass().add(ROOTPANE_STYLESHEET);
 	}
@@ -156,9 +156,10 @@ public class UIComponent {
 	private VBox getUserInputComponentHolder() {
 		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_PLACEHOLDER_STYLESHEET);
 		suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
+		guideMsgText = createText(GUIDE_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
 		
-		cmdInputBox = new UICmdInputBox(suggestionText);
-		userInputComponentHolder.getChildren().addAll(cmdInputBox.getCmdInputBox(), suggestionText);
+		cmdInputBox = new UICmdInputBox(suggestionText, guideMsgText);
+		userInputComponentHolder.getChildren().addAll(cmdInputBox.getCmdInputBox(), guideMsgText, suggestionText);
 		return userInputComponentHolder;
 	}
 
@@ -195,14 +196,32 @@ public class UIComponent {
 		return innerBox;
 	}
 	
+    //@author A0111824R
+    /**
+     * Update the title of the right panel (depreciated)
+     * 
+     * @param input the string to represent the title of the panel.
+     */
 	public void setFloatingTaskHeading(String title) {
 		floatingTaskTitle.setText(title);
 	}
 	
+    //@author A0111824R
+    /**
+     * Update the title of the left panel (depreciated)
+     * 
+     * @param input the string to represent the title of the panel.
+     */
 	public void setReminderTaskHeading(String title) {
 		reminderTaskTitle.setText(title);
 	}
-
+	
+    //@author A0111824R
+    /**
+     * Update the view for the right panel (depreciated)
+     * 
+     * @param input the arraylist of tasks to populate the listview.
+     */
 	public void updateTaskList(ArrayList<Task> items) {
 	    floatingTaskListView.populateTaskListWithData(items);
 	    floatingTaskListView.clearSelection();
@@ -210,10 +229,45 @@ public class UIComponent {
 	    logger.log(Level.INFO, "Task ListView is updated.");
 	}
 	
+    //@author A0111824R
+    /**
+     * Update the view for the left panel (depreciated)
+     * 
+     * @param input the arraylist of tasks to be populated on the listview.
+     */
 	public void updateReminderList(ArrayList<Task> items) {
 	    eventReminderTaskListView.populateTaskListWithData(items);
 	    eventReminderTaskListView.clearSelection();    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
+	}
+	
+    //@author A0111824R
+    /**
+     * Update both the title and the view of the left panel
+     * 
+     * @param input the arraylist of tasks to be populated on the listview
+     *        input the String to replace the current title of the heading
+     */
+	public void updateLeftPanel(ArrayList<Task> items, String title) {
+		reminderTaskTitle.setText(title);
+	    eventReminderTaskListView.populateTaskListWithData(items);
+	    eventReminderTaskListView.clearSelection();    
+		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
+	}
+	
+    //@author A0111824R
+    /**
+     * Update both the title and the view of the right panel
+     * 
+     * @param input the arraylist of tasks to be populated on the listview
+     *        input the String to replace the current title of the heading
+     */
+	public void updateRightPanel(ArrayList<Task> items, String title) {
+		floatingTaskTitle.setText(title);
+		floatingTaskListView.populateTaskListWithData(items);
+	    floatingTaskListView.clearSelection();
+	    
+	    logger.log(Level.INFO, "Task ListView is updated.");
 	}
 	
 	public void setSuggestionText(String text) {
@@ -224,7 +278,7 @@ public class UIComponent {
     	try {
     		primaryStage.setScene(this.getScene());
     		primaryStage.setResizable(false);
-    		primaryStage.setTitle("WaveWave[0.2]");
+    		primaryStage.setTitle("WaveWave[0.4]");
     		primaryStage.show();
     		Controller.getTasks();
         	logger.log(Level.INFO, "UI has been successfully displayed.");
