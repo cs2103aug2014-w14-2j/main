@@ -59,7 +59,8 @@ public class Parser {
      */
     private String parseTaskDesc(String input,String cmdType) {
         String desc = null;
-        if ((cmdType.equalsIgnoreCase("add")) || (cmdType.equalsIgnoreCase("edit"))){
+        if ((cmdType.equalsIgnoreCase("add")) || (cmdType.equalsIgnoreCase("edit"))
+                || (cmdType.equalsIgnoreCase("search")) || (cmdType.equalsIgnoreCase("show"))){
             int startIndex = input.indexOf("[");
             int endIndex = input.indexOf("]");
             if ((startIndex>0) && (endIndex>0)) {
@@ -105,11 +106,6 @@ public class Parser {
     private String parseCommandType(String input) {
         String[] array = input.trim().split("\\s+");
         String command = array[0].toUpperCase();
-        if ((command.equalsIgnoreCase("search")) || (array.length==2)){
-            if (array[1].equals("complete")) {
-                command = command+" "+array[1].toUpperCase();
-            }
-        }
         return command;      
     }
 
