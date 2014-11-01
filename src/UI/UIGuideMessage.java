@@ -22,9 +22,9 @@ public class UIGuideMessage implements EventHandler<KeyEvent> {
 
     @Override
     public void handle(KeyEvent event) {
-<<<<<<< HEAD
+  /*
         if (event.getCode().equals(KeyCode.ENTER)) { 
-            System.out.println("Enter task description inside square brackets");
+         //   System.out.println("Enter task description inside square brackets");
 
             String input = this.cmdInputBox.getText();
             // do something
@@ -32,8 +32,10 @@ public class UIGuideMessage implements EventHandler<KeyEvent> {
                 System.out.println("Enter task description inside square brackets");
             } 
         }
-=======
+
     	//System.out.println(cmdInputBox.getText());
->>>>>>> tys-ui
+
+  */
     }
+    
 }

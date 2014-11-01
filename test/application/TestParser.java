@@ -10,7 +10,7 @@ public class TestParser {
     public static void main(String[] args) {
     Parser parser = new Parser();
 
-    CommandInfo cmd = parser.getCommandInfo("x []");
+    CommandInfo cmd = parser.getCommandInfo("add []");
 
   //  System.out.println(cmd.getCommandType());
 
@@ -30,7 +30,7 @@ public class TestParser {
   //      System.out.println(IDs.get(i));
   //  }
     
-    System.out.println(cmd.getTaskDesc());
+    System.out.println("task desc is " +cmd.getTaskDesc());
     System.out.println("boolean"+ cmd.isCompleted());
   //  System.out.println(cmd.getPriority());
     System.out.println("start time is " + cmd.getStartDateTime());
