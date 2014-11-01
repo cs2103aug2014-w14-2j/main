@@ -53,6 +53,25 @@ class KeepTasksToShowToday implements TaskFilter {
     }
 }
 
+class KeepTasksToShowTheNextDay implements TaskFilter {
+    private LocalDate today;
+    private LocalDate nextDay;
+    public KeepTasksToShowTheNextDay() {
+        this.today = new LocalDate();
+    }
+    @Override
+    public boolean apply(Task t) {
+        LocalDate date = new LocalDate(t.getDate());
+        if (date.isAfter(this.today) && this.nextDay == null) { // Different date,
+            this.nextDay = date; // Set the next day's date.
+        }
+        if (this.nextDay != null && date.equals(this.nextDay)) { // Same as next day,
+            return true; // Show the task/
+        }
+        return false;
+    }
+}
+
 class KeepTasksWithStartDate implements TaskFilter {
     @Override
     public boolean apply(Task t) {

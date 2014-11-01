@@ -216,7 +216,8 @@ class TaskManager {
         
         filter = new TaskListFilter(filteredTasks, false); // Does a OR/|| filtering.
         filter.add(new KeepTasksCompletedToday()); // or,
-        filter.add(new KeepTasksToShowToday());
+        filter.add(new KeepTasksToShowToday()); // or,
+        filter.add(new KeepTasksToShowTheNextDay());
         filteredTasks = filter.apply();
 
         Collections.sort(filteredTasks, new DayPriorityComparator());
