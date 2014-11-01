@@ -22,8 +22,6 @@ public class UIGuideMessage implements EventHandler<KeyEvent> {
     
     @Override
     public void handle(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.ENTER)) { 
-           // do something
-        } 
+    	//System.out.println(cmdInputBox.getText());
     }
 }
