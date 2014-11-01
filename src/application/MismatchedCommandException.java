@@ -9,5 +9,5 @@ public class MismatchedCommandException extends Exception {
     public MismatchedCommandException(String message) {
         super(message);
     }
-    
 }
+

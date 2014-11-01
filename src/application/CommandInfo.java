@@ -12,7 +12,6 @@ import org.joda.time.DateTimeComparator;
  * @author A0090971Y
  */
 
-
 public class CommandInfo {
 
     private String commandType;
@@ -40,30 +39,11 @@ public class CommandInfo {
         this.taskDesc = taskDesc;
         this.startDateTime = getStartDateTime(startDT);
         this.endDateTime = getEndDateTime(endDT);
-        this.startDateTime = adjustStartDateTime(startDateTime);
-        this.endDateTime = adjustEndDateTime(endDateTime);
         this.priority = priority;
-
-
-    }
-    private DateTime adjustStartDateTime(DateTime dateTime) {
-        if (dateTime != null ) {
-            DateTime currentDT = new DateTime();
-            int result = DateTimeComparator.getInstance().compare(currentDT,dateTime);
-            if (result == 1) {   //currentDT is less than dateTime
-                dateTime = dateTime.plusDays(1);
-            }
-        }
-        return dateTime;
     }
 
     private DateTime adjustEndDateTime(DateTime dateTime) {
-        if (dateTime != null ) {
-            int result = DateTimeComparator.getInstance().compare(this.startDateTime,dateTime);
-            if (result == 1) {   //currentDT is less than dateTime
-                dateTime = dateTime.plusDays(1);
-            }
-        }
+       
         return dateTime;
     }
 
@@ -96,6 +76,21 @@ public class CommandInfo {
                 }
                 else {
                     throw new MismatchedCommandException("Invalid Task ID Entered.");}
+            }
+        }
+        
+        if (this.startDateTime != null ) {
+            DateTime currentDT = new DateTime();
+            int result = DateTimeComparator.getInstance().compare(currentDT,this.startDateTime);
+            if (result == 1) {   //currentDT is less than dateTime
+                throw new MismatchedCommandException("The Time Specified is before the Current Time.");
+            }
+        }
+        
+        if (this.endDateTime != null ) {
+            int result = DateTimeComparator.getInstance().compare(this.startDateTime,this.endDateTime);
+            if (result == 1) {   //currentDT is less than dateTime
+                throw new MismatchedCommandException("Invalid Time Period Specified.");
             }
         }
     }
@@ -179,7 +174,4 @@ public class CommandInfo {
     public DateTime getEndDateTime() {
         return this.endDateTime;
     }
-
-
-
 }

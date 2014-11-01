@@ -15,8 +15,6 @@ public class Parser {
 
     private DateTimeParser parser;
     private static String[] timePrepositions = new String[] {"by","due","till","until"};
-    private static String[] escapeSequences = new String[]{"\\"};
-    private static String[] addSlashes = new String[] {"\\\\"};
 
     //@author A0090971Y
     /**
@@ -38,7 +36,7 @@ public class Parser {
         taskIDs = parseTaskIDs(userInput);
 
         String taskDesc = parseTaskDesc(userInput,commandType);
-        int priority = parsePriority(userInput,taskDesc);
+  //      int priority = parsePriority(userInput,taskDesc);
         String content = parseContent(userInput,taskDesc);
         parser = new DateTimeParser(content);
         Date startDateTime = parser.getStartDateTime();
@@ -49,8 +47,8 @@ public class Parser {
         }
 
     
-        CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority);
-
+    //    CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority);
+        CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, 0);
         return cmdInfo;
     }
 
@@ -67,28 +65,11 @@ public class Parser {
             int endIndex = input.indexOf("]");
             if ((startIndex>0) && (endIndex>0)) {
             desc = input.substring(startIndex+1, endIndex);
-            //      desc = dealEscapeSequences(desc);
             }
         }
         else {
             cmdType = input.trim().split("\\s+")[0];
             desc = input.replaceFirst(cmdType+"", "");
-        }
-        return desc;
-    }
-
-    //@author A0090971Y
-    /**
-     * 
-     * @param desc
-     * @return task description without the escape sequences
-     */
-    private String dealEscapeSequences(String desc) {
-        for (int i = 0; i<escapeSequences.length;i++) {
-            if (desc.indexOf(escapeSequences[i])>=0) { 
-                desc = desc.replace(escapeSequences[i],addSlashes[i]);
-                break;
-            }
         }
         return desc;
     }
@@ -167,6 +148,7 @@ public class Parser {
         int priority = StringUtils.countMatches(input,"!");
         return priority;
     }
+    
 
 
     /*

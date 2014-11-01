@@ -10,15 +10,17 @@ public class TestParser {
     public static void main(String[] args) {
     Parser parser = new Parser();
 
-    CommandInfo cmd = parser.getCommandInfo("complete T1 T2 E1 [drink tea]");
+    CommandInfo cmd = parser.getCommandInfo("add [go] Oct 11");
 
   //  System.out.println(cmd.getCommandType());
+
     try { 
     cmd.validateUserInput();
     }
     catch (MismatchedCommandException e) {
         System.out.println(e);
     }
+    
   //  ArrayList<String> IDs = new ArrayList<String>();
   //  IDs = cmd.getTaskIDs();
   //  for (int i = 0; i<IDs.size();i++) {
@@ -26,8 +28,8 @@ public class TestParser {
   //  }
     System.out.println(cmd.getTaskDesc());
   //  System.out.println(cmd.getPriority());
-  //  System.out.println("start time is " + cmd.getStartDateTime());
-  //  System.out.println("end time is " + cmd.getEndDateTime());
+    System.out.println("start time is " + cmd.getStartDateTime());
+    System.out.println("end time is " + cmd.getEndDateTime());
   //  System.out.println("keyword is "+cmd.getTaskDesc());
 
  
