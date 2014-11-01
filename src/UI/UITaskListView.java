@@ -301,11 +301,14 @@ public class UITaskListView {
         		output += item.getDate().toString("h:mm a");
         	} 
         	
-        	
         	if(item.getDate() == null && item.getEndDate() != null) {
         		output += "Due on: " + item.getEndDate().toString("dd MMM yyy, h:mm a");
-        	} else if(item.getEndDate() != null) {
-        		output += " - " + item.getEndDate().toString("h:mm a");
+        	} else if(item.getDate() != null && item.getEndDate() != null) {
+        		if(item.getDate().equals(item.getEndDate())) {
+        			output += " - " + item.getEndDate().toString("h:mm a");
+        		} else {
+        			output += " - " + item.getEndDate().toString("dd MMM yy, h:mm a");
+        		}
         	} 
         	
         	output += "\n" + item.getDescription() + "\n";
