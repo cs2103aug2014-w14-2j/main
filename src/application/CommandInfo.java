@@ -48,7 +48,8 @@ public class CommandInfo {
     }
 
     private void checkStartDateTime() {
-        if (this.startDateTime != null ) {
+        if ((this.startDateTime != null ) && ((this.commandType.equalsIgnoreCase("add"))
+        || (this.commandType.equalsIgnoreCase("edit")))){
             DateTime currentDT = new DateTime();
             int result = DateTimeComparator.getInstance().compare(currentDT,this.startDateTime);
             if (result == 1) {   //currentDT is less than dateTime
@@ -58,7 +59,8 @@ public class CommandInfo {
     }
 
     private void checkEndDateTime() {
-        if (this.endDateTime != null ) {
+        if ((this.endDateTime != null ) && ((this.commandType.equalsIgnoreCase("add"))
+                || (this.commandType.equalsIgnoreCase("edit")))){
             DateTime currentDT = new DateTime();
             int result = DateTimeComparator.getInstance().compare(currentDT,this.endDateTime);
             if (result == 1) {   //currentDT is less than dateTime

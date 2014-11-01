@@ -90,7 +90,9 @@ public class Parser {
         if (parseTaskIDs(input).size()!=0) {
             content = content.replace(parseTaskIDs(input).get(0)+" ","").trim();
         }
+        if (desc != null) {
         content = content.replaceAll(desc, "");
+        }
         content = content.replace("[","");
         content = content.replace("]", "");
         content = content.replace("!", "");
@@ -139,7 +141,9 @@ public class Parser {
      * @return the priority of the task by counting the number of exclamation marks in user input
      */
     private int parsePriority(String input,String desc){
+        if (desc != null) {
         input = input.replaceAll(desc, "");
+        }
         int priority = StringUtils.countMatches(input,"!");
         return priority;
     }
