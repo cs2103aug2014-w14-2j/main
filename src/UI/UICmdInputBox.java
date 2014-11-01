@@ -12,12 +12,14 @@ public class UICmdInputBox {
 
     private TextField cmdInputBox;
     private Text suggestionText;
+    private Text guideMsgText;
     
     private final int CMDINPUT_HEIGHT = 35;
     private final String CMDINPUT_PROMPT_TEXT = "Ask WaveWave to do something ?";
     
-    public UICmdInputBox(Text suggestionText) {
+    public UICmdInputBox(Text suggestionText, Text guideMsgText) {
         this.suggestionText = suggestionText;
+        this.guideMsgText = guideMsgText;
         this.cmdInputBox = new TextField();
         
         setInputBoxProperty();
@@ -45,6 +47,10 @@ public class UICmdInputBox {
     
     public void setSuggestionText(String output) {
         suggestionText.setText(output);
+    }
+    
+    public void setGuideMsgText(String output) {
+    	guideMsgText.setText(output);
     }
     
     public void focusCommandInputBox() {

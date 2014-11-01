@@ -30,13 +30,15 @@ import javafx.collections.ObservableList;
 public class UIComponent {
     
     private final String SUGGESTION_TEXT = "Hello User! I am WaveWave.";
+    private final String GUIDE_TEXT = "WaveWave is here to help you :D.";
+    
     private WaveLogger logger;
 	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
 	private final String LISTVIEW_STYLESHEET = "taskDisplay_outer";
 	private final String ROOTPANE_STYLESHEET = "rootPane";
 	
 	private final int APPLICATION_WIDTH = 650;
-	private final int APPLICATION_HEIGHT = 650;
+	private final int APPLICATION_HEIGHT = 700;
 	
 	private final String APP_DEFAULT_FONT = "Ariel";
 	private final String APP_DEFAULT_STYLESHEET = "application.css";
@@ -44,7 +46,7 @@ public class UIComponent {
 	
 	private Scene scene;
 	private BorderPane rootPane;
-	private Text suggestionText;
+	private Text suggestionText, guideMsgText;
 	private UICmdInputBox cmdInputBox;
 	private UITaskListView floatingTaskListView, eventReminderTaskListView;
 	
@@ -154,9 +156,10 @@ public class UIComponent {
 	private VBox getUserInputComponentHolder() {
 		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_PLACEHOLDER_STYLESHEET);
 		suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
+		guideMsgText = createText(GUIDE_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
 		
-		cmdInputBox = new UICmdInputBox(suggestionText);
-		userInputComponentHolder.getChildren().addAll(cmdInputBox.getCmdInputBox(), suggestionText);
+		cmdInputBox = new UICmdInputBox(suggestionText, guideMsgText);
+		userInputComponentHolder.getChildren().addAll(cmdInputBox.getCmdInputBox(), guideMsgText, suggestionText);
 		return userInputComponentHolder;
 	}
 

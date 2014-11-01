@@ -225,7 +225,7 @@ public class UITaskListView {
         		if(taskDate.equals(today)) {
         			output = "Today - " + taskDate.toString("dd MMM yyyy");
         		} else if (taskDate.equals(tomorrow)) {
-        			output = "Tomorrow";
+        			output = "Tomorrow - " + taskDate.toString("dd MMM yyyy");
         		} else {
             		output = currentDate.dayOfWeek().getAsText();
         		}
