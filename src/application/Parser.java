@@ -36,7 +36,7 @@ public class Parser {
         taskIDs = parseTaskIDs(userInput);
 
         String taskDesc = parseTaskDesc(userInput,commandType);
-  //      int priority = parsePriority(userInput,taskDesc);
+        int priority = parsePriority(userInput,taskDesc);
         String content = parseContent(userInput,taskDesc);
         parser = new DateTimeParser(content);
         Date startDateTime = parser.getStartDateTime();
@@ -47,8 +47,7 @@ public class Parser {
         }
 
     
-    //    CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority);
-        CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, 0);
+        CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority);
         return cmdInfo;
     }
 

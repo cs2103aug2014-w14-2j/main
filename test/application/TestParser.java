@@ -10,7 +10,7 @@ public class TestParser {
     public static void main(String[] args) {
     Parser parser = new Parser();
 
-    CommandInfo cmd = parser.getCommandInfo("add [go] Oct 11");
+    CommandInfo cmd = parser.getCommandInfo("add [go] 6pm to 7pm");
 
   //  System.out.println(cmd.getCommandType());
 
@@ -20,6 +20,7 @@ public class TestParser {
     catch (MismatchedCommandException e) {
         System.out.println(e);
     }
+    System.out.println(cmd.getMessage());
     
   //  ArrayList<String> IDs = new ArrayList<String>();
   //  IDs = cmd.getTaskIDs();

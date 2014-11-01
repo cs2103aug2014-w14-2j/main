@@ -21,6 +21,7 @@ public class CommandInfo {
     private DateTime endDateTime;
     private int priority;
     private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","quit","search","search complete","undo"};
+    private String message = null;
 
     //@author A0090971Y
     /**
@@ -40,14 +41,35 @@ public class CommandInfo {
         this.startDateTime = getStartDateTime(startDT);
         this.endDateTime = getEndDateTime(endDT);
         this.priority = priority;
+        checkStartDateTime();
+        checkEndDateTime();
     }
 
-    private DateTime adjustEndDateTime(DateTime dateTime) {
-       
-        return dateTime;
+    private void checkStartDateTime() {
+        if (this.startDateTime != null ) {
+            DateTime currentDT = new DateTime();
+            int result = DateTimeComparator.getInstance().compare(currentDT,this.startDateTime);
+            if (result == 1) {   //currentDT is less than dateTime
+                setMessage("The Time Specified is before the Current Time.");
+            }
+        }
     }
 
-  //@author A0090971Y
+    private void checkEndDateTime() {
+        if (this.endDateTime != null ) {
+            DateTime currentDT = new DateTime();
+            int result = DateTimeComparator.getInstance().compare(currentDT,this.endDateTime);
+            if (result == 1) {   //currentDT is less than dateTime
+                setMessage("The End Time Specified is before the Current Time.");
+            }
+            else {
+                String m = null;
+                setMessage(m);
+            }
+        }
+    }
+
+    //@author A0090971Y
     /**
      * throws MismatchedCommandException when the user input entered is invalid
      * @throws MismatchedCommandException
@@ -76,21 +98,6 @@ public class CommandInfo {
                 }
                 else {
                     throw new MismatchedCommandException("Invalid Task ID Entered.");}
-            }
-        }
-        
-        if (this.startDateTime != null ) {
-            DateTime currentDT = new DateTime();
-            int result = DateTimeComparator.getInstance().compare(currentDT,this.startDateTime);
-            if (result == 1) {   //currentDT is less than dateTime
-                throw new MismatchedCommandException("The Time Specified is before the Current Time.");
-            }
-        }
-        
-        if (this.endDateTime != null ) {
-            int result = DateTimeComparator.getInstance().compare(this.startDateTime,this.endDateTime);
-            if (result == 1) {   //currentDT is less than dateTime
-                throw new MismatchedCommandException("Invalid Time Period Specified.");
             }
         }
     }
@@ -124,7 +131,7 @@ public class CommandInfo {
     private static String[] getValidCommandTypes() {
         return validCommandTypes;
     }
-    
+
     //@author A0090971Y
     /**
      * This returns the command type to be executed 
@@ -133,7 +140,7 @@ public class CommandInfo {
     public String getCommandType(){
         return commandType.toLowerCase();
     }
-    
+
     //@author A0090971Y
     /**
      * 
@@ -173,5 +180,18 @@ public class CommandInfo {
     }
     public DateTime getEndDateTime() {
         return this.endDateTime;
+    }
+
+    private void setMessage(String m) {
+        this.message = m;
+    }
+    
+    //@authour A0090971Y
+    /**
+     * 
+     * @return a message when there is one otherwise return null
+     */
+    public String getMessage() {
+        return this.message;
     }
 }
