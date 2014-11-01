@@ -10,7 +10,7 @@ import java.lang.NoSuchMethodException;
 
 import com.joestelmach.natty.Parser;
 
-public class testDateTimeParser {
+public class DateTimeParserTest {
     Parser test = new Parser();
 
     @Test

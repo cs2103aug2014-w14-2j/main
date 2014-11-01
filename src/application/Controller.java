@@ -68,15 +68,15 @@ public class Controller extends Application {
                     taskManager.complete(commandInfo);
                     feedback = new MessageNotifyComplete(commandInfo.getTaskIDs());
                     break;
-                case "search complete": // Temporary.
-                    taskManager.clearIDMapping();
-                    uiComponent.updateTaskList(taskManager.getCompletedTasks());
-                    uiComponent.updateReminderList(taskManager.getCompletedReminders());
-                    return;
+                case "home":
+                    break;
                 case "search":
                 case "display":
                 case "show":
-                    break;
+                    taskManager.clearIDMapping();
+                    uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
+                    uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search reuslts");
+                    return;
                 case "quit":
                 case "exit":
                     Platform.exit();
@@ -94,8 +94,10 @@ public class Controller extends Application {
         }
         
         taskManager.clearIDMapping();
-        uiComponent.updateTaskList(taskManager.getTasks());
-        uiComponent.updateReminderList(taskManager.getReminders());
+        // uiComponent.updateTaskList(taskManager.getTasks());
+        // uiComponent.updateReminderList(taskManager.getReminders());
+        uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
+        uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
         
         dataStorage.saveTasks(taskManager.getList());
     }
