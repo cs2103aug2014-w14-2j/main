@@ -13,6 +13,9 @@ public class Message {
 
     protected final String WARNING_INVALID_ID = "Cannot find tasks ";
     protected final String WARNING_INVALID_DATE = "Cannot understand time ";
+    protected final String WARNING_PASSED_DATE = "Task %s has already begun";
+    protected final String WARNING_PASSED_END_DATE = "Task %s has already passed";
+    protected final String WARNING_IS_THIS_MISTAKE = "If this is a mistake, please edit";
 
     protected String outputMsg = "";
     
@@ -125,5 +128,19 @@ class MessageWarningInvalidDate extends Message {
                 outputMsg += " and ";
             }
         }
+    }
+}
+
+class MessageWarningDatePassed extends Message {
+    
+    MessageWarningDatePassed(String taskID) {
+        outputMsg = String.format(WARNING_PASSED_DATE + WARNING_IS_THIS_MISTAKE, taskID);
+    }
+}
+
+class MessageWarningEndDatePassed extends Message {
+    
+    MessageWarningEndDatePassed(String taskID) {
+        outputMsg = String.format(WARNING_PASSED_END_DATE + WARNING_IS_THIS_MISTAKE, taskID);
     }
 }
