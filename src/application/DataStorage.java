@@ -107,7 +107,7 @@ public class DataStorage {
      */
     public void saveTasks(ArrayList<Task> array) {
 
-        undoQueue.add(new ArrayList<Task>(array));
+        undoQueue.add(backupTasks(array));
         logger.log(Level.INFO, "Current version stored as backup");
         manageundoQueueSize();
 
@@ -253,13 +253,29 @@ public class DataStorage {
 
     //@author A0115864B
     /**
-     * Support for undo command
+     * Returns a past saved version when "undo" command is received
+     * 
      * @return backup ArrayList of tasks that was saved before last operation
      */
     public ArrayList<Task> getPastVersion() {
         ArrayList<Task> pastVersion = undoQueue.remove(0);
         logger.log(Level.INFO, "Backup version retrieved");
         return pastVersion;
+    }
+    
+    //@author A0115864B
+    /**
+     * Stores a copy of the ArrayList of Tasks in current state. Deep copies everything.
+     * 
+     * @param tasks
+     * @return
+     */
+    public ArrayList<Task> backupTasks(ArrayList<Task> originalTasks) {
+        ArrayList<Task> backup = new ArrayList<Task>();
+        for (Task task : originalTasks) {
+            backup.add(new Task(task));
+        }
+        return backup;
     }
 
 }
