@@ -30,6 +30,54 @@ class KeepTasksCompletedToday implements TaskFilter {
     }
 }
 
+class KeepTasksBetween implements TaskFilter {
+    private DateTime start, end;
+    public KeepTasksBetween(DateTime start, DateTime end) {
+        this.start = start;
+        this.end = end;
+    }
+    
+    @Override
+    public boolean apply(Task t) {
+        // There is start date,
+        if (t.getDate() != null) {
+            // Start date is between requested start and end,
+            if (t.getDate().isAfter(this.start) && t.getDate().isBefore(this.end)) {
+                return true;
+            }
+        }
+        
+        // There is end date,
+        if (t.getEndDate() != null) {
+            // End date is between requested start and end,
+            if (t.getEndDate().isAfter(this.start) && t.getDate().isBefore(this.end)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }   
+}
+
+class KeepTasksWithKeyword implements TaskFilter {
+    private String keyword;
+    public KeepTasksWithKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+    
+    @Override
+    public boolean apply(Task t) {
+        return t.getDescription().indexOf(this.keyword) > -1;        
+    }
+}
+
+class KeepTasksWithPriority implements TaskFilter {    
+    @Override
+    public boolean apply(Task t) {
+         return t.getPriority() > 0;
+    }
+}
+
 class KeepTasksToShowToday implements TaskFilter {
     private LocalDate today;
     public KeepTasksToShowToday() {

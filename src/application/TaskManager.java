@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.ListIterator;
 
+import org.joda.time.DateTime;
+
 //@author A0110546R
 /**
  * The manager that manipulates and contains the array list of Tasks.
@@ -292,6 +294,58 @@ class TaskManager {
         
         return filteredTasks;
     }
+    
+    /**
+     * Returns the tasks given in the search parameters.
+     * 
+     * @return the tasks given in the search parameters.
+     */
+    public ArrayList<Task> getSearchedTasks(CommandInfo commandInfo) {
+        TaskListFilter filter = new TaskListFilter(this.list, true); // AND filter.
+        filter.add(new IgnoreTasksDeleted()); // and, 
+        filter.add(new KeepTasksWithStartDate());
+        ArrayList<Task> filteredTasks = filter.apply();
+        
+        
+        filter = new TaskListFilter(this.list, true); // AND filter.
+        
+        // Filtering of dates:
+        DateTime start = commandInfo.getStartDateTime();
+        DateTime end = commandInfo.getEndDateTime();
+        if (start != null && end != null) {
+            filter.add(new KeepTasksBetween(start, end));
+        }
+        else if (start != null) { // end is null,
+            end = start.withTimeAtStartOfDay().plusDays(1);
+            start = start.withTimeAtStartOfDay().minusMillis(1); // Millisecond before today.
+            filter.add(new KeepTasksBetween(start, end));
+        }
+        else if (end != null) { // start is null, not possible here but whatever.
+            start = new DateTime();
+            filter.add(new KeepTasksBetween(start, end));
+        }
+        
+        // Whether to show completed only:
+        if (commandInfo.isCompleted()) { // For completed tasks only.
+            filter.add(new KeepTasksCompleted());
+        }
+        
+        // Whether to show priority, inclusive:
+        if (commandInfo.getPriority() > 0) {
+            filter.add(new KeepTasksWithPriority());
+        }
+        
+        // Searching by keywords:
+        if (commandInfo.getTaskDesc() != null) {
+            filter.add(new KeepTasksWithKeyword(commandInfo.getTaskDesc()));
+        }
+        
+        filteredTasks = filter.apply();
+        
+        return filteredTasks;
+        
+    }
+    
 
     /**
      * Initializes the list of tasks from storage.
