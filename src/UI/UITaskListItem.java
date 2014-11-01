@@ -45,5 +45,4 @@ public class UITaskListItem {
 	public String getType() {
 		return type;
 	}
-
 }

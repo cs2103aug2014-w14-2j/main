@@ -1,6 +1,7 @@
 package UI;
 
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -16,8 +17,8 @@ public class UISceneListener implements EventHandler<KeyEvent>{
 		this.cmdInputBox = cmdInputBox;
 	}
 	
-	private boolean isValidFocusCharacter(String keyCodeText) {
-		if(keyCodeText.length() == 1 || keyCodeText.startsWith("DIGIT")) {
+	private boolean isValidFocusCharacter(KeyCode keyCode) {
+		if(keyCode.isDigitKey() || keyCode.isLetterKey()) {
 			return true;
 		}
 		return false;
@@ -26,9 +27,8 @@ public class UISceneListener implements EventHandler<KeyEvent>{
 	 @Override 
      public void handle(KeyEvent ke) { 
          String currentText = cmdInputBox.getText();
-         String keyCodeText = ke.getCode().toString();
          
-         if((!cmdInputBox.isFocused() && isValidFocusCharacter(keyCodeText))) {
+         if((!cmdInputBox.isFocused() && isValidFocusCharacter(ke.getCode()))) {
              cmdInputBox.focusCommandInputBox();
              cmdInputBox.setText(currentText);
              cmdInputBox.resetPositionCaret();

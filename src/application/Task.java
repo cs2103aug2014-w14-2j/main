@@ -11,17 +11,18 @@ import org.joda.time.LocalDate;
  * 
  * @author Sun Wang Jun
  */
-public class Task {    
+public class Task {
+    /* The following fields are not stored. */
     private int id;
     private String displayID;
+    private boolean deleted = false;
     
+    /* The following attributes are stored. */
     private String description;
-
     private DateTime date;
     private DateTime endDate;
-    private boolean completed;    
-    private int priority;
-    
+    private boolean completed;
+    private int priority;    
     private DateTime createdAt;
     private DateTime modifiedAt;
     private DateTime completedAt;
@@ -46,6 +47,23 @@ public class Task {
         if (commandInfo.getPriority() != 0) {
             this.priority = commandInfo.getPriority();
         }
+    }
+    
+    /**
+     * Constructor for cloning task object, used when storing past versions
+     * @param original
+     */
+    public Task(Task original) {
+        setDescription(original.getDescription());
+        setDisplayID(original.getDisplayID());
+        setDate(original.getDate());
+        setEndDate(original.getEndDate());
+        setCompleted(original.isCompleted());
+        setPriority(original.getPriority());
+        setCreatedAt(original.getCreatedAt());
+        setModifiedAt(original.getModifiedAt());
+        setCompletedAt(original.getCompletedAt());
+        
     }
 
     /**
@@ -206,7 +224,7 @@ public class Task {
     }
     
     /**
-     * Gets the created date of the Task.
+     * Returns the created date of the Task.
      * 
      * @return the created date of the Task.
      */
@@ -214,48 +232,65 @@ public class Task {
     
     /**
      * Sets the created date of the Task.
+     * Used only when retrieving tasks list from external file.
      * 
-     * Used only when retrieving tasks list from external file
-     * @param createdDate
+     * @param createdDate the created DateTime of the Task.
      */
     public void setCreatedAt(DateTime createdDate) {
         this.createdAt = createdDate;
     }
     
     /**
-     * Gets the last modified date of the Task.
+     * Returns the last modified date of the Task.
      * 
      * @return the last modified date of the Task.
      */
     public DateTime getModifiedAt() { return this.modifiedAt; }
     
     /**
-     * Sets the last modified date of the Task.
+     * Sets the last modified date of the Task. 
+     * Used only when retrieving tasks list from external file.
      * 
-     * Used only when retrieving tasks list from external file
-     * @param modDate
+     * @param modifiedDate the last modified DateTime of the Task.
      */
-    public void setModifiedAt(DateTime modDate) {
-        this.modifiedAt = modDate;
+    public void setModifiedAt(DateTime modifiedDate) {
+        this.modifiedAt = modifiedDate;
     }
     
     /**
-     * Gets the completed date of the Task.
+     * Returns the completed date of the Task.
      * 
-     * @return the last completed date of the Task.
+     * @return the completed date of the Task.
      */
     public DateTime getCompletedAt() { return this.completedAt; }
     
     /**
      * Sets the completed date of the Task.
+     * Used only when retrieving tasks list from external file.
      * 
-     * Used only when retrieving tasks list from external file
-     * @param completedDate
+     * @param completedDate the completed DateTime of the Task.
      */
     public void setCompletedAt(DateTime completedDate) {
         this.completedAt = completedDate;
     }
     
+    /**
+     * Used to reset the internal ID counter back to 0.
+     */
+    public static void resetIDCounter() { idCounter = 0; }
+    
+    /**
+     * Returns whether this task is deleted.
+     * 
+     * @return whether this task is deleted.
+     */
+    public boolean isDeleted() { return this.deleted; }
+    
+    /**
+     * Sets whether the Task is deleted.
+     * @param deleted boolean whether to delete the Task.
+     */
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }   
     
 }
 
@@ -279,6 +314,56 @@ class DateComparator implements Comparator<Task> {
             } else if (a.getEndDate().isAfter(b.getEndDate())) {
                 return 1; // a is after b, so a comes after b.
             } else if (a.getEndDate().isBefore(b.getEndDate())) {
+                return -1; // a is before b, so a comes before b.
+            }
+        }
+        return 0;
+    }
+}
+
+/**
+ * The comparator class used to sort Tasks by their end date.
+ * @author Sun Wang Jun
+ *
+ */
+class EndDateComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        if (a.getEndDate() == null && b.getEndDate() == null) {
+            return 0;
+        } else if (a.getEndDate() == null) {
+            return 1; // b has end date, so a comes after b.
+        } else if (b.getEndDate() == null) {
+            return -1; // a has end date, so a comes before b.
+        } else { // Both a and b has end date,
+            if (a.getEndDate().isAfter(b.getEndDate())) {
+                return 1; // a is after b, a comes after b.
+            } else if (a.getEndDate().isBefore(b.getEndDate())) {
+                return -1; // a is before b, so a comes before b.
+            }
+        }
+        return 0;
+    }
+}
+
+/**
+ * The comparator class used to sort Tasks by their completed at date.
+ * @author Sun Wang Jun
+ * 
+ */
+class CompletedAtComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        if (a.getCompletedAt() == null && b.getCompletedAt() == null) {
+            return 0;
+        } else if (a.getCompletedAt() == null) {
+            return -1; // b has completed date, so a comes before b.
+        } else if (b.getCompletedAt() == null) {
+            return 1; // a has completed date, so a comes after b.
+        } else { // Both a and b has end date,
+            if (a.getCompletedAt().isAfter(b.getCompletedAt())) {
+                return 1; // a is after b, a comes after b.
+            } else if (a.getCompletedAt().isBefore(b.getCompletedAt())) {
                 return -1; // a is before b, so a comes before b.
             }
         }

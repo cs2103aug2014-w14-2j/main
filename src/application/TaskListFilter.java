@@ -3,93 +3,152 @@ package application;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
-public final class TaskListFilter {
-    private static ArrayList<Task> filterTasksAboutStartDates(ArrayList<Task> tasks, boolean hasStartDate) {
-        ArrayList<Task> filteredTasks = new ArrayList<Task>();
-        
-        ListIterator<Task> li = tasks.listIterator();
-        boolean hasDate = false;
-        while (li.hasNext()) {
-            Task t = li.next();
-            if (t == null) { continue; }
-            hasDate = t.getDate() != null; // True if has date.
-            if (hasDate == hasStartDate) { 
-                // If has date, and we want dated, add, or
-                // if has no date, and we want no date, add.
-                filteredTasks.add(t);
-            }
-        }
-        return filteredTasks;        
-    }
-    
-    public static ArrayList<Task> filterOutTasksWithStartDates(ArrayList<Task> tasks) {
-        return filterTasksAboutStartDates(tasks, false); // This keeps tasks without start dates.
-    }
-    
-    public static ArrayList<Task> filterOutTasksWithoutStartDates(ArrayList<Task> tasks) {
-        return filterTasksAboutStartDates(tasks, true); // This keeps tasks with start dates.
-    }
-    
-    private static ArrayList<Task> filterTasksAboutEndDates(ArrayList<Task> tasks, boolean hasEndDate) {
-        ArrayList<Task> filteredTasks = new ArrayList<Task>();
-        
-        ListIterator<Task> li = tasks.listIterator();
-        boolean hasDate = false;
-        while (li.hasNext()) {
-            Task t = li.next();
-            if (t == null) { continue; }
-            hasDate = t.getEndDate() != null; // True if has date.
-            if (hasDate == hasEndDate) { 
-                // If has date, and we want dated, add, or
-                // if has no date, and we want no date, add.
-                filteredTasks.add(t);
-            }
-        }
-        return filteredTasks;        
-    }
-    
-    public static ArrayList<Task> filterOutTasksWithEndDates(ArrayList<Task> tasks) {
-        return filterTasksAboutEndDates(tasks, false); // This keeps tasks without start dates.
-    }
-    
-    public static ArrayList<Task> filterOutTasksWithoutEndDates(ArrayList<Task> tasks) {
-        return filterTasksAboutEndDates(tasks, true); // This keeps tasks with start dates.
-    }
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
-    private static ArrayList<Task> filterTasksAboutCompleted(ArrayList<Task> tasks, boolean isCompleted) {
-        ArrayList<Task> filteredTasks = new ArrayList<Task>();
-        
-        ListIterator<Task> li = tasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            if (t == null) { continue; }
-            if (t.isCompleted() == isCompleted) {
-                // If is completed, we want completed, add, or
-                // if not completed, and we want not completed, add.
-                filteredTasks.add(t);
-            }
-        }
-        return filteredTasks;        
-    }
-    
-    public static ArrayList<Task> filterOutCompletedTasks(ArrayList<Task> tasks) {
-        return filterTasksAboutCompleted(tasks, false); // This keeps tasks that are not completed.
-    }
-    
-    public static ArrayList<Task> filterOutNotCompletedTasks(ArrayList<Task> tasks) {
-        return filterTasksAboutCompleted(tasks, true); // This keeps tasks that are completed.
-    }
-    
-    public static ArrayList<Task> filterOutNullTasks(ArrayList<Task> tasks) {
-        ArrayList<Task> filteredTasks = new ArrayList<Task>();
-        
-        ListIterator<Task> li = tasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            if (t != null) { // Task is not null, we keep.
-                filteredTasks.add(t);
-            }
-        }
-        return filteredTasks;
+//@author A0110546R
+interface TaskFilter {
+    public boolean apply(Task t);
+}
+
+class KeepTasksCompleted implements TaskFilter {
+    @Override
+    public boolean apply(Task t) {
+        return t.isCompleted();
     }
 }
+
+class KeepTasksCompletedToday implements TaskFilter {
+    private DateTime oneDayAgo;
+    public KeepTasksCompletedToday() {
+        this.oneDayAgo = new DateTime().minusDays(1);
+    }
+    
+    @Override
+    public boolean apply(Task t) {
+        return t.getCompletedAt() != null && t.getCompletedAt().isAfter(this.oneDayAgo);
+    }
+}
+
+class KeepTasksToShowToday implements TaskFilter {
+    private LocalDate today;
+    public KeepTasksToShowToday() {
+        this.today = new LocalDate();
+    }
+    
+    @Override
+    public boolean apply(Task t) {
+        LocalDate date = new LocalDate(t.getDate());
+        LocalDate endDate = new LocalDate(t.getEndDate());
+        
+        if (date.equals(this.today)) {
+            return true;
+        }
+        // If start date is before today, and end date is today or after,
+        else if (date.isBefore(this.today) &&
+                (endDate.equals(this.today) || endDate.isAfter(this.today))) {
+            return true;
+        }
+        return false;
+    }
+}
+
+class KeepTasksToShowTheNextDay implements TaskFilter {
+    private LocalDate today;
+    private LocalDate nextDay;
+    public KeepTasksToShowTheNextDay() {
+        this.today = new LocalDate();
+    }
+    @Override
+    public boolean apply(Task t) {
+        LocalDate date = new LocalDate(t.getDate());
+        if (date.isAfter(this.today) && this.nextDay == null) { // Different date,
+            this.nextDay = date; // Set the next day's date.
+        }
+        if (this.nextDay != null && date.equals(this.nextDay)) { // Same as next day,
+            return true; // Show the task/
+        }
+        return false;
+    }
+}
+
+class KeepTasksWithStartDate implements TaskFilter {
+    @Override
+    public boolean apply(Task t) {
+        return t.getDate() != null; // True if there is start date.
+    }
+}
+
+class KeepTasksWithoutStartDate implements TaskFilter {
+    @Override
+    public boolean apply(Task t) {
+        return t.getDate() == null; // True if there is no start date.
+    }
+}
+
+class IgnoreTasksDeleted implements TaskFilter { // Keep tasks which are not deleted.
+    @Override
+    public boolean apply(Task t) {
+        return !t.isDeleted(); // True if not deleted. 
+    }
+}
+
+class KeepTasksNotCompleted implements TaskFilter {
+    @Override
+    public boolean apply(Task t) {
+        return !t.isCompleted();
+    }
+}
+
+public class TaskListFilter {
+    private ArrayList<TaskFilter> filters;
+    private ArrayList<Task> taskList;
+    private boolean strongFilter; // true for AND/&&, false for OR/||.
+    
+    public TaskListFilter(ArrayList<Task> taskList, boolean strongFilter) {
+        this.filters = new ArrayList<TaskFilter>();
+        this.taskList = taskList;
+        this.strongFilter = strongFilter;
+    }
+    
+    public void add(TaskFilter filter) {
+        this.filters.add(filter);
+    }
+    
+    public ArrayList<Task> apply() {
+        ArrayList<Task> filteredTaskList = new ArrayList<Task>();
+        ListIterator<Task> taskI = this.taskList.listIterator();
+        ListIterator<TaskFilter> filterI;
+        Task task;
+        TaskFilter filter;
+        boolean keep = this.strongFilter;
+        
+        while (taskI.hasNext()) {
+            task = taskI.next();
+            keep = this.strongFilter;
+            filterI = this.filters.listIterator();
+            while (filterI.hasNext()) {
+                filter = filterI.next();
+                if (this.strongFilter) { // Strong filter is on, do &&.
+                    if (!filter.apply(task)) { // Once false,
+                        keep = false; // Do not keep.
+                        break; // Get out of the while loop.
+                    }
+                }
+                else { // Strong filter is off, do ||.
+                    if (filter.apply(task)) { // Once true,
+                        filteredTaskList.add(task);
+                        break; // Get out of the while loop.
+                    }
+                }
+            }
+            // Only add at this point if it is a strong filter and kept.
+            if (this.strongFilter && keep) { filteredTaskList.add(task); }
+        }
+        
+        return filteredTaskList;
+    }
+}
+
+
+
