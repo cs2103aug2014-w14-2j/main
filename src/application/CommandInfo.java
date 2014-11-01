@@ -12,18 +12,17 @@ import org.joda.time.DateTimeComparator;
  * @author A0090971Y
  */
 
-
 public class CommandInfo {
 
-    private boolean isValidCommandType;
-    private boolean isValidID;
     private String commandType;
     private ArrayList<String> taskIDs = new ArrayList<String>();
     private String taskDesc;
     private DateTime startDateTime;
     private DateTime endDateTime;
     private int priority;
-    private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","quit","search","search complete","undo"};
+    private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","home","quit","search","show","undo","exit"};
+    private String message = null;
+    private boolean completed;
 
     //@author A0090971Y
     /**
@@ -36,99 +35,75 @@ public class CommandInfo {
      * @param priority
      */
 
-    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority) {  // edit 
-
-        this.isValidCommandType = validateCommandType(commandType);
-   //     this.isValidID = validateTaskID(taskID);
+    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority,boolean isCompleted) {  // edit 
         this.commandType = commandType;
         this.taskIDs = taskIDs;
         this.taskDesc = taskDesc;
         this.startDateTime = getStartDateTime(startDT);
         this.endDateTime = getEndDateTime(endDT);
-        this.startDateTime = adjustStartDateTime(startDateTime);
-        this.endDateTime = adjustEndDateTime(endDateTime);
         this.priority = priority;
-
-
+        this.completed = isCompleted;
+        checkStartDateTime();
+        checkEndDateTime();
     }
-    private DateTime adjustStartDateTime(DateTime dateTime) {
-        if (dateTime != null ) {
+
+    private void checkStartDateTime() {
+        if (this.startDateTime != null ) {
             DateTime currentDT = new DateTime();
-            int result = DateTimeComparator.getInstance().compare(currentDT,dateTime);
+            int result = DateTimeComparator.getInstance().compare(currentDT,this.startDateTime);
             if (result == 1) {   //currentDT is less than dateTime
-                dateTime = dateTime.plusDays(1);
+                setMessage("The Time Specified is before the Current Time.");
             }
         }
-        return dateTime;
     }
 
-    private DateTime adjustEndDateTime(DateTime dateTime) {
-        if (dateTime != null ) {
-            int result = DateTimeComparator.getInstance().compare(this.startDateTime,dateTime);
+    private void checkEndDateTime() {
+        if (this.endDateTime != null ) {
+            DateTime currentDT = new DateTime();
+            int result = DateTimeComparator.getInstance().compare(currentDT,this.endDateTime);
             if (result == 1) {   //currentDT is less than dateTime
-                dateTime = dateTime.plusDays(1);
+                setMessage("The End Time Specified is before the Current Time.");
+            }
+            else {
+                String m = null;
+                setMessage(m);
             }
         }
-        return dateTime;
-    }
-
-
-    private boolean validateTaskID(String ID) {
-        if (ID != null) {
-            if ((Character.compare(ID.charAt(0),TaskManager.NORMAL_TASK_PREFIX)==0) || 
-                    (Character.compare(ID.charAt(0),TaskManager.DATED_TASK_PREFIX)==0))
-            {
-                ID = ID.substring(1);
-                if ((StringUtils.isNumeric(ID)) && (!ID.equals("0"))) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     //@author A0090971Y
     /**
-     * 
-     * @param command
-     * @return true if the command type is valid, else return false
+     * throws MismatchedCommandException when the user input entered is invalid
+     * @throws MismatchedCommandException
      */
-    private boolean validateCommandType(String command) {
+    public void validateUserInput() throws MismatchedCommandException {
+        boolean isValid = false;
         for (int i = 0; i<CommandInfo.getValidCommandTypes().length; i++) {
-            if (command.equalsIgnoreCase(CommandInfo.getValidCommandTypes()[i])) {
-                return true;
+            if (this.commandType.equalsIgnoreCase(CommandInfo.getValidCommandTypes()[i])) {
+                isValid = true;
             }
         }
-        return false;        
+        if (isValid == false) {
+            throw new MismatchedCommandException("Invalid Command Type Entered.");
+        }
+        for (int i = 0; i<this.taskIDs.size();i++) {
+            if (this.taskIDs.get(i) != null) {
+                if ((Character.compare(this.taskIDs.get(i).charAt(0),TaskManager.NORMAL_TASK_PREFIX)==0) || 
+                        (Character.compare(this.taskIDs.get(i).charAt(0),TaskManager.DATED_TASK_PREFIX)==0))
+                {
+                    String ID = this.taskIDs.get(i).substring(1);
+                    if ((StringUtils.isNumeric(ID)) && (!ID.equals("0"))) {
+                    }
+                    else {
+                        throw new MismatchedCommandException("Invalid Task ID Entered.");
+                    }
+                }
+                else {
+                    throw new MismatchedCommandException("Invalid Task ID Entered.");}
+            }
+        }
     }
 
-    //@author A0090971Y
-    /**
-     * 
-     * @return the boolean value indicating the validity of the user input. True if the command is valid, false if invalid
-     */
-    public boolean getIsValidCommandType() {
-        return this.isValidCommandType;
-    }
-
-    //@author A0090971Y
-    /**
-     * This returns the command type to be executed 
-     * @return command type
-     */
-    public String getCommandType(){
-        return commandType.toLowerCase();
-    }
-
-    //@author A0090971Y
-    /**
-     * This returns the task ID 
-     * @return task ID
-     */
-  /*  public String getTaskID(){
-        return taskID;
-    }
-   */
     //@author A0090971Y
     /**
      * This returns the start date time of the task
@@ -155,15 +130,27 @@ public class CommandInfo {
         return (new DateTime(endDT));
     }
 
-    public DateTime getStartDateTime() {
-        return this.startDateTime;
-    }
-    public DateTime getEndDateTime() {
-        return this.endDateTime;
+    private static String[] getValidCommandTypes() {
+        return validCommandTypes;
     }
 
+    //@author A0090971Y
+    /**
+     * This returns the command type to be executed 
+     * @return command type
+     */
+    public String getCommandType(){
+        return commandType.toLowerCase();
+    }
 
-
+    //@author A0090971Y
+    /**
+     * 
+     * @return an ArrayList of task IDs
+     */
+    public ArrayList<String> getTaskIDs() {
+        return taskIDs;
+    }
     //@author A0090971Y
     /**
      * 
@@ -190,26 +177,31 @@ public class CommandInfo {
     public String getKeyword(){
         return taskDesc;
     }
-
-    private static String[] getValidCommandTypes() {
-        return validCommandTypes;
+    public DateTime getStartDateTime() {
+        return this.startDateTime;
+    }
+    public DateTime getEndDateTime() {
+        return this.endDateTime;
     }
 
-    public static void setValidCommandTypes(String[] validCommandTypes) {
-        CommandInfo.validCommandTypes = validCommandTypes;
+    private void setMessage(String m) {
+        this.message = m;
     }
 
-    
-  /*  public boolean getIsValidID() {
-
-
-
-        return isValidID;
+    //@authour A0090971Y
+    /**
+     * 
+     * @return a message when there is one otherwise return null
+     */
+    public String getMessage() {
+        return this.message;
     }
-   */
-    public ArrayList<String> getTaskIDs() {
-        return taskIDs;
+    //@author A0090971Y
+    /**
+     * 
+     * @return a boolean to indicate if the user searches a completed task, true for searching completed tasks, false for searching not completed tasks
+     */
+    public boolean isCompleted(){
+        return completed;
     }
- 
-
 }
