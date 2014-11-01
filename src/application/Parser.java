@@ -64,12 +64,13 @@ public class Parser {
             int startIndex = input.indexOf("[");
             int endIndex = input.indexOf("]");
             if ((startIndex>0) && (endIndex>0)) {
-            desc = input.substring(startIndex+1, endIndex);
+                desc = input.substring(startIndex+1, endIndex);
             }
+            else desc = "";
         }
         else {
             cmdType = input.trim().split("\\s+")[0];
-            desc = input.replaceFirst(cmdType+"", "");
+            desc = input.replaceFirst(cmdType, "").trim();
         }
         return desc;
     }
@@ -83,19 +84,21 @@ public class Parser {
         }
         return false;
     }
+    
     private String parseContent(String input,String desc) {
         String content;
         String firstWord = input.trim().split("\\s+")[0];
         content = input.replace(firstWord,"").trim();
         if (parseTaskIDs(input).size()!=0) {
-            content = content.replace(parseTaskIDs(input).get(0)+" ","").trim();
+            content = content.replace(parseTaskIDs(input).get(0),"").trim();
         }
-        if (desc != null) {
-        content = content.replaceAll(desc, "");
-        }
+        
         content = content.replace("[","");
         content = content.replace("]", "");
         content = content.replace("!", "");
+        if (!desc.equalsIgnoreCase("")) {
+            content = content.replaceAll(desc, "");
+        }
         return content;
     }
 
@@ -141,13 +144,11 @@ public class Parser {
      * @return the priority of the task by counting the number of exclamation marks in user input
      */
     private int parsePriority(String input,String desc){
-        if (desc != null) {
         input = input.replaceAll(desc, "");
-        }
         int priority = StringUtils.countMatches(input,"!");
         return priority;
     }
-    
+
     private boolean getComplete(String content) {
         if (content.indexOf("complete")>=0) {
             return true; 

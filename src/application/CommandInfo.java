@@ -49,7 +49,7 @@ public class CommandInfo {
 
     private void checkStartDateTime() {
         if ((this.startDateTime != null ) && ((this.commandType.equalsIgnoreCase("add"))
-        || (this.commandType.equalsIgnoreCase("edit")))){
+                || (this.commandType.equalsIgnoreCase("edit")))){
             DateTime currentDT = new DateTime();
             int result = DateTimeComparator.getInstance().compare(currentDT,this.startDateTime);
             if (result == 1) {   //currentDT is less than dateTime
@@ -103,6 +103,10 @@ public class CommandInfo {
                 else {
                     throw new MismatchedCommandException("Invalid Task ID Entered.");}
             }
+        }
+        if (((this.commandType.equalsIgnoreCase("add")) || (this.commandType.equalsIgnoreCase("edit"))) 
+                && (this.taskDesc.equalsIgnoreCase(""))) {
+            throw new MismatchedCommandException("Empty Task Description.");        
         }
     }
 
