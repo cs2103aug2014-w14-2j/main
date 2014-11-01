@@ -46,7 +46,7 @@ public class UICmdInputBox {
     }
     
     public void setSuggestionText(String output) {
-        suggestionText.setText(output);
+        suggestionText.setText("\u2022 " + output);
     }
     
     public void setGuideMsgText(String output) {
