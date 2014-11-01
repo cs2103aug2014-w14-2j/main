@@ -12,6 +12,7 @@ interface TaskFilter {
 }
 
 class KeepTasksCompleted implements TaskFilter {
+    @Override
     public boolean apply(Task t) {
         return t.isCompleted();
     }
@@ -23,6 +24,7 @@ class KeepTasksCompletedToday implements TaskFilter {
         this.oneDayAgo = new DateTime().minusDays(1);
     }
     
+    @Override
     public boolean apply(Task t) {
         return t.getCompletedAt() != null && t.getCompletedAt().isAfter(this.oneDayAgo);
     }
@@ -34,6 +36,7 @@ class KeepTasksToShowToday implements TaskFilter {
         this.today = new LocalDate();
     }
     
+    @Override
     public boolean apply(Task t) {
         LocalDate date = new LocalDate(t.getDate());
         LocalDate endDate = new LocalDate(t.getEndDate());
@@ -50,25 +53,48 @@ class KeepTasksToShowToday implements TaskFilter {
     }
 }
 
+class KeepTasksToShowTheNextDay implements TaskFilter {
+    private LocalDate today;
+    private LocalDate nextDay;
+    public KeepTasksToShowTheNextDay() {
+        this.today = new LocalDate();
+    }
+    @Override
+    public boolean apply(Task t) {
+        LocalDate date = new LocalDate(t.getDate());
+        if (date.isAfter(this.today) && this.nextDay == null) { // Different date,
+            this.nextDay = date; // Set the next day's date.
+        }
+        if (this.nextDay != null && date.equals(this.nextDay)) { // Same as next day,
+            return true; // Show the task/
+        }
+        return false;
+    }
+}
+
 class KeepTasksWithStartDate implements TaskFilter {
+    @Override
     public boolean apply(Task t) {
         return t.getDate() != null; // True if there is start date.
     }
 }
 
 class KeepTasksWithoutStartDate implements TaskFilter {
+    @Override
     public boolean apply(Task t) {
         return t.getDate() == null; // True if there is no start date.
     }
 }
 
 class IgnoreTasksDeleted implements TaskFilter { // Keep tasks which are not deleted.
+    @Override
     public boolean apply(Task t) {
         return !t.isDeleted(); // True if not deleted. 
     }
 }
 
 class KeepTasksNotCompleted implements TaskFilter {
+    @Override
     public boolean apply(Task t) {
         return !t.isCompleted();
     }

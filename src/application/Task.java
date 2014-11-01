@@ -305,6 +305,56 @@ class DateComparator implements Comparator<Task> {
 }
 
 /**
+ * The comparator class used to sort Tasks by their end date.
+ * @author Sun Wang Jun
+ *
+ */
+class EndDateComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        if (a.getEndDate() == null && b.getEndDate() == null) {
+            return 0;
+        } else if (a.getEndDate() == null) {
+            return 1; // b has end date, so a comes after b.
+        } else if (b.getEndDate() == null) {
+            return -1; // a has end date, so a comes before b.
+        } else { // Both a and b has end date,
+            if (a.getEndDate().isAfter(b.getEndDate())) {
+                return 1; // a is after b, a comes after b.
+            } else if (a.getEndDate().isBefore(b.getEndDate())) {
+                return -1; // a is before b, so a comes before b.
+            }
+        }
+        return 0;
+    }
+}
+
+/**
+ * The comparator class used to sort Tasks by their completed at date.
+ * @author Sun Wang Jun
+ * 
+ */
+class CompletedAtComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        if (a.getCompletedAt() == null && b.getCompletedAt() == null) {
+            return 0;
+        } else if (a.getCompletedAt() == null) {
+            return -1; // b has completed date, so a comes before b.
+        } else if (b.getCompletedAt() == null) {
+            return 1; // a has completed date, so a comes after b.
+        } else { // Both a and b has end date,
+            if (a.getCompletedAt().isAfter(b.getCompletedAt())) {
+                return 1; // a is after b, a comes after b.
+            } else if (a.getCompletedAt().isBefore(b.getCompletedAt())) {
+                return -1; // a is before b, so a comes before b.
+            }
+        }
+        return 0;
+    }
+}
+
+/**
  * The comparator class used to sort Tasks by their created at date.
  * 
  * @author Sun Wang Jun
