@@ -88,6 +88,7 @@ public class UIAutoComplete {
         for (String command : commandList) {
            if(command.startsWith(word)) {
                output += command + " ";
+               break;
            }
         }
         return output;
