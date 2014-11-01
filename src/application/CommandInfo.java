@@ -20,8 +20,9 @@ public class CommandInfo {
     private DateTime startDateTime;
     private DateTime endDateTime;
     private int priority;
-    private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","quit","search","search complete","undo"};
+    private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","home","quit","search","show","undo","exit"};
     private String message = null;
+    private boolean completed;
 
     //@author A0090971Y
     /**
@@ -34,13 +35,14 @@ public class CommandInfo {
      * @param priority
      */
 
-    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority) {  // edit 
+    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority,boolean isCompleted) {  // edit 
         this.commandType = commandType;
         this.taskIDs = taskIDs;
         this.taskDesc = taskDesc;
         this.startDateTime = getStartDateTime(startDT);
         this.endDateTime = getEndDateTime(endDT);
         this.priority = priority;
+        this.completed = isCompleted;
         checkStartDateTime();
         checkEndDateTime();
     }
@@ -185,7 +187,7 @@ public class CommandInfo {
     private void setMessage(String m) {
         this.message = m;
     }
-    
+
     //@authour A0090971Y
     /**
      * 
@@ -193,5 +195,13 @@ public class CommandInfo {
      */
     public String getMessage() {
         return this.message;
+    }
+    //@author A0090971Y
+    /**
+     * 
+     * @return a boolean to indicate if the user searches a completed task, true for searching completed tasks, false for searching not completed tasks
+     */
+    public boolean isCompleted(){
+        return completed;
     }
 }

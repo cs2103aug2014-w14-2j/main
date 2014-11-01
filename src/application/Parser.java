@@ -45,9 +45,9 @@ public class Parser {
             endDateTime = startDateTime;
             startDateTime = null;
         }
+        boolean completed = getComplete(content);
 
-    
-        CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority);
+        CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority,completed);
         return cmdInfo;
     }
 
@@ -148,100 +148,12 @@ public class Parser {
         return priority;
     }
     
-
-
-    /*
-    private String extractTime(String dateTime){
-        String time =dateTime.trim().split("\\s+")[3];
-        return time;
-    }
-
-    private String extractDate(String dateTime){
-        logger.log(Level.INFO, "starting to extract date");
-        int day,month,year;
-
-        String[] dateTimes = dateTime.trim().split("\\s+");
-        year =Integer.parseInt(dateTimes[dateTimes.length-1]);
-        month = matchMonth(dateTimes[1]);
-        day = Integer.parseInt(dateTimes[2]);
-
-        LocalDate localDate = new LocalDate(year, month, day);
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
-        String formattedDate = formatter.print(localDate);
-        return formattedDate;
-
-    }
-
-    private int matchMonth(String month) {
-        switch (month) {
-            case "Jan" : return 1; 
-            case "Feb" : return 2;
-            case "Mar" : return 3; 
-            case "Apr" : return 4; 
-            case "May" : return 5;
-            case "Jun" : return 6;
-            case "Jul" : return 7;
-            case "Aug" : return 8;
-            case "Sep" : return 9;
-            case "Oct" : return 10;
-            case "Nov" : return 11; 
-            case "Dec" : return 12;
-            default: return 0;
+    private boolean getComplete(String content) {
+        if (content.indexOf("complete")>=0) {
+            return true; 
         }
+        return false;
     }
-     */
-
-    //@author A0090971Y
-    /**
-     * 
-     * @param input
-     * @param taskDesc
-     * @return a string of the task description by removing the prepositions in front of time
-     */
-    /*
-    private String removePrepositions(String input, String taskDesc){
-        String[] inputArray = input.trim().split("\\s+");
-        String[] descArray = taskDesc.trim().split("\\s+");
-        int indexInput = -1;
-        String preposition = null;
-        for (int j = 0; j<inputArray.length;j++)
-            for (int i = 0; i<Parser.getTimePrepositions().length;i++) {
-                if (inputArray[j].equals(Parser.getTimePrepositions()[i])) {
-                    indexInput = j;
-                    preposition = Parser.getTimePrepositions()[i];
-                    break;
-                }
-            }
-
-        for (int i = 0; i<descArray.length;i++){
-            if (descArray[i].equals(preposition)) {
-                if ((i+1)!= descArray.length){
-                    String nextWordDesc = descArray[i+1];
-                    String nextWordInput = inputArray[i+1];
-                    if (!nextWordInput.equals(nextWordDesc)) {
-                        taskDesc = taskDesc.replace(preposition, "");
-                    }
-                }
-                else {
-                    if ((indexInput+1)!=inputArray.length) {
-                        taskDesc = taskDesc.replace(preposition,"");
-                    }
-                }
-            }
-        }
-
-        return taskDesc;
-    }
-     public static String[] getTimePrepositions() {
-        return timePrepositions;
-    }
-
-    public static void setTimePrepositions(String[] timePrepositions) {
-        Parser.timePrepositions = timePrepositions;
-    }
-
-     */
-
 }
 
 
