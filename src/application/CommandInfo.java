@@ -35,7 +35,9 @@ public class CommandInfo {
      * @param priority
      */
 
-    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority,boolean isCompleted) {  // edit 
+    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority,boolean isCompleted) 
+    throws MismatchedCommandException {  // edit
+        try {
         this.commandType = commandType;
         this.taskIDs = taskIDs;
         this.taskDesc = taskDesc;
@@ -45,6 +47,11 @@ public class CommandInfo {
         this.completed = isCompleted;
         checkStartDateTime();
         checkEndDateTime();
+        validateUserInput();
+        }
+        catch (MismatchedCommandException e) {
+            throw e;
+        }
     }
 
     private void checkStartDateTime() {
@@ -78,7 +85,7 @@ public class CommandInfo {
      * throws MismatchedCommandException when the user input entered is invalid
      * @throws MismatchedCommandException
      */
-    public void validateUserInput() throws MismatchedCommandException {
+    private void validateUserInput() throws MismatchedCommandException {
         boolean isValid = false;
         for (int i = 0; i<CommandInfo.getValidCommandTypes().length; i++) {
             if (this.commandType.equalsIgnoreCase(CommandInfo.getValidCommandTypes()[i])) {

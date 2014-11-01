@@ -32,7 +32,13 @@ public class Controller extends Application {
     public static void runCommandInput(String input) {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
 
-        CommandInfo commandInfo = (new Parser()).getCommandInfo(input);
+        CommandInfo commandInfo = null;
+        try {
+            commandInfo = (new Parser()).getCommandInfo(input);
+        } catch (MismatchedCommandException e) { // Need to change exception type.
+            uiComponent.setSuggestionText("Command is invalid");
+            return;
+        }
         Message feedback = null;
         
         // Check for invalid IDs.
@@ -50,7 +56,7 @@ public class Controller extends Application {
             switch (commandInfo.getCommandType()) {
                 case "add":
                     taskManager.add(commandInfo);
-                    feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getID() + "");
+                    // feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getID() + "");
                     break;
                 case "delete":
                     taskManager.delete(commandInfo);
@@ -58,7 +64,7 @@ public class Controller extends Application {
                     break;
                 case "edit":
                     taskManager.edit(commandInfo);
-                    feedback = new MessageNotifyEdit(taskManager.getLastModifiedTask().getID() + "");
+                    feedback = new MessageNotifyEdit(commandInfo.getTaskIDs().get(0));
                     break;
                 case "undo":
                     taskManager.undo(commandInfo, dataStorage.getPastVersion());
@@ -88,16 +94,20 @@ public class Controller extends Application {
             e.printStackTrace();
         }
         
-        if (feedback != null) {
-            uiComponent.setSuggestionText(messageManager.getMessage(feedback));
-            logger.log(messageManager.getMessage(feedback));
-        }
-        
         taskManager.clearIDMapping();
         uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
         uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
         
         dataStorage.saveTasks(taskManager.getList());
+        
+        if ("add".equals(commandInfo.getCommandType())) {
+            feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getDisplayID());
+        }
+        
+        if (feedback != null) {
+            uiComponent.setSuggestionText(messageManager.getMessage(feedback));
+            logger.log(messageManager.getMessage(feedback));
+        }
     }
     
 

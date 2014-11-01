@@ -29,7 +29,7 @@ public class Parser {
      * return the object of CommandInfo class
      * @return the object of CommandInfo class 
      */
-    public CommandInfo getCommandInfo(String userInput) {
+    public CommandInfo getCommandInfo(String userInput) throws MismatchedCommandException {
 
         String commandType = parseCommandType(userInput);
         ArrayList<String> taskIDs = new ArrayList<String>();
@@ -46,9 +46,13 @@ public class Parser {
             startDateTime = null;
         }
         boolean completed = getComplete(content);
-
+        try {
         CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority,completed);
         return cmdInfo;
+        }
+        catch (MismatchedCommandException e) {
+            throw e;
+        }
     }
 
     //@author A0090971Y
@@ -66,10 +70,13 @@ public class Parser {
             if ((startIndex>0) && (endIndex>0)) {
                 desc = input.substring(startIndex+1, endIndex);
             }
+            else desc = "";
         }
         else {
             cmdType = input.trim().split("\\s+")[0];
-            desc = input.replaceFirst(cmdType+"", "");
+            desc = input.replaceFirst(cmdType, "").trim();
+            desc = desc.replace("[", "");
+            desc = desc.replace("]", "");
         }
         return desc;
     }
@@ -83,21 +90,19 @@ public class Parser {
         }
         return false;
     }
+    
     private String parseContent(String input,String desc) {
         String content;
         String firstWord = input.trim().split("\\s+")[0];
         content = input.replace(firstWord,"").trim();
         if (parseTaskIDs(input).size()!=0) {
-            content = content.replace(parseTaskIDs(input).get(0)+" ","").trim();
+            content = content.replace(parseTaskIDs(input).get(0),"").trim();
         }
         
-        desc = desc.replace("[", "");
-        desc = desc.replace("]","");
         content = content.replace("[","");
         content = content.replace("]", "");
         content = content.replace("!", "");
-        if (desc != null) {
-            System.out.println("desc 98" +desc);
+        if (!desc.equalsIgnoreCase("")) {
             content = content.replaceAll(desc, "");
         }
         return content;
@@ -145,12 +150,8 @@ public class Parser {
      * @return the priority of the task by counting the number of exclamation marks in user input
      */
     private int parsePriority(String input,String desc){
-        System.out.println("desc"+desc);
-        desc = desc.trim();
-        desc =desc.replace("[", "");
+        desc = desc.replace("[", "");
         desc = desc.replace("]", "");
-        System.out.println("desc"+desc);
-        System.out.println("input" +input);
         input = input.replaceAll(desc, "");
         int priority = StringUtils.countMatches(input,"!");
         return priority;
