@@ -81,8 +81,6 @@ public class UIComponent {
 	}
 
 	private void initializeStyleSheet() {
-		Font.loadFont(UIComponent.class.getResource("Raleway-Regular.TTF").toExternalForm(), 10);
-		Font.loadFont(UIComponent.class.getResource("Bemio.otf").toExternalForm(), 10);
 		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
 		rootPane.getStyleClass().add(ROOTPANE_STYLESHEET);
 	}
@@ -195,14 +193,32 @@ public class UIComponent {
 		return innerBox;
 	}
 	
+    //@author A0111824R
+    /**
+     * Update the title of the right panel (depreciated)
+     * 
+     * @param input the string to represent the title of the panel.
+     */
 	public void setFloatingTaskHeading(String title) {
 		floatingTaskTitle.setText(title);
 	}
 	
+    //@author A0111824R
+    /**
+     * Update the title of the left panel (depreciated)
+     * 
+     * @param input the string to represent the title of the panel.
+     */
 	public void setReminderTaskHeading(String title) {
 		reminderTaskTitle.setText(title);
 	}
-
+	
+    //@author A0111824R
+    /**
+     * Update the view for the right panel (depreciated)
+     * 
+     * @param input the arraylist of tasks to populate the listview.
+     */
 	public void updateTaskList(ArrayList<Task> items) {
 	    floatingTaskListView.populateTaskListWithData(items);
 	    floatingTaskListView.clearSelection();
@@ -210,10 +226,45 @@ public class UIComponent {
 	    logger.log(Level.INFO, "Task ListView is updated.");
 	}
 	
+    //@author A0111824R
+    /**
+     * Update the view for the left panel (depreciated)
+     * 
+     * @param input the arraylist of tasks to be populated on the listview.
+     */
 	public void updateReminderList(ArrayList<Task> items) {
 	    eventReminderTaskListView.populateTaskListWithData(items);
 	    eventReminderTaskListView.clearSelection();    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
+	}
+	
+    //@author A0111824R
+    /**
+     * Update both the title and the view of the left panel
+     * 
+     * @param input the arraylist of tasks to be populated on the listview
+     *        input the String to replace the current title of the heading
+     */
+	public void updateLeftPanel(ArrayList<Task> items, String title) {
+		reminderTaskTitle.setText(title);
+	    eventReminderTaskListView.populateTaskListWithData(items);
+	    eventReminderTaskListView.clearSelection();    
+		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
+	}
+	
+    //@author A0111824R
+    /**
+     * Update both the title and the view of the right panel
+     * 
+     * @param input the arraylist of tasks to be populated on the listview
+     *        input the String to replace the current title of the heading
+     */
+	public void updateRightPanel(ArrayList<Task> items, String title) {
+		floatingTaskTitle.setText(title);
+		floatingTaskListView.populateTaskListWithData(items);
+	    floatingTaskListView.clearSelection();
+	    
+	    logger.log(Level.INFO, "Task ListView is updated.");
 	}
 	
 	public void setSuggestionText(String text) {
@@ -224,7 +275,7 @@ public class UIComponent {
     	try {
     		primaryStage.setScene(this.getScene());
     		primaryStage.setResizable(false);
-    		primaryStage.setTitle("WaveWave[0.2]");
+    		primaryStage.setTitle("WaveWave[0.4]");
     		primaryStage.show();
     		Controller.getTasks();
         	logger.log(Level.INFO, "UI has been successfully displayed.");
