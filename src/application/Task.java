@@ -47,6 +47,23 @@ public class Task {
             this.priority = commandInfo.getPriority();
         }
     }
+    
+    /**
+     * Constructor for cloning task object, used when storing past versions
+     * @param original
+     */
+    public Task(Task original) {
+        setDescription(original.getDescription());
+        setDisplayID(original.getDisplayID());
+        setDate(original.getDate());
+        setEndDate(original.getEndDate());
+        setCompleted(original.isCompleted());
+        setPriority(original.getPriority());
+        setCreatedAt(original.getCreatedAt());
+        setModifiedAt(original.getModifiedAt());
+        setCompletedAt(original.getCompletedAt());
+        
+    }
 
     /**
      * Constructor that edits an existing Task based on CommandInfo and assigns the same id.
