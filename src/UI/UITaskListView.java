@@ -114,7 +114,7 @@ public class UITaskListView {
     		listItems.add(new UITaskListItem(t, t.getDate()));
     		currentHeader.incrementNumOfTask();
     	}
-    	
+
     	return listItems;
     }
     
@@ -160,6 +160,7 @@ public class UITaskListView {
         private String COLOR_DEFAULT_PRIORITY = "rgba(37, 232, 154, 1)";
         private String COLOR_HIGH_PRIORITY = "rgba(249, 104, 114, 1)";
         private String COLOR_MEDIUM_PRIORITY = "rgba(247, 207, 89, 1)";
+        private String COLOR_COMPLETED = "rgba(188, 187, 185, 1)";
         
         private Rectangle contentPlaceHolder;
         private Text indexLabel;
@@ -180,13 +181,17 @@ public class UITaskListView {
             return textLabel;
         }
         
-        private StackPane getPriorityIndicator(int priority, String displayID, int height) {
+        private StackPane getPriorityIndicator(int priority, String displayID, int height, boolean isCompleted) {
         	String indicator_color = COLOR_DEFAULT_PRIORITY;
         	
-        	if(priority > 1 && priority <= 4) {
-        		indicator_color = COLOR_MEDIUM_PRIORITY;
-        	} else if (priority >= 5) {
-        		indicator_color = COLOR_HIGH_PRIORITY;
+        	if(isCompleted) {
+        		indicator_color = COLOR_COMPLETED;
+        	} else {
+        		if(priority > 1 && priority <= 4) {
+        			indicator_color = COLOR_MEDIUM_PRIORITY;
+        		} else if (priority >= 5) {
+        			indicator_color = COLOR_HIGH_PRIORITY;
+        		}
         	}
         	
         	Rectangle priorityIndicator = createRectangle(40, height-10, 0, 0, Color.web(indicator_color));
@@ -278,7 +283,6 @@ public class UITaskListView {
         			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
         			HBox.setMargin(text, new Insets(10, 10, 10, 10));
         			
-        			//Requires Refractor
         			VBox vbox = new VBox(10);
         			HBox hbox = new HBox(-10);
         			
@@ -310,8 +314,8 @@ public class UITaskListView {
         					hbox.getChildren().addAll(labelStack);
         				}
         			}
-        			
-        			//Complete
+      
+        			/*Complete
         			if(item.getTask().isCompleted()) {
         				Text completeText = createText("COMPLETED", 60, 10, "", FontWeight.BOLD, Color.WHITE);
         				completeText.setTextAlignment(TextAlignment.LEFT);
@@ -323,11 +327,11 @@ public class UITaskListView {
         				StackPane.setAlignment(completeText, Pos.TOP_CENTER);
         				completeStack.getChildren().addAll(completeRect, completeText);
         				hbox.getChildren().addAll(completeStack);
-        			}
+        			}*/
         			
         			vbox.getChildren().addAll(text, hbox);
         			
-        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height), vbox);
+        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height, taskItem.isCompleted()), vbox);
         			
         			StackPane stack = new StackPane();
         			StackPane.setMargin(taskInnerContentHolder, new Insets(5, 0, 0, 0));
