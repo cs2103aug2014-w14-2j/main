@@ -23,6 +23,7 @@ public class UICmdInputBox {
         setInputBoxProperty();
         addKeyPressedListener();
         addKeyTypedListener();
+        addKeyReleasedListener();
     }
     
     private void setInputBoxProperty() {
@@ -34,8 +35,12 @@ public class UICmdInputBox {
         cmdInputBox.setOnKeyPressed(new UIControllerListener(this));
     }
     
-    private void addKeyTypedListener() {
+    private void addKeyReleasedListener() {
         cmdInputBox.setOnKeyReleased(new UIAutoCompleteListener(this));
+    }
+    
+    private void addKeyTypedListener() {
+    	cmdInputBox.setOnKeyTyped(new UIGuideMessage(this));
     }
     
     public void setSuggestionText(String output) {

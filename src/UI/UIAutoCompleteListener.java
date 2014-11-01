@@ -70,7 +70,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         				String replaceString = front + extract;
         				
         				inputBox.setText(replaceString);
-        				inputBox.positionCaret(replaceString.length());
+        				inputBox.positionCaret(replaceString.length()+1);
         			}
         				
         			isDouble = true;

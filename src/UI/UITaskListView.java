@@ -223,14 +223,14 @@ public class UITaskListView {
         	
         	if(interval.contains(currentDate)) {
         		if(taskDate.equals(today)) {
-        			output = "Today";
+        			output = "Today - " + taskDate.toString("dd MMM yyyy");
         		} else if (taskDate.equals(tomorrow)) {
         			output = "Tomorrow";
         		} else {
             		output = currentDate.dayOfWeek().getAsText();
         		}
         	} else {
-        		output = currentDate.toString("dd MMMM yyyy");
+        		output = currentDate.toString("dd MMM yyyy");
         	}
         	
         	return output;
@@ -253,15 +253,18 @@ public class UITaskListView {
         }
         
         private String generateTaskDescription(Task item) {
-        	String output = item.getDescription();
+        	String output = "";
         	
         	if(item.getDate() != null) {
-        		output += "\n" + item.getDate().toString("dd MMM yyyy, hh:mm a");
+        		output += item.getDate().toString("dd MMM yyyy");
         	} 
         	
         	if(item.getEndDate() != null) {
-        		output += "\n" + item.getEndDate().toString("dd MMM yyyy, hh:mm a");
+        		//output += item.getEndDate().toString("dd MMM yyyy, hh:mm a");
+        		output += item.getEndDate().toString("dd MMM yyyy");
         	} 
+        	
+        	output +=  "\n" + item.getDescription();
         	
         	return output;
         }
