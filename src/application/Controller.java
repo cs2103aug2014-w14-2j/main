@@ -50,7 +50,7 @@ public class Controller extends Application {
             switch (commandInfo.getCommandType()) {
                 case "add":
                     taskManager.add(commandInfo);
-                    feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getID() + "");
+                    // feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getID() + "");
                     break;
                 case "delete":
                     taskManager.delete(commandInfo);
@@ -58,7 +58,7 @@ public class Controller extends Application {
                     break;
                 case "edit":
                     taskManager.edit(commandInfo);
-                    feedback = new MessageNotifyEdit(taskManager.getLastModifiedTask().getID() + "");
+                    feedback = new MessageNotifyEdit(commandInfo.getTaskIDs().get(0));
                     break;
                 case "undo":
                     taskManager.undo(commandInfo, dataStorage.getPastVersion());
@@ -88,16 +88,20 @@ public class Controller extends Application {
             e.printStackTrace();
         }
         
-        if (feedback != null) {
-            uiComponent.setSuggestionText(messageManager.getMessage(feedback));
-            logger.log(messageManager.getMessage(feedback));
-        }
-        
         taskManager.clearIDMapping();
         uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
         uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
         
         dataStorage.saveTasks(taskManager.getList());
+        
+        if ("add".equals(commandInfo.getCommandType())) {
+            feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getDisplayID());
+        }
+        
+        if (feedback != null) {
+            uiComponent.setSuggestionText(messageManager.getMessage(feedback));
+            logger.log(messageManager.getMessage(feedback));
+        }
     }
     
 
