@@ -44,14 +44,13 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
         	
         	if (event.getCode().toString().equals("UP")) {
         		cmdInputBox.setText(cmdHistory.get(cmdIndex));
+        		cmdInputBox.resetPositionCaret();
         		cmdIndex++;
         	} else if (event.getCode().toString().equals("DOWN")) {
         		cmdInputBox.setText(cmdHistory.get(cmdIndex));
+        		cmdInputBox.resetPositionCaret();
         		cmdIndex--;
         	}
-        	cmdInputBox.resetPositionCaret();
         }
-        
     }
-
 }

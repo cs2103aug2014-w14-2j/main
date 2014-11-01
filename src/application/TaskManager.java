@@ -168,7 +168,6 @@ class TaskManager {
         TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
         filter.add(new IgnoreTasksDeleted());
         return filter.apply();
-        // return TaskListFilter.filterOutNullTasks(this.list); // Need to filter out nulls, because they are soft-deleted.
     }
     
     /**
@@ -189,7 +188,9 @@ class TaskManager {
                 
         // Sort by modified at date first, then priority.
         Collections.sort(filteredTasks, new ModifiedAtComparator());
+        Collections.sort(filteredTasks, new EndDateComparator());
         Collections.sort(filteredTasks, new PriorityComparator());
+        Collections.sort(filteredTasks, new CompletedAtComparator());
         
         int i = 1;
         ListIterator<Task> li = filteredTasks.listIterator();
@@ -217,7 +218,8 @@ class TaskManager {
         
         filter = new TaskListFilter(filteredTasks, false); // Does a OR/|| filtering.
         filter.add(new KeepTasksCompletedToday()); // or,
-        filter.add(new KeepTasksToShowToday());
+        filter.add(new KeepTasksToShowToday()); // or,
+        filter.add(new KeepTasksToShowTheNextDay());
         filteredTasks = filter.apply();
 
         Collections.sort(filteredTasks, new DayPriorityComparator());
