@@ -74,8 +74,8 @@ public class Controller extends Application {
                 case "display":
                 case "show":
                     taskManager.clearIDMapping();
-                    uiComponent.updateTaskList(taskManager.getSearchedTasks(commandInfo));
-                    uiComponent.updateReminderList(taskManager.getSearchedEvents(commandInfo));
+                    uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
+                    uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search reuslts");
                     break;
                 case "quit":
                 case "exit":
@@ -94,8 +94,10 @@ public class Controller extends Application {
         }
         
         taskManager.clearIDMapping();
-        uiComponent.updateTaskList(taskManager.getTasks());
-        uiComponent.updateReminderList(taskManager.getReminders());
+        // uiComponent.updateTaskList(taskManager.getTasks());
+        // uiComponent.updateReminderList(taskManager.getReminders());
+        uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
+        uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
         
         dataStorage.saveTasks(taskManager.getList());
     }
