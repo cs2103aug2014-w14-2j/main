@@ -29,7 +29,7 @@ public class Parser {
      * return the object of CommandInfo class
      * @return the object of CommandInfo class 
      */
-    public CommandInfo getCommandInfo(String userInput) {
+    public CommandInfo getCommandInfo(String userInput) throws MismatchedCommandException {
 
         String commandType = parseCommandType(userInput);
         ArrayList<String> taskIDs = new ArrayList<String>();
@@ -46,9 +46,13 @@ public class Parser {
             startDateTime = null;
         }
         boolean completed = getComplete(content);
-
+        try {
         CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority,completed);
         return cmdInfo;
+        }
+        catch (MismatchedCommandException e) {
+            throw e;
+        }
     }
 
     //@author A0090971Y
@@ -71,6 +75,8 @@ public class Parser {
         else {
             cmdType = input.trim().split("\\s+")[0];
             desc = input.replaceFirst(cmdType, "").trim();
+            desc = desc.replace("[", "");
+            desc = desc.replace("]", "");
         }
         return desc;
     }
@@ -144,6 +150,8 @@ public class Parser {
      * @return the priority of the task by counting the number of exclamation marks in user input
      */
     private int parsePriority(String input,String desc){
+        desc = desc.replace("[", "");
+        desc = desc.replace("]", "");
         input = input.replaceAll(desc, "");
         int priority = StringUtils.countMatches(input,"!");
         return priority;
