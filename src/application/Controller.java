@@ -68,6 +68,8 @@ public class Controller extends Application {
                     taskManager.complete(commandInfo);
                     feedback = new MessageNotifyComplete(commandInfo.getTaskIDs());
                     break;
+                case "home":
+                    break;
                 case "search":
                 case "display":
                 case "show":
