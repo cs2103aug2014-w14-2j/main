@@ -14,12 +14,9 @@ import org.apache.commons.lang.StringUtils;
 public class Parser {
 
     private DateTimeParser parser;
-    private static String[] timePrepositions = new String[] {"by","till","until"};
+    private static String[] timePrepositions = new String[] {"by","due","till","until"};
     private static String[] escapeSequences = new String[]{"\\"};
     private static String[] addSlashes = new String[] {"\\\\"};
-
-
-
 
     //@author A0090971Y
     /**
@@ -51,7 +48,7 @@ public class Parser {
             startDateTime = null;
         }
 
-
+    
         CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority);
 
         return cmdInfo;
