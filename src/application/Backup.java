@@ -51,8 +51,8 @@ public class Backup {
      */
     public ArrayList<Task> backupTasks(ArrayList<Task> originalTasks) {
         ArrayList<Task> backup = new ArrayList<Task>();
-        for (Task task : originalTasks) {
-            backup.add(new Task(task));
+        for (int i = 0; i < originalTasks.size(); i++) {
+            backup.add(new Task(originalTasks.get(i), i));
         }
         return backup;
     }
