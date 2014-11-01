@@ -241,62 +241,6 @@ class TaskManager {
     }
     
     /**
-     * Returns the completed tasks without start dates.
-     * 
-     * @return the completed tasks without start dates.
-     */
-    public ArrayList<Task> getCompletedTasks() {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
-        filter.add(new IgnoreTasksDeleted()); // and,
-        filter.add(new KeepTasksWithoutStartDate()); // and,
-        filter.add(new KeepTasksCompleted());
-        ArrayList<Task> filteredTasks = filter.apply();
-        
-        // Sort by modified at date first, then priority.
-        Collections.sort(filteredTasks, new ModifiedAtComparator());
-        Collections.sort(filteredTasks, new PriorityComparator());
-        
-        int i = 1;
-        ListIterator<Task> li = filteredTasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            String displayID = NORMAL_TASK_PREFIX + "" + i;
-            this.idMapping.put(displayID, t.getID());
-            t.setDisplayID(displayID);
-            i++;
-        }
-        
-        return filteredTasks;
-    }
-    
-    /**
-     * Returns the completed tasks with start dates.
-     * 
-     * @return the completed tasks with start dates.
-     */
-    public ArrayList<Task> getCompletedReminders() {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
-        filter.add(new IgnoreTasksDeleted()); // and, 
-        filter.add(new KeepTasksWithStartDate()); // and,
-        filter.add(new KeepTasksCompleted());
-        ArrayList<Task> filteredTasks = filter.apply();
-
-        Collections.sort(filteredTasks, new DayPriorityComparator());
-        
-        int i = 1;
-        ListIterator<Task> li = filteredTasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            String displayID = DATED_TASK_PREFIX + "" + i;
-            this.idMapping.put(displayID, t.getID());
-            t.setDisplayID(displayID);
-            i++;
-        }
-        
-        return filteredTasks;
-    }
-    
-    /**
      * Returns the tasks given in the search parameters.
      * 
      * @return the tasks given in the search parameters.
@@ -309,7 +253,7 @@ class TaskManager {
         
         ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
         
-        filter = new TaskListFilter(this.list, true); // AND filter.
+        filter = new TaskListFilter(filteredTasks, true); // AND filter.
         
         // Filtering of dates:
         DateTime start = commandInfo.getStartDateTime();
@@ -382,7 +326,7 @@ class TaskManager {
         
         ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
         
-        filter = new TaskListFilter(this.list, true); // AND filter.
+        filter = new TaskListFilter(filteredTasks, true); // AND filter.
         
         // Filtering of dates:
         DateTime start = commandInfo.getStartDateTime();

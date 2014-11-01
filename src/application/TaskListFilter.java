@@ -50,7 +50,7 @@ class KeepTasksBetween implements TaskFilter {
         // There is end date,
         if (t.getEndDate() != null) {
             // End date is between requested start and end,
-            if (t.getEndDate().isAfter(this.start) && t.getDate().isBefore(this.end)) {
+            if (t.getEndDate().isAfter(this.start) && t.getEndDate().isBefore(this.end)) {
                 return true;
             }
         }
