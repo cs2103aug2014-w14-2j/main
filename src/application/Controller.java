@@ -94,8 +94,6 @@ public class Controller extends Application {
         }
         
         taskManager.clearIDMapping();
-        // uiComponent.updateTaskList(taskManager.getTasks());
-        // uiComponent.updateReminderList(taskManager.getReminders());
         uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
         uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
         
@@ -108,8 +106,8 @@ public class Controller extends Application {
      * For the UI to retrieve the list of tasks after it is initialized.
      */
     public static void getTasks() {
-        uiComponent.updateTaskList(taskManager.getTasks());
-        uiComponent.updateReminderList(taskManager.getReminders());
+        uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
+        uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
     }
     
     //@author A0110546R
