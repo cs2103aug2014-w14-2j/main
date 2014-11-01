@@ -33,7 +33,7 @@ public class TestParser {
   //  System.out.println(cmd.getPriority());
     System.out.println("start time is " + cmd.getStartDateTime());
     System.out.println("end time is " + cmd.getEndDateTime());
-  //  System.out.println("keyword is "+cmd.getTaskDesc());
+    System.out.println("keyword is "+cmd.getTaskDesc());
 
  
 }

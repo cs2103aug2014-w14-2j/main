@@ -59,7 +59,8 @@ public class Parser {
      */
     private String parseTaskDesc(String input,String cmdType) {
         String desc = null;
-        if ((cmdType.equalsIgnoreCase("add")) || (cmdType.equalsIgnoreCase("edit"))){
+        if ((cmdType.equalsIgnoreCase("add")) || (cmdType.equalsIgnoreCase("edit"))
+                || (cmdType.equalsIgnoreCase("search"))){
             int startIndex = input.indexOf("[");
             int endIndex = input.indexOf("]");
             if ((startIndex>0) && (endIndex>0)) {
