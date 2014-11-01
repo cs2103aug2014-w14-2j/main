@@ -32,7 +32,13 @@ public class Controller extends Application {
     public static void runCommandInput(String input) {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
 
-        CommandInfo commandInfo = (new Parser()).getCommandInfo(input);
+        CommandInfo commandInfo = null;
+        try {
+            commandInfo = (new Parser()).getCommandInfo(input);
+        } catch (MismatchedCommandException e) { // Need to change exception type.
+            uiComponent.setSuggestionText("Command is invalid");
+            return;
+        }
         Message feedback = null;
         
         // Check for invalid IDs.
