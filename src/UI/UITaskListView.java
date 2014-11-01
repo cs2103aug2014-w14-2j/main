@@ -79,9 +79,30 @@ public class UITaskListView {
     
     private ArrayList<UITaskListItem> generateFloatingList(ArrayList<Task> items) {
     	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+    	UITaskListItem currentHeader = null;
     	
-    	for(Task listItem : items) {
-    		listItems.add(new UITaskListItem(listItem, listItem.getDate()));
+    	for(int i =0; i<items.size(); i++) {
+    		Task listItem = items.get(i);
+    		
+    		if(currentHeader == null) {
+    			if(listItem.getEndDate() == null) {
+    				currentHeader = new UITaskListItem(null, null, "Right");
+    				listItems.add(currentHeader);
+    			} else if(listItem.getEndDate() != null) {
+    				currentHeader = new UITaskListItem(null, listItem.getEndDate(), "Right");
+    				listItems.add(currentHeader);
+    			} 
+    		} else {
+    			if(listItem.getEndDate() != null && !currentHeader.getSeparatorTitle().equalsIgnoreCase("DEADLINES")) {
+    				currentHeader = new UITaskListItem(null, listItem.getEndDate(), "Right");
+    				listItems.add(currentHeader);
+    			} else if(listItem.getEndDate() == null && !currentHeader.getSeparatorTitle().equalsIgnoreCase("TASKS")){
+    				currentHeader = new UITaskListItem(null, null, "Right");
+    				listItems.add(currentHeader);
+    			}
+    		}
+    	
+    		listItems.add(new UITaskListItem(listItem, listItem.getDate(), "Right"));
     	}
     
     	return listItems;
@@ -97,22 +118,22 @@ public class UITaskListView {
     		Task t = items.get(i);
     		if(currentHeader == null) {
         		currentDate = t.getDate();
-        		currentHeader = new UITaskListItem(null, t.getDate());
+        		currentHeader = new UITaskListItem(null, t.getDate(), "Left");
         		listItems.add(currentHeader);
     		} else {
     			if(currentDate.toString("y").equals(t.getDate().toString("y"))) {
     				if(!currentDate.toString("D").equals(t.getDate().toString("D"))) {
     					currentDate = t.getDate();
-    					currentHeader = new UITaskListItem(null, t.getDate());
+    					currentHeader = new UITaskListItem(null, t.getDate(), "Left");
     					listItems.add(currentHeader);
     				}
     			} else {
     				currentDate = t.getDate();
-    				currentHeader = new UITaskListItem(null, t.getDate());
+    				currentHeader = new UITaskListItem(null, t.getDate(), "Left");
     				listItems.add(currentHeader);
     			}
     		}	
-    		listItems.add(new UITaskListItem(t, t.getDate()));
+    		listItems.add(new UITaskListItem(t, t.getDate(), "Left"));
     		currentHeader.incrementNumOfTask();
     	}
 
@@ -182,15 +203,35 @@ public class UITaskListView {
             return textLabel;
         }
         
-        private StackPane getPriorityIndicator(int priority, String displayID, int height, boolean isCompleted) {
+        private StackPane getPriorityIndicator(int priority, String displayID, int height, Task item) {
         	String indicator_color = COLOR_DEFAULT_PRIORITY;
         	
-        	if(isCompleted) {
+        	if(item.isCompleted()) {
         		indicator_color = COLOR_COMPLETED;
+        	} else if(item.getEndDate() != null && !item.isCompleted()) {	
+				if(item.getEndDate().isBeforeNow()) {
+					indicator_color = COLOR_MEDIUM_PRIORITY;
+				} else {
+	        		if(priority == 0) {
+	        			 indicator_color = COLOR_DEFAULT_PRIORITY;
+	        		} else if (priority != 0) {
+	        			indicator_color = COLOR_HIGH_PRIORITY;
+	        		}
+				}
+        	} else if(item.getDate() != null && !item.isCompleted()){
+				if(item.getDate().isBeforeNow()) {
+					indicator_color = COLOR_MEDIUM_PRIORITY;
+				} else {
+	        		if(priority == 0) {
+	        			 indicator_color = COLOR_DEFAULT_PRIORITY;
+	        		} else if (priority != 0) {
+	        			indicator_color = COLOR_HIGH_PRIORITY;
+	        		}
+				}
         	} else {
-        		if(priority > 1 && priority <= 4) {
-        			indicator_color = COLOR_MEDIUM_PRIORITY;
-        		} else if (priority >= 5) {
+        		if(priority == 0) {
+        			 indicator_color = COLOR_DEFAULT_PRIORITY;
+        		} else if (priority != 0) {
         			indicator_color = COLOR_HIGH_PRIORITY;
         		}
         	}
@@ -260,8 +301,10 @@ public class UITaskListView {
         		output += item.getDate().toString("h:mm a");
         	} 
         	
-        	if(item.getEndDate() != null) {
-        		//output += item.getEndDate().toString("dd MMM yyyy, hh:mm a");
+        	
+        	if(item.getDate() == null && item.getEndDate() != null) {
+        		output += "Due on: " + item.getEndDate().toString("dd MMM yyy, h:mm a");
+        	} else if(item.getEndDate() != null) {
         		output += " - " + item.getEndDate().toString("h:mm a");
         	} 
         	
@@ -289,39 +332,9 @@ public class UITaskListView {
         			
         			VBox vbox = new VBox(10);
         			HBox hbox = new HBox(-10);
-        			
-        			/*Outstanding
-        			if(item.getTask().getEndDate() != null && !item.getTask().isCompleted()) {	
-        				if(item.getTask().getEndDate().isBeforeNow()) {
-        					Text labelText = createText("OUTSTANDING", 90, 10, "", FontWeight.BOLD, Color.WHITE);
-        					labelText.setTextAlignment(TextAlignment.LEFT);
-        					Rectangle labelRect = createRectangle(90, 15, 5, 5, Color.web("rgba(231, 76, 60, 1)"));
-        		
-        					StackPane labelStack = new StackPane();
-        					StackPane.setMargin(labelText, new Insets(0, 8, 0, 8));
-        					StackPane.setAlignment(labelRect, Pos.TOP_LEFT);
-        					StackPane.setAlignment(labelText, Pos.TOP_LEFT);
-        					labelStack.getChildren().addAll(labelRect, labelText);
-        					hbox.getChildren().addAll(labelStack);
-        				}
-        			} else if(item.getTask().getDate() != null && !item.getTask().isCompleted()){
-        				if(item.getTask().getDate().isBeforeNow()) {
-        					Text labelText = createText("OUTSTANDING", 90, 10, "", FontWeight.BOLD, Color.WHITE);
-        					labelText.setTextAlignment(TextAlignment.LEFT);
-        					Rectangle labelRect = createRectangle(90, 15, 5, 5, Color.web("rgba(231, 76, 60, 1)"));
-        		
-        					StackPane labelStack = new StackPane();
-        					StackPane.setMargin(labelText, new Insets(0, 8, 0, 8));
-        					StackPane.setAlignment(labelRect, Pos.TOP_LEFT);
-        					StackPane.setAlignment(labelText, Pos.TOP_LEFT);
-        					labelStack.getChildren().addAll(labelRect, labelText);
-        					hbox.getChildren().addAll(labelStack);
-        				}
-        			}*/
-        			
         			vbox.getChildren().addAll(text, hbox);
         			
-        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height, taskItem.isCompleted()), vbox);
+        			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height, taskItem), vbox);
         			
         			StackPane stack = new StackPane();
         			StackPane.setMargin(taskInnerContentHolder, new Insets(5, 0, 0, 0));
@@ -330,11 +343,23 @@ public class UITaskListView {
         			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
         			setGraphic(stack);
         			
-        		} else if(item != null && item.getType().equals("date")) {	
+        		} else if(item != null && item.getType().equals("header")) {	
         			
         			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
         			this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;" + cellHeight);
         			String output = getDateString(item.getDate());
+        			Text text = createText(output, 0, 15, "Ariel", FontWeight.BOLD, Color.WHITE);
+        			
+        			StackPane stack = new StackPane();
+        			stack.getChildren().addAll(text);
+        			StackPane.setAlignment(text, Pos.TOP_LEFT);
+        			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
+        			setGraphic(stack);
+        		} else if(item.getTask() == null && item.getType().equals("float_separator")) {
+        			
+        			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
+        			this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;" + cellHeight);
+        			String output = item.getSeparatorTitle();
         			Text text = createText(output, 0, 15, "Ariel", FontWeight.BOLD, Color.WHITE);
         			
         			StackPane stack = new StackPane();
