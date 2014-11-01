@@ -29,8 +29,8 @@ import javafx.collections.ObservableList;
  */
 public class UIComponent {
     
-    private final String SUGGESTION_TEXT = "Hello User! I am WaveWave.";
-    private final String GUIDE_TEXT = "WaveWave is here to help you :D.";
+    private final String SUGGESTION_TEXT = "\u2022 Hello user! I am WaveWave.";
+    private final String GUIDE_TEXT = "\u2022 WaveWave is here to help you :D.";
     
     private WaveLogger logger;
 	private final int LISTVIEW_DISPLAY_HEIGHT = 550;

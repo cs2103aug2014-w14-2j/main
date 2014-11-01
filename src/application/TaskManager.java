@@ -2,8 +2,11 @@ package application;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.ListIterator;
+
+import org.joda.time.DateTime;
 
 //@author A0110546R
 /**
@@ -238,21 +241,64 @@ class TaskManager {
     }
     
     /**
-     * Returns the completed tasks without start dates.
+     * Returns the tasks given in the search parameters.
      * 
-     * @return the completed tasks without start dates.
+     * @return the tasks given in the search parameters.
      */
-    public ArrayList<Task> getCompletedTasks() {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
-        filter.add(new IgnoreTasksDeleted()); // and,
-        filter.add(new KeepTasksWithoutStartDate()); // and,
-        filter.add(new KeepTasksCompleted());
+    public ArrayList<Task> getSearchedTasks(CommandInfo commandInfo) {
+        TaskListFilter filter = new TaskListFilter(this.list, true); // AND filter.
+        filter.add(new IgnoreTasksDeleted()); // and, 
+        filter.add(new KeepTasksWithoutStartDate());
         ArrayList<Task> filteredTasks = filter.apply();
         
-        // Sort by modified at date first, then priority.
-        Collections.sort(filteredTasks, new ModifiedAtComparator());
-        Collections.sort(filteredTasks, new PriorityComparator());
+        ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
         
+        filter = new TaskListFilter(filteredTasks, true); // AND filter.
+        
+        // Filtering of dates:
+        DateTime start = commandInfo.getStartDateTime();
+        DateTime end = commandInfo.getEndDateTime();
+        if (start != null && end != null) {
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new EndDateComparator());
+        }
+        else if (start != null) { // end is null, not possible here but whatever,
+            end = start.withTimeAtStartOfDay().plusDays(1);
+            start = start.withTimeAtStartOfDay().minusMillis(1); // Millisecond before today.
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new EndDateComparator());
+        }
+        else if (end != null) { // start is null,
+            start = new DateTime();
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new EndDateComparator());
+        }
+        
+        // Whether to show completed only:
+        if (commandInfo.isCompleted()) { // For completed tasks only.
+            filter.add(new KeepTasksCompleted());
+            comparators.add(new CompletedAtComparator());
+        }
+        
+        // Whether to show priority, inclusive:
+        if (commandInfo.getPriority() > 0) {
+            filter.add(new KeepTasksWithPriority());
+        }
+        
+        // Searching by keywords:
+        if (commandInfo.getTaskDesc() != null) {
+            filter.add(new KeepTasksWithKeyword(commandInfo.getTaskDesc()));
+        }
+        
+        filteredTasks = filter.apply();
+        
+        // Sorting.
+        ListIterator<Comparator<Task>> liComparator = comparators.listIterator();
+        while (liComparator.hasNext()) {
+            Collections.sort(filteredTasks, liComparator.next());
+        }
+        
+        // For displaying.
         int i = 1;
         ListIterator<Task> li = filteredTasks.listIterator();
         while (li.hasNext()) {
@@ -264,22 +310,68 @@ class TaskManager {
         }
         
         return filteredTasks;
+        
     }
     
     /**
-     * Returns the completed tasks with start dates.
+     * Returns the events given in the search parameters.
      * 
-     * @return the completed tasks with start dates.
+     * @return the events given in the search parameters.
      */
-    public ArrayList<Task> getCompletedReminders() {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
+    public ArrayList<Task> getSearchedEvents(CommandInfo commandInfo) {
+        TaskListFilter filter = new TaskListFilter(this.list, true); // AND filter.
         filter.add(new IgnoreTasksDeleted()); // and, 
-        filter.add(new KeepTasksWithStartDate()); // and,
-        filter.add(new KeepTasksCompleted());
+        filter.add(new KeepTasksWithStartDate());
         ArrayList<Task> filteredTasks = filter.apply();
-
-        Collections.sort(filteredTasks, new DayPriorityComparator());
         
+        ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
+        
+        filter = new TaskListFilter(filteredTasks, true); // AND filter.
+        
+        // Filtering of dates:
+        DateTime start = commandInfo.getStartDateTime();
+        DateTime end = commandInfo.getEndDateTime();
+        if (start != null && end != null) {
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new EndDateComparator());
+        }
+        else if (start != null) { // end is null,
+            end = start.withTimeAtStartOfDay().plusDays(1);
+            start = start.withTimeAtStartOfDay().minusMillis(1); // Millisecond before today.
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new EndDateComparator());
+        }
+        else if (end != null) { // start is null, not possible here but whatever,
+            start = new DateTime();
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new EndDateComparator());
+        }
+        
+        // Whether to show completed only:
+        if (commandInfo.isCompleted()) { // For completed tasks only.
+            filter.add(new KeepTasksCompleted());
+            comparators.add(new CompletedAtComparator());
+        }
+        
+        // Whether to show priority, inclusive:
+        if (commandInfo.getPriority() > 0) {
+            filter.add(new KeepTasksWithPriority());
+        }
+        
+        // Searching by keywords:
+        if (commandInfo.getTaskDesc() != null) {
+            filter.add(new KeepTasksWithKeyword(commandInfo.getTaskDesc()));
+        }
+        
+        filteredTasks = filter.apply();
+        
+        // Sorting.
+        ListIterator<Comparator<Task>> liComparator = comparators.listIterator();
+        while (liComparator.hasNext()) {
+            Collections.sort(filteredTasks, liComparator.next());
+        }
+        
+        // For displaying.
         int i = 1;
         ListIterator<Task> li = filteredTasks.listIterator();
         while (li.hasNext()) {
@@ -291,7 +383,9 @@ class TaskManager {
         }
         
         return filteredTasks;
+        
     }
+    
 
     /**
      * Initializes the list of tasks from storage.

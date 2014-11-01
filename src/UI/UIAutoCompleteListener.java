@@ -38,7 +38,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     }
     
     private boolean isAddCommand(String next) {
-    	if(next.trim().equals(ADD_COMMAND)) {
+    	if(next.trim().equalsIgnoreCase(ADD_COMMAND)) {
     		return true;
     	}
     	return false;
@@ -47,7 +47,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     private boolean isEditCommand(String next) {
     	String[] cmdRetrieval = next.split(" ");
     	
-    	if(cmdRetrieval[0].equals(EDIT_COMMAND) && cmdRetrieval.length == 3) {
+    	if(cmdRetrieval[0].equalsIgnoreCase(EDIT_COMMAND) && cmdRetrieval.length == 3) {
     		return true;
     	}
     	return false;
@@ -67,7 +67,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         				String currentText = inputBox.getText();
         				String extract = " [" + currentText.substring(currentText.indexOf("[") + 1, currentText.indexOf("]")).trim() + "]";
         				String front = currentText.substring(0, currentText.indexOf("[")-1);
-        				String replaceString = front + extract;
+        				String replaceString = front + extract + " ";
         				
         				inputBox.setText(replaceString);
         				inputBox.positionCaret(replaceString.length()+1);

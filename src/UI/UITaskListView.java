@@ -37,6 +37,7 @@ public class UITaskListView {
 
     private final int DISPLAY_WIDTH = 300;
     private final int DISPLAY_HEIGHT = 500;
+    
     private final String FLOATING = "Task";
     private final String EVENT = "Event";
     
@@ -256,15 +257,15 @@ public class UITaskListView {
         	String output = "";
         	
         	if(item.getDate() != null) {
-        		output += item.getDate().toString("dd MMM yyyy");
+        		output += item.getDate().toString("h:mm a");
         	} 
         	
         	if(item.getEndDate() != null) {
         		//output += item.getEndDate().toString("dd MMM yyyy, hh:mm a");
-        		output += item.getEndDate().toString("dd MMM yyyy");
+        		output += " - " + item.getEndDate().toString("h:mm a");
         	} 
         	
-        	output +=  "\n" + item.getDescription();
+        	output += "\n" + item.getDescription() + "\n";
         	
         	return output;
         }
@@ -289,7 +290,7 @@ public class UITaskListView {
         			VBox vbox = new VBox(10);
         			HBox hbox = new HBox(-10);
         			
-        			//Outstanding
+        			/*Outstanding
         			if(item.getTask().getEndDate() != null && !item.getTask().isCompleted()) {	
         				if(item.getTask().getEndDate().isBeforeNow()) {
         					Text labelText = createText("OUTSTANDING", 90, 10, "", FontWeight.BOLD, Color.WHITE);
@@ -316,20 +317,6 @@ public class UITaskListView {
         					labelStack.getChildren().addAll(labelRect, labelText);
         					hbox.getChildren().addAll(labelStack);
         				}
-        			}
-      
-        			/*Complete
-        			if(item.getTask().isCompleted()) {
-        				Text completeText = createText("COMPLETED", 60, 10, "", FontWeight.BOLD, Color.WHITE);
-        				completeText.setTextAlignment(TextAlignment.LEFT);
-        				Rectangle completeRect = createRectangle(80, 15, 5, 5, Color.web("rgba(243, 156, 18, 1)"));
-        		
-        				StackPane completeStack = new StackPane();
-        				StackPane.setMargin(completeText, new Insets(0, 10, 0, 10));
-        				StackPane.setAlignment(completeRect, Pos.TOP_CENTER);
-        				StackPane.setAlignment(completeText, Pos.TOP_CENTER);
-        				completeStack.getChildren().addAll(completeRect, completeText);
-        				hbox.getChildren().addAll(completeStack);
         			}*/
         			
         			vbox.getChildren().addAll(text, hbox);

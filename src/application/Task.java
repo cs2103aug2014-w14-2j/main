@@ -63,6 +63,7 @@ public class Task {
         setCreatedAt(original.getCreatedAt());
         setModifiedAt(original.getModifiedAt());
         setCompletedAt(original.getCompletedAt());
+        setDeleted(original.isDeleted());
         
     }
 
