@@ -68,14 +68,12 @@ public class Controller extends Application {
                     taskManager.complete(commandInfo);
                     feedback = new MessageNotifyComplete(commandInfo.getTaskIDs());
                     break;
-                case "search complete": // Temporary.
-                    taskManager.clearIDMapping();
-                    uiComponent.updateTaskList(taskManager.getCompletedTasks());
-                    uiComponent.updateReminderList(taskManager.getCompletedReminders());
-                    return;
                 case "search":
                 case "display":
                 case "show":
+                    taskManager.clearIDMapping();
+                    uiComponent.updateTaskList(taskManager.getSearchedTasks(commandInfo));
+                    uiComponent.updateReminderList(taskManager.getSearchedEvents(commandInfo));
                     break;
                 case "quit":
                 case "exit":
