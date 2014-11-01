@@ -75,7 +75,7 @@ public class UIAutoComplete {
                 cmdInputBox.setSuggestionText(String.format(MSG_COMMAND_SUGGESTION, suggestedCmd));
                 this.acListener.setNextPossibleCmd(suggestedCmd);
             }
-        } else if (isTheNWord(command, SECOND_WORD_IN_CMD) && cmdUsed.equals(EDIT_COMMAND)) {
+        } else if (isTheNWord(command, SECOND_WORD_IN_CMD) && cmdUsed.equalsIgnoreCase(EDIT_COMMAND)) {
         	 String suggestedCmd = cmdInputBox.getText() + "[]";
         	 this.acListener.setNextPossibleCmd(suggestedCmd);
         } else {
