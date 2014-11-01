@@ -219,14 +219,15 @@ class TaskManager {
         filter.add(new KeepTasksWithStartDate());
         ArrayList<Task> filteredTasks = filter.apply();
         
+        Collections.sort(filteredTasks, new CompletedAtComparator());
+        Collections.sort(filteredTasks, new DayPriorityComparator());
+        
         filter = new TaskListFilter(filteredTasks, false); // Does a OR/|| filtering.
         filter.add(new KeepTasksCompletedToday()); // or,
         filter.add(new KeepTasksToShowToday()); // or,
         filter.add(new KeepTasksToShowTheNextDay());
         filteredTasks = filter.apply();
 
-        Collections.sort(filteredTasks, new CompletedAtComparator());
-        Collections.sort(filteredTasks, new DayPriorityComparator());
         
         int i = 1;
         ListIterator<Task> li = filteredTasks.listIterator();
