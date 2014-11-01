@@ -106,7 +106,7 @@ public class DataStorage {
      * @param array ArrayList of tasks
      */
     public void saveTasks(ArrayList<Task> array) {
-
+        
         undoQueue.add(backupTasks(array));
         logger.log(Level.INFO, "Current version stored as backup");
         manageundoQueueSize();
