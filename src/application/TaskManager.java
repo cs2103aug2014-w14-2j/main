@@ -225,6 +225,7 @@ class TaskManager {
         filter.add(new KeepTasksToShowTheNextDay());
         filteredTasks = filter.apply();
 
+        Collections.sort(filteredTasks, new CompletedAtComparator());
         Collections.sort(filteredTasks, new DayPriorityComparator());
         
         int i = 1;
