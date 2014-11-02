@@ -73,7 +73,7 @@ public class UICmdInputBox {
     }
     
     public void setGuideMsgText(String output) {
-    	guideMsgText.setText(output);
+    	guideMsgText.setText("\u2022 " + output);
     }
     
     public void focusCommandInputBox() {

@@ -50,7 +50,7 @@ public class UIComponent {
 	private UICmdInputBox cmdInputBox;
 	private UITaskListView floatingTaskListView, eventReminderTaskListView;
 	
-	private final String LISTVIEW_HEADING_REMINDER = "Reminder & Events";
+	private final String LISTVIEW_HEADING_REMINDER = "Events";
 	private final String LISTVIEW_HEADING_TASK = "Tasks";
 	
 	private Text reminderTaskTitle,floatingTaskTitle;

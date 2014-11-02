@@ -96,7 +96,7 @@ public class UITaskListView {
     			if(listItem.getEndDate() != null && !currentHeader.getSeparatorTitle().equalsIgnoreCase("DEADLINES")) {
     				currentHeader = new UITaskListItem(null, listItem.getEndDate(), "Right");
     				listItems.add(currentHeader);
-    			} else if(listItem.getEndDate() == null && !currentHeader.getSeparatorTitle().equalsIgnoreCase("TASKS")){
+    			} else if(listItem.getEndDate() == null && !currentHeader.getSeparatorTitle().equalsIgnoreCase("REMINDERS")){
     				currentHeader = new UITaskListItem(null, null, "Right");
     				listItems.add(currentHeader);
     			}
@@ -210,6 +210,7 @@ public class UITaskListView {
         		indicator_color = COLOR_COMPLETED;
         	} else if(item.getEndDate() != null && !item.isCompleted()) {	
 				if(item.getEndDate().isBeforeNow()) {
+					//outstanding
 					indicator_color = COLOR_MEDIUM_PRIORITY;
 				} else {
 	        		if(priority == 0) {
@@ -220,6 +221,7 @@ public class UITaskListView {
 				}
         	} else if(item.getDate() != null && !item.isCompleted()){
 				if(item.getDate().isBeforeNow()) {
+					//outstanding
 					indicator_color = COLOR_MEDIUM_PRIORITY;
 				} else {
 	        		if(priority == 0) {
@@ -280,38 +282,40 @@ public class UITaskListView {
         
         private int getContentHeight(int length) {
         	if (length < 140) {
-        		return 80;
+        		return 100;
         	} else if (length > 140 && length < 200) {
-        		return 130;
+        		return 150;
         	} else if (length > 200 && length < 260){
-        		return 180;
+        		return 200;
         	} else if (length > 260 && length < 320) {
-        		return 230;
+        		return 250;
         	} else if (length > 320 && length < 380){
-        		return 280;
+        		return 300;
+        	} else if (length > 380 && length < 440){
+        		return 350;
         	} else {
-        		return 320;
+        		return 400;
         	}
         }
         
-        private String generateTaskDescription(Task item) {
+        private String generateTaskDate(Task item) {
         	String output = "";
         	
-        	if(item.getDate() != null) {
+        	if(item.getDate() != null && item.getEndDate() == null) {
+        		output += item.getDate().toString("h:mm a") + "\n";
+        	} else if(item.getDate() != null && item.getEndDate() != null) {
         		output += item.getDate().toString("h:mm a");
-        	} 
+        	}
         	
         	if(item.getDate() == null && item.getEndDate() != null) {
-        		output += "Due on: " + item.getEndDate().toString("dd MMM yyy, h:mm a");
+        		output += "Due on: " + item.getEndDate().toString("dd MMM yyy, h:mm a") + "\n";
         	} else if(item.getDate() != null && item.getEndDate() != null) {
         		if(item.getDate().equals(item.getEndDate())) {
-        			output += " - " + item.getEndDate().toString("h:mm a");
+        			output += " - " + item.getEndDate().toString("h:mm a") + "\n";
         		} else {
-        			output += " - " + item.getEndDate().toString("dd MMM yy, h:mm a");
+        			output += " - " + item.getEndDate().toString("dd MMM yy, h:mm a") + "\n";
         		}
         	} 
-        	
-        	output += "\n" + item.getDescription() + "\n";
         	
         	return output;
         }
@@ -323,19 +327,27 @@ public class UITaskListView {
         	if(!empty) {
         		if (item != null && item.getType().equals("default")) {
         			Task taskItem = item.getTask();
-        			String output = generateTaskDescription(taskItem);
         			
-        			Text text = createText(output, 190, 12, "", FontWeight.NORMAL, Color.BLACK);
-        			int height = getContentHeight(output.length());
-        			this.setStyle(" -fx-padding: 0 5 0 5;" + String.format(CONTAINER_HEIGHT, height));
+        			VBox descriptionBox = new VBox(-12);
+        			
+        			String dateString = generateTaskDate(taskItem);
+        			if(dateString.trim().length() != 0) {
+            			Text descriptionDate = createText(dateString, 190, 11, "", FontWeight.BOLD, Color.CADETBLUE);
+            			descriptionBox.getChildren().addAll(descriptionDate);
+        			}
+        			
+        			Text descriptionText = createText(taskItem.getDescription(), 190, 14, "Raleway", FontWeight.NORMAL, Color.BLACK);
+        			
+        			int height = getContentHeight(taskItem.getDescription().length());
+        			this.setStyle("-fx-padding: 0 5 0 5;" + String.format(CONTAINER_HEIGHT, height));
         			contentPlaceHolder = createRectangle(270, height-10, 5, 5, Color.WHITE);
+        			descriptionBox.getChildren().addAll(descriptionText);
         			
         			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
-        			HBox.setMargin(text, new Insets(10, 10, 10, 10));
+        			HBox.setMargin(descriptionText, new Insets(10, 10, 10, 10));
         			
         			VBox vbox = new VBox(10);
-        			HBox hbox = new HBox(-10);
-        			vbox.getChildren().addAll(text, hbox);
+        			vbox.getChildren().addAll(descriptionBox);
         			
         			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height, taskItem), vbox);
         			
