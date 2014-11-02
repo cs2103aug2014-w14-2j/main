@@ -258,14 +258,12 @@ class TaskManager {
         ArrayList<Task> filteredTasks = filter.apply();
         
         ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
+        comparators.add(new ModifiedAtComparator());
+        comparators.add(new PriorityComparator());
+        comparators.add(new EndDateComparator());
+        comparators.add(new CompletedAtComparator());
         
         filter = new TaskListFilter(filteredTasks, true); // AND filter.
-
-        // Whether to show priority:
-        if (commandInfo.getPriority() > 0) {
-            filter.add(new KeepTasksWithPriority());
-            comparators.add(new PriorityComparator());
-        }
         
         // Filtering of dates:
         DateTime start = commandInfo.getStartDateTime();
@@ -284,6 +282,11 @@ class TaskManager {
             start = new DateTime();
             filter.add(new KeepTasksBetween(start, end));
             comparators.add(new EndDateComparator());
+        }
+
+        // Whether to show priority:
+        if (commandInfo.getPriority() > 0) {
+            filter.add(new KeepTasksWithPriority());
         }
         
         // Whether to show completed only:
@@ -332,6 +335,8 @@ class TaskManager {
         ArrayList<Task> filteredTasks = filter.apply();
         
         ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
+        comparators.add(new CompletedAtComparator());
+        comparators.add(new DayPriorityComparator());
         
         filter = new TaskListFilter(filteredTasks, true); // AND filter.
 
@@ -344,7 +349,6 @@ class TaskManager {
         // Whether to show priority, inclusive:
         if (commandInfo.getPriority() > 0) {
             filter.add(new KeepTasksWithPriority());
-            comparators.add(new PriorityComparator());
         }
         
         // Filtering of dates:
