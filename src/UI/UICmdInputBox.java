@@ -36,7 +36,7 @@ public class UICmdInputBox {
         addKeyTypedListener();
         addKeyReleasedListener();
         initializeToolTip();
-        guideMsgText.setText(this.getToolTip());
+        setGuideMsgText(this.getToolTip());
         toolTipCounter++;
     }
     
@@ -48,7 +48,7 @@ public class UICmdInputBox {
     }
     
     public String getToolTip() {
-    	return "\u2022 " + toolTip.get(toolTipCounter);
+    	return toolTip.get(toolTipCounter);
     }
     
     private void setInputBoxProperty() {
@@ -73,7 +73,7 @@ public class UICmdInputBox {
     }
     
     public void setGuideMsgText(String output) {
-    	guideMsgText.setText(output);
+    	guideMsgText.setText("\u2022 " + output);
     }
     
     public void focusCommandInputBox() {

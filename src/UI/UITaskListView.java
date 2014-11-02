@@ -13,8 +13,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -23,7 +21,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 
 /**
@@ -46,13 +43,11 @@ public class UITaskListView {
     
 	private final String CMD_DELETE_FLOATING_TASK = "DELETE %s";
 	private final String CMD_DELETE_EVENT_TASK = "DELETE %s";
-	private ObservableList<UITaskListItem> listItems;
 	
 	public String type;
     
     public UITaskListView(UICmdInputBox cmdInputBox, String type) {
         taskList = new ListView<UITaskListItem>();
-        listItems = FXCollections.observableArrayList();
         this.cmdInputBox = cmdInputBox;
         this.type = type;
         setTaskListProperty();
@@ -96,7 +91,7 @@ public class UITaskListView {
     			if(listItem.getEndDate() != null && !currentHeader.getSeparatorTitle().equalsIgnoreCase("DEADLINES")) {
     				currentHeader = new UITaskListItem(null, listItem.getEndDate(), "Right");
     				listItems.add(currentHeader);
-    			} else if(listItem.getEndDate() == null && !currentHeader.getSeparatorTitle().equalsIgnoreCase("TASKS")){
+    			} else if(listItem.getEndDate() == null && !currentHeader.getSeparatorTitle().equalsIgnoreCase("REMINDERS")){
     				currentHeader = new UITaskListItem(null, null, "Right");
     				listItems.add(currentHeader);
     			}
@@ -181,7 +176,6 @@ public class UITaskListView {
 
         private String COLOR_DEFAULT_PRIORITY = "rgba(37, 232, 154, 1)";
         private String COLOR_HIGH_PRIORITY = "rgba(249, 104, 114, 1)";
-        private String COLOR_MEDIUM_PRIORITY = "rgba(247, 207, 89, 1)";
         private String COLOR_COMPLETED = "rgba(188, 187, 185, 1)";
         
         private Rectangle contentPlaceHolder;
@@ -208,26 +202,6 @@ public class UITaskListView {
         	
         	if(item.isCompleted()) {
         		indicator_color = COLOR_COMPLETED;
-        	} else if(item.getEndDate() != null && !item.isCompleted()) {	
-				if(item.getEndDate().isBeforeNow()) {
-					indicator_color = COLOR_MEDIUM_PRIORITY;
-				} else {
-	        		if(priority == 0) {
-	        			 indicator_color = COLOR_DEFAULT_PRIORITY;
-	        		} else if (priority != 0) {
-	        			indicator_color = COLOR_HIGH_PRIORITY;
-	        		}
-				}
-        	} else if(item.getDate() != null && !item.isCompleted()){
-				if(item.getDate().isBeforeNow()) {
-					indicator_color = COLOR_MEDIUM_PRIORITY;
-				} else {
-	        		if(priority == 0) {
-	        			 indicator_color = COLOR_DEFAULT_PRIORITY;
-	        		} else if (priority != 0) {
-	        			indicator_color = COLOR_HIGH_PRIORITY;
-	        		}
-				}
         	} else {
         		if(priority == 0) {
         			 indicator_color = COLOR_DEFAULT_PRIORITY;
@@ -279,27 +253,33 @@ public class UITaskListView {
         }
         
         private int getContentHeight(int length) {
-        	if (length < 140) {
-        		return 80;
+        	if(length < 80) {
+        		return 65;
+        	} else if (length > 80 && length < 140) {
+        		return 105;
         	} else if (length > 140 && length < 200) {
-        		return 130;
+        		return 155;
         	} else if (length > 200 && length < 260){
-        		return 180;
+        		return 205;
         	} else if (length > 260 && length < 320) {
-        		return 230;
+        		return 255;
         	} else if (length > 320 && length < 380){
-        		return 280;
+        		return 305;
+        	} else if (length > 380 && length < 440){
+        		return 355;
         	} else {
-        		return 320;
+        		return 405;
         	}
         }
         
-        private String generateTaskDescription(Task item) {
+        private String generateTaskDate(Task item) {
         	String output = "";
         	
-        	if(item.getDate() != null) {
+        	if(item.getDate() != null && item.getEndDate() == null) {
         		output += item.getDate().toString("h:mm a");
-        	} 
+        	} else if(item.getDate() != null && item.getEndDate() != null) {
+        		output += item.getDate().toString("h:mm a");
+        	}
         	
         	if(item.getDate() == null && item.getEndDate() != null) {
         		output += "Due on: " + item.getEndDate().toString("dd MMM yyy, h:mm a");
@@ -311,9 +291,19 @@ public class UITaskListView {
         		}
         	} 
         	
-        	output += "\n" + item.getDescription() + "\n";
-        	
         	return output;
+        }
+        
+        private StackPane createOutstandingLabel() {
+        	Rectangle outstandingLabel = createRectangle(290, 15, 0, 0, Color.web("rgba(255, 120, 120, 1)"));
+        	Text labelText = createText("OUTSTANDING", 190, 10, "Raleway", FontWeight.BOLD, Color.WHITE);
+        	
+			StackPane stack = new StackPane();
+			StackPane.setAlignment(outstandingLabel, Pos.TOP_LEFT);
+			StackPane.setMargin(labelText, new Insets(0, 50, 0, 70));
+			stack.getChildren().addAll(outstandingLabel, labelText);
+        	
+        	return stack;
         }
 
         @Override
@@ -323,21 +313,45 @@ public class UITaskListView {
         	if(!empty) {
         		if (item != null && item.getType().equals("default")) {
         			Task taskItem = item.getTask();
-        			String output = generateTaskDescription(taskItem);
         			
-        			Text text = createText(output, 190, 12, "", FontWeight.NORMAL, Color.BLACK);
-        			int height = getContentHeight(output.length());
-        			this.setStyle(" -fx-padding: 0 5 0 5;" + String.format(CONTAINER_HEIGHT, height));
+        			VBox descriptionBox = new VBox(2);
+        			
+        		    if(!taskItem.isCompleted()) {
+        				if(taskItem.getEndDate() != null) {	
+        					if(taskItem.getEndDate().isBeforeNow()) {
+        						//outstanding
+        						descriptionBox.getChildren().addAll(createOutstandingLabel());
+        					} 
+        	        	}else if(taskItem.getDate() != null){
+        					if(taskItem.getDate().isBeforeNow()) {
+        						//outstanding
+        						descriptionBox.getChildren().addAll(createOutstandingLabel());
+        					} 
+                		}
+        			}
+        			
+        			String dateString = generateTaskDate(taskItem);
+        			if(dateString.trim().length() != 0) {
+            			Text descriptionDate = createText(dateString, 190, 11, "", FontWeight.BOLD, Color.CADETBLUE);
+            			descriptionBox.getChildren().addAll(descriptionDate);
+            			VBox.setMargin(descriptionDate, new Insets(0, 0, 0, 10));
+        			}
+        			
+        			Text descriptionText = createText(taskItem.getDescription(), 190, 14, "", FontWeight.NORMAL, Color.BLACK);
+        			
+        			int height = getContentHeight(taskItem.getDescription().length());
+        			this.setStyle("-fx-padding: 0 5 0 5;" + String.format(CONTAINER_HEIGHT, height));
         			contentPlaceHolder = createRectangle(270, height-10, 5, 5, Color.WHITE);
+        			descriptionBox.getChildren().addAll(descriptionText);
         			
-        			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
-        			HBox.setMargin(text, new Insets(10, 10, 10, 10));
-        			
+        			HBox taskInnerContentHolder = new HBox();
+        			VBox.setMargin(descriptionText, new Insets(1, 1, 5, 1));
         			VBox vbox = new VBox(10);
-        			HBox hbox = new HBox(-10);
-        			vbox.getChildren().addAll(text, hbox);
-        			
+        			vbox.getChildren().addAll(descriptionBox);
+        			VBox.setMargin(descriptionText, new Insets(0, 0, 0, 10));
+        		
         			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height, taskItem), vbox);
+        			
         			
         			StackPane stack = new StackPane();
         			StackPane.setMargin(taskInnerContentHolder, new Insets(5, 0, 0, 0));
