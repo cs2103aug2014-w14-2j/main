@@ -81,7 +81,7 @@ public class Controller extends Application {
                 case "show":
                     taskManager.clearIDMapping();
                     uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
-                    uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search reuslts");
+                    uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search results");
                     return;
                 case "quit":
                 case "exit":
