@@ -13,15 +13,29 @@ import javafx.scene.input.KeyEvent;
  * @author Tan Young Sing
  */
 public class UIGuideMessage implements EventHandler<KeyEvent> {
-    
+
     private UICmdInputBox cmdInputBox;
-    
+
     public UIGuideMessage(UICmdInputBox cmdInputBox) {
         this.cmdInputBox = cmdInputBox;
     }
-    
+
     @Override
     public void handle(KeyEvent event) {
+  /*
+        if (event.getCode().equals(KeyCode.ENTER)) { 
+         //   System.out.println("Enter task description inside square brackets");
+
+            String input = this.cmdInputBox.getText();
+            // do something
+            if (input.equalsIgnoreCase("add []")) {
+                System.out.println("Enter task description inside square brackets");
+            } 
+        }
+
     	//System.out.println(cmdInputBox.getText());
+
+  */
     }
+    
 }

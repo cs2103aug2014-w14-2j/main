@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -31,7 +30,6 @@ public class DataStorage {
     private final String filename;
     private JSONArray tasks = new JSONArray();
     private DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-    private ArrayList<ArrayList<Task>> undoQueue = new ArrayList<ArrayList<Task>>();
 
     private static final String KEY_DESCRIPTION = "Description";
     private static final String KEY_DATE = "Date";
@@ -41,9 +39,7 @@ public class DataStorage {
     private static final String KEY_COMPLETED_DATE = "Completed date";
     private static final String KEY_CREATED_DATE = "Created date";
     private static final String KEY_LAST_MODIFIED_DATE = "Last modified date";
-
-    private static final Integer undoQueue_MAX_SIZE = 2;
-
+    
     private static WaveLogger logger = new WaveLogger("DataStorage");
 
     //@author A0115864B
@@ -106,11 +102,6 @@ public class DataStorage {
      * @param array ArrayList of tasks
      */
     public void saveTasks(ArrayList<Task> array) {
-
-        undoQueue.add(backupTasks(array));
-        logger.log(Level.INFO, "Current version stored as backup");
-        manageundoQueueSize();
-
         convertArrayListToJSONArray(array);
         try {
             FileWriter fw = new FileWriter(filename, false);
@@ -188,22 +179,10 @@ public class DataStorage {
             }
             list.add(task);
         }
-        undoQueue.add(list);
         return list;
 
     }
 
-    /**
-     * Maintain maximum undo queue size as 2
-     */
-    public void manageundoQueueSize() {
-        if (undoQueue.size() > undoQueue_MAX_SIZE) {
-            logger.log(Level.INFO, "Deleting older saved versions");
-            for (int i = undoQueue.size(); i > undoQueue_MAX_SIZE; i--) {
-                undoQueue.remove(0);
-            }
-        }
-    }
 
     //@author A0115864B
     /**
@@ -249,33 +228,6 @@ public class DataStorage {
             tasks.add(obj);
         }
         return tasks;
-    }
-
-    //@author A0115864B
-    /**
-     * Returns a past saved version when "undo" command is received
-     * 
-     * @return backup ArrayList of tasks that was saved before last operation
-     */
-    public ArrayList<Task> getPastVersion() {
-        ArrayList<Task> pastVersion = undoQueue.remove(0);
-        logger.log(Level.INFO, "Backup version retrieved");
-        return pastVersion;
-    }
-    
-    //@author A0115864B
-    /**
-     * Stores a copy of the ArrayList of Tasks in current state. Deep copies everything.
-     * 
-     * @param tasks
-     * @return
-     */
-    public ArrayList<Task> backupTasks(ArrayList<Task> originalTasks) {
-        ArrayList<Task> backup = new ArrayList<Task>();
-        for (Task task : originalTasks) {
-            backup.add(new Task(task));
-        }
-        return backup;
     }
 
 }

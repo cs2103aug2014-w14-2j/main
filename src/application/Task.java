@@ -53,16 +53,18 @@ public class Task {
      * Constructor for cloning task object, used when storing past versions
      * @param original
      */
-    public Task(Task original) {
-        setDescription(original.getDescription());
-        setDisplayID(original.getDisplayID());
-        setDate(original.getDate());
-        setEndDate(original.getEndDate());
-        setCompleted(original.isCompleted());
-        setPriority(original.getPriority());
-        setCreatedAt(original.getCreatedAt());
-        setModifiedAt(original.getModifiedAt());
-        setCompletedAt(original.getCompletedAt());
+    public Task(Task original, int originalID) {
+        id = originalID;
+        description = original.getDescription();
+        displayID = original.getDisplayID();
+        date = original.getDate();
+        endDate = original.getEndDate();
+        completed = original.isCompleted();
+        priority = original.getPriority();
+        createdAt = original.getCreatedAt();
+        modifiedAt = original.getModifiedAt();
+        completedAt = original.getCompletedAt();
+        deleted = original.isDeleted();
         
     }
 

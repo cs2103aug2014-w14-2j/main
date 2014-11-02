@@ -22,6 +22,7 @@ public class Controller extends Application {
     private static TaskManager taskManager;
     private static UIComponent uiComponent;
     private static MessageManager messageManager;
+    private static Backup backup;
     
     //@author A0110546R
     /**
@@ -32,7 +33,13 @@ public class Controller extends Application {
     public static void runCommandInput(String input) {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
 
-        CommandInfo commandInfo = (new Parser()).getCommandInfo(input);
+        CommandInfo commandInfo = null;
+        try {
+            commandInfo = (new Parser()).getCommandInfo(input);
+        } catch (MismatchedCommandException e) { // Need to change exception type.
+            uiComponent.setSuggestionText("Command is invalid");
+            return;
+        }
         Message feedback = null;
         
         // Check for invalid IDs.
@@ -50,7 +57,7 @@ public class Controller extends Application {
             switch (commandInfo.getCommandType()) {
                 case "add":
                     taskManager.add(commandInfo);
-                    feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getID() + "");
+                    // feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getID() + "");
                     break;
                 case "delete":
                     taskManager.delete(commandInfo);
@@ -58,25 +65,25 @@ public class Controller extends Application {
                     break;
                 case "edit":
                     taskManager.edit(commandInfo);
-                    feedback = new MessageNotifyEdit(taskManager.getLastModifiedTask().getID() + "");
+                    feedback = new MessageNotifyEdit(commandInfo.getTaskIDs().get(0));
                     break;
                 case "undo":
-                    taskManager.undo(commandInfo, dataStorage.getPastVersion());
+                    taskManager.undo(commandInfo, backup.getPastVersion());
                     feedback = new MessageNotifyUndo();
                     break;
                 case "complete":
                     taskManager.complete(commandInfo);
                     feedback = new MessageNotifyComplete(commandInfo.getTaskIDs());
                     break;
-                case "search complete": // Temporary.
-                    taskManager.clearIDMapping();
-                    uiComponent.updateTaskList(taskManager.getCompletedTasks());
-                    uiComponent.updateReminderList(taskManager.getCompletedReminders());
-                    return;
+                case "home":
+                    break;
                 case "search":
                 case "display":
                 case "show":
-                    break;
+                    taskManager.clearIDMapping();
+                    uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
+                    uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search reuslts");
+                    return;
                 case "quit":
                 case "exit":
                     Platform.exit();
@@ -88,16 +95,21 @@ public class Controller extends Application {
             e.printStackTrace();
         }
         
+        taskManager.clearIDMapping();
+        uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
+        uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
+        
+        backup.storeBackup(taskManager.getAll());
+        dataStorage.saveTasks(taskManager.getList());
+        
+        if ("add".equals(commandInfo.getCommandType())) {
+            feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getDisplayID());
+        }
+        
         if (feedback != null) {
             uiComponent.setSuggestionText(messageManager.getMessage(feedback));
             logger.log(messageManager.getMessage(feedback));
         }
-        
-        taskManager.clearIDMapping();
-        uiComponent.updateTaskList(taskManager.getTasks());
-        uiComponent.updateReminderList(taskManager.getReminders());
-        
-        dataStorage.saveTasks(taskManager.getList());
     }
     
 
@@ -106,8 +118,8 @@ public class Controller extends Application {
      * For the UI to retrieve the list of tasks after it is initialized.
      */
     public static void getTasks() {
-        uiComponent.updateTaskList(taskManager.getTasks());
-        uiComponent.updateReminderList(taskManager.getReminders());
+        uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
+        uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
     }
     
     //@author A0110546R
@@ -115,10 +127,12 @@ public class Controller extends Application {
         taskManager = new TaskManager();
         dataStorage = new DataStorage();
         messageManager = new MessageManager();
+        backup = new Backup();
         
         dataStorage.initiateFile();
         
         taskManager.initializeList(dataStorage.retrieveTasks());
+        backup.storeBackup(taskManager.getAll());
     }
     
     //@author A0110546R
