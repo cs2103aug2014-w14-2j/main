@@ -15,7 +15,6 @@ public class UITaskListItem {
 	private String type;
 	private int numOfTasks;
 	private String separatorTitle;
-	private String pane;
 
 	public UITaskListItem(Task task, DateTime date, String pane) {
 		if(pane.equals("Left")) {
@@ -37,7 +36,6 @@ public class UITaskListItem {
 			}
 		}
 		
-		this.pane = pane;
 		this.numOfTasks = 0;
 		this.task = task;
 	}

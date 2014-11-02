@@ -13,8 +13,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -23,7 +21,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 
 /**
@@ -46,13 +43,11 @@ public class UITaskListView {
     
 	private final String CMD_DELETE_FLOATING_TASK = "DELETE %s";
 	private final String CMD_DELETE_EVENT_TASK = "DELETE %s";
-	private ObservableList<UITaskListItem> listItems;
 	
 	public String type;
     
     public UITaskListView(UICmdInputBox cmdInputBox, String type) {
         taskList = new ListView<UITaskListItem>();
-        listItems = FXCollections.observableArrayList();
         this.cmdInputBox = cmdInputBox;
         this.type = type;
         setTaskListProperty();

@@ -22,7 +22,6 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     private String nextPossibleCommand;
     
     final public String ADD_COMMAND = "ADD";
-    final private String DELETE_COMMAND = "DELETE";
     final private String EDIT_COMMAND = "EDIT";
     final private String SEARCH_COMMAND = "SEARCH";
       
@@ -30,7 +29,6 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         this.uiAutoComplete = new UIAutoComplete(cmdInputBox, this);
         this.cmdInputBox = cmdInputBox;
         this.nextPossibleCommand = "";
-        this.previousKey = null;
         this.isDouble = false;
     }
     
