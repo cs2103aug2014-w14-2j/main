@@ -334,26 +334,7 @@ class TaskManager {
         ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
         
         filter = new TaskListFilter(filteredTasks, true); // AND filter.
-        
-        // Filtering of dates:
-        DateTime start = commandInfo.getStartDateTime();
-        DateTime end = commandInfo.getEndDateTime();
-        if (start != null && end != null) {
-            filter.add(new KeepTasksBetween(start, end));
-            comparators.add(new EndDateComparator());
-        }
-        else if (start != null) { // end is null,
-            end = start.withTimeAtStartOfDay().plusDays(1);
-            start = start.withTimeAtStartOfDay().minusMillis(1); // Millisecond before today.
-            filter.add(new KeepTasksBetween(start, end));
-            comparators.add(new EndDateComparator());
-        }
-        else if (end != null) { // start is null, not possible here but whatever,
-            start = new DateTime();
-            filter.add(new KeepTasksBetween(start, end));
-            comparators.add(new EndDateComparator());
-        }
-        
+
         // Whether to show completed only:
         if (commandInfo.isCompleted()) { // For completed tasks only.
             filter.add(new KeepTasksCompleted());
@@ -363,6 +344,26 @@ class TaskManager {
         // Whether to show priority, inclusive:
         if (commandInfo.getPriority() > 0) {
             filter.add(new KeepTasksWithPriority());
+            comparators.add(new PriorityComparator());
+        }
+        
+        // Filtering of dates:
+        DateTime start = commandInfo.getStartDateTime();
+        DateTime end = commandInfo.getEndDateTime();
+        if (start != null && end != null) {
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new DateComparator());
+        }
+        else if (start != null) { // end is null,
+            end = start.withTimeAtStartOfDay().plusDays(1);
+            start = start.withTimeAtStartOfDay().minusMillis(1); // Millisecond before today.
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new DateComparator());
+        }
+        else if (end != null) { // start is null, not possible here but whatever,
+            start = new DateTime();
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new DateComparator());
         }
         
         // Searching by keywords:
