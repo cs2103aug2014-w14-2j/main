@@ -27,7 +27,7 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
     public void handle(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) { 
             Controller.runCommandInput(cmdInputBox.getText());
-            cmdHistory.add(cmdInputBox.getText());
+            cmdHistory.add(0, cmdInputBox.getText());
             cmdInputBox.setText("");
             
             cmdInputBox.setGuideMsgText(cmdInputBox.getToolTip());

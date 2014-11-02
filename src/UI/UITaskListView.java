@@ -181,7 +181,6 @@ public class UITaskListView {
 
         private String COLOR_DEFAULT_PRIORITY = "rgba(37, 232, 154, 1)";
         private String COLOR_HIGH_PRIORITY = "rgba(249, 104, 114, 1)";
-        private String COLOR_MEDIUM_PRIORITY = "rgba(247, 207, 89, 1)";
         private String COLOR_COMPLETED = "rgba(188, 187, 185, 1)";
         
         private Rectangle contentPlaceHolder;
@@ -208,28 +207,6 @@ public class UITaskListView {
         	
         	if(item.isCompleted()) {
         		indicator_color = COLOR_COMPLETED;
-        	} else if(item.getEndDate() != null && !item.isCompleted()) {	
-				if(item.getEndDate().isBeforeNow()) {
-					//outstanding
-					indicator_color = COLOR_MEDIUM_PRIORITY;
-				} else {
-	        		if(priority == 0) {
-	        			 indicator_color = COLOR_DEFAULT_PRIORITY;
-	        		} else if (priority != 0) {
-	        			indicator_color = COLOR_HIGH_PRIORITY;
-	        		}
-				}
-        	} else if(item.getDate() != null && !item.isCompleted()){
-				if(item.getDate().isBeforeNow()) {
-					//outstanding
-					indicator_color = COLOR_MEDIUM_PRIORITY;
-				} else {
-	        		if(priority == 0) {
-	        			 indicator_color = COLOR_DEFAULT_PRIORITY;
-	        		} else if (priority != 0) {
-	        			indicator_color = COLOR_HIGH_PRIORITY;
-	        		}
-				}
         	} else {
         		if(priority == 0) {
         			 indicator_color = COLOR_DEFAULT_PRIORITY;
@@ -302,22 +279,34 @@ public class UITaskListView {
         	String output = "";
         	
         	if(item.getDate() != null && item.getEndDate() == null) {
-        		output += item.getDate().toString("h:mm a") + "\n";
+        		output += item.getDate().toString("h:mm a");
         	} else if(item.getDate() != null && item.getEndDate() != null) {
         		output += item.getDate().toString("h:mm a");
         	}
         	
         	if(item.getDate() == null && item.getEndDate() != null) {
-        		output += "Due on: " + item.getEndDate().toString("dd MMM yyy, h:mm a") + "\n";
+        		output += "Due on: " + item.getEndDate().toString("dd MMM yyy, h:mm a");
         	} else if(item.getDate() != null && item.getEndDate() != null) {
         		if(item.getDate().equals(item.getEndDate())) {
-        			output += " - " + item.getEndDate().toString("h:mm a") + "\n";
+        			output += " - " + item.getEndDate().toString("h:mm a");
         		} else {
-        			output += " - " + item.getEndDate().toString("dd MMM yy, h:mm a") + "\n";
+        			output += " - " + item.getEndDate().toString("dd MMM yy, h:mm a");
         		}
         	} 
         	
         	return output;
+        }
+        
+        private StackPane createOutstandingLabel() {
+        	Rectangle outstandingLabel = createRectangle(90, 15, 5, 5, Color.RED);
+        	Text labelText = createText("OUTSTANDING", 190, 10, "Raleway", FontWeight.BOLD, Color.WHITE);
+        	
+			StackPane stack = new StackPane();
+			StackPane.setAlignment(outstandingLabel, Pos.TOP_LEFT);
+			StackPane.setMargin(labelText, new Insets(0, 6, 0, 8));
+			stack.getChildren().addAll(outstandingLabel, labelText);
+        	
+        	return stack;
         }
 
         @Override
@@ -328,7 +317,21 @@ public class UITaskListView {
         		if (item != null && item.getType().equals("default")) {
         			Task taskItem = item.getTask();
         			
-        			VBox descriptionBox = new VBox(-12);
+        			VBox descriptionBox = new VBox(5);
+        			
+        		    if(!taskItem.isCompleted()) {
+        				if(taskItem.getEndDate() != null) {	
+        					if(taskItem.getEndDate().isBeforeNow()) {
+        						//outstanding
+        						descriptionBox.getChildren().addAll(createOutstandingLabel());
+        					} 
+        	        	}else if(taskItem.getDate() != null){
+        					if(taskItem.getDate().isBeforeNow()) {
+        						//outstanding
+        						descriptionBox.getChildren().addAll(createOutstandingLabel());
+        					} 
+                		}
+        			}
         			
         			String dateString = generateTaskDate(taskItem);
         			if(dateString.trim().length() != 0) {
@@ -336,7 +339,7 @@ public class UITaskListView {
             			descriptionBox.getChildren().addAll(descriptionDate);
         			}
         			
-        			Text descriptionText = createText(taskItem.getDescription(), 190, 14, "Raleway", FontWeight.NORMAL, Color.BLACK);
+        			Text descriptionText = createText(taskItem.getDescription(), 190, 14, "", FontWeight.NORMAL, Color.BLACK);
         			
         			int height = getContentHeight(taskItem.getDescription().length());
         			this.setStyle("-fx-padding: 0 5 0 5;" + String.format(CONTAINER_HEIGHT, height));
@@ -344,11 +347,9 @@ public class UITaskListView {
         			descriptionBox.getChildren().addAll(descriptionText);
         			
         			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
-        			HBox.setMargin(descriptionText, new Insets(10, 10, 10, 10));
-        			
+        			VBox.setMargin(descriptionText, new Insets(0, 0, 0, 0));
         			VBox vbox = new VBox(10);
-        			vbox.getChildren().addAll(descriptionBox);
-        			
+        			vbox.getChildren().addAll(descriptionBox);	
         			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height, taskItem), vbox);
         			
         			StackPane stack = new StackPane();
