@@ -21,14 +21,16 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
     public UIControllerListener(UICmdInputBox cmdInputBox) {
         this.cmdInputBox = cmdInputBox;
         this.cmdHistory = new ArrayList<String>();
+        this.cmdHistory.add("");
     }
     
     @Override
     public void handle(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) { 
             Controller.runCommandInput(cmdInputBox.getText());
-            cmdHistory.add(cmdInputBox.getText());
+            cmdHistory.add(0, cmdInputBox.getText());
             cmdInputBox.setText("");
+            cmdIndex = 0;
             
             cmdInputBox.setGuideMsgText(cmdInputBox.getToolTip());
             UICmdInputBox.toolTipCounter++;
