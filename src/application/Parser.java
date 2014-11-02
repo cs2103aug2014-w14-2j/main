@@ -132,13 +132,13 @@ public class Parser {
         String taskID = null;
         if (command.equalsIgnoreCase("edit")) {
             taskID = input.trim().split("\\s+")[1];
-            IDs.add(taskID.toUpperCase());
+            IDs.add(taskID);
         }
         else if ((command.equalsIgnoreCase("complete")) || (command.equalsIgnoreCase("delete"))) {
             String[] array = input.trim().split("\\s+");
             for (int i = 1; i<array.length; i++) {
                 taskID = array[i];
-                IDs.add(taskID.toUpperCase());
+                IDs.add(taskID);
             }
         }
         return IDs;
