@@ -72,6 +72,15 @@ public class UITaskListView {
         }
     }
     
+    private ArrayList<UITaskListItem> generateEmptyList(ArrayList<Task> items) {
+    	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+    	UITaskListItem item = new UITaskListItem(null, null, "EMPTY");
+    	listItems.add(item);
+    	return listItems;
+    }
+    
+    
+    
     private ArrayList<UITaskListItem> generateFloatingList(ArrayList<Task> items) {
     	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
     	UITaskListItem currentHeader = null;
