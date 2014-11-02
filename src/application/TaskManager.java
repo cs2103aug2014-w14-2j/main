@@ -161,6 +161,10 @@ class TaskManager {
         
         return this.list;
     }
+    
+    public ArrayList<Task> getAll() {
+        return this.list;
+    }
 
     /**
      * Returns the full list of tasks, ignoring the deleted tasks.
@@ -256,6 +260,12 @@ class TaskManager {
         ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
         
         filter = new TaskListFilter(filteredTasks, true); // AND filter.
+
+        // Whether to show priority:
+        if (commandInfo.getPriority() > 0) {
+            filter.add(new KeepTasksWithPriority());
+            comparators.add(new PriorityComparator());
+        }
         
         // Filtering of dates:
         DateTime start = commandInfo.getStartDateTime();
@@ -280,11 +290,6 @@ class TaskManager {
         if (commandInfo.isCompleted()) { // For completed tasks only.
             filter.add(new KeepTasksCompleted());
             comparators.add(new CompletedAtComparator());
-        }
-        
-        // Whether to show priority, inclusive:
-        if (commandInfo.getPriority() > 0) {
-            filter.add(new KeepTasksWithPriority());
         }
         
         // Searching by keywords:
