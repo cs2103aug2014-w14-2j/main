@@ -258,20 +258,22 @@ public class UITaskListView {
         }
         
         private int getContentHeight(int length) {
-        	if (length < 140) {
-        		return 100;
+        	if(length < 80) {
+        		return 65;
+        	} else if (length > 80 && length < 140) {
+        		return 105;
         	} else if (length > 140 && length < 200) {
-        		return 150;
+        		return 155;
         	} else if (length > 200 && length < 260){
-        		return 200;
+        		return 205;
         	} else if (length > 260 && length < 320) {
-        		return 250;
+        		return 255;
         	} else if (length > 320 && length < 380){
-        		return 300;
+        		return 305;
         	} else if (length > 380 && length < 440){
-        		return 350;
+        		return 355;
         	} else {
-        		return 400;
+        		return 405;
         	}
         }
         
@@ -298,7 +300,7 @@ public class UITaskListView {
         }
         
         private StackPane createOutstandingLabel() {
-        	Rectangle outstandingLabel = createRectangle(90, 15, 5, 5, Color.RED);
+        	Rectangle outstandingLabel = createRectangle(90, 15, 5, 5, Color.web("rgba(231, 76, 60,1.0)"));
         	Text labelText = createText("OUTSTANDING", 190, 10, "Raleway", FontWeight.BOLD, Color.WHITE);
         	
 			StackPane stack = new StackPane();
@@ -317,7 +319,7 @@ public class UITaskListView {
         		if (item != null && item.getType().equals("default")) {
         			Task taskItem = item.getTask();
         			
-        			VBox descriptionBox = new VBox(5);
+        			VBox descriptionBox = new VBox(2);
         			
         		    if(!taskItem.isCompleted()) {
         				if(taskItem.getEndDate() != null) {	
@@ -347,7 +349,7 @@ public class UITaskListView {
         			descriptionBox.getChildren().addAll(descriptionText);
         			
         			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
-        			VBox.setMargin(descriptionText, new Insets(0, 0, 0, 0));
+        			VBox.setMargin(descriptionText, new Insets(1, 1, 5, 1));
         			VBox vbox = new VBox(10);
         			vbox.getChildren().addAll(descriptionBox);	
         			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height, taskItem), vbox);

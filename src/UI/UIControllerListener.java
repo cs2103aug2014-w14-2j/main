@@ -29,6 +29,7 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
             Controller.runCommandInput(cmdInputBox.getText());
             cmdHistory.add(0, cmdInputBox.getText());
             cmdInputBox.setText("");
+            cmdIndex = 0;
             
             cmdInputBox.setGuideMsgText(cmdInputBox.getToolTip());
             UICmdInputBox.toolTipCounter++;

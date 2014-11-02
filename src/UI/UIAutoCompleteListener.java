@@ -24,6 +24,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     final public String ADD_COMMAND = "ADD";
     final private String DELETE_COMMAND = "DELETE";
     final private String EDIT_COMMAND = "EDIT";
+    final private String SEARCH_COMMAND = "SEARCH";
       
     public UIAutoCompleteListener(UICmdInputBox cmdInputBox) {
         this.uiAutoComplete = new UIAutoComplete(cmdInputBox, this);
@@ -43,6 +44,14 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     	}
     	return false;
     }
+    
+    private boolean isSearchCommand(String next) {
+    	if(next.trim().equalsIgnoreCase(SEARCH_COMMAND)) {
+    		return true;
+    	}
+    	return false;
+    }
+    
     
     private boolean isEditCommand(String next) {
     	String[] cmdRetrieval = next.split(" ");
@@ -78,7 +87,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         	}
         	
             if(nextPossibleCommand.length() != 0) {
-            	if(isAddCommand(nextPossibleCommand)) {
+            	if(isAddCommand(nextPossibleCommand) || isSearchCommand(nextPossibleCommand)) {
             		inputBox.setText(nextPossibleCommand + "[]");
             	} else {
             		inputBox.setText(nextPossibleCommand);
@@ -86,8 +95,8 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
             	
                 inputBox.positionCaret(inputBox.getText().length());
 
-            	if(isAddCommand(nextPossibleCommand) || isEditCommand(nextPossibleCommand)) {
-            		 inputBox.positionCaret(inputBox.getText().length()-1);
+            	if(isAddCommand(nextPossibleCommand) || isEditCommand(nextPossibleCommand) || isSearchCommand(nextPossibleCommand)) {
+            		 inputBox.positionCaret(inputBox.getText().length()-1); 
             	}
             	
                 cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
