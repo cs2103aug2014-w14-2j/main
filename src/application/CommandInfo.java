@@ -39,7 +39,7 @@ public class CommandInfo {
     throws MismatchedCommandException {  // edit
         try {
         this.commandType = commandType;
-        this.taskIDs = taskIDs;
+        this.taskIDs = upperCaseIDs(taskIDs);
         this.taskDesc = taskDesc;
         this.startDateTime = getStartDateTime(startDT);
         this.endDateTime = getEndDateTime(endDT);
@@ -54,6 +54,14 @@ public class CommandInfo {
         }
     }
 
+    private ArrayList<String> upperCaseIDs(ArrayList<String> IDs) {
+        for (int i = 0; i<IDs.size();i++) {
+            String ID = IDs.get(i).toUpperCase();
+            IDs.set(i,ID);
+        }
+        return IDs;
+        
+    }
     private void checkStartDateTime() {
         if ((this.startDateTime != null ) && ((this.commandType.equalsIgnoreCase("add"))
                 || (this.commandType.equalsIgnoreCase("edit")))){
