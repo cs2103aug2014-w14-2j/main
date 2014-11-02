@@ -163,7 +163,9 @@ public class UITaskListView {
     public void populateTaskListWithData(ArrayList<Task> items) {
     	ObservableList<UITaskListItem> convertedList = FXCollections.observableArrayList();
     	
-    	if(this.type.equals(EVENT)) {
+    	if(items.size() == 0) {
+    		convertedList.setAll(generateEmptyList(items));
+    	} else if(this.type.equals(EVENT)) {
     		convertedList.setAll(generateListItems(items));
     	} else if (this.type.equals(FLOATING)){
     		convertedList.setAll(generateFloatingList(items));
@@ -392,6 +394,13 @@ public class UITaskListView {
         			stack.getChildren().addAll(text);
         			StackPane.setAlignment(text, Pos.TOP_LEFT);
         			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
+        			
+        			
+        			if(item.getPane().equals("EMPTY")) {
+        				StackPane.setMargin(text, new Insets(0, 70, 0, 70));
+        				this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #FFB347;" + cellHeight);
+        			}
+        			
         			setGraphic(stack);
         		}
             } else {

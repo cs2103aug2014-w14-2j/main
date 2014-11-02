@@ -37,7 +37,7 @@ public class UITaskListItem {
 			}
 		} else if(pane.equals("EMPTY")) {
 			this.type = LISTITEM_SEPARATOR;
-			this.separatorTitle = "No Task Found.";
+			this.separatorTitle = "No Scheduled Task";
 		}
 		
 		this.pane = pane;
