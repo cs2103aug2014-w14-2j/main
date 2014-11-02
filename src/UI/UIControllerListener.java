@@ -21,6 +21,7 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
     public UIControllerListener(UICmdInputBox cmdInputBox) {
         this.cmdInputBox = cmdInputBox;
         this.cmdHistory = new ArrayList<String>();
+        this.cmdHistory.add("");
     }
     
     @Override

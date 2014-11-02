@@ -295,12 +295,12 @@ public class UITaskListView {
         }
         
         private StackPane createOutstandingLabel() {
-        	Rectangle outstandingLabel = createRectangle(90, 15, 5, 5, Color.web("rgba(231, 76, 60,1.0)"));
+        	Rectangle outstandingLabel = createRectangle(290, 15, 0, 0, Color.web("rgba(255, 120, 120, 1)"));
         	Text labelText = createText("OUTSTANDING", 190, 10, "Raleway", FontWeight.BOLD, Color.WHITE);
         	
 			StackPane stack = new StackPane();
 			StackPane.setAlignment(outstandingLabel, Pos.TOP_LEFT);
-			StackPane.setMargin(labelText, new Insets(0, 6, 0, 8));
+			StackPane.setMargin(labelText, new Insets(0, 50, 0, 70));
 			stack.getChildren().addAll(outstandingLabel, labelText);
         	
         	return stack;
@@ -334,6 +334,7 @@ public class UITaskListView {
         			if(dateString.trim().length() != 0) {
             			Text descriptionDate = createText(dateString, 190, 11, "", FontWeight.BOLD, Color.CADETBLUE);
             			descriptionBox.getChildren().addAll(descriptionDate);
+            			VBox.setMargin(descriptionDate, new Insets(0, 0, 0, 10));
         			}
         			
         			Text descriptionText = createText(taskItem.getDescription(), 190, 14, "", FontWeight.NORMAL, Color.BLACK);
@@ -343,11 +344,14 @@ public class UITaskListView {
         			contentPlaceHolder = createRectangle(270, height-10, 5, 5, Color.WHITE);
         			descriptionBox.getChildren().addAll(descriptionText);
         			
-        			HBox taskInnerContentHolder = new HBox(TASK_CONTAINER_SPACING);
+        			HBox taskInnerContentHolder = new HBox();
         			VBox.setMargin(descriptionText, new Insets(1, 1, 5, 1));
         			VBox vbox = new VBox(10);
-        			vbox.getChildren().addAll(descriptionBox);	
+        			vbox.getChildren().addAll(descriptionBox);
+        			VBox.setMargin(descriptionText, new Insets(0, 0, 0, 10));
+        		
         			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height, taskItem), vbox);
+        			
         			
         			StackPane stack = new StackPane();
         			StackPane.setMargin(taskInnerContentHolder, new Insets(5, 0, 0, 0));
