@@ -107,6 +107,7 @@ public class UITaskListView {
     		}
     	
     		listItems.add(new UITaskListItem(listItem, listItem.getDate(), "Right"));
+    		currentHeader.incrementNumOfTask();
     	}
     
     	return listItems;
@@ -375,7 +376,7 @@ public class UITaskListView {
         			
         			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
         			this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;" + cellHeight);
-        			String output = getDateString(item.getDate());
+        			String output = getDateString(item.getDate()) + " (" + item.getNumberTask() + ")";
         			Text text = createText(output, 0, 15, "Ariel", FontWeight.BOLD, Color.WHITE);
         			
         			StackPane stack = new StackPane();
@@ -387,7 +388,7 @@ public class UITaskListView {
         			
         			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
         			this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;" + cellHeight);
-        			String output = item.getSeparatorTitle();
+        			String output = item.getSeparatorTitle() + " (" + item.getNumberTask() + ")";
         			Text text = createText(output, 0, 15, "Ariel", FontWeight.BOLD, Color.WHITE);
         			
         			StackPane stack = new StackPane();
