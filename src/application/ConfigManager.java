@@ -67,12 +67,5 @@ public class ConfigManager {
             logger.log(Level.SEVERE, e.toString(), e);
         }
     }
-    
-    public static void main(String[] args) {
-        ConfigManager test = new ConfigManager();
-        test.setHomeViewType(1);
-        System.out.println(test.getHomeViewType());
-
-    }
 
 }
