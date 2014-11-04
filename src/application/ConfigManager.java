@@ -7,16 +7,25 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.logging.Level;
+import java.util.stream.IntStream;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class ConfigManager {
     
     private static File file;
-    
+    private static final String KEY_HOME_VIEW_TYPE = "Home view setting";
     private static WaveLogger logger = new WaveLogger("Config");
     private static String filename;
     
     public ConfigManager() {
-        filename = "Config.txt";
+        filename = "Config.json";
         initiateFile(filename);
     }
     
@@ -33,26 +42,29 @@ public class ConfigManager {
     }
     
     public int getHomeViewType() {
-        String line = null;
+        int setting = 0;
         try {
-            FileReader fr = new FileReader(filename);
-            BufferedReader br = new BufferedReader(fr);
-            line = br.readLine();
-            br.close();
-            fr.close();
+            JSONParser parser = new JSONParser();
+            JSONObject homeSetting = (JSONObject) parser.parse(new FileReader(filename));
+            setting = (int)(long) homeSetting.get(KEY_HOME_VIEW_TYPE);
             logger.log(Level.INFO, "Default home view setting retrieved");
         } catch (IOException e) {
             logger.log(Level.SEVERE, e.toString(), e);
+        } catch (ParseException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
         }
-        return Integer.parseInt(line);
+        return setting;
     }
     
     public void setHomeViewType(int type) {
+        JSONObject homeSetting = new JSONObject();
+        homeSetting.put(KEY_HOME_VIEW_TYPE, type);
         try {
             FileWriter fw = new FileWriter(file, false);
-            PrintWriter pw = new PrintWriter(fw);
-            pw.println(type);
-            pw.close();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String output = gson.toJson(homeSetting);
+            fw.write(output);
+            fw.flush();
             fw.close();
             logger.log(Level.INFO, "Default home view setting saved");
         } catch (IOException e) {
@@ -60,6 +72,11 @@ public class ConfigManager {
         }
     }
     
-    
+    public static void main(String[] args) {
+        ConfigManager test = new ConfigManager();
+        test.setHomeViewType(1);
+        System.out.println(test.getHomeViewType());
+
+    }
 
 }
