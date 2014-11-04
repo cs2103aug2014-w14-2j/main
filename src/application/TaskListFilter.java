@@ -150,12 +150,10 @@ class KeepTasksNotCompleted implements TaskFilter {
 
 public class TaskListFilter {
     private ArrayList<TaskFilter> filters;
-    private ArrayList<Task> taskList;
     private boolean strongFilter; // true for AND/&&, false for OR/||.
     
-    public TaskListFilter(ArrayList<Task> taskList, boolean strongFilter) {
+    public TaskListFilter(boolean strongFilter) {
         this.filters = new ArrayList<TaskFilter>();
-        this.taskList = taskList;
         this.strongFilter = strongFilter;
     }
     
@@ -163,9 +161,9 @@ public class TaskListFilter {
         this.filters.add(filter);
     }
     
-    public ArrayList<Task> apply() {
+    public ArrayList<Task> apply(ArrayList<Task> taskList) {
         ArrayList<Task> filteredTaskList = new ArrayList<Task>();
-        ListIterator<Task> taskI = this.taskList.listIterator();
+        ListIterator<Task> taskI = taskList.listIterator();
         ListIterator<TaskFilter> filterI;
         Task task;
         TaskFilter filter;

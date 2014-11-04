@@ -22,8 +22,13 @@ class TaskManager {
     private Task task; // Maybe this can act as "last modified task".
     private Hashtable<String, Integer> idMapping;
     
+    private ListDisplay eventsDisplay;
+    private ListDisplay tasksDisplay;
+    
     public TaskManager() { // Maybe singleton this.
         this.idMapping = new Hashtable<String, Integer>();
+        this.eventsDisplay = new EventListDisplay();
+        this.tasksDisplay = new TaskListDisplay();
     }
     
     /**
@@ -172,9 +177,9 @@ class TaskManager {
      * @return the full list of tasks, ignoring the deleted tasks.
      */
     public ArrayList<Task> getList() {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
+        TaskListFilter filter = new TaskListFilter(true); // Does a AND/&& filtering.
         filter.add(new IgnoreTasksDeleted());
-        return filter.apply();
+        return filter.apply(this.list);
     }
     
     /**
@@ -183,33 +188,12 @@ class TaskManager {
      * @return the tasks without start dates.
      */
     public ArrayList<Task> getTasks() {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
-        filter.add(new IgnoreTasksDeleted()); // and,
-        filter.add(new KeepTasksWithoutStartDate());
-        ArrayList<Task> filteredTasks = filter.apply();
-        
-        filter = new TaskListFilter(filteredTasks, false); // Does a OR/|| filtering.
+        TaskListFilter filter = new TaskListFilter(false); // Does a OR/|| filtering.
         filter.add(new KeepTasksCompletedToday()); // or,
         filter.add(new KeepTasksNotCompleted());
-        filteredTasks = filter.apply();
-                
-        // Sort by modified at date first, then priority.
-        Collections.sort(filteredTasks, new ModifiedAtComparator());
-        Collections.sort(filteredTasks, new PriorityComparator());
-        Collections.sort(filteredTasks, new EndDateComparator());
-        Collections.sort(filteredTasks, new CompletedAtComparator());
+        this.tasksDisplay.replaceFilter(filter);
         
-        int i = 1;
-        ListIterator<Task> li = filteredTasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            String displayID = NORMAL_TASK_PREFIX + "" + i;
-            this.idMapping.put(displayID, t.getID());
-            t.setDisplayID(displayID);
-            i++;
-        }
-        
-        return filteredTasks;
+        return this.tasksDisplay.display(this.list, this.idMapping);
     }
     
     /**
@@ -218,32 +202,13 @@ class TaskManager {
      * @return the tasks with start dates.
      */
     public ArrayList<Task> getReminders() {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
-        filter.add(new IgnoreTasksDeleted()); // and,
-        filter.add(new KeepTasksWithStartDate());
-        ArrayList<Task> filteredTasks = filter.apply();
-        
-        Collections.sort(filteredTasks, new CompletedAtComparator());
-        Collections.sort(filteredTasks, new DayPriorityComparator());
-        
-        filter = new TaskListFilter(filteredTasks, false); // Does a OR/|| filtering.
+        TaskListFilter filter = new TaskListFilter(false); // Does a OR/|| filtering.
         filter.add(new KeepTasksCompletedToday()); // or,
         filter.add(new KeepTasksToShowToday()); // or,
         filter.add(new KeepTasksToShowTheNextDay());
-        filteredTasks = filter.apply();
-
+        this.eventsDisplay.replaceFilter(filter);
         
-        int i = 1;
-        ListIterator<Task> li = filteredTasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            String displayID = DATED_TASK_PREFIX + "" + i;
-            this.idMapping.put(displayID, t.getID());
-            t.setDisplayID(displayID);
-            i++;
-        }
-        
-        return filteredTasks;
+        return this.eventsDisplay.display(this.list, this.idMapping);
     }
     
     /**
@@ -251,19 +216,9 @@ class TaskManager {
      * 
      * @return the tasks given in the search parameters.
      */
-    public ArrayList<Task> getSearchedTasks(CommandInfo commandInfo) {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // AND filter.
-        filter.add(new IgnoreTasksDeleted()); // and, 
-        filter.add(new KeepTasksWithoutStartDate());
-        ArrayList<Task> filteredTasks = filter.apply();
-        
-        ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
-        comparators.add(new ModifiedAtComparator());
-        comparators.add(new PriorityComparator());
-        comparators.add(new EndDateComparator());
-        comparators.add(new CompletedAtComparator());
-        
-        filter = new TaskListFilter(filteredTasks, true); // AND filter.
+    public ArrayList<Task> getSearchedTasks(CommandInfo commandInfo) {        
+        ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();        
+        TaskListFilter filter = new TaskListFilter(true); // AND filter.
         
         // Filtering of dates:
         DateTime start = commandInfo.getStartDateTime();
@@ -300,27 +255,10 @@ class TaskManager {
             filter.add(new KeepTasksWithKeyword(commandInfo.getTaskDesc()));
         }
         
-        filteredTasks = filter.apply();
+        this.tasksDisplay.replaceFilter(filter);
+        this.tasksDisplay.replaceComparators(comparators);
         
-        // Sorting.
-        ListIterator<Comparator<Task>> liComparator = comparators.listIterator();
-        while (liComparator.hasNext()) {
-            Collections.sort(filteredTasks, liComparator.next());
-        }
-        
-        // For displaying.
-        int i = 1;
-        ListIterator<Task> li = filteredTasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            String displayID = NORMAL_TASK_PREFIX + "" + i;
-            this.idMapping.put(displayID, t.getID());
-            t.setDisplayID(displayID);
-            i++;
-        }
-        
-        return filteredTasks;
-        
+        return this.tasksDisplay.display(this.list, this.idMapping);
     }
     
     /**
@@ -329,16 +267,8 @@ class TaskManager {
      * @return the events given in the search parameters.
      */
     public ArrayList<Task> getSearchedEvents(CommandInfo commandInfo) {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // AND filter.
-        filter.add(new IgnoreTasksDeleted()); // and, 
-        filter.add(new KeepTasksWithStartDate());
-        ArrayList<Task> filteredTasks = filter.apply();
-        
         ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
-        comparators.add(new CompletedAtComparator());
-        comparators.add(new DayPriorityComparator());
-        
-        filter = new TaskListFilter(filteredTasks, true); // AND filter.
+        TaskListFilter filter = new TaskListFilter(true); // AND filter.
 
         // Whether to show completed only:
         if (commandInfo.isCompleted()) { // For completed tasks only.
@@ -375,27 +305,10 @@ class TaskManager {
             filter.add(new KeepTasksWithKeyword(commandInfo.getTaskDesc()));
         }
         
-        filteredTasks = filter.apply();
+        this.eventsDisplay.replaceFilter(filter);
+        this.eventsDisplay.replaceComparators(comparators);
         
-        // Sorting.
-        ListIterator<Comparator<Task>> liComparator = comparators.listIterator();
-        while (liComparator.hasNext()) {
-            Collections.sort(filteredTasks, liComparator.next());
-        }
-        
-        // For displaying.
-        int i = 1;
-        ListIterator<Task> li = filteredTasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            String displayID = DATED_TASK_PREFIX + "" + i;
-            this.idMapping.put(displayID, t.getID());
-            t.setDisplayID(displayID);
-            i++;
-        }
-        
-        return filteredTasks;
-        
+        return this.eventsDisplay.display(this.list, this.idMapping);
     }
     
 
