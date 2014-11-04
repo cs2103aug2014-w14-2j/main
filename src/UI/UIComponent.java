@@ -18,8 +18,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  * Main Class for the UI, That integrates all components into one and return 
@@ -50,7 +48,7 @@ public class UIComponent {
 	private UICmdInputBox cmdInputBox;
 	private UITaskListView floatingTaskListView, eventReminderTaskListView;
 	
-	private final String LISTVIEW_HEADING_REMINDER = "Reminder & Events";
+	private final String LISTVIEW_HEADING_REMINDER = "Events";
 	private final String LISTVIEW_HEADING_TASK = "Tasks";
 	
 	private Text reminderTaskTitle,floatingTaskTitle;
