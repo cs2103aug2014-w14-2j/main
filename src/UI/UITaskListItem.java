@@ -15,6 +15,7 @@ public class UITaskListItem {
 	private String type;
 	private int numOfTasks;
 	private String separatorTitle;
+	private String pane;
 
 	public UITaskListItem(Task task, DateTime date, String pane) {
 		if(pane.equals("Left")) {
@@ -34,10 +35,18 @@ public class UITaskListItem {
 			}else {
 				this.type = LISTITEM_DEFAULT;
 			}
+		} else if(pane.equals("EMPTY")) {
+			this.type = LISTITEM_SEPARATOR;
+			this.separatorTitle = "No Scheduled Task";
 		}
 		
+		this.pane = pane;
 		this.numOfTasks = 0;
 		this.task = task;
+	}
+	
+	public String getPane() {
+		return pane;
 	}
 	
 	public String getSeparatorTitle() {

@@ -72,6 +72,15 @@ public class UITaskListView {
         }
     }
     
+    private ArrayList<UITaskListItem> generateEmptyList(ArrayList<Task> items) {
+    	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+    	UITaskListItem item = new UITaskListItem(null, null, "EMPTY");
+    	listItems.add(item);
+    	return listItems;
+    }
+    
+    
+    
     private ArrayList<UITaskListItem> generateFloatingList(ArrayList<Task> items) {
     	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
     	UITaskListItem currentHeader = null;
@@ -98,6 +107,7 @@ public class UITaskListView {
     		}
     	
     		listItems.add(new UITaskListItem(listItem, listItem.getDate(), "Right"));
+    		currentHeader.incrementNumOfTask();
     	}
     
     	return listItems;
@@ -154,7 +164,9 @@ public class UITaskListView {
     public void populateTaskListWithData(ArrayList<Task> items) {
     	ObservableList<UITaskListItem> convertedList = FXCollections.observableArrayList();
     	
-    	if(this.type.equals(EVENT)) {
+    	if(items.size() == 0) {
+    		convertedList.setAll(generateEmptyList(items));
+    	} else if(this.type.equals(EVENT)) {
     		convertedList.setAll(generateListItems(items));
     	} else if (this.type.equals(FLOATING)){
     		convertedList.setAll(generateFloatingList(items));
@@ -364,7 +376,7 @@ public class UITaskListView {
         			
         			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
         			this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;" + cellHeight);
-        			String output = getDateString(item.getDate());
+        			String output = getDateString(item.getDate()) + " (" + item.getNumberTask() + ")";
         			Text text = createText(output, 0, 15, "Ariel", FontWeight.BOLD, Color.WHITE);
         			
         			StackPane stack = new StackPane();
@@ -376,13 +388,20 @@ public class UITaskListView {
         			
         			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
         			this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;" + cellHeight);
-        			String output = item.getSeparatorTitle();
+        			String output = item.getSeparatorTitle() + " (" + item.getNumberTask() + ")";
         			Text text = createText(output, 0, 15, "Ariel", FontWeight.BOLD, Color.WHITE);
         			
         			StackPane stack = new StackPane();
         			stack.getChildren().addAll(text);
         			StackPane.setAlignment(text, Pos.TOP_LEFT);
         			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
+        			
+        			
+        			if(item.getPane().equals("EMPTY")) {
+        				StackPane.setMargin(text, new Insets(0, 70, 0, 70));
+        				this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #FFB347;" + cellHeight);
+        			}
+        			
         			setGraphic(stack);
         		}
             } else {
