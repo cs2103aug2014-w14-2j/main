@@ -6,6 +6,8 @@ import java.util.Hashtable;
 import java.util.ListIterator;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 
 //@author A0110546R
 /**
@@ -24,10 +26,29 @@ class TaskManager {
     private ListDisplay eventsDisplay;
     private ListDisplay tasksDisplay;
     
+    private int daysToDisplay = 3;
+    
     public TaskManager() { // Maybe singleton this.
         this.idMapping = new Hashtable<String, Integer>();
         this.eventsDisplay = new EventListDisplay();
         this.tasksDisplay = new TaskListDisplay();
+    }
+    
+    public void setDaysToDisplay(int days) {
+        this.daysToDisplay = days;
+    }
+    
+    public void setDaysToDisplay(CommandInfo commandInfo, ConfigManager configManager) {
+        LocalDate today = new LocalDate();
+        LocalDate startDay = new LocalDate();
+        if (commandInfo.getStartDateTime() != null) {
+            startDay = commandInfo.getStartDateTime().toLocalDate();
+        }
+        if (startDay.equals(today) && commandInfo.getEndDateTime() != null) {
+            LocalDate endDay = commandInfo.getEndDateTime().toLocalDate();
+            this.daysToDisplay = Days.daysBetween(startDay, endDay).getDays();
+            configManager.setHomeViewType(this.daysToDisplay);
+        }
     }
     
     /**
@@ -203,8 +224,8 @@ class TaskManager {
     public ArrayList<Task> getReminders() {
         TaskListFilter filter = new TaskListFilter(false); // Does a OR/|| filtering.
         filter.add(new KeepTasksCompletedToday()); // or,
-        filter.add(new KeepTasksToShowToday()); // or,
-        filter.add(new KeepTasksToShowTheNextDay());
+        filter.add(new KeepTasksOutstanding());
+        filter.add(new KeepTasksBetween(this.daysToDisplay));
         this.eventsDisplay.replaceFilter(filter);
         
         return this.eventsDisplay.display(this.list, this.idMapping);

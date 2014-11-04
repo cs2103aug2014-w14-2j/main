@@ -30,11 +30,37 @@ class KeepTasksCompletedToday implements TaskFilter {
     }
 }
 
+class KeepTasksOutstanding implements TaskFilter {
+    private DateTime now;
+    public KeepTasksOutstanding() {
+        this.now = new DateTime();
+    }
+    
+    @Override
+    public boolean apply(Task t) {
+        if (!t.isCompleted()) {
+            if (t.getEndDate() != null && t.getEndDate().isBefore(this.now)) {
+                return true;
+            }
+            // There is no end date but only start date, and it is before now.
+            else if (t.getEndDate() == null &&
+                    t.getDate() != null && t.getDate().isBefore(this.now)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
 class KeepTasksBetween implements TaskFilter {
     private DateTime start, end;
     public KeepTasksBetween(DateTime start, DateTime end) {
         this.start = start;
         this.end = end;
+    }
+    public KeepTasksBetween(int numDays) {
+        this.start = new DateTime();
+        this.end = new DateTime().plusDays(numDays);
     }
     
     @Override
