@@ -258,7 +258,7 @@ public class UIComponent {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		floatingTaskTitle = createText(LISTVIEW_HEADING_TASK, 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 
-		floatingTaskListView = new UITaskListView(cmdInputBox, "Task");
+		floatingTaskListView = new UIFloatingTaskListView(cmdInputBox);
 		innerBox.getChildren().addAll(floatingTaskTitle, floatingTaskListView.getListView());
 		
 		return innerBox;
@@ -273,7 +273,7 @@ public class UIComponent {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		reminderTaskTitle = createText(LISTVIEW_HEADING_REMINDER, 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 		
-		eventReminderTaskListView = new UITaskListView(cmdInputBox, "Event");
+		eventReminderTaskListView = new UIEventTaskListView(cmdInputBox);
 		innerBox.getChildren().addAll(reminderTaskTitle, eventReminderTaskListView.getListView());
 
 		return innerBox;

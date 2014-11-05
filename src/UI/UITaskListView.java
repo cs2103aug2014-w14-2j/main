@@ -29,33 +29,23 @@ import javafx.util.Callback;
  * 
  * @author Tan Young Sing
  */
-public class UITaskListView {
+public abstract class UITaskListView {
 
-    private ListView<UITaskListItem> taskList;
+    protected ListView<UITaskListItem> taskList;
+    protected UICmdInputBox cmdInputBox;
+    private final String TASKLIST_DEFAULT_STYLE = "taskList_style";
 
     private final int DISPLAY_WIDTH = 300;
     private final int DISPLAY_HEIGHT = 500;
-    
-    private final String FLOATING = "Task";
-    private final String EVENT = "Event";
-    
-    private final String TASKLIST_DEFAULT_STYLE = "taskList_style";
-    private UICmdInputBox cmdInputBox;
-    
-	private final String CMD_DELETE_FLOATING_TASK = "DELETE %s";
-	private final String CMD_DELETE_EVENT_TASK = "DELETE %s";
-	
-	public String type;
-    
+
 	//@author A0111824R
     /**
      *
      * @author Tan Young Sing
      */
-    public UITaskListView(UICmdInputBox cmdInputBox, String type) {
+    public UITaskListView(UICmdInputBox cmdInputBox) {
         taskList = new ListView<UITaskListItem>();
         this.cmdInputBox = cmdInputBox;
-        this.type = type;
         setTaskListProperty();
     }
 
@@ -75,12 +65,6 @@ public class UITaskListView {
                 return new TaskListCell();
             }
         });
-        
-        if(type.equals(FLOATING)) {
-        	taskList.setOnKeyPressed(new UITaskListViewListener(CMD_DELETE_FLOATING_TASK, cmdInputBox, this));
-        } else if(type.equals(EVENT)) {
-        	taskList.setOnKeyPressed(new UITaskListViewListener(CMD_DELETE_EVENT_TASK, cmdInputBox, this));
-        }
     }
     
 	//@author A0111824R
@@ -95,79 +79,6 @@ public class UITaskListView {
     	return listItems;
     }
    
-	//@author A0111824R
-    /**
-     *
-     * @author Tan Young Sing
-     */
-    private ArrayList<UITaskListItem> generateFloatingList(ArrayList<Task> items) {
-    	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
-    	UITaskListItem currentHeader = null;
-    	
-    	for(int i =0; i<items.size(); i++) {
-    		Task listItem = items.get(i);
-    		
-    		if(currentHeader == null) {
-    			if(listItem.getEndDate() == null) {
-    				currentHeader = new UITaskListItem(null, null, "Right");
-    				listItems.add(currentHeader);
-    			} else if(listItem.getEndDate() != null) {
-    				currentHeader = new UITaskListItem(null, listItem.getEndDate(), "Right");
-    				listItems.add(currentHeader);
-    			} 
-    		} else {
-    			if(listItem.getEndDate() != null && !currentHeader.getSeparatorTitle().equalsIgnoreCase("DEADLINES")) {
-    				currentHeader = new UITaskListItem(null, listItem.getEndDate(), "Right");
-    				listItems.add(currentHeader);
-    			} else if(listItem.getEndDate() == null && !currentHeader.getSeparatorTitle().equalsIgnoreCase("REMINDERS")){
-    				currentHeader = new UITaskListItem(null, null, "Right");
-    				listItems.add(currentHeader);
-    			}
-    		}
-    	
-    		listItems.add(new UITaskListItem(listItem, listItem.getDate(), "Right"));
-    		currentHeader.incrementNumOfTask();
-    	}
-    
-    	return listItems;
-    }
-    
-	//@author A0111824R
-    /**
-     *
-     * @author Tan Young Sing
-     */
-    private ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items) {
-    	DateTime currentDate = null;
-    	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
-    	UITaskListItem currentHeader = null;
-    	
-    	for(int i = 0; i<items.size(); i++) {
-    		Task t = items.get(i);
-    		if(currentHeader == null) {
-        		currentDate = t.getDate();
-        		currentHeader = new UITaskListItem(null, t.getDate(), "Left");
-        		listItems.add(currentHeader);
-    		} else {
-    			if(currentDate.toString("y").equals(t.getDate().toString("y"))) {
-    				if(!currentDate.toString("D").equals(t.getDate().toString("D"))) {
-    					currentDate = t.getDate();
-    					currentHeader = new UITaskListItem(null, t.getDate(), "Left");
-    					listItems.add(currentHeader);
-    				}
-    			} else {
-    				currentDate = t.getDate();
-    				currentHeader = new UITaskListItem(null, t.getDate(), "Left");
-    				listItems.add(currentHeader);
-    			}
-    		}	
-    		listItems.add(new UITaskListItem(t, t.getDate(), "Left"));
-    		currentHeader.incrementNumOfTask();
-    	}
-
-    	return listItems;
-    }
-    
 	//@author A0111824R
     /**
      *
@@ -203,6 +114,8 @@ public class UITaskListView {
     public ObservableList<UITaskListItem> getSelectedItem() {
     	return taskList.getSelectionModel().getSelectedItems();
     }
+    
+    protected abstract ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items);
    
 	//@author A0111824R
     /**
@@ -214,12 +127,9 @@ public class UITaskListView {
     	
     	if(items.size() == 0) {
     		convertedList.setAll(generateEmptyList(items));
-    	} else if(this.type.equals(EVENT)) {
+    	} else {
     		convertedList.setAll(generateListItems(items));
-    	} else if (this.type.equals(FLOATING)){
-    		convertedList.setAll(generateFloatingList(items));
-    	}
-    	
+    	} 
     	taskList.setItems(convertedList);
     }
 

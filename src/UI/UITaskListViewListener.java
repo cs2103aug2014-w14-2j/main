@@ -40,11 +40,7 @@ public class UITaskListViewListener implements EventHandler<KeyEvent> {
 	private String formatIndexIntoCmd(ObservableList<UITaskListItem> items) {
 		String output = "";
 		for (UITaskListItem item : items) {
-			if(taskList.type.equals(FLOATING)){
-				output += item.getTask().getDisplayID() + " ";
-			} else if(taskList.type.equals(EVENT)){
-				output += item.getTask().getDisplayID() + " ";
-			}
+			output += item.getTask().getDisplayID() + " ";
 		}
 		return output.trim();
 	}
