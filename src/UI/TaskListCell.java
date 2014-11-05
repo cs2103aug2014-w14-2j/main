@@ -27,6 +27,10 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     static private final int TASK_CONTAINER_WIDTH = 260;
     static private final int TASK_CONTAINER_HEIGHT = 70;
     static private final int TASK_CONTAINER_SPACING = 15;
+    
+	private final String LISTITEM_HEADER = "header";
+	private final String LISTITEM_DEFAULT = "default";
+	private final String LISTITEM_SEPARATOR = "float_separator";
 
     private final String CONTAINER_HEIGHT = "-fx-cell-size: %s;";
 
@@ -207,7 +211,7 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     	super.updateItem(item, empty);
     	
     	if(!empty) {
-    		if (item != null && item.getType().equals("default")) {
+    		if (item != null && item.getType().equals(LISTITEM_DEFAULT)) {
     			Task taskItem = item.getTask();
     			
     			VBox descriptionBox = new VBox(2);
@@ -256,7 +260,7 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
     			setGraphic(stack);
     			
-    		} else if(item != null && item.getType().equals("header")) {	
+    		} else if(item != null && item.getType().equals(LISTITEM_HEADER)) {	
     			
     			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
     			this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;" + cellHeight);
@@ -268,7 +272,7 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     			StackPane.setAlignment(text, Pos.TOP_LEFT);
     			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
     			setGraphic(stack);
-    		} else if(item.getTask() == null && item.getType().equals("float_separator")) {
+    		} else if(item.getTask() == null && item.getType().equals(LISTITEM_SEPARATOR)) {
     			
     			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
     			this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;" + cellHeight);
