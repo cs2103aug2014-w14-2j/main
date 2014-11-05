@@ -38,10 +38,20 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         this.isDouble = false;
     }
     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public void setNextPossibleCmd(String cmd) {
         this.nextPossibleCommand = cmd;
     }
     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     private boolean isAddCommand(String next) {
     	if(next.trim().equalsIgnoreCase(ADD_COMMAND)) {
     		return true;
@@ -49,6 +59,11 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     	return false;
     }
     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     private boolean isSearchCommand(String next) {
     	if(next.trim().equalsIgnoreCase(SEARCH_COMMAND)) {
     		return true;
@@ -56,7 +71,11 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     	return false;
     }
     
-    
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     private boolean isEditCommand(String next) {
     	String[] cmdRetrieval = next.split(" ");
     	
@@ -66,6 +85,11 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     	return false;
     }
     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     @Override
     public void handle(KeyEvent event) {
         TextField inputBox = cmdInputBox.getCmdInputBox();
