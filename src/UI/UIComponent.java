@@ -306,7 +306,7 @@ public class UIComponent {
      * @param input the arraylist of tasks to populate the listview.
      */
 	public void updateTaskList(ArrayList<Task> items) {
-	    floatingTaskListView.populateTaskListWithData(items);
+	    floatingTaskListView.populateTaskListWithData(items, false);
 	    floatingTaskListView.clearSelection();
 	    
 	    logger.log(Level.INFO, "Task ListView is updated.");
@@ -319,7 +319,7 @@ public class UIComponent {
      * @param input the arraylist of tasks to be populated on the listview.
      */
 	public void updateReminderList(ArrayList<Task> items) {
-	    eventReminderTaskListView.populateTaskListWithData(items);
+	    eventReminderTaskListView.populateTaskListWithData(items, true);
 	    eventReminderTaskListView.clearSelection();    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
 	}
@@ -333,7 +333,7 @@ public class UIComponent {
      */
 	public void updateLeftPanel(ArrayList<Task> items, String title) {
 		reminderTaskTitle.setText(title);
-	    eventReminderTaskListView.populateTaskListWithData(items);
+	    eventReminderTaskListView.populateTaskListWithData(items, true);
 	    eventReminderTaskListView.clearSelection();    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
 	}
@@ -347,7 +347,7 @@ public class UIComponent {
      */
 	public void updateRightPanel(ArrayList<Task> items, String title) {
 		floatingTaskTitle.setText(title);
-		floatingTaskListView.populateTaskListWithData(items);
+		floatingTaskListView.populateTaskListWithData(items, false);
 	    floatingTaskListView.clearSelection();
 	    
 	    logger.log(Level.INFO, "Task ListView is updated.");

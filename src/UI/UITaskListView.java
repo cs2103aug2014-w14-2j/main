@@ -66,19 +66,7 @@ public abstract class UITaskListView {
             }
         });
     }
-    
-	//@author A0111824R
-    /**
-     *
-     * @author Tan Young Sing
-     */
-    private ArrayList<UITaskListItem> generateEmptyList(ArrayList<Task> items) {
-    	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
-    	UITaskListItem item = new UITaskListItem(null, null, "EMPTY");
-    	listItems.add(item);
-    	return listItems;
-    }
-   
+
 	//@author A0111824R
     /**
      *
@@ -114,19 +102,17 @@ public abstract class UITaskListView {
     public ObservableList<UITaskListItem> getSelectedItem() {
     	return taskList.getSelectionModel().getSelectedItems();
     }
-    
-    protected abstract ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items);
    
 	//@author A0111824R
     /**
      *
      * @author Tan Young Sing
      */
-    public void populateTaskListWithData(ArrayList<Task> items) {
+    public void populateTaskListWithData(ArrayList<Task> items, boolean isLeftPane) {
     	ObservableList<UITaskListItem> convertedList = FXCollections.observableArrayList();
     	
     	if(items.size() == 0) {
-    		convertedList.setAll(generateEmptyList(items));
+    		convertedList.setAll(generateEmptyList(items, isLeftPane));
     	} else {
     		convertedList.setAll(generateListItems(items));
     	} 
@@ -141,7 +127,22 @@ public abstract class UITaskListView {
     public ListView<UITaskListItem> getListView() {
         return taskList;
     }
-
+    
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
+    protected abstract ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items);
+    
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
+    protected abstract ArrayList<UITaskListItem> generateEmptyList(ArrayList<Task> items, boolean isLeftPane);
+    
+    
 	//@author A0111824R
     /**
      *
@@ -405,7 +406,7 @@ public abstract class UITaskListView {
         			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
         			
         			
-        			if(item.getPane().equals("EMPTY")) {
+        			if(item instanceof UIEmptyTaskListItem) {
         				StackPane.setMargin(text, new Insets(0, 70, 0, 70));
         				this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #FFB347;" + cellHeight);
         			}
