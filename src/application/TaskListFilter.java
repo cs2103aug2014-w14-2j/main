@@ -30,11 +30,37 @@ class KeepTasksCompletedToday implements TaskFilter {
     }
 }
 
+class KeepTasksOutstanding implements TaskFilter {
+    private DateTime now;
+    public KeepTasksOutstanding() {
+        this.now = new DateTime();
+    }
+    
+    @Override
+    public boolean apply(Task t) {
+        if (!t.isCompleted()) {
+            if (t.getEndDate() != null && t.getEndDate().isBefore(this.now)) {
+                return true;
+            }
+            // There is no end date but only start date, and it is before now.
+            else if (t.getEndDate() == null &&
+                    t.getDate() != null && t.getDate().isBefore(this.now)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
 class KeepTasksBetween implements TaskFilter {
     private DateTime start, end;
     public KeepTasksBetween(DateTime start, DateTime end) {
         this.start = start;
         this.end = end;
+    }
+    public KeepTasksBetween(int numDays) {
+        this.start = new DateTime();
+        this.end = new DateTime().plusDays(numDays);
     }
     
     @Override
@@ -150,12 +176,10 @@ class KeepTasksNotCompleted implements TaskFilter {
 
 public class TaskListFilter {
     private ArrayList<TaskFilter> filters;
-    private ArrayList<Task> taskList;
     private boolean strongFilter; // true for AND/&&, false for OR/||.
     
-    public TaskListFilter(ArrayList<Task> taskList, boolean strongFilter) {
+    public TaskListFilter(boolean strongFilter) {
         this.filters = new ArrayList<TaskFilter>();
-        this.taskList = taskList;
         this.strongFilter = strongFilter;
     }
     
@@ -163,9 +187,9 @@ public class TaskListFilter {
         this.filters.add(filter);
     }
     
-    public ArrayList<Task> apply() {
+    public ArrayList<Task> apply(ArrayList<Task> taskList) {
         ArrayList<Task> filteredTaskList = new ArrayList<Task>();
-        ListIterator<Task> taskI = this.taskList.listIterator();
+        ListIterator<Task> taskI = taskList.listIterator();
         ListIterator<TaskFilter> filterI;
         Task task;
         TaskFilter filter;
