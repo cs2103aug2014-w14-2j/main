@@ -23,6 +23,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
+//@author A0111824R
 /**
  * Abstracted ListView Class
  * 
@@ -46,6 +47,11 @@ public class UITaskListView {
 	
 	public String type;
     
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public UITaskListView(UICmdInputBox cmdInputBox, String type) {
         taskList = new ListView<UITaskListItem>();
         this.cmdInputBox = cmdInputBox;
@@ -53,6 +59,11 @@ public class UITaskListView {
         setTaskListProperty();
     }
 
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     private void setTaskListProperty() {
         taskList.setPrefHeight(DISPLAY_HEIGHT);
         taskList.setPrefWidth(DISPLAY_WIDTH);
@@ -72,15 +83,23 @@ public class UITaskListView {
         }
     }
     
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     private ArrayList<UITaskListItem> generateEmptyList(ArrayList<Task> items) {
     	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
     	UITaskListItem item = new UITaskListItem(null, null, "EMPTY");
     	listItems.add(item);
     	return listItems;
     }
-    
-    
-    
+   
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     private ArrayList<UITaskListItem> generateFloatingList(ArrayList<Task> items) {
     	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
     	UITaskListItem currentHeader = null;
@@ -113,7 +132,11 @@ public class UITaskListView {
     	return listItems;
     }
     
-    
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     private ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items) {
     	DateTime currentDate = null;
     	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
@@ -145,22 +168,47 @@ public class UITaskListView {
     	return listItems;
     }
     
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public boolean isFocused() {
     	return taskList.isFocused();
     }
     
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public void clearSelection() {
     	taskList.getSelectionModel().clearSelection();
     }
     
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public int getSelectedItemIndex() {
     	return taskList.getSelectionModel().getSelectedIndex();
     }
     
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public ObservableList<UITaskListItem> getSelectedItem() {
     	return taskList.getSelectionModel().getSelectedItems();
     }
    
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public void populateTaskListWithData(ArrayList<Task> items) {
     	ObservableList<UITaskListItem> convertedList = FXCollections.observableArrayList();
     	
@@ -175,10 +223,20 @@ public class UITaskListView {
     	taskList.setItems(convertedList);
     }
 
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public ListView<UITaskListItem> getListView() {
         return taskList;
     }
 
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     class TaskListCell extends ListCell<UITaskListItem> { 
         static private final int TASK_CONTAINER_WIDTH = 260;
         static private final int TASK_CONTAINER_HEIGHT = 70;
@@ -193,6 +251,11 @@ public class UITaskListView {
         private Rectangle contentPlaceHolder;
         private Text indexLabel;
         
+    	//@author A0111824R
+        /**
+         *
+         * @author Tan Young Sing
+         */
         private Rectangle createRectangle(int width, int height, int arcWidth, int arcHeight, Color c) {
         	Rectangle rect = new Rectangle(width, height);
             rect.setArcHeight(arcHeight);
@@ -201,6 +264,11 @@ public class UITaskListView {
             return rect;
         }
 
+    	//@author A0111824R
+        /**
+         *
+         * @author Tan Young Sing
+         */
         private Text createText(String text, int textWidth, int size, String fontFamily, FontWeight weight, Color color) {
             Text textLabel = new Text(text);
             textLabel.setWrappingWidth(textWidth);
@@ -209,6 +277,11 @@ public class UITaskListView {
             return textLabel;
         }
         
+    	//@author A0111824R
+        /**
+         *
+         * @author Tan Young Sing
+         */
         private StackPane getPriorityIndicator(int priority, String displayID, int height, Task item) {
         	String indicator_color = COLOR_DEFAULT_PRIORITY;
         	
@@ -237,6 +310,11 @@ public class UITaskListView {
         	return stack;
         }
         
+    	//@author A0111824R
+        /**
+         *
+         * @author Tan Young Sing
+         */
         private String getDateString(DateTime currentDate) {
         	String output = "";
         	DateTime systemTime = new DateTime();
@@ -264,6 +342,11 @@ public class UITaskListView {
         	return output;
         }
         
+    	//@author A0111824R
+        /**
+         *
+         * @author Tan Young Sing
+         */
         private int getContentHeight(int length) {
         	if(length < 80) {
         		return 65;
@@ -284,6 +367,11 @@ public class UITaskListView {
         	}
         }
         
+    	//@author A0111824R
+        /**
+         *
+         * @author Tan Young Sing
+         */
         private String generateTaskDate(Task item) {
         	String output = "";
         	
@@ -306,6 +394,11 @@ public class UITaskListView {
         	return output;
         }
         
+    	//@author A0111824R
+        /**
+         *
+         * @author Tan Young Sing
+         */
         private StackPane createOutstandingLabel() {
         	Rectangle outstandingLabel = createRectangle(290, 15, 0, 0, Color.web("rgba(255, 120, 120, 1)"));
         	Text labelText = createText("OUTSTANDING", 190, 10, "Raleway", FontWeight.BOLD, Color.WHITE);
@@ -318,6 +411,11 @@ public class UITaskListView {
         	return stack;
         }
 
+    	//@author A0111824R
+        /**
+         *
+         * @author Tan Young Sing
+         */
         @Override
         public void updateItem(UITaskListItem item, boolean empty) {
         	super.updateItem(item, empty);

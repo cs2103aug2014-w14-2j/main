@@ -5,6 +5,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.TextField;
 
+//@author A0111824R
 /**
  * UIAutoCompleteListener: ActionHandler acts as a middle man between UIAutoComplete & UIComponent.
  * 
@@ -24,7 +25,12 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     final public String ADD_COMMAND = "ADD";
     final private String EDIT_COMMAND = "EDIT";
     final private String SEARCH_COMMAND = "SEARCH";
-      
+     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public UIAutoCompleteListener(UICmdInputBox cmdInputBox) {
         this.uiAutoComplete = new UIAutoComplete(cmdInputBox, this);
         this.cmdInputBox = cmdInputBox;

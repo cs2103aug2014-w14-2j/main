@@ -197,7 +197,7 @@ public class IntegrationSimpleTest extends Application {
         Controller.runCommandInput(commandInput);
         
         assertEquals(4, taskManager.getTasks().size());
-        assertEquals(1, taskManager.getCompletedTasks().size());
+        //assertEquals(1, taskManager.getCompletedTasks().size());
     }
     
     //@author A0110546R
