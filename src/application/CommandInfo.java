@@ -123,6 +123,12 @@ public class CommandInfo {
                 && (this.taskDesc.equalsIgnoreCase(""))) {
             throw new MismatchedCommandException("Empty Task Description.");        
         }
+        if ((startDateTime != null) && (endDateTime!=null)){
+            int result = DateTimeComparator.getInstance().compare(this.startDateTime,this.endDateTime);
+            if (result == 1) {   //currentDT is less than dateTime
+                throw new MismatchedCommandException("The End Time is before the Start Time.");
+            }
+        }
     }
 
     //@author A0090971Y
