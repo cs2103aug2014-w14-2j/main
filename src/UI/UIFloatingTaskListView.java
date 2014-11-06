@@ -12,6 +12,8 @@ import application.Task;
 public class UIFloatingTaskListView extends UITaskListView {
 	
 	private final String CMD_DELETE_FLOATING_TASK = "DELETE %s";
+	private final String UI_SEPARATOR_REMINDER = "REMINDERS";
+	private final String UI_SEPARATOR_DEADLINE = "DEADLINES";
 	
 	//@author A0111824R
     /**
@@ -60,10 +62,10 @@ public class UIFloatingTaskListView extends UITaskListView {
     				listItems.add(currentHeader);
     			} 
     		} else {
-    			if(listItem.getEndDate() != null && !currentHeader.getSeparatorTitle().equalsIgnoreCase("DEADLINES")) {
+    			if(listItem.getEndDate() != null && !currentHeader.getSeparatorTitle().equalsIgnoreCase(UI_SEPARATOR_DEADLINE)) {
     				currentHeader = new UIRightTaskListItem(null, listItem.getEndDate(), false);
     				listItems.add(currentHeader);
-    			} else if(listItem.getEndDate() == null && !currentHeader.getSeparatorTitle().equalsIgnoreCase("REMINDERS")){
+    			} else if(listItem.getEndDate() == null && !currentHeader.getSeparatorTitle().equalsIgnoreCase(UI_SEPARATOR_REMINDER)){
     				currentHeader = new UIRightTaskListItem(null, null, false);
     				listItems.add(currentHeader);
     			}

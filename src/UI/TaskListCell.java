@@ -20,7 +20,7 @@ import application.Task;
 
 //@author A0111824R
 /**
- *
+ * This class will override the default ListCell generate for the LISTVIEW component
  * @author Tan Young Sing
  */
 public class TaskListCell extends ListCell<UITaskListItem> { 
@@ -48,6 +48,9 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     private final String UI_EMPTY_TASK_STYLE = "-fx-background-color: rgb(227, 227, 227, 1);";
     private final String UI_EMPTY_TASKS = "-fx-padding: 3 0 3 0; -fx-background-color: #FFB347;";
     
+    private final int UI_OUTSTANDING_HEIGHT = 15;
+    private final int UI_OUTSTANDING_WIDTH = 290;
+   
 	private final String LISTITEM_HEADER = "header";
 	private final String LISTITEM_DEFAULT = "default";
 	private final String LISTITEM_SEPARATOR = "float_separator";
@@ -64,7 +67,13 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     
 	//@author A0111824R
     /**
-     *
+     * Creates a Rectangle Object
+     * @param width : Width of the rectangle
+     *  	  height : Height of the rectangle
+     *   	  arcWidth : Curve Border Top Half
+     *        arcHeight : Curve Border Bottom Half
+     *        Color : Color of the Rectangle
+     * @return Rectangle
      * @author Tan Young Sing
      */
     private Rectangle createRectangle(int width, int height, int arcWidth, int arcHeight, Color c) {
@@ -77,7 +86,14 @@ public class TaskListCell extends ListCell<UITaskListItem> {
 
 	//@author A0111824R
     /**
-     *
+     * Create a Text Object
+     * @param text : String of the text
+     * 		  textWidth: Word Wrap Width
+     * 		  size : font size
+     *    	  fontFamily: font-family of the display text
+     *        fontWeight: weight of the font default: NORMAL
+     *        color : color of the text
+     * @return Text
      * @author Tan Young Sing
      */
     private Text createText(String text, int textWidth, int size, String fontFamily, FontWeight weight, Color color) {
@@ -90,7 +106,11 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     
 	//@author A0111824R
     /**
-     *
+     * @param priority : (0,1) 0 is non prioritize and 1 is prioritize
+     *  	  displayID : Task ID
+     *        height : height of the priority Indicator
+     *        item : Task object that will retrieve all specific data for display
+     * @return StackPane
      * @author Tan Young Sing
      */
     private StackPane getPriorityIndicator(int priority, String displayID, int height, Task item) {
@@ -162,21 +182,21 @@ public class TaskListCell extends ListCell<UITaskListItem> {
      */
     private int getContentHeight(int length) {
     	if(length < 80) {
-    		return 65;
+    		return 70;
     	} else if (length > 80 && length < 140) {
-    		return 105;
+    		return 110;
     	} else if (length > 140 && length < 200) {
-    		return 155;
+    		return 160;
     	} else if (length > 200 && length < 260){
-    		return 205;
+    		return 210;
     	} else if (length > 260 && length < 320) {
-    		return 255;
+    		return 260;
     	} else if (length > 320 && length < 380){
-    		return 305;
+    		return 310;
     	} else if (length > 380 && length < 440){
-    		return 355;
+    		return 360;
     	} else {
-    		return 405;
+    		return 410;
     	}
     }
     
@@ -213,7 +233,7 @@ public class TaskListCell extends ListCell<UITaskListItem> {
      * @author Tan Young Sing
      */
     private StackPane createOutstandingLabel() {
-    	Rectangle outstandingLabel = createRectangle(290, 15, 0, 0, Color.web(COLOR_OUTSTANDING));
+    	Rectangle outstandingLabel = createRectangle(UI_OUTSTANDING_WIDTH, UI_OUTSTANDING_HEIGHT, 0, 0, Color.web(COLOR_OUTSTANDING));
     	Text labelText = createText(UI_OVERDUE_LABEL, 190, 10, UI_DESCRIPTION_FONT, FontWeight.BOLD, Color.WHITE);
     	
 		StackPane stack = new StackPane();
@@ -236,6 +256,7 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     	if(!empty) {
     		if (item != null && item.getType().equals(LISTITEM_DEFAULT)) {
     			Task taskItem = item.getTask();
+    			boolean isOutstanding = false;
     			
     			VBox descriptionBox = new VBox(2);
     			
@@ -244,11 +265,13 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     					if(taskItem.getEndDate().isBeforeNow()) {
     						//outstanding
     						descriptionBox.getChildren().addAll(createOutstandingLabel());
+    						isOutstanding = true;
     					} 
     	        	}else if(taskItem.getDate() != null){
     					if(taskItem.getDate().isBeforeNow()) {
     						//outstanding
     						descriptionBox.getChildren().addAll(createOutstandingLabel());
+    						isOutstanding = true;
     					} 
             		}
     			}
@@ -263,6 +286,11 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     			Text descriptionText = createText(taskItem.getDescription(), 190, 14, "", FontWeight.NORMAL, Color.BLACK);
     			
     			int height = getContentHeight(taskItem.getDescription().length());
+    			
+    			if(isOutstanding) {
+    				height += UI_OUTSTANDING_HEIGHT;
+    			}
+    			
     			this.setStyle(UI_DEFAULT_PADDING + String.format(CONTAINER_HEIGHT, height));
     			contentPlaceHolder = createRectangle(270, height-10, 5, 5, Color.WHITE);
     			descriptionBox.getChildren().addAll(descriptionText);
@@ -299,9 +327,9 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     		} else if(item.getTask() == null && item.getType().equals(LISTITEM_SEPARATOR)) {
     			
     			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
-    			this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;" + cellHeight);
+    			this.setStyle(UI_HEADING_STYLE + cellHeight);
     			String output = item.getSeparatorTitle() + " (" + item.getNumberTask() + ")";
-    			Text text = createText(output, 0, 15, "Ariel", FontWeight.BOLD, Color.WHITE);
+    			Text text = createText(output, 0, 15,  UI_DESCRIPTION_FONT, FontWeight.BOLD, Color.WHITE);
     			
     			StackPane stack = new StackPane();
     			stack.getChildren().addAll(text);
@@ -310,7 +338,7 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     			
     			if(item instanceof UIEmptyTaskListItem) {
     				StackPane.setMargin(text, new Insets(0, 70, 0, 70));
-    				this.setStyle("-fx-padding: 3 0 3 0; -fx-background-color: #FFB347;" + cellHeight);
+    				this.setStyle(UI_EMPTY_TASKS + cellHeight);
     			}
     			
     			setGraphic(stack);
