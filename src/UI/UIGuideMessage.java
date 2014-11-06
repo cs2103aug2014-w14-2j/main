@@ -10,7 +10,7 @@ import javafx.scene.input.KeyEvent;
 /**
  * Middle man between UIComponent and Controller.
  * 
- * @author Tan Young Sing
+ * @author 
  */
 public class UIGuideMessage implements EventHandler<KeyEvent> {
 

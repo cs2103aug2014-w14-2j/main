@@ -53,26 +53,56 @@ public class UIComponent {
 	
 	private Text reminderTaskTitle,floatingTaskTitle;
 	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	public Scene getScene() {
 		return scene;
 	}
 	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	public BorderPane getRootPane() {
 		return rootPane;
 	}
 
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	public UICmdInputBox getCmdInputBox() {
 		return cmdInputBox;
 	}
 
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	public UITaskListView getFloatingTaskListView() {
 		return floatingTaskListView;
 	}
 
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	public UITaskListView getEventReminderTaskListView() {
 		return eventReminderTaskListView;
 	}
 
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	public UIComponent() {
 		initializeLoggerFileHandler();
 		initializeComponents();
@@ -80,11 +110,21 @@ public class UIComponent {
 		initializeStyleSheet();
 	}
 
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	private void initializeStyleSheet() {
 		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
 		rootPane.getStyleClass().add(ROOTPANE_STYLESHEET);
 	}
 	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	private void initializeLoggerFileHandler() {
         try {
         	logger = new WaveLogger("UIComponent");
@@ -93,17 +133,32 @@ public class UIComponent {
         }
 	}
 	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	private void setupScene() {
 		scene = new Scene(rootPane, APPLICATION_WIDTH, APPLICATION_HEIGHT);
 		scene.setOnKeyPressed(new UISceneListener(cmdInputBox));
 		logger.log(Level.INFO, "The Scene is created.");
 	}
 
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	private void initializeComponents() {
 		rootPane = new BorderPane();
 		rootPane.setCenter(getMainComponentHolder());
 	}
 	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	private VBox createVBox(int spacing, Insets padding, int prefWidth, int prefHeight, String style) {
 		VBox vBox = new VBox(spacing);
 		vBox.setPadding(padding);
@@ -120,6 +175,11 @@ public class UIComponent {
 		return vBox;
 	}
 	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	private HBox createHBox(int spacing, Insets padding, int prefWidth, int prefHeight, String style) {
 		HBox hBox = new HBox(spacing);
 		hBox.setPadding(padding);
@@ -136,6 +196,11 @@ public class UIComponent {
 		return hBox;
 	}
 	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	private Text createText(String text, int size, FontWeight weight, String fontFamily, Color color) {
 		Text textLabel = new Text(text);
 		textLabel.setTextAlignment(TextAlignment.JUSTIFY);
@@ -151,6 +216,11 @@ public class UIComponent {
 		return textLabel;
 	}
 	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	private VBox getUserInputComponentHolder() {
 		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_PLACEHOLDER_STYLESHEET);
 		suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
@@ -161,6 +231,11 @@ public class UIComponent {
 		return userInputComponentHolder;
 	}
 
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	private VBox getMainComponentHolder() {
 		HBox taskListViewComponentHolder = createHBox(10, new Insets(10, 0, 10, 0), 0, 0, "");
 		VBox mainComponentHolder = createVBox(5, new Insets(15, 15, 0, 15), 0, 0, "");
@@ -174,21 +249,31 @@ public class UIComponent {
 		return mainComponentHolder;
 	}
 
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	private VBox getFloatingTaskListViewHolder() {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		floatingTaskTitle = createText(LISTVIEW_HEADING_TASK, 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 
-		floatingTaskListView = new UITaskListView(cmdInputBox, "Task");
+		floatingTaskListView = new UIFloatingTaskListView(cmdInputBox);
 		innerBox.getChildren().addAll(floatingTaskTitle, floatingTaskListView.getListView());
 		
 		return innerBox;
 	}
 
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	private VBox getTimedAndDeadlineTaskHolder() {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
 		reminderTaskTitle = createText(LISTVIEW_HEADING_REMINDER, 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
 		
-		eventReminderTaskListView = new UITaskListView(cmdInputBox, "Event");
+		eventReminderTaskListView = new UIEventTaskListView(cmdInputBox);
 		innerBox.getChildren().addAll(reminderTaskTitle, eventReminderTaskListView.getListView());
 
 		return innerBox;
@@ -221,7 +306,7 @@ public class UIComponent {
      * @param input the arraylist of tasks to populate the listview.
      */
 	public void updateTaskList(ArrayList<Task> items) {
-	    floatingTaskListView.populateTaskListWithData(items);
+	    floatingTaskListView.populateTaskListWithData(items, false);
 	    floatingTaskListView.clearSelection();
 	    
 	    logger.log(Level.INFO, "Task ListView is updated.");
@@ -234,7 +319,7 @@ public class UIComponent {
      * @param input the arraylist of tasks to be populated on the listview.
      */
 	public void updateReminderList(ArrayList<Task> items) {
-	    eventReminderTaskListView.populateTaskListWithData(items);
+	    eventReminderTaskListView.populateTaskListWithData(items, true);
 	    eventReminderTaskListView.clearSelection();    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
 	}
@@ -248,7 +333,7 @@ public class UIComponent {
      */
 	public void updateLeftPanel(ArrayList<Task> items, String title) {
 		reminderTaskTitle.setText(title);
-	    eventReminderTaskListView.populateTaskListWithData(items);
+	    eventReminderTaskListView.populateTaskListWithData(items, true);
 	    eventReminderTaskListView.clearSelection();    
 		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
 	}
@@ -262,16 +347,26 @@ public class UIComponent {
      */
 	public void updateRightPanel(ArrayList<Task> items, String title) {
 		floatingTaskTitle.setText(title);
-		floatingTaskListView.populateTaskListWithData(items);
+		floatingTaskListView.populateTaskListWithData(items, false);
 	    floatingTaskListView.clearSelection();
 	    
 	    logger.log(Level.INFO, "Task ListView is updated.");
 	}
 	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	public void setSuggestionText(String text) {
 		suggestionText.setText(text);
 	}
 	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public void showStage(Stage primaryStage) {
     	try {
     		primaryStage.setScene(this.getScene());

@@ -22,6 +22,7 @@ public class Controller extends Application {
     
     private static DataStorage dataStorage;    
     private static TaskManager taskManager;
+    private static ConfigManager configManager;
     private static UIComponent uiComponent;
     private static MessageManager messageManager;
     private static Backup backup;
@@ -80,9 +81,12 @@ public class Controller extends Application {
                 case "home":
                     break;
                 case "search":
-                case "display":
+                    taskManager.clearIDMapping();
+                    uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
+                    uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search results");
                 case "show":
                     taskManager.clearIDMapping();
+                    taskManager.setDaysToDisplay(commandInfo, configManager);
                     uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
                     uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search results");
                     return;
@@ -126,14 +130,18 @@ public class Controller extends Application {
     
     //@author A0110546R
     private static void setup() {
-        taskManager = new TaskManager();
         dataStorage = new DataStorage();
-        messageManager = new MessageManager();
-        backup = new Backup();
-        
         dataStorage.initiateFile();
         
+        taskManager = new TaskManager();
         taskManager.initializeList(dataStorage.retrieveTasks());
+        
+        messageManager = new MessageManager();
+        
+        configManager = new ConfigManager();
+        taskManager.setDaysToDisplay(configManager.getHomeViewType());
+        
+        backup = new Backup();
         backup.storeBackup(taskManager.getAll());
     }
     
