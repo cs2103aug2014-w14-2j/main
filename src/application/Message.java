@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Message {
 
-    protected final String NOTIFY_ADDED = "Added as Task";
+    protected final String NOTIFY_ADDED = "Added as ";
     protected final String NOTIFY_DELETED = "Deleted ";
     protected final String NOTIFY_EDITED = "edited successfully";
     protected final String NOTIFY_COMPLETED = "finished ";
@@ -32,7 +32,7 @@ class MessageNotifyAdd extends Message {
      * @param ID Task ID assigned to the new task
      */
     MessageNotifyAdd(String ID) {
-        outputMsg += NOTIFY_ADDED + " " + ID;
+        outputMsg += NOTIFY_ADDED + ID;
     }
 }
 
