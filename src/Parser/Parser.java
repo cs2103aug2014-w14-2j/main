@@ -11,13 +11,14 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 
 import application.MismatchedCommandException;
 
 public class Parser {
 
     private DateTimeParser parser;
-    private static String[] timePrepositions = new String[] {"by","due","till","until"};
+    private static String[] timePrepositions = new String[] {"BY","DUE","TILL","UNTIL"};
 
     //@author A0090971Y
     /**
@@ -40,7 +41,7 @@ public class Parser {
 
         String taskDesc = parseTaskDesc(userInput,commandType);
         int priority = parsePriority(userInput,taskDesc);
-        String content = parseContent(userInput,taskDesc);
+        String content = parseContent(userInput,taskDesc).toUpperCase();
         parser = new DateTimeParser(content);
         DateTime startDateTime =changeToDateTime(parser.getStartDateTime());
         DateTime endDateTime = changeToDateTime(parser.getEndDateTime());
@@ -49,11 +50,12 @@ public class Parser {
             startDateTime = null;
             endDateTime = formatEndDateTime(endDateTime,content);
         }
+        startDateTime = formatStartDateTime(startDateTime,content);
         boolean completed = getComplete(content);
         String input = parseInput(userInput);
         try {
-        CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority,completed,input);
-        return cmdInfo;
+            CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority,completed,input);
+            return cmdInfo;
         }
         catch (MismatchedCommandException e) {
             throw e;
@@ -62,11 +64,30 @@ public class Parser {
 
     //@author A0090971Y
     private DateTime formatEndDateTime(DateTime dt,String content) {
+        if (dt == null) {
+            return dt;
+        }
         if(!content.matches(".*\\d.*")){
             int year = Integer.parseInt(dt.toString().substring(0, 4));
             int month =Integer.parseInt(dt.toString().substring(5, 7));
             int day = Integer.parseInt(dt.toString().substring(8,10));       
             dt = new DateTime(year,month, day,23,59,59);
+        }
+        return dt;
+    }
+
+    //@author A0090971Y
+    private DateTime formatStartDateTime(DateTime dt,String content) {
+        if (dt == null) {
+            return dt;
+        }
+        DateTime currentDT = new DateTime();
+        int result = DateTimeComparator.getInstance().compare(currentDT,dt);
+        if ((result == -1)&&(!content.matches(".*\\d.*"))) {   //currentDT is after dt
+            int year = Integer.parseInt(dt.toString().substring(0, 4));
+            int month =Integer.parseInt(dt.toString().substring(5, 7));
+            int day = Integer.parseInt(dt.toString().substring(8,10));       
+            dt = new DateTime(year,month, day,0,0,0);
         }
         return dt;
     }
@@ -114,7 +135,7 @@ public class Parser {
         }
         return false;
     }
-    
+
     private String parseContent(String input,String desc) {
         String content;
         String firstWord = input.trim().split("\\s+")[0];
@@ -122,12 +143,9 @@ public class Parser {
         if (parseTaskIDs(input).size()!=0) {
             content = content.replace(parseTaskIDs(input).get(0),"").trim();
         }
-        
-        content = content.replace("[","");
-        content = content.replace("]", "");
-        content = content.replace("!", "");
-        if (!desc.equalsIgnoreCase("")) {
-            content = content.replaceAll(desc, "");
+        if (input.indexOf("]")>=0) {
+           int index = input.lastIndexOf("]");
+           content = input.substring(index+1);
         }
         return content;
     }
@@ -167,7 +185,7 @@ public class Parser {
         }
         return IDs;
     }
-    
+
     //@author A0090971Y
     /**
      * 
@@ -188,11 +206,11 @@ public class Parser {
         }
         return false;
     }
-    
+
     private String parseInput(String userInput){
         if (parseCommandType(userInput).equalsIgnoreCase("add")){
-        String command = userInput.trim().split("\\s+")[0];
-        userInput = userInput.replace(command,"").trim();
+            String command = userInput.trim().split("\\s+")[0];
+            userInput = userInput.replace(command,"").trim();
         }
         else if (parseCommandType(userInput).equalsIgnoreCase("edit")){
             String command = userInput.trim().split("\\s+")[0];
@@ -204,7 +222,7 @@ public class Parser {
         else {
             userInput = null;
         }
-        
+
         return userInput;
     }
 }
