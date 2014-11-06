@@ -1,0 +1,524 @@
+//@author: a0115864b
+
+
+
+	/**
+	 * origin: .\src\application\Backup.java
+	 */
+
+    /**
+     * Returns a past saved version when "undo" command is received
+     * 
+     * @return backup ArrayList of tasks that was saved before last operation
+     */
+    public ArrayList<Task> getPastVersion() {
+        ArrayList<Task> pastVersion = undoQueue.remove(0);
+        logger.log(Level.INFO, "Backup version retrieved");
+        return pastVersion;
+    }
+    
+	// End of segment: .\src\application\Backup.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Backup.java
+	 */
+
+    /**
+     * Stores a copy of the ArrayList of Tasks in current state. Deep copies everything.
+     * 
+     * @param tasks
+     * @return
+     */
+    public ArrayList<Task> backupTasks(ArrayList<Task> originalTasks) {
+        ArrayList<Task> backup = new ArrayList<Task>();
+        for (int i = 0; i < originalTasks.size(); i++) {
+            backup.add(new Task(originalTasks.get(i), i));
+        }
+        return backup;
+    }
+
+}
+
+	// End of segment: .\src\application\Backup.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\DataStorage.java
+	 */
+
+    /**
+     * Constructor.
+     */
+    public DataStorage() {
+        filename = "Todo.json";
+        initiateFile();
+    }
+
+	// End of segment: .\src\application\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\DataStorage.java
+	 */
+
+    /**
+     * Constructor when filename for external json storage is provided. For unit testing.
+     * @param name name of the json file for storing the tasks
+     */
+    public DataStorage(String name) {
+        filename = name;
+        initiateFile();
+    }
+
+	// End of segment: .\src\application\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\DataStorage.java
+	 */
+
+    /**
+     * Confirm that the external json file exists. If not, create it.
+     */
+    public void initiateFile() {
+        File file = new File(filename);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            logger.log(Level.INFO, "Storage file ready");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+
+	// End of segment: .\src\application\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\DataStorage.java
+	 */
+
+    /**
+     * Read json file. Retrieve all tasks and store them in JSONArray.
+     * @return ArrayList of tasks
+     */
+    public ArrayList<Task> retrieveTasks() {
+        tasks.clear();
+        JSONParser parser = new JSONParser();
+        try {
+            tasks = (JSONArray) parser.parse(new FileReader(filename));
+            logger.log(Level.INFO, "Contents of storage file retrieved");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        } catch (ParseException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
+        return getTasks();
+    }
+
+	// End of segment: .\src\application\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\DataStorage.java
+	 */
+
+    /**
+     * Store tasks to external json file
+     * @param array ArrayList of tasks
+     */
+    public void saveTasks(ArrayList<Task> array) {
+        convertArrayListToJSONArray(array);
+        try {
+            FileWriter fw = new FileWriter(filename, false);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String output = gson.toJson(tasks);
+            fw.write(output);
+            fw.flush();
+            fw.close();
+            logger.log(Level.INFO, "Tasks written to external file");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+
+	// End of segment: .\src\application\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\DataStorage.java
+	 */
+
+    /**
+     * 
+     * @return
+     */
+    public ArrayList<Task> getTasks() {
+        return convertJSONArrayToArrayList(tasks);
+    }
+
+	// End of segment: .\src\application\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\DataStorage.java
+	 */
+
+    /**
+     * Converts JSONArray containing the tasks to a form that other components can understand
+     * @return ArrayList of Tasks objects
+     */
+    public ArrayList<Task> convertJSONArrayToArrayList(JSONArray array) {
+        ArrayList<Task> list = new ArrayList<Task>();
+        for (int i = 0; i < array.size(); i++) {
+            Task task = new Task();
+            JSONObject obj = (JSONObject) array.get(i);
+            try {
+                task.setDescription((String) obj.get(KEY_DESCRIPTION));
+                
+                if (obj.containsKey(KEY_DATE)) {
+                    String dateString = (String) obj.get(KEY_DATE);
+                    DateTime date = fmt.parseDateTime(dateString);
+                    task.setDate(date);
+                }
+                
+                if (obj.containsKey(KEY_END)) {
+                    String endString = (String) obj.get(KEY_END);
+                    DateTime end = fmt.parseDateTime(endString);
+                    task.setEndDate(end);
+                }
+                
+                
+                if (obj.containsKey(KEY_PRIORITY)) {
+                    task.setPriority(((Long) obj.get(KEY_PRIORITY))
+                            .intValue());
+                }
+                
+                boolean isCompleted = (boolean) obj.get(KEY_ISCOMPLETED);
+                task.setCompleted(isCompleted);
+                if (isCompleted) {
+                    String compString = (String) obj.get(KEY_COMPLETED_DATE);
+                    DateTime completedTime = fmt.parseDateTime(compString);
+                    task.setCompletedAt(completedTime);
+                }
+                
+                String modString = (String) obj.get(KEY_LAST_MODIFIED_DATE);
+                DateTime modTime = fmt.parseDateTime(modString);
+                task.setModifiedAt(modTime);
+                
+                String createdString = (String) obj.get(KEY_CREATED_DATE);
+                DateTime createdTime = fmt.parseDateTime(createdString);
+                task.setCreatedAt(createdTime);
+                
+                logger.log(Level.INFO,
+                        "JSONArray converted to ArrayList of tasks");
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, e.toString(), e);
+            }
+            list.add(task);
+        }
+        return list;
+
+    }
+
+
+	// End of segment: .\src\application\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\DataStorage.java
+	 */
+
+    /**
+     * Converts ArrayList to JSONArray that can be saved to external json file
+     * @param list ArrayList of Task objects
+     */
+    public JSONArray convertArrayListToJSONArray(ArrayList<Task> list) {
+        tasks.clear();
+        for (int i = 0; i < list.size(); i++) {
+            JSONObject obj = new JSONObject();
+            
+            try {
+                obj.put(KEY_DESCRIPTION, list.get(i).getDescription());
+                obj.put(KEY_PRIORITY, list.get(i).getPriority());
+                
+                if (list.get(i).getDate() != null) {
+                    String date = fmt.print(list.get(i).getDate());
+                    obj.put(KEY_DATE, date);
+                }
+                
+                if (list.get(i).getEndDate() != null) {
+                    String end = fmt.print(list.get(i).getEndDate());
+                    obj.put(KEY_END, end);
+                }
+                
+                boolean isCompleted = list.get(i).isCompleted();
+                obj.put(KEY_ISCOMPLETED, isCompleted);
+                if (isCompleted) {
+                    String comp = fmt.print(list.get(i).getCompletedAt());
+                    obj.put(KEY_COMPLETED_DATE, comp);
+                }
+                
+                String mod = fmt.print(list.get(i).getModifiedAt());
+                obj.put(KEY_LAST_MODIFIED_DATE, mod);
+                String cr = fmt.print(list.get(i).getCreatedAt());
+                obj.put(KEY_CREATED_DATE, cr);
+                
+                logger.log(Level.INFO,
+                        "ArrayList of tasks converted to JSONArray");
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, e.toString(), e);
+            }
+            tasks.add(obj);
+        }
+        return tasks;
+    }
+
+}
+
+	// End of segment: .\src\application\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\DataTest.java
+	 */
+
+	@Test
+	public void testInitiateFile() {
+		test = new DataStorage("testInitiateFile.json");
+		test.initiateFile();
+		boolean fileExists = false;
+		File storage = new File("testInitiateFile.json");
+		if(storage.isFile() && storage.exists()) {
+			fileExists = true;
+		}
+		// After initiateFile() is called, external storage must exist
+		assertEquals(fileExists, true);
+		
+	}
+	
+	// End of segment: .\test\application\DataTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\DataTest.java
+	 */
+
+	@Test
+	public void testRetrieveTasks() {
+		test = new DataStorage("testRetrieveTasks.json");
+		test.initiateFile();
+		ArrayList<Task> arrayList = test.retrieveTasks();
+		
+		// Deadline task
+		Task task1 = arrayList.get(0);
+		assertEquals(task1.getDescription(), "Birthday party preparation");
+		assertEquals(task1.getDate().toString(), "2015-01-16T01:34:23.000+08:00");
+		
+		// Timed task
+		Task task2 = arrayList.get(1);
+		assertEquals(task2.getDescription(), "CS2103T tutorial");
+		assertEquals(task2.getDate().toString(), "2014-10-15T14:00:00.000+08:00");
+		assertEquals(task2.getEndDate().toString(), "2014-10-15T15:00:00.000+08:00");
+		
+		// Floating task
+		Task task3 = arrayList.get(2);
+		assertEquals(task3.getDescription(), "Remember to feed dog");
+		
+	}
+	
+	// End of segment: .\test\application\DataTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\DataTest.java
+	 */
+
+	@Test
+	public void testSaveTasks() {
+		test = new DataStorage("testSaveTasks.json");
+		test.initiateFile();
+		
+		ArrayList<Task> testArrayList = new ArrayList<Task>();
+		
+		// Deadline task
+		Task task1 = new Task();
+		task1.setDescription("Birthday party preparation");
+		DateTime date1 = formatter.parseDateTime("16/01/2015 01:34:23");
+		task1.setDate(date1);
+		
+		// Timed task
+		Task task2 = new Task();
+		task2.setDescription("CS2103T tutorial");
+		DateTime date2 = formatter.parseDateTime("15/10/2014 14:00:00");
+		task2.setDate(date2);
+		DateTime end2 = formatter.parseDateTime("15/10/2014 15:00:00");
+		task2.setEndDate(end2);
+		
+		// Floating task
+		Task task3 = new Task();
+		task3.setDescription("Remember to feed dog");
+		testArrayList.add(task1);
+		testArrayList.add(task2);
+		testArrayList.add(task3);
+		
+		test.saveTasks(testArrayList);
+		// Comparing the contents of output file with those of expected output file
+		byte b1 = 0;
+		byte b2 = 1;
+		try {
+			FileInputStream f1 = new FileInputStream("testSaveTasks.json");
+			FileInputStream f2 = new FileInputStream("testSaveTasksExpected.json");
+			DataInputStream d1 = new DataInputStream(f1);
+			DataInputStream d2 = new DataInputStream(f2);
+			b1 = d1.readByte();
+			b2 = d2.readByte();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		assertEquals(b1, b2);
+		
+		
+	}
+	
+	// End of segment: .\test\application\DataTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\DataTest.java
+	 */
+
+	@Test
+	public void testConvert1() {
+		test = new DataStorage();
+		
+		// Original ArrayList of tasks
+		ArrayList<Task> testArrayList = new ArrayList<Task>();
+		Task task1 = new Task();
+		task1.setDescription("Buy Civilization: Beyond Earth");
+		DateTime date1 = formatter.parseDateTime("24/10/2014 13:23:04");
+		task1.setDate(date1);
+		Task task2 = new Task();
+		task2.setDescription("MA2214 tutorial");
+		DateTime date2 = formatter.parseDateTime("23/10/2014 14:00:00");
+		task2.setDate(date2);
+		DateTime end2 = formatter.parseDateTime("23/10/2014 15:00:00");
+		task2.setEndDate(end2);
+		Task task3 = new Task();
+		task3.setDescription("Fix toilet pipe");
+		testArrayList.add(task1);
+		testArrayList.add(task2);
+		testArrayList.add(task3);
+		
+		JSONArray jsonArray = test.convertArrayListToJSONArray(testArrayList);
+		
+		JSONObject obj1 = (JSONObject) jsonArray.get(0);
+		assertEquals(obj1.get("Description"), task1.getDescription());
+		assertEquals(obj1.get("Date"), task1.getDate().toString());
+		
+		JSONObject obj2 = (JSONObject) jsonArray.get(1);
+		assertEquals(obj2.get("Description"), task2.getDescription());
+		assertEquals(obj2.get("Date"), task2.getDate().toString());
+		assertEquals(obj2.get("End date"), task2.getEndDate().toString());
+		
+		JSONObject obj3 = (JSONObject) jsonArray.get(2);
+		assertEquals(obj3.get("Description"), task3.getDescription());
+		
+	}
+	
+	// End of segment: .\test\application\DataTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\DataTest.java
+	 */
+
+	@Test
+	public void testConvert2() {
+		test = new DataStorage();
+		
+		// Original JSONArray of tasks
+		JSONArray jsonArray = new JSONArray();
+		JSONObject obj1 = new JSONObject();
+		obj1.put("Description", "submit CS2103T code");
+		obj1.put("Date", "2014-10-22T23:59:59.999+08:00");
+		JSONObject obj2 = new JSONObject();
+		obj2.put("Description", "CS2101 class");
+		obj2.put("Date", "2014-10-23T12:00:00.000+08:00");
+		obj2.put("End date", "2014-10-23T14:00:00.000+08:00");
+		JSONObject obj3 = new JSONObject();
+		obj3.put("Description", "Practice drawing");
+		jsonArray.add(obj1);
+		jsonArray.add(obj2);
+		jsonArray.add(obj3);
+		
+		ArrayList<Task> arrayList = test.convertJSONArrayToArrayList(jsonArray);
+		
+		Task task1 = arrayList.get(0);
+		assertEquals(task1.getDescription(), obj1.get("Description"));
+		assertEquals(task1.getDate().toString(), obj1.get("Date"));
+		
+		Task task2 = arrayList.get(1);
+		assertEquals(task2.getDescription(), obj2.get("Description"));
+		assertEquals(task2.getDate().toString(), obj2.get("Date"));
+		assertEquals(task2.getEndDate().toString(), obj2.get("End date"));
+		
+		Task task3 = arrayList.get(2);
+		assertEquals(task3.getDescription(), obj3.get("Description"));
+		
+	}
+	
+
+}
+
+	// End of segment: .\test\application\DataTest.java
+
+
+
+
+

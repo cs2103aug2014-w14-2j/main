@@ -1,0 +1,1151 @@
+//@author: sunwangjun
+
+
+
+	/**
+	 * origin: .\src\application\Controller.java
+	 */
+
+ */
+public class Controller extends Application {
+    
+    private static final WaveLogger logger = new WaveLogger("Controller");
+    
+    private static DataStorage dataStorage;    
+    private static TaskManager taskManager;
+    private static ConfigManager configManager;
+    private static UIComponent uiComponent;
+    private static MessageManager messageManager;
+    private static Backup backup;
+    
+	// End of segment: .\src\application\Controller.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Task.java
+	 */
+
+ */
+public class Task {
+    /* The following fields are not stored. */
+    private int id;
+    private String displayID;
+    private boolean deleted = false;
+    
+    /* The following attributes are stored. */
+    private String description;
+    private DateTime date;
+    private DateTime endDate;
+    private boolean completed;
+    private int priority;    
+    private DateTime createdAt;
+    private DateTime modifiedAt;
+    private DateTime completedAt;
+    
+    private static int idCounter = 0;
+    
+    /**
+     * Constructor that creates a Task based on CommandInfo.
+     * 
+     * @param commandInfo the CommandInfo object that contains parsed information.
+     */
+    public Task(CommandInfo commandInfo) {
+        this(); // Calls default constructor first.
+        
+        this.description = commandInfo.getTaskDesc();
+        if (commandInfo.getStartDateTime() != null) {
+            this.date = commandInfo.getStartDateTime();
+        }
+        if (commandInfo.getEndDateTime() != null) {
+            this.endDate = commandInfo.getEndDateTime();
+        }
+        if (commandInfo.getPriority() != 0) {
+            this.priority = commandInfo.getPriority();
+        }
+    }
+    
+    /**
+     * Constructor for cloning task object, used when storing past versions
+     * @param original
+     */
+    public Task(Task original, int originalID) {
+        id = originalID;
+        description = original.getDescription();
+        displayID = original.getDisplayID();
+        date = original.getDate();
+        endDate = original.getEndDate();
+        completed = original.isCompleted();
+        priority = original.getPriority();
+        createdAt = original.getCreatedAt();
+        modifiedAt = original.getModifiedAt();
+        completedAt = original.getCompletedAt();
+        deleted = original.isDeleted();
+        
+    }
+
+    /**
+     * Constructor that edits an existing Task based on CommandInfo and assigns the same id.
+     * 
+     * @param commandInfo the CommandInfo object that contains parsed information.
+     * @param id an existing Task id.
+     */
+    public Task(CommandInfo commandInfo, int id) {
+        this(commandInfo); // Calls commandInfo constructor first.
+        this.id = id;
+        Task.idCounter--; // Because we are editing, so do not increment the counter.
+    }
+    
+    /**
+     * Public default constructor.
+     */
+    public Task() {
+        this.id = Task.idCounter++;
+        this.createdAt = new DateTime();
+        this.modifiedAt = new DateTime();
+    }
+
+    /**
+     * Returns the id of the Task.
+     * 
+     * @return the id of the Task.
+     */
+    public int getID() { return this.id; }
+
+    // We may not want to expose any setting of ids.
+    // public void setId(String id) { this.id = id; }
+
+    /**
+     * Returns the description of the Task.
+     * 
+     * @return the description of the Task.
+     */
+    public String getDescription() { return this.description; }
+
+    /**
+     * Sets the description of the Task.
+     * 
+     * @param description overwrites the description of the Task.
+     */
+    public void setDescription(String description) {
+        this.description = description;
+        this.modifiedAt = new DateTime();
+    }    
+    
+    /**
+     * Returns the displayID of the Task.
+     * 
+     * @return the displayID of the Task.
+     */
+    public String getDisplayID() { return this.displayID; }
+
+    /**
+     * Sets the displayID of the Task.
+     * 
+     * @param description overwrites the displayID of the Task.
+     */
+    public void setDisplayID(String displayID) {
+        this.displayID = displayID;
+        // this.modifiedAt = new DateTime(); // This does not modify the task. 
+    }
+
+    /**
+     * Returns the (start) date of the Task. Returns null if there is no date.
+     * 
+     * @return the (start) date of the Task. Returns null if there is no date.
+     */
+    public DateTime getDate() { return this.date; }
+
+    /**
+     * Sets the (start) date of the Task. Set as null to remove the date.
+     * 
+     * @param date sets the (start) date of the Task.
+     *     Set to null to remove the date.
+     */
+    public void setDate(DateTime date) {
+        // We should probably set endDate to null if date is null.
+        this.date = date;
+        this.modifiedAt = new DateTime();
+    }
+
+    /**
+     * Removes the (start) date of the Task.
+     */
+    public void removeDate() { this.setDate(null); }
+
+    /**
+     * Returns the end date of the Task. Returns null if there is no end date.
+     * 
+     * @return the end date of the Task. Returns null if there is no end date.
+     */
+    public DateTime getEndDate() { return this.endDate; }
+
+    /**
+     * Sets the end date of the Task. Set as null to remove the date.
+     * 
+     * @param endDate sets the end date of the Task. Set to null to remove the date.
+     */
+    public void setEndDate(DateTime endDate) {
+        this.endDate = endDate;
+        this.modifiedAt = new DateTime();
+    }
+
+    /**
+     * Removes the end date of the Task.
+     */
+    public void removeEndDate() { this.setEndDate(null); }
+
+    /**
+     * Returns whether Task is completed.
+     * 
+     * @return boolean whether Task is completed.
+     */
+    public boolean isCompleted() { return completed; }
+
+    /**
+     * Sets the completed status of the Task.
+     * 
+     * @param completed overwrites the completed status of the Task.
+     */
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+        this.modifiedAt = new DateTime();
+        if (completed) {
+            this.completedAt = new DateTime(this.modifiedAt);
+        }
+        else {
+            this.completedAt = null;
+        }
+    }
+
+    /**
+     * Completes the task.
+     */
+    public void complete() { this.setCompleted(true); }
+
+    /**
+     * Returns the priority of the Task.
+     * 
+     * @return int priority of the Task.
+     */
+    public int getPriority() { return this.priority; }
+
+    /**
+     * Sets the priority of the Task.
+     * 
+     * @param priority overwrites the priority of the Task.
+     */
+    public void setPriority(int priority) {
+        // Check if priority is negative.
+        this.priority = priority;
+        this.modifiedAt = new DateTime();
+    }
+    
+    /**
+     * Returns the created date of the Task.
+     * 
+     * @return the created date of the Task.
+     */
+    public DateTime getCreatedAt() { return this.createdAt; }
+    
+    /**
+     * Sets the created date of the Task.
+     * Used only when retrieving tasks list from external file.
+     * 
+     * @param createdDate the created DateTime of the Task.
+     */
+    public void setCreatedAt(DateTime createdDate) {
+        this.createdAt = createdDate;
+    }
+    
+    /**
+     * Returns the last modified date of the Task.
+     * 
+     * @return the last modified date of the Task.
+     */
+    public DateTime getModifiedAt() { return this.modifiedAt; }
+    
+    /**
+     * Sets the last modified date of the Task. 
+     * Used only when retrieving tasks list from external file.
+     * 
+     * @param modifiedDate the last modified DateTime of the Task.
+     */
+    public void setModifiedAt(DateTime modifiedDate) {
+        this.modifiedAt = modifiedDate;
+    }
+    
+    /**
+     * Returns the completed date of the Task.
+     * 
+     * @return the completed date of the Task.
+     */
+    public DateTime getCompletedAt() { return this.completedAt; }
+    
+    /**
+     * Sets the completed date of the Task.
+     * Used only when retrieving tasks list from external file.
+     * 
+     * @param completedDate the completed DateTime of the Task.
+     */
+    public void setCompletedAt(DateTime completedDate) {
+        this.completedAt = completedDate;
+    }
+    
+    /**
+     * Used to reset the internal ID counter back to 0.
+     */
+    public static void resetIDCounter() { idCounter = 0; }
+    
+    /**
+     * Returns whether this task is deleted.
+     * 
+     * @return whether this task is deleted.
+     */
+    public boolean isDeleted() { return this.deleted; }
+    
+    /**
+     * Sets whether the Task is deleted.
+     * @param deleted boolean whether to delete the Task.
+     */
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }   
+    
+}
+
+
+	// End of segment: .\src\application\Task.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskComparators.java
+	 */
+
+ */
+class DateComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        if (a.getDate().isAfter(b.getDate())) {
+            return 1; // a is after b, so a comes after b.
+        } else if (a.getDate().isBefore(b.getDate())) {
+            return -1; // a is before b, so a comes before b.
+        } else {
+            if (a.getEndDate() == null && b.getEndDate() == null) { // Untested.
+                return 0; // both a and b has no end date, do nothing.
+            } else if (a.getEndDate() == null) { // Untested.
+                return 1; // a has no end date, b has end date, so a comes after b. 
+            } else if (a.getEndDate().isAfter(b.getEndDate())) {
+                return 1; // a is after b, so a comes after b.
+            } else if (a.getEndDate().isBefore(b.getEndDate())) {
+                return -1; // a is before b, so a comes before b.
+            }
+        }
+        return 0;
+    }
+}
+
+	// End of segment: .\src\application\TaskComparators.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskComparators.java
+	 */
+
+ *
+ */
+class EndDateComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        if (a.getEndDate() == null && b.getEndDate() == null) {
+            return 0;
+        } else if (a.getEndDate() == null) {
+            return 1; // b has end date, so a comes after b.
+        } else if (b.getEndDate() == null) {
+            return -1; // a has end date, so a comes before b.
+        } else { // Both a and b has end date,
+            if (a.getEndDate().isAfter(b.getEndDate())) {
+                return 1; // a is after b, a comes after b.
+            } else if (a.getEndDate().isBefore(b.getEndDate())) {
+                return -1; // a is before b, so a comes before b.
+            }
+        }
+        return 0;
+    }
+}
+
+	// End of segment: .\src\application\TaskComparators.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskComparators.java
+	 */
+
+ * 
+ */
+class CompletedAtComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        if (a.getCompletedAt() == null && b.getCompletedAt() == null) {
+            return 0;
+        } else if (a.getCompletedAt() == null) {
+            return -1; // b has completed date, so a comes before b.
+        } else if (b.getCompletedAt() == null) {
+            return 1; // a has completed date, so a comes after b.
+        } else { // Both a and b has end date,
+            if (a.getCompletedAt().isAfter(b.getCompletedAt())) {
+                return 1; // a is after b, a comes after b.
+            } else if (a.getCompletedAt().isBefore(b.getCompletedAt())) {
+                return -1; // a is before b, so a comes before b.
+            }
+        }
+        return 0;
+    }
+}
+
+	// End of segment: .\src\application\TaskComparators.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskComparators.java
+	 */
+
+ */
+class ModifiedAtComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        if (a.getModifiedAt().isAfter(b.getModifiedAt())) {
+            return -1; // a is after b, so a comes after b.
+        } else if (a.getModifiedAt().isBefore(b.getModifiedAt())) {
+            return 1; // a is before b, so a comes before b.
+        }
+        return 0;
+    }
+}
+
+	// End of segment: .\src\application\TaskComparators.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskComparators.java
+	 */
+
+ */
+class PriorityComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        // a is greater priority, a should be before b.
+        return b.getPriority() - a.getPriority();
+    }
+}
+
+	// End of segment: .\src\application\TaskComparators.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskComparators.java
+	 */
+
+ */
+class DayPriorityComparator implements Comparator<Task> {
+    @Override
+    public int compare(Task a, Task b) {
+        LocalDate ldtA = a.getDate().toLocalDate();
+        LocalDate ldtB = b.getDate().toLocalDate();
+        
+        if (ldtA.isAfter(ldtB)) {
+            return 1; // a is after b, so a comes after b.
+        } else if (ldtA.isBefore(ldtB)) {
+            return -1; // a is before b, so a comes before b.
+        }
+
+        else { // Same day, so sort by priority:
+            
+            if (a.getPriority() > b.getPriority()) {
+                return -1; // a has greater priority, so a comes before b.
+            } else if (a.getPriority() < b.getPriority()) {
+                return 1; // a has smaller priority, so a comes after b.
+            }
+            
+            // Else, priority is equal, so sort by end date:
+            else if (a.getEndDate() == null && b.getEndDate() == null) {
+                return 0; // both a and b has no end date, do nothing.
+            } else if (a.getEndDate() == null) { // Untested.
+                return 1; // a has no end date, b has end date, so a comes after b. 
+            } else if (a.getEndDate().isAfter(b.getEndDate())) {
+                return 1; // a is after b, so a comes after b.
+            } else if (a.getEndDate().isBefore(b.getEndDate())) {
+                return -1; // a is before b, so a comes before b.
+            }
+        }
+        return 0;        
+    }
+}
+
+	// End of segment: .\src\application\TaskComparators.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskManager.java
+	 */
+
+ */
+class TaskManager {
+    public static final char NORMAL_TASK_PREFIX = 'T';
+    public static final char DATED_TASK_PREFIX = 'E';
+    
+    private ArrayList<Task> list;
+    private Task task; // Maybe this can act as "last modified task".
+    private Hashtable<String, Integer> idMapping;
+    
+    private ListDisplay eventsDisplay;
+    private ListDisplay tasksDisplay;
+    
+    private int daysToDisplay = 3;
+    
+    public TaskManager() { // Maybe singleton this.
+        this.idMapping = new Hashtable<String, Integer>();
+        this.eventsDisplay = new EventListDisplay();
+        this.tasksDisplay = new TaskListDisplay();
+    }
+    
+    public void setDaysToDisplay(int days) {
+        this.daysToDisplay = days;
+    }
+    
+    public void setDaysToDisplay(CommandInfo commandInfo, ConfigManager configManager) {
+        LocalDate today = new LocalDate();
+        LocalDate startDay = new LocalDate();
+        if (commandInfo.getStartDateTime() != null) {
+            startDay = commandInfo.getStartDateTime().toLocalDate();
+        }
+        if (startDay.equals(today) && commandInfo.getEndDateTime() != null) {
+            LocalDate endDay = commandInfo.getEndDateTime().toLocalDate();
+            this.daysToDisplay = Days.daysBetween(startDay, endDay).getDays();
+            configManager.setHomeViewType(this.daysToDisplay);
+        }
+    }
+    
+    /**
+     * Checks if the task displayID entered is valid.
+     * 
+     * @param displayID the task displayID the user entered.
+     * @return whether it exists in idMapping
+     */
+    public boolean ensureValidDisplayID(String displayID) {
+        return this.idMapping.containsKey(displayID);
+    }
+    
+    /**
+     * Used to map displayID to actual taskID.
+     * 
+     * @param displayID
+     * @return taskID
+     */
+    private int mapDisplayIDtoActualID(String displayID) {
+        assert(this.idMapping.containsKey(displayID) == true);
+        return this.idMapping.get(displayID);
+    }
+    
+    /**
+     * Adds a task to the list.
+     * 
+     * @param commandInfo of type "add".
+     * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "add".
+     */
+    public ArrayList<Task> add(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"add".equals(commandInfo.getCommandType())) {
+            throw new MismatchedCommandException();
+        }
+        
+        this.task = new Task(commandInfo);
+        this.list.add(this.task);
+        
+        return this.list;
+    }
+
+    /**
+     * Edits a task in the list.
+     * 
+     * @param commandInfo of type "edit" and contains task id.
+     * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "edit".
+     */
+    public ArrayList<Task> edit(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"edit".equals(commandInfo.getCommandType())) {
+            throw new MismatchedCommandException();
+        }
+        
+        // Waiting for proper sequence flow.
+        int taskId = this.mapDisplayIDtoActualID(commandInfo.getTaskIDs().get(0));       
+        this.task = new Task(commandInfo, taskId);
+        
+        this.list.set(taskId, this.task); // Replaces the task.
+        
+        return this.list;
+    }
+
+    /**
+     * Deletes a task in the list.
+     * 
+     * @param commandInfo of type "delete" and contains task id(s).
+     * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "delete".
+     */
+    public ArrayList<Task> delete(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"delete".equals(commandInfo.getCommandType())) {
+            throw new MismatchedCommandException();
+        }
+        
+        ListIterator<String> li = commandInfo.getTaskIDs().listIterator();
+        while (li.hasNext()) {
+            String displayID = li.next();
+            int taskId = this.mapDisplayIDtoActualID(displayID);
+            this.list.get(taskId).setDeleted(true);
+        }
+
+        return this.list;
+    }
+    
+    /**
+     * Completes a task in the list.
+     * 
+     * @param commandInfo of type "complete" and contains task id(s).
+     * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "complete".
+     */
+    public ArrayList<Task> complete(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"complete".equals(commandInfo.getCommandType())) {
+            throw new MismatchedCommandException();
+        }
+        
+        ListIterator<String> li = commandInfo.getTaskIDs().listIterator();
+        while (li.hasNext()) {
+            String displayID = li.next();
+            int taskId = this.mapDisplayIDtoActualID(displayID);
+            this.list.get(taskId).complete(); // "Soft-delete" in the ArrayList.
+        }
+        
+        return this.list;
+    }
+
+    /**
+     * Undos one previous commandInfo.
+     * 
+     * @param commandInfo of type "undo".
+     * @param backup the backup task list.
+     * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "undo".
+     */
+    public ArrayList<Task> undo(CommandInfo commandInfo, ArrayList<Task> backup) 
+            throws MismatchedCommandException {
+        if (!"undo".equals(commandInfo.getCommandType())) {
+            throw new MismatchedCommandException();
+        }
+        this.list = new ArrayList<Task>(backup);
+        return this.list;
+    }
+    
+    /**
+     * Displays completed tasks. (temporary)
+     * 
+     * @param commandInfo of type "search complete" and contains task id.
+     * @return the updated list of tasks.
+     * @throws MismatchedCommandException if not of type "search complete"
+     */
+    public ArrayList<Task> display(CommandInfo commandInfo) throws MismatchedCommandException {
+        if (!"search complete".equals(commandInfo.getCommandType())) {
+            throw new MismatchedCommandException();
+        }
+        
+        return this.list;
+    }
+    
+    public ArrayList<Task> getAll() {
+        return this.list;
+    }
+
+    /**
+     * Returns the full list of tasks, ignoring the deleted tasks.
+     * 
+     * @return the full list of tasks, ignoring the deleted tasks.
+     */
+    public ArrayList<Task> getList() {
+        TaskListFilter filter = new TaskListFilter(true); // Does a AND/&& filtering.
+        filter.add(new IgnoreTasksDeleted());
+        return filter.apply(this.list);
+    }
+    
+    /**
+     * Returns the tasks without start dates.
+     * 
+     * @return the tasks without start dates.
+     */
+    public ArrayList<Task> getTasks() {
+        TaskListFilter filter = new TaskListFilter(false); // Does a OR/|| filtering.
+        filter.add(new KeepTasksCompletedToday()); // or,
+        filter.add(new KeepTasksNotCompleted());
+        this.tasksDisplay.replaceFilter(filter);
+        
+        return this.tasksDisplay.display(this.list, this.idMapping);
+    }
+    
+    /**
+     * Returns the tasks with start dates.
+     * 
+     * @return the tasks with start dates.
+     */
+    public ArrayList<Task> getReminders() {
+        TaskListFilter filter = new TaskListFilter(false); // Does a OR/|| filtering.
+        filter.add(new KeepTasksCompletedToday()); // or,
+        filter.add(new KeepTasksOutstanding());
+        filter.add(new KeepTasksBetween(this.daysToDisplay));
+        this.eventsDisplay.replaceFilter(filter);
+        
+        return this.eventsDisplay.display(this.list, this.idMapping);
+    }
+    
+    /**
+     * Returns the tasks given in the search parameters.
+     * 
+     * @return the tasks given in the search parameters.
+     */
+    public ArrayList<Task> getSearchedTasks(CommandInfo commandInfo) {        
+        ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();        
+        TaskListFilter filter = new TaskListFilter(true); // AND filter.
+        
+        // Filtering of dates:
+        DateTime start = commandInfo.getStartDateTime();
+        DateTime end = commandInfo.getEndDateTime();
+        if (start != null && end != null) {
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new EndDateComparator());
+        }
+        else if (start != null) { // end is null, not possible here but whatever,
+            end = start.withTimeAtStartOfDay().plusDays(1);
+            start = start.withTimeAtStartOfDay().minusMillis(1); // Millisecond before today.
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new EndDateComparator());
+        }
+        else if (end != null) { // start is null,
+            start = new DateTime();
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new EndDateComparator());
+        }
+
+        // Whether to show priority:
+        if (commandInfo.getPriority() > 0) {
+            filter.add(new KeepTasksWithPriority());
+        }
+        
+        // Whether to show completed only:
+        if (commandInfo.isCompleted()) { // For completed tasks only.
+            filter.add(new KeepTasksCompleted());
+            comparators.add(new CompletedAtComparator());
+        }
+        
+        // Searching by keywords:
+        if (commandInfo.getTaskDesc() != null) {
+            filter.add(new KeepTasksWithKeyword(commandInfo.getTaskDesc()));
+        }
+        
+        this.tasksDisplay.replaceFilter(filter);
+        this.tasksDisplay.replaceComparators(comparators);
+        
+        return this.tasksDisplay.display(this.list, this.idMapping);
+    }
+    
+    /**
+     * Returns the events given in the search parameters.
+     * 
+     * @return the events given in the search parameters.
+     */
+    public ArrayList<Task> getSearchedEvents(CommandInfo commandInfo) {
+        ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
+        TaskListFilter filter = new TaskListFilter(true); // AND filter.
+
+        // Whether to show completed only:
+        if (commandInfo.isCompleted()) { // For completed tasks only.
+            filter.add(new KeepTasksCompleted());
+            comparators.add(new CompletedAtComparator());
+        }
+        
+        // Whether to show priority, inclusive:
+        if (commandInfo.getPriority() > 0) {
+            filter.add(new KeepTasksWithPriority());
+        }
+        
+        // Filtering of dates:
+        DateTime start = commandInfo.getStartDateTime();
+        DateTime end = commandInfo.getEndDateTime();
+        if (start != null && end != null) {
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new DateComparator());
+        }
+        else if (start != null) { // end is null,
+            end = start.withTimeAtStartOfDay().plusDays(1);
+            start = start.withTimeAtStartOfDay().minusMillis(1); // Millisecond before today.
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new DateComparator());
+        }
+        else if (end != null) { // start is null, not possible here but whatever,
+            start = new DateTime();
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new DateComparator());
+        }
+        
+        // Searching by keywords:
+        if (commandInfo.getTaskDesc() != null) {
+            filter.add(new KeepTasksWithKeyword(commandInfo.getTaskDesc()));
+        }
+        
+        this.eventsDisplay.replaceFilter(filter);
+        this.eventsDisplay.replaceComparators(comparators);
+        
+        return this.eventsDisplay.display(this.list, this.idMapping);
+    }
+    
+
+    /**
+     * Initializes the list of tasks from storage.
+     * 
+     * @param storedList ArrayList of tasks.
+     * @return the initialized list of tasks.
+     */
+    public ArrayList<Task> initializeList(ArrayList<Task> storedList) {
+        list = new ArrayList<Task>(storedList);
+        return this.list;
+    }
+    
+    /**
+     * Returns the last task modified.
+     * @return the last task modified.
+     */    
+    public Task getLastModifiedTask() {
+        return this.task;
+    }
+    
+    
+    /**
+     * Returns a list of invalid display IDs.
+     * @return a list of invalid display IDs, or null if none.
+     */
+    public ArrayList<String> getInvalidDisplayIDs(ArrayList<String> taskIDs) {
+        if (taskIDs == null) { return null; }
+        
+        ArrayList<String> invalidIDs = new ArrayList<String>();
+
+        ListIterator<String> li = taskIDs.listIterator();
+        while (li.hasNext()) {
+            String taskID = li.next();
+            if (!this.idMapping.containsKey(taskID)) { // Invalid id...
+                invalidIDs.add(taskID);
+            }
+        }
+        
+        if (invalidIDs.size() == 0) { return null; }
+        return invalidIDs;
+    }
+    
+    /**
+     * Clears the ID mapping hashtable.
+     */
+    public void clearIDMapping() { this.idMapping.clear(); }
+    
+}
+
+	// End of segment: .\src\application\TaskManager.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\WaveLogger.java
+	 */
+
+ *
+ */
+public class WaveLogger {
+    private static final String consoleOutputList = "consoleOutput.txt";
+    
+    private final Logger logger;
+    private FileHandler fileHandler;
+    
+    /**
+     * Constructs a new logger.
+     * Preferably use literal strings for the name of the logger.
+     * e.g. "Controller" instead of Controller.class.getName()
+     * 
+     * @param name the name of the file, without extension.
+     */
+    public WaveLogger(String name) {
+        this.logger = Logger.getLogger(name);
+        try {
+            this.fileHandler = new FileHandler("log\\" + name + ".log");
+            this.fileHandler.setFormatter(new SimpleFormatter());
+            this.logger.addHandler(this.fileHandler);
+        }
+        catch (Exception e) {
+            // This will log to the console.
+            logger.log(Level.SEVERE, null, e);
+        }
+        this.logger.setLevel(Level.FINEST);
+        
+        // If not in console output list...
+        if (!useConsoleOutput(name)) {
+            // Prevents console output.
+            this.logger.setUseParentHandlers(false);
+        }
+    }
+    
+    private static boolean useConsoleOutput(String name) {
+        try {
+            Scanner sc = new Scanner(new FileReader(consoleOutputList));
+            while (sc.hasNext()) {
+                String nameInList = sc.nextLine();
+                
+                if (name.equals(nameInList)) {
+                    sc.close();
+                    return true;
+                }
+            }
+            sc.close();
+            return false;  
+        }
+        catch (FileNotFoundException e) {
+            return false;
+        }      
+    }
+        
+    /**
+     * Wraps Logger log method with fine grained level control
+     * and message parameters.
+     * 
+     * @param level the intensity of the message.
+     * @param message the message.
+     * @param param any objects to pass into message.
+     */
+    public void log(Level level, String message, Object param) {
+        this.logger.log(level, message, param);
+    }
+    
+    /**
+     * Wraps Logger log method with fine grained level control.
+     * 
+     * @param level the intensity of the message.
+     * @param message the message.
+     */
+    public void log(Level level, String message) {
+        this.logger.log(level, message);
+    }
+    
+    /**
+     * Basic logging log without having to care about levels.
+     * 
+     * @param message simply the message.
+     */
+    public void log(String message) {
+        this.logger.log(Level.INFO, message);
+    }
+}
+
+	// End of segment: .\src\application\WaveLogger.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationSimpleTest.java
+	 */
+
+ *
+ */
+class ControllerReflector {
+    // Hashtable to map each method and field to their own name.
+    public static Hashtable<String, Method> methods = new Hashtable<String, Method>();
+    public static Hashtable<String, Field> fields = new Hashtable<String, Field>();
+
+    public static void reflect() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Class<?> controller = Controller.class;
+  
+        // Reflects the private static methods.
+        Method m[] = controller.getDeclaredMethods();
+        for (Method method : m) {
+            methods.put(method.getName(), method);
+            method.setAccessible(true);
+        }
+  
+        // Reflects the private static fields.
+        Field f[] = controller.getDeclaredFields();
+        for (Field field : f) {
+            fields.put(field.getName(), field);
+            field.setAccessible(true);
+        }
+    }
+}
+
+	// End of segment: .\test\application\IntegrationSimpleTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationSimpleTest.java
+	 */
+
+ *
+ */
+public class IntegrationSimpleTest extends Application {
+    private static final String TODO_TEST_JSON_FILENAME = "Todo.test.json"; // To be used in tests.
+    private static final String SAMPLE_TEST_JSON_FILENAME = "SampleTodo.test.json"; // To be loaded in tests.
+    private static final Object[] EMPTY = {};
+    static UIComponent uiComponent;
+    static TaskManager taskManager = new TaskManager();
+    static DataStorage dataStorage = new DataStorage(TODO_TEST_JSON_FILENAME);
+    static int FIXTURES_SIZE;
+  
+	// End of segment: .\test\application\IntegrationSimpleTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\TaskTest.java
+	 */
+
+ *
+ */
+public class TaskTest {
+    private Task task;
+
+    @Before
+    public void setUp() {
+        task = new Task();
+    }
+
+    @After
+    public void tearDown() {
+    }
+
+    /**
+     * Test method for {@link application.Task#getID()}.
+     */
+    @Test
+    public void testGetId() {
+        assertNotNull(task.getID());
+    }
+    
+    /**
+     * Test method for {@link application.Task#displayID()}.
+     */
+    @Test
+    public void testDisplayId() {
+        assertNull("has null displayID", task.getDisplayID());
+        
+        String displayID = "F1";
+        task.setDisplayID(displayID);
+        assertEquals("has set displayID", displayID, task.getDisplayID());
+    }
+
+    /**
+     * Test method for {@link application.Task#description}.
+     */
+    @Test
+    public void testDescription() {
+        assertNull("has null description", task.getDescription());
+        
+        String description = "description";
+        task.setDescription(description);
+        assertEquals("has set description", description, task.getDescription());
+    }
+
+    /**
+     * Test method for {@link application.Task#date}.
+     */
+    @Test
+    public void testDate() {
+        assertNull("has null date", task.getDate());
+        
+        DateTime date = new DateTime(2014, 10, 11, 12, 44, 0);
+        task.setDate(date);
+        assertEquals("has set date", date, task.getDate());
+        
+        task.setDate(null);
+        assertNull("has set null date", task.getDate());
+    }
+
+    /**
+     * Test method for {@link application.Task#endDate}.
+     */
+    @Test
+    public void testEndDate() {
+        assertNull("has null endDate", task.getEndDate());
+        
+        DateTime endDate = new DateTime(2014, 10, 11, 12, 44, 0);
+        task.setEndDate(endDate);
+        assertEquals("has set endDate", endDate, task.getEndDate());
+        
+        task.setEndDate(null);
+        assertNull("has set null endDate", task.getEndDate());
+    }
+
+    /**
+     * Test method for {@link application.Task#completed}.
+     */
+    @Test
+    public void testCompleted() {
+        assertFalse("is not completed", task.isCompleted());
+        
+        task.complete();
+        assertTrue("is completed", task.isCompleted());
+        
+        task.setCompleted(false);
+        assertFalse("is not completed again", task.isCompleted());
+    }
+
+    /**
+     * Test method for {@link application.Task#priority}.
+     */
+    @Test
+    public void testPriority() {
+        assertEquals("has no priority", task.getPriority(), 0);
+        
+        int priority = 1;
+        task.setPriority(priority);
+        assertEquals("has priority", priority, task.getPriority());        
+    }
+
+}
+
+	// End of segment: .\test\application\TaskTest.java
+
+
+
+
+

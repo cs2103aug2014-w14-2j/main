@@ -1,0 +1,35 @@
+//@author: a0090971y  
+
+
+
+	/**
+	 * origin: .\test\application\ParserTest.java
+	 */
+
+    @Test
+    public void testParsePriority() throws NoSuchMethodException,
+    IllegalAccessException, InvocationTargetException {
+        Method method = Parser.class.getDeclaredMethod("parsePriority", String.class,String.class);
+        method.setAccessible(true);
+        
+        Object input1_1 = "Add [drink tea] !!!";
+        Object input1_2 = "drink tea";
+        Object input2_1 = "Edit [write responses!!] ";
+        Object input2_2 = "write responses!!";
+        Object input3_1 = "Add [!!! book tickets] !!!!!!!!!!";
+        Object input3_2 = "!!! book tickets";
+        
+        int output1 = (int)method.invoke(test,input1_1,input1_2);
+        int output2 = (int)method.invoke(test,input2_1,input2_2);
+        int output3 = (int)method.invoke(test, input3_1,input3_2);
+        assertEquals(3,output1);
+        assertEquals(0,output2);
+        assertEquals(10,output3);
+    }
+   
+	// End of segment: .\test\application\ParserTest.java
+
+
+
+
+

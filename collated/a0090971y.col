@@ -1,0 +1,616 @@
+//@author: a0090971y
+
+
+
+	/**
+	 * origin: .\src\application\CommandInfo.java
+	 */
+
+ */
+
+public class CommandInfo {
+
+    private String commandType;
+    private ArrayList<String> taskIDs = new ArrayList<String>();
+    private String taskDesc;
+    private DateTime startDateTime;
+    private DateTime endDateTime;
+    private int priority;
+    private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","home","quit","search","show","undo","exit"};
+    private String message = null;
+    private boolean completed;
+
+	// End of segment: .\src\application\CommandInfo.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\CommandInfo.java
+	 */
+
+    /**
+     * constructor for CommandInfo class
+     * @param commandType
+     * @param taskID
+     * @param taskDesc
+     * @param startDateTime
+     * @param endDateTime
+     * @param priority
+     */
+
+    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority,boolean isCompleted) 
+    throws MismatchedCommandException {  // edit
+        try {
+        this.commandType = commandType;
+        this.taskIDs = upperCaseIDs(taskIDs);
+        this.taskDesc = taskDesc;
+        this.startDateTime = getStartDateTime(startDT);
+        this.endDateTime = getEndDateTime(endDT);
+        this.priority = priority;
+        this.completed = isCompleted;
+        checkStartDateTime();
+        checkEndDateTime();
+        validateUserInput();
+        }
+        catch (MismatchedCommandException e) {
+            throw e;
+        }
+    }
+
+    private ArrayList<String> upperCaseIDs(ArrayList<String> IDs) {
+        for (int i = 0; i<IDs.size();i++) {
+            String ID = IDs.get(i).toUpperCase();
+            IDs.set(i,ID);
+        }
+        return IDs;
+        
+    }
+    private void checkStartDateTime() {
+        if ((this.startDateTime != null ) && ((this.commandType.equalsIgnoreCase("add"))
+                || (this.commandType.equalsIgnoreCase("edit")))){
+            DateTime currentDT = new DateTime();
+            int result = DateTimeComparator.getInstance().compare(currentDT,this.startDateTime);
+            if (result == 1) {   //currentDT is less than dateTime
+                setMessage("The Time Specified is before the Current Time.");
+            }
+        }
+    }
+
+    private void checkEndDateTime() {
+        if ((this.endDateTime != null ) && ((this.commandType.equalsIgnoreCase("add"))
+                || (this.commandType.equalsIgnoreCase("edit")))){
+            DateTime currentDT = new DateTime();
+            int result = DateTimeComparator.getInstance().compare(currentDT,this.endDateTime);
+            if (result == 1) {   //currentDT is less than dateTime
+                setMessage("The End Time Specified is before the Current Time.");
+            }
+            else {
+                String m = null;
+                setMessage(m);
+            }
+        }
+    }
+
+	// End of segment: .\src\application\CommandInfo.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\CommandInfo.java
+	 */
+
+    /**
+     * throws MismatchedCommandException when the user input entered is invalid
+     * @throws MismatchedCommandException
+     */
+    private void validateUserInput() throws MismatchedCommandException {
+        boolean isValid = false;
+        for (int i = 0; i<CommandInfo.getValidCommandTypes().length; i++) {
+            if (this.commandType.equalsIgnoreCase(CommandInfo.getValidCommandTypes()[i])) {
+                isValid = true;
+            }
+        }
+        if (isValid == false) {
+            throw new MismatchedCommandException("Invalid Command Type Entered.");
+        }
+        for (int i = 0; i<this.taskIDs.size();i++) {
+            if (this.taskIDs.get(i) != null) {
+                if ((Character.compare(this.taskIDs.get(i).charAt(0),TaskManager.NORMAL_TASK_PREFIX)==0) || 
+                        (Character.compare(this.taskIDs.get(i).charAt(0),TaskManager.DATED_TASK_PREFIX)==0))
+                {
+                    String ID = this.taskIDs.get(i).substring(1);
+                    if ((StringUtils.isNumeric(ID)) && (!ID.equals("0"))) {
+                    }
+                    else {
+                        throw new MismatchedCommandException("Invalid Task ID Entered.");
+                    }
+                }
+                else {
+                    throw new MismatchedCommandException("Invalid Task ID Entered.");}
+            }
+        }
+        if (((this.commandType.equalsIgnoreCase("add")) || (this.commandType.equalsIgnoreCase("edit"))) 
+                && (this.taskDesc.equalsIgnoreCase(""))) {
+            throw new MismatchedCommandException("Empty Task Description.");        
+        }
+    }
+
+	// End of segment: .\src\application\CommandInfo.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\CommandInfo.java
+	 */
+
+    /**
+     * This returns the start date time of the task
+     * @return the start date time of a task with the type Date, null if there is no start date time
+     */
+    public DateTime getStartDateTime(Date startDT) {
+        DateTime dateTime = null;
+        if (startDT == null) {
+            return dateTime;
+        }
+        return (new DateTime(startDT));
+    }
+
+	// End of segment: .\src\application\CommandInfo.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\CommandInfo.java
+	 */
+
+    /**
+     * This returns the end date time of the task
+     * @return the start date time of a task with the type Date, null if there is no end date time
+     */
+    private DateTime getEndDateTime(Date endDT) {
+        DateTime dateTime = null;
+        if (endDT == null) {
+            return dateTime;
+        }
+        return (new DateTime(endDT));
+    }
+
+    private static String[] getValidCommandTypes() {
+        return validCommandTypes;
+    }
+
+	// End of segment: .\src\application\CommandInfo.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\CommandInfo.java
+	 */
+
+    /**
+     * This returns the command type to be executed 
+     * @return command type
+     */
+    public String getCommandType(){
+        return commandType.toLowerCase();
+    }
+
+	// End of segment: .\src\application\CommandInfo.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\CommandInfo.java
+	 */
+
+    /**
+     * 
+     * @return an ArrayList of task IDs
+     */
+    public ArrayList<String> getTaskIDs() {
+        return taskIDs;
+    }
+	// End of segment: .\src\application\CommandInfo.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\CommandInfo.java
+	 */
+
+    /**
+     * 
+     * @return an integer indicate the level of priority, the larger the integer, the higher the priority
+     */
+    public int getPriority(){
+        return priority;
+    }
+
+	// End of segment: .\src\application\CommandInfo.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\CommandInfo.java
+	 */
+
+    /**
+     * return the description of the Task
+     * @return the description of the Task.
+     */
+    public String getTaskDesc(){
+        return taskDesc;
+    }
+
+	// End of segment: .\src\application\CommandInfo.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\CommandInfo.java
+	 */
+
+    /**
+     * return the keyword to be searched
+     * @return the keyword to be searched.
+     */
+    public String getKeyword(){
+        return taskDesc;
+    }
+    public DateTime getStartDateTime() {
+        return this.startDateTime;
+    }
+    public DateTime getEndDateTime() {
+        return this.endDateTime;
+    }
+
+    private void setMessage(String m) {
+        this.message = m;
+    }
+
+    //@authour A0090971Y
+    /**
+     * 
+     * @return a message when there is one otherwise return null
+     */
+    public String getMessage() {
+        return this.message;
+    }
+	// End of segment: .\src\application\CommandInfo.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\CommandInfo.java
+	 */
+
+    /**
+     * 
+     * @return a boolean to indicate if the user searches a completed task, true for searching completed tasks, false for searching not completed tasks
+     */
+    public boolean isCompleted(){
+        return completed;
+    }
+}
+
+	// End of segment: .\src\application\CommandInfo.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Parser.java
+	 */
+
+    /**
+     * This constructs a parser object with an user input 
+     * @param userInput   the one line command statement the user inputs
+     */
+    Parser(){
+    }
+
+	// End of segment: .\src\application\Parser.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Parser.java
+	 */
+
+    /**
+     * return the object of CommandInfo class
+     * @return the object of CommandInfo class 
+     */
+    public CommandInfo getCommandInfo(String userInput) throws MismatchedCommandException {
+
+        String commandType = parseCommandType(userInput);
+        ArrayList<String> taskIDs = new ArrayList<String>();
+        taskIDs = parseTaskIDs(userInput);
+
+        String taskDesc = parseTaskDesc(userInput,commandType);
+        int priority = parsePriority(userInput,taskDesc);
+        String content = parseContent(userInput,taskDesc);
+        parser = new DateTimeParser(content);
+        Date startDateTime = parser.getStartDateTime();
+        Date endDateTime = parser.getEndDateTime();
+        if (isDeadline(content,startDateTime,endDateTime)) {
+            endDateTime = startDateTime;
+            startDateTime = null;
+        }
+        boolean completed = getComplete(content);
+        try {
+        CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority,completed);
+        return cmdInfo;
+        }
+        catch (MismatchedCommandException e) {
+            throw e;
+        }
+    }
+
+	// End of segment: .\src\application\Parser.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Parser.java
+	 */
+
+    /**
+     * 
+     * @param input
+     * @return the input by removing the command type word and the taskID.
+     */
+    private String parseTaskDesc(String input,String cmdType) {
+        String desc = null;
+        if ((cmdType.equalsIgnoreCase("add")) || (cmdType.equalsIgnoreCase("edit"))
+                || (cmdType.equalsIgnoreCase("search")) || (cmdType.equalsIgnoreCase("show"))){
+            int startIndex = input.indexOf("[");
+            int endIndex = input.indexOf("]");
+            if ((startIndex>0) && (endIndex>0)) {
+                desc = input.substring(startIndex+1, endIndex);
+            }
+            else desc = "";
+        }
+        else {
+            cmdType = input.trim().split("\\s+")[0];
+            desc = input.replaceFirst(cmdType, "").trim();
+            desc = desc.replace("[", "");
+            desc = desc.replace("]", "");
+        }
+        return desc;
+    }
+
+    private boolean isDeadline(String content,Date startDT, Date endDT) {
+        for (int i = 0; i<timePrepositions.length;i++) {
+            if (content.indexOf(timePrepositions[i])>=0){
+                if (endDT == null)
+                    return true;
+            }
+        }
+        return false;
+    }
+    
+    private String parseContent(String input,String desc) {
+        String content;
+        String firstWord = input.trim().split("\\s+")[0];
+        content = input.replace(firstWord,"").trim();
+        if (parseTaskIDs(input).size()!=0) {
+            content = content.replace(parseTaskIDs(input).get(0),"").trim();
+        }
+        
+        content = content.replace("[","");
+        content = content.replace("]", "");
+        content = content.replace("!", "");
+        if (!desc.equalsIgnoreCase("")) {
+            content = content.replaceAll(desc, "");
+        }
+        return content;
+    }
+
+	// End of segment: .\src\application\Parser.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Parser.java
+	 */
+
+    /**
+     * 
+     * @param input
+     * @return the command type , all letters capitalized
+     */
+    private String parseCommandType(String input) {
+        String[] array = input.trim().split("\\s+");
+        String command = array[0].toUpperCase();
+        return command;      
+    }
+
+	// End of segment: .\src\application\Parser.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Parser.java
+	 */
+
+    /**
+     * 
+     * @param input
+     * @return null when taskID is not required, otherwise taskID as an ArrayList of String for edit,complete or delete command keyword
+     */
+    private ArrayList<String> parseTaskIDs(String input) {
+        String command = parseCommandType(input);
+        ArrayList<String> IDs = new ArrayList<String>();
+        String taskID = null;
+        if (command.equalsIgnoreCase("edit")) {
+            taskID = input.trim().split("\\s+")[1];
+            IDs.add(taskID);
+        }
+        else if ((command.equalsIgnoreCase("complete")) || (command.equalsIgnoreCase("delete"))) {
+            String[] array = input.trim().split("\\s+");
+            for (int i = 1; i<array.length; i++) {
+                taskID = array[i];
+                IDs.add(taskID);
+            }
+        }
+        return IDs;
+    }
+	// End of segment: .\src\application\Parser.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Parser.java
+	 */
+
+    /**
+     * 
+     * @param input
+     * @return the priority of the task by counting the number of exclamation marks in user input
+     */
+    private int parsePriority(String input,String desc){
+        desc = desc.replace("[", "");
+        desc = desc.replace("]", "");
+        input = input.replaceAll(desc, "");
+        int priority = StringUtils.countMatches(input,"!");
+        return priority;
+    }
+
+    private boolean getComplete(String content) {
+        if (content.indexOf("complete")>=0) {
+            return true; 
+        }
+        return false;
+    }
+}
+
+
+
+
+
+
+
+
+
+	// End of segment: .\src\application\Parser.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\ParserTest.java
+	 */
+
+    @Test  
+    public void testParseTaskDesc() throws NoSuchMethodException,     
+    InvocationTargetException, IllegalAccessException {
+       
+        Method method = Parser.class.getDeclaredMethod("parseTaskDesc", String.class,String.class);
+        method.setAccessible(true);
+        
+        Object input1_1 = "Add [drink tea]";
+        Object input1_2 = "ADD";
+        Object input2_1 = "EDIT T2 [make cakes]";
+        Object input2_2 = "EDIT";
+        Object input3_1 = "Edit";
+        Object input3_2 = "EDIT";
+        Object input4_1 = "exit";
+        Object input4_2 = "EXIT";
+        
+        String output1 = (String)method.invoke(test,input1_1,input1_2); 
+        String output2 = (String)method.invoke(test,input2_1,input2_2);
+        String output3 = (String)method.invoke(test, input3_1,input3_2);
+        String output4 = (String)method.invoke(test, input4_1,input4_2);
+        
+        assertEquals("drink tea",output1);
+        assertEquals("make cakes",output2);
+        assertEquals(null,output3);
+        assertEquals("",output4);
+        
+    }
+  
+    
+	// End of segment: .\test\application\ParserTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\ParserTest.java
+	 */
+
+    @Test
+    public void testParseTaskIDs() throws NoSuchMethodException,
+    IllegalAccessException, InvocationTargetException {
+        Method method = Parser.class.getDeclaredMethod("parseTaskIDs", String.class);
+        method.setAccessible(true);
+        
+        Object input1 = "DELETE e2 t1";
+        Object input2 = "Edit T4 [write responses] 2pm";
+        Object input3 = "ADD [do laundry]";
+        // test case for invalid command
+        Object input4 = "go home";
+        
+        ArrayList<String> output1 = (ArrayList<String>)method.invoke(test,input1);
+        ArrayList<String> output2 = (ArrayList<String>)method.invoke(test,input2);
+        ArrayList<String> output3 = (ArrayList<String>)method.invoke(test, input3);
+        ArrayList<String> output4 = (ArrayList<String>)method.invoke(test, input4);
+        
+        ArrayList<String> expectedOutput1 =new ArrayList<String>();
+        expectedOutput1.add("E2");
+        expectedOutput1.add("T1");
+        
+        ArrayList<String> expectedOutput2 =new ArrayList<String>();
+        expectedOutput2.add("T4");
+        
+        ArrayList<String> expectedOutput3 =new ArrayList<String>();
+        ArrayList<String> expectedOutput4 =new ArrayList<String>();
+        
+        assertEquals(expectedOutput1,output1);
+        assertEquals(expectedOutput2,output2);
+        assertEquals(expectedOutput3,output3);
+        assertEquals(expectedOutput4,output3);
+    }
+    
+}
+
+	// End of segment: .\test\application\ParserTest.java
+
+
+
+
+

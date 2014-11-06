@@ -1,0 +1,868 @@
+//@author: a0110546r
+
+
+
+	/**
+	 * origin: .\src\application\Controller.java
+	 */
+
+    /**
+     * Executes the command entered.
+     * 
+     * @param input The entire command input.
+     */
+    public static void runCommandInput(String input) {
+        logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
+
+        CommandInfo commandInfo = null;
+        try {
+            commandInfo = (new Parser()).getCommandInfo(input);
+        } catch (MismatchedCommandException e) { // Need to change exception type.
+            uiComponent.setSuggestionText("Command is invalid");
+            return;
+        }
+        Message feedback = null;
+        
+        // Check for invalid IDs.
+        ArrayList<String> invalidIDs = taskManager.getInvalidDisplayIDs(commandInfo.getTaskIDs());
+        if (invalidIDs != null) {
+            feedback = new MessageWarningInvalidID(invalidIDs);
+            uiComponent.setSuggestionText(messageManager.getMessage(feedback));
+            logger.log(messageManager.getMessage(feedback));
+            return;
+        }
+
+        // Really should command pattern this now!
+        // Run the command.
+        try {            
+            switch (commandInfo.getCommandType()) {
+                case "add":
+                    taskManager.add(commandInfo);
+                    // feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getID() + "");
+                    break;
+                case "delete":
+                    taskManager.delete(commandInfo);
+                    feedback = new MessageNotifyDelete(commandInfo.getTaskIDs());
+                    break;
+                case "edit":
+                    taskManager.edit(commandInfo);
+                    feedback = new MessageNotifyEdit(commandInfo.getTaskIDs().get(0));
+                    break;
+                case "undo":
+                    taskManager.undo(commandInfo, backup.getPastVersion());
+                    feedback = new MessageNotifyUndo();
+                    break;
+                case "complete":
+                    taskManager.complete(commandInfo);
+                    feedback = new MessageNotifyComplete(commandInfo.getTaskIDs());
+                    break;
+                case "home":
+                    break;
+                case "search":
+                    taskManager.clearIDMapping();
+                    uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
+                    uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search results");
+                case "show":
+                    taskManager.clearIDMapping();
+                    taskManager.setDaysToDisplay(commandInfo, configManager);
+                    uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
+                    uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search results");
+                    return;
+                case "quit":
+                case "exit":
+                    Platform.exit();
+                    break;
+                	
+            }
+        } catch (MismatchedCommandException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+            e.printStackTrace();
+        }
+        
+        taskManager.clearIDMapping();
+        uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
+        uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
+        
+        backup.storeBackup(taskManager.getAll());
+        dataStorage.saveTasks(taskManager.getList());
+        
+        if ("add".equals(commandInfo.getCommandType())) {
+            feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getDisplayID());
+        }
+        
+        if (feedback != null) {
+            uiComponent.setSuggestionText(messageManager.getMessage(feedback));
+            logger.log(messageManager.getMessage(feedback));
+        }
+    }
+    
+
+	// End of segment: .\src\application\Controller.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Controller.java
+	 */
+
+    /**
+     * For the UI to retrieve the list of tasks after it is initialized.
+     */
+    public static void getTasks() {
+        uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
+        uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
+    }
+    
+	// End of segment: .\src\application\Controller.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Controller.java
+	 */
+
+    private static void setup() {
+        dataStorage = new DataStorage();
+        dataStorage.initiateFile();
+        
+        taskManager = new TaskManager();
+        taskManager.initializeList(dataStorage.retrieveTasks());
+        
+        messageManager = new MessageManager();
+        
+        configManager = new ConfigManager();
+        taskManager.setDaysToDisplay(configManager.getHomeViewType());
+        
+        backup = new Backup();
+        backup.storeBackup(taskManager.getAll());
+    }
+    
+	// End of segment: .\src\application\Controller.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Controller.java
+	 */
+
+    public static void main(String[] args) {
+        setup();
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        uiComponent = new UIComponent();
+        uiComponent.showStage(primaryStage);
+    }
+}
+
+	// End of segment: .\src\application\Controller.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Task.java
+	 */
+
+/**
+ * The task object!
+ * 
+	// End of segment: .\src\application\Task.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskComparators.java
+	 */
+
+/**
+ * The comparator class used to sort Tasks by their date.
+ * 
+	// End of segment: .\src\application\TaskComparators.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskComparators.java
+	 */
+
+/**
+ * The comparator class used to sort Tasks by their end date.
+	// End of segment: .\src\application\TaskComparators.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskComparators.java
+	 */
+
+/**
+ * The comparator class used to sort Tasks by their completed at date.
+	// End of segment: .\src\application\TaskComparators.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskComparators.java
+	 */
+
+/**
+ * The comparator class used to sort Tasks by their created at date.
+ * 
+	// End of segment: .\src\application\TaskComparators.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskComparators.java
+	 */
+
+/**
+ * The comparator class used to sort Tasks by their priority.
+ * 
+	// End of segment: .\src\application\TaskComparators.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskComparators.java
+	 */
+
+/**
+ * The comparator class used to sort Tasks by days and within each day, by priority.
+ * 
+	// End of segment: .\src\application\TaskComparators.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskListFilter.java
+	 */
+
+interface TaskFilter {
+    public boolean apply(Task t);
+}
+
+class KeepTasksCompleted implements TaskFilter {
+    @Override
+    public boolean apply(Task t) {
+        return t.isCompleted();
+    }
+}
+
+class KeepTasksCompletedToday implements TaskFilter {
+    private DateTime oneDayAgo;
+    public KeepTasksCompletedToday() {
+        this.oneDayAgo = new DateTime().minusDays(1);
+    }
+    
+    @Override
+    public boolean apply(Task t) {
+        return t.getCompletedAt() != null && t.getCompletedAt().isAfter(this.oneDayAgo);
+    }
+}
+
+class KeepTasksOutstanding implements TaskFilter {
+    private DateTime now;
+    public KeepTasksOutstanding() {
+        this.now = new DateTime();
+    }
+    
+    @Override
+    public boolean apply(Task t) {
+        if (!t.isCompleted()) {
+            if (t.getEndDate() != null && t.getEndDate().isBefore(this.now)) {
+                return true;
+            }
+            // There is no end date but only start date, and it is before now.
+            else if (t.getEndDate() == null &&
+                    t.getDate() != null && t.getDate().isBefore(this.now)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+class KeepTasksBetween implements TaskFilter {
+    private DateTime start, end;
+    public KeepTasksBetween(DateTime start, DateTime end) {
+        this.start = start;
+        this.end = end;
+    }
+    public KeepTasksBetween(int numDays) {
+        this.start = new DateTime();
+        this.end = new DateTime().plusDays(numDays);
+    }
+    
+    @Override
+    public boolean apply(Task t) {
+        // There is start date,
+        if (t.getDate() != null) {
+            // Start date is between requested start and end,
+            if (t.getDate().isAfter(this.start) && t.getDate().isBefore(this.end)) {
+                return true;
+            }
+        }
+        
+        // There is end date,
+        if (t.getEndDate() != null) {
+            // End date is between requested start and end,
+            if (t.getEndDate().isAfter(this.start) && t.getEndDate().isBefore(this.end)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }   
+}
+
+class KeepTasksWithKeyword implements TaskFilter {
+    private String keyword;
+    public KeepTasksWithKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+    
+    @Override
+    public boolean apply(Task t) {
+        return t.getDescription().indexOf(this.keyword) > -1;        
+    }
+}
+
+class KeepTasksWithPriority implements TaskFilter {    
+    @Override
+    public boolean apply(Task t) {
+         return t.getPriority() > 0;
+    }
+}
+
+class KeepTasksToShowToday implements TaskFilter {
+    private LocalDate today;
+    public KeepTasksToShowToday() {
+        this.today = new LocalDate();
+    }
+    
+    @Override
+    public boolean apply(Task t) {
+        LocalDate date = new LocalDate(t.getDate());
+        LocalDate endDate = new LocalDate(t.getEndDate());
+        
+        if (date.equals(this.today)) {
+            return true;
+        }
+        // If start date is before today, and end date is today or after,
+        else if (date.isBefore(this.today) &&
+                (endDate.equals(this.today) || endDate.isAfter(this.today))) {
+            return true;
+        }
+        return false;
+    }
+}
+
+class KeepTasksToShowTheNextDay implements TaskFilter {
+    private LocalDate today;
+    private LocalDate nextDay;
+    public KeepTasksToShowTheNextDay() {
+        this.today = new LocalDate();
+    }
+    @Override
+    public boolean apply(Task t) {
+        LocalDate date = new LocalDate(t.getDate());
+        if (date.isAfter(this.today) && this.nextDay == null) { // Different date,
+            this.nextDay = date; // Set the next day's date.
+        }
+        if (this.nextDay != null && date.equals(this.nextDay)) { // Same as next day,
+            return true; // Show the task/
+        }
+        return false;
+    }
+}
+
+class KeepTasksWithStartDate implements TaskFilter {
+    @Override
+    public boolean apply(Task t) {
+        return t.getDate() != null; // True if there is start date.
+    }
+}
+
+class KeepTasksWithoutStartDate implements TaskFilter {
+    @Override
+    public boolean apply(Task t) {
+        return t.getDate() == null; // True if there is no start date.
+    }
+}
+
+class IgnoreTasksDeleted implements TaskFilter { // Keep tasks which are not deleted.
+    @Override
+    public boolean apply(Task t) {
+        return !t.isDeleted(); // True if not deleted. 
+    }
+}
+
+class KeepTasksNotCompleted implements TaskFilter {
+    @Override
+    public boolean apply(Task t) {
+        return !t.isCompleted();
+    }
+}
+
+public class TaskListFilter {
+    private ArrayList<TaskFilter> filters;
+    private boolean strongFilter; // true for AND/&&, false for OR/||.
+    
+    public TaskListFilter(boolean strongFilter) {
+        this.filters = new ArrayList<TaskFilter>();
+        this.strongFilter = strongFilter;
+    }
+    
+    public void add(TaskFilter filter) {
+        this.filters.add(filter);
+    }
+    
+    public ArrayList<Task> apply(ArrayList<Task> taskList) {
+        ArrayList<Task> filteredTaskList = new ArrayList<Task>();
+        ListIterator<Task> taskI = taskList.listIterator();
+        ListIterator<TaskFilter> filterI;
+        Task task;
+        TaskFilter filter;
+        boolean keep = this.strongFilter;
+        
+        while (taskI.hasNext()) {
+            task = taskI.next();
+            keep = this.strongFilter;
+            filterI = this.filters.listIterator();
+            while (filterI.hasNext()) {
+                filter = filterI.next();
+                if (this.strongFilter) { // Strong filter is on, do &&.
+                    if (!filter.apply(task)) { // Once false,
+                        keep = false; // Do not keep.
+                        break; // Get out of the while loop.
+                    }
+                }
+                else { // Strong filter is off, do ||.
+                    if (filter.apply(task)) { // Once true,
+                        filteredTaskList.add(task);
+                        break; // Get out of the while loop.
+                    }
+                }
+            }
+            // Only add at this point if it is a strong filter and kept.
+            if (this.strongFilter && keep) { filteredTaskList.add(task); }
+        }
+        
+        return filteredTaskList;
+    }
+}
+
+
+
+
+	// End of segment: .\src\application\TaskListFilter.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\TaskManager.java
+	 */
+
+/**
+ * The manager that manipulates and contains the array list of Tasks.
+ * 
+	// End of segment: .\src\application\TaskManager.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\WaveLogger.java
+	 */
+
+/**
+ * Our custom logging class that wraps Logger.
+ * Control loggers that output to the console by adding their
+ * names into consoleOutput.txt.
+ * 
+	// End of segment: .\src\application\WaveLogger.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationSimpleTest.java
+	 */
+
+/**
+ * This class is used to reflect all the private static fields and methods of the Controller class.
+	// End of segment: .\test\application\IntegrationSimpleTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationSimpleTest.java
+	 */
+
+/**
+ * Mocks the UIComponent class.
+	// End of segment: .\test\application\IntegrationSimpleTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationSimpleTest.java
+	 */
+
+    // This is used to set up integration testing.
+    // This method will always run once before the tests begin.
+    @BeforeClass
+    public static void initializeIntegrationTest() throws Exception {
+        try {
+            ControllerReflector.reflect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        // Resets the ArrayList of Tasks to empty.
+        ArrayList<Task> emptyTasks = new ArrayList<Task>();
+        taskManager.initializeList(emptyTasks);
+        dataStorage.saveTasks(emptyTasks);
+        
+        // Runs the setup methods to initialize other components.
+        ControllerReflector.methods.get("setup").invoke(null, EMPTY);
+        
+        // Replaces the two static fields with our own stubs.
+        ControllerReflector.fields.get("taskManager").set(null, taskManager);
+        ControllerReflector.fields.get("dataStorage").set(null, dataStorage);
+        
+        // Run the JavaFX thread in the background.
+        Thread t = new Thread("JavaFX Background") {
+            @Override
+            public void run() {
+                launch(IntegrationSimpleTest.class);
+            }
+        };
+        t.setDaemon(true);
+        t.start();
+        
+        // Sleeps every half second until uiComponent is set and ready for use.
+        int i = 0;
+        while (uiComponent == null && i < 6) {
+            i++;
+            Thread.sleep(500);
+        }
+    }
+
+	// End of segment: .\test\application\IntegrationSimpleTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationSimpleTest.java
+	 */
+
+    // Method to start JavaFX stage during tests.
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        ControllerReflector.fields.get("uiComponent").set(null, new UIComponent());
+        uiComponent = (UIComponent) ControllerReflector.fields.get("uiComponent").get(null);
+    }
+
+	// End of segment: .\test\application\IntegrationSimpleTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationSimpleTest.java
+	 */
+
+    // This method will be run once before each test.
+    @Before
+    public void readyTasks() {
+        DataStorage fixtureStorage = new DataStorage(SAMPLE_TEST_JSON_FILENAME);
+        ArrayList<Task> fixtures = fixtureStorage.retrieveTasks();
+        taskManager.initializeList(fixtures);
+        dataStorage.saveTasks(fixtures);    
+
+        FIXTURES_SIZE = fixtures.size();
+        
+        // The following lines readies the hashtable.
+        taskManager.getTasks();
+        taskManager.getReminders();
+        
+        /**
+         * The fixture contains:
+         * ****
+         * 
+         * Left pane:
+         *   E1: Final CS2103T Lecture
+         *     Red !, 31st Oct Fri 14:00 to Fri 16:00
+         *     
+         *   E2: NUS Hackers free pizza
+         *     Green !, 31st Oct Fri 18:30
+         *     
+         *   E3: CS2103T Final Exam
+         *     Yellow !, 26th Nov Wed 13:00 to Wed 15:00
+         *     
+         *   E4: Dental appointment
+         *     Green !, 29th Nov Sat 11:00
+         *     
+         * Right pane:
+         *   T1: Finish integration testing..., Red !
+         *   T2: Watch drama, 28th Oct 23:30, Red !
+         *   T3: Project Manual, 7th Nov 21:43, Yellow !
+         *   T4: Tidy room, Green !
+         *   T5: Learn new language, Green !
+         *
+         */
+    }
+
+	// End of segment: .\test\application\IntegrationSimpleTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationSimpleTest.java
+	 */
+
+    // This method will be run once after each test.
+    @After
+    public void clearTasks() {
+        // Resets the ArrayList of Tasks to empty.
+        ArrayList<Task> emptyTasks = new ArrayList<Task>();
+        taskManager.initializeList(emptyTasks);
+        dataStorage.saveTasks(emptyTasks);
+    }
+
+	// End of segment: .\test\application\IntegrationSimpleTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationSimpleTest.java
+	 */
+
+    @Test
+    public void testAdd() {
+        String commandInput = "add [first wavewave]";
+        Controller.runCommandInput(commandInput);
+        
+        DataStorage checkStorage = new DataStorage(TODO_TEST_JSON_FILENAME);
+        
+        assertEquals(FIXTURES_SIZE + 1, checkStorage.retrieveTasks().size());
+        assertEquals(FIXTURES_SIZE + 1, taskManager.getList().size());
+        assertEquals(5 + 1, taskManager.getTasks().size());
+        assertEquals(4, taskManager.getReminders().size());
+    }
+
+	// End of segment: .\test\application\IntegrationSimpleTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationSimpleTest.java
+	 */
+
+    @Test
+    public void testAddEmpty() {
+        String commandInput = "add []";
+        Controller.runCommandInput(commandInput);
+        
+        // We have not fixed this, since empty task should not be added.
+        // assertEquals(taskManager.getList().size(), FIXTURES_SIZE);
+    }
+
+	// End of segment: .\test\application\IntegrationSimpleTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationSimpleTest.java
+	 */
+
+    @Test
+    public void testCompleteTask() {
+        String commandInput = "complete T2";
+        Controller.runCommandInput(commandInput);
+        
+        assertEquals(4, taskManager.getTasks().size());
+        assertEquals(1, taskManager.getCompletedTasks().size());
+    }
+    
+	// End of segment: .\test\application\IntegrationSimpleTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationSimpleTest.java
+	 */
+
+    @Test
+    public void testDeleteTask() {
+        String commandInput = "delete T1";
+        Controller.runCommandInput(commandInput);
+        
+        DataStorage checkStorage = new DataStorage(TODO_TEST_JSON_FILENAME);
+        
+        assertEquals(FIXTURES_SIZE - 1, checkStorage.retrieveTasks().size());        
+        assertEquals(FIXTURES_SIZE - 1, taskManager.getList().size());        
+    }
+
+}
+
+	// End of segment: .\test\application\IntegrationSimpleTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\TaskComparatorTest.java
+	 */
+
+public class TaskComparatorTest {
+
+   ArrayList<Task> tasks;
+   Task a, b;
+   
+    @Before
+    public void setUp() throws Exception {
+        tasks = new ArrayList<Task>();
+        a = new Task();
+        b = new Task();
+        
+        tasks.add(a);
+        tasks.add(b);
+        
+        // a comes before b at the moment.
+    }
+
+    @After
+    public void tearDown() throws Exception {
+    }
+    
+    @Test
+    public void testOrderInArrayList() {
+        assertEquals("a is in front", a, tasks.get(0));
+        assertEquals("b is behind", b, tasks.get(1));
+    }
+
+    @Test
+    public void testStartDateComparator() {
+        DateTime date = new DateTime(2014, 10, 30, 12, 44, 0); // 30 October 2014, 12:44:00
+        a.setDate(date);
+        date = date.minusDays(1);
+        b.setDate(date);
+        
+        Collections.sort(tasks, new DateComparator());
+        
+        assertEquals("b is now in front", b, tasks.get(0));
+        assertEquals("a is now behind", a, tasks.get(1));
+    }
+    
+    @Test
+    public void testEndDateComparator() {
+        DateTime date = new DateTime(2014, 10, 30, 12, 44, 0); // 30 October 2014, 12:44:00
+        a.setDate(date);
+        b.setDate(date);
+
+        date = date.plusDays(3);
+        a.setEndDate(date);
+        date = date.minusDays(1);
+        b.setEndDate(date);
+        
+        Collections.sort(tasks, new DateComparator());
+
+        assertEquals("a is now behind", a, tasks.get(1));
+        assertEquals("b is now in front", b, tasks.get(0));
+    }
+    
+    @Test
+    public void testPriorityComparator() {
+        a.setPriority(1);
+        b.setPriority(3);
+        
+        Collections.sort(tasks, new PriorityComparator());
+        
+        assertEquals("b is now in front", b, tasks.get(0));
+        assertEquals("a is now behind", a, tasks.get(1));        
+    }
+    
+    @Test
+    public void testModifiedAtComparator() {
+        try {
+            Thread.sleep(100);
+        } catch (Exception e) {
+            // ???
+        }
+        
+        b.setPriority(0);
+        
+        Collections.sort(tasks, new ModifiedAtComparator());
+        
+        assertEquals("b is now in front", b, tasks.get(0));
+        assertEquals("a is now behind", a, tasks.get(1));        
+    }
+
+}
+
+	// End of segment: .\test\application\TaskComparatorTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\TaskTest.java
+	 */
+
+/**
+	// End of segment: .\test\application\TaskTest.java
+
+
+
+
+
