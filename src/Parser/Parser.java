@@ -146,6 +146,7 @@ public class Parser {
         }
         return IDs;
     }
+    
     //@author A0090971Y
     /**
      * 
@@ -172,9 +173,17 @@ public class Parser {
         String command = userInput.trim().split("\\s+")[0];
         userInput = userInput.replace(command,"").trim();
         }
+        else if (parseCommandType(userInput).equalsIgnoreCase("edit")){
+            String command = userInput.trim().split("\\s+")[0];
+            String index = userInput.trim().split("\\s+")[1];
+            userInput = userInput.replaceAll(command, "");
+            userInput = userInput.replaceAll(index, "");
+            userInput = userInput.trim();
+        }
         else {
             userInput = null;
         }
+        
         return userInput;
     }
 }
