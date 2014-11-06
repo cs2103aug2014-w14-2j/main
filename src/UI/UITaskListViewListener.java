@@ -17,9 +17,6 @@ public class UITaskListViewListener implements EventHandler<KeyEvent> {
 	private UICmdInputBox cmdInput;
 	private UITaskListView taskList;
 	
-    private final String FLOATING = "Task";
-    private final String EVENT = "Event";
-	
 	//@author A0111824R
     /**
      *

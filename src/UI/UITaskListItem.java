@@ -5,7 +5,7 @@ import application.Task;
 
 //@author A0111824R
 /**
- *
+ * 
  * @author Tan Young Sing
  */
 public class UITaskListItem {

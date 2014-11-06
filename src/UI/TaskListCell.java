@@ -26,7 +26,27 @@ import application.Task;
 public class TaskListCell extends ListCell<UITaskListItem> { 
     static private final int TASK_CONTAINER_WIDTH = 260;
     static private final int TASK_CONTAINER_HEIGHT = 70;
-    static private final int TASK_CONTAINER_SPACING = 15;
+    
+    private final int UI_OFFSET = 10;
+    private final int UI_NON_PRIORITY = 0;
+    
+    private final String UI_DEFAULT_FONT = "Bemio";
+    private final String UI_DESCRIPTION_FONT = "Raleway";
+    
+    private final int UI_MAXWIDTH_PRIORITY_INDICATOR = 40;
+    
+    private final int UI_PERIOD_ONE = 1;
+    private final int UI_PERIOD_WEEK = 7;
+    
+    private final String UI_DATEFORMAT = "dd MMM yyyy";
+    private final String UI_TIMEFORMAT = "h:mm a";
+    private final String UI_DATETIMEFORMAT = "dd MMM yyy, h:mm a";
+    
+    private final String UI_OVERDUE_LABEL = "Outstanding";
+    private final String UI_DEFAULT_PADDING = "-fx-padding: 0 5 0 5;";
+    private final String UI_HEADING_STYLE = " -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;";
+    private final String UI_EMPTY_TASK_STYLE = "-fx-background-color: rgb(227, 227, 227, 1);";
+    private final String UI_EMPTY_TASKS = "-fx-padding: 3 0 3 0; -fx-background-color: #FFB347;";
     
 	private final String LISTITEM_HEADER = "header";
 	private final String LISTITEM_DEFAULT = "default";
@@ -37,6 +57,7 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     private String COLOR_DEFAULT_PRIORITY = "rgba(37, 232, 154, 1)";
     private String COLOR_HIGH_PRIORITY = "rgba(249, 104, 114, 1)";
     private String COLOR_COMPLETED = "rgba(188, 187, 185, 1)";
+    private String COLOR_OUTSTANDING = "rgba(255, 120, 120, 1)";
     
     private Rectangle contentPlaceHolder;
     private Text indexLabel;
@@ -78,20 +99,20 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     	if(item.isCompleted()) {
     		indicator_color = COLOR_COMPLETED;
     	} else {
-    		if(priority == 0) {
+    		if(priority == UI_NON_PRIORITY) {
     			 indicator_color = COLOR_DEFAULT_PRIORITY;
-    		} else if (priority != 0) {
+    		} else if (priority != UI_NON_PRIORITY) {
     			indicator_color = COLOR_HIGH_PRIORITY;
     		}
     	}
     	
-    	Rectangle priorityIndicator = createRectangle(40, height-10, 0, 0, Color.web(indicator_color));
-    	indexLabel = createText(displayID, 0, 20, "Bemio", FontWeight.BOLD, Color.WHITE);
+    	Rectangle priorityIndicator = createRectangle(UI_MAXWIDTH_PRIORITY_INDICATOR, height-UI_OFFSET, 0, 0, Color.web(indicator_color));
+    	indexLabel = createText(displayID, 0, 20, UI_DEFAULT_FONT, FontWeight.BOLD, Color.WHITE);
 
     	StackPane stack = new StackPane();
     	stack.setPadding(new Insets(0, 0, 0, 0));
-		stack.setMaxHeight(height-10);
-		stack.setMaxWidth(40);
+		stack.setMaxHeight(height-UI_OFFSET);
+		stack.setMaxWidth(UI_MAXWIDTH_PRIORITY_INDICATOR);
     	
 		StackPane.setAlignment(priorityIndicator, Pos.TOP_LEFT);
     	StackPane.setAlignment(indexLabel, Pos.CENTER);
@@ -100,6 +121,8 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     	return stack;
     }
     
+    
+   
 	//@author A0111824R
     /**
      *
@@ -111,22 +134,22 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     	
     	DateTime taskDate = new DateTime(currentDate.getYear(), currentDate.getMonthOfYear(), currentDate.getDayOfMonth(), 0, 0);
     	DateTime today = new DateTime(systemTime.getYear(), systemTime.getMonthOfYear(), systemTime.getDayOfMonth(), 0, 0);
-    	DateTime tomorrow = today.plus(Period.days(1));
+    	DateTime tomorrow = today.plus(Period.days(UI_PERIOD_ONE));
     	
-    	DateTime end = today.plus(Period.days(7));
+    	DateTime end = today.plus(Period.days(UI_PERIOD_WEEK));
     	
     	Interval interval = new Interval(today, end);
     	
     	if(interval.contains(currentDate)) {
     		if(taskDate.equals(today)) {
-    			output = "Today - " + taskDate.toString("dd MMM yyyy");
+    			output = "Today - " + taskDate.toString(UI_DATEFORMAT);
     		} else if (taskDate.equals(tomorrow)) {
-    			output = "Tomorrow - " + taskDate.toString("dd MMM yyyy");
+    			output = "Tomorrow - " + taskDate.toString(UI_DATEFORMAT);
     		} else {
         		output = currentDate.dayOfWeek().getAsText();
     		}
     	} else {
-    		output = currentDate.toString("dd MMM yyyy");
+    		output = currentDate.toString(UI_DATEFORMAT);
     	}
     	
     	return output;
@@ -166,18 +189,18 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     	String output = "";
     	
     	if(item.getDate() != null && item.getEndDate() == null) {
-    		output += item.getDate().toString("h:mm a");
+    		output += item.getDate().toString(UI_TIMEFORMAT);
     	} else if(item.getDate() != null && item.getEndDate() != null) {
-    		output += item.getDate().toString("h:mm a");
+    		output += item.getDate().toString(UI_TIMEFORMAT);
     	}
     	
     	if(item.getDate() == null && item.getEndDate() != null) {
-    		output += "Due on: " + item.getEndDate().toString("dd MMM yyy, h:mm a");
+    		output += "Due on: " + item.getEndDate().toString();
     	} else if(item.getDate() != null && item.getEndDate() != null) {
     		if(item.getDate().equals(item.getEndDate())) {
-    			output += " - " + item.getEndDate().toString("h:mm a");
+    			output += " - " + item.getEndDate().toString(UI_TIMEFORMAT);
     		} else {
-    			output += " - " + item.getEndDate().toString("dd MMM yy, h:mm a");
+    			output += " - " + item.getEndDate().toString(UI_DATETIMEFORMAT);
     		}
     	} 
     	
@@ -190,8 +213,8 @@ public class TaskListCell extends ListCell<UITaskListItem> {
      * @author Tan Young Sing
      */
     private StackPane createOutstandingLabel() {
-    	Rectangle outstandingLabel = createRectangle(290, 15, 0, 0, Color.web("rgba(255, 120, 120, 1)"));
-    	Text labelText = createText("OUTSTANDING", 190, 10, "Raleway", FontWeight.BOLD, Color.WHITE);
+    	Rectangle outstandingLabel = createRectangle(290, 15, 0, 0, Color.web(COLOR_OUTSTANDING));
+    	Text labelText = createText(UI_OVERDUE_LABEL, 190, 10, UI_DESCRIPTION_FONT, FontWeight.BOLD, Color.WHITE);
     	
 		StackPane stack = new StackPane();
 		StackPane.setAlignment(outstandingLabel, Pos.TOP_LEFT);
@@ -240,7 +263,7 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     			Text descriptionText = createText(taskItem.getDescription(), 190, 14, "", FontWeight.NORMAL, Color.BLACK);
     			
     			int height = getContentHeight(taskItem.getDescription().length());
-    			this.setStyle("-fx-padding: 0 5 0 5;" + String.format(CONTAINER_HEIGHT, height));
+    			this.setStyle(UI_DEFAULT_PADDING + String.format(CONTAINER_HEIGHT, height));
     			contentPlaceHolder = createRectangle(270, height-10, 5, 5, Color.WHITE);
     			descriptionBox.getChildren().addAll(descriptionText);
     			
@@ -263,7 +286,7 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     		} else if(item != null && item.getType().equals(LISTITEM_HEADER)) {	
     			
     			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
-    			this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;" + cellHeight);
+    			this.setStyle(UI_HEADING_STYLE + cellHeight);
     			String output = getDateString(item.getDate()) + " (" + item.getNumberTask() + ")";
     			Text text = createText(output, 0, 15, "Ariel", FontWeight.BOLD, Color.WHITE);
     			
@@ -272,6 +295,7 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     			StackPane.setAlignment(text, Pos.TOP_LEFT);
     			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
     			setGraphic(stack);
+    			
     		} else if(item.getTask() == null && item.getType().equals(LISTITEM_SEPARATOR)) {
     			
     			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
@@ -284,16 +308,15 @@ public class TaskListCell extends ListCell<UITaskListItem> {
     			StackPane.setAlignment(text, Pos.TOP_LEFT);
     			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
     			
-    			
     			if(item instanceof UIEmptyTaskListItem) {
     				StackPane.setMargin(text, new Insets(0, 70, 0, 70));
-    				this.setStyle(" -fx-padding: 3 0 3 0; -fx-background-color: #FFB347;" + cellHeight);
+    				this.setStyle("-fx-padding: 3 0 3 0; -fx-background-color: #FFB347;" + cellHeight);
     			}
     			
     			setGraphic(stack);
     		}
         } else {
-        	this.setStyle("-fx-background-color: rgb(227, 227, 227, 1);");
+        	this.setStyle(UI_EMPTY_TASK_STYLE);
     		setGraphic(null);
     	}
     }
