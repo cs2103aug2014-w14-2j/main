@@ -5,6 +5,8 @@ import java.util.Comparator;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import Parser.CommandInfo;
+
 //@author A0110546R
 /**
  * The task object!

@@ -1,4 +1,4 @@
-package application;
+package Parser;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -6,6 +6,9 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
+
+import application.MismatchedCommandException;
+import application.TaskManager;
 
 /** This class stores all information that a Command object needs to execute a command 
  * 
@@ -23,7 +26,8 @@ public class CommandInfo {
     private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","home","quit","search","show","undo","exit"};
     private String message = null;
     private boolean completed;
-
+    private String input;
+    
     //@author A0090971Y
     /**
      * constructor for CommandInfo class
@@ -35,7 +39,7 @@ public class CommandInfo {
      * @param priority
      */
 
-    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority,boolean isCompleted) 
+    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority,boolean isCompleted,String input) 
     throws MismatchedCommandException {  // edit
         try {
         this.commandType = commandType;
@@ -45,6 +49,7 @@ public class CommandInfo {
         this.endDateTime = getEndDateTime(endDT);
         this.priority = priority;
         this.completed = isCompleted;
+        this.input = input;
         checkStartDateTime();
         checkEndDateTime();
         validateUserInput();
@@ -230,5 +235,13 @@ public class CommandInfo {
      */
     public boolean isCompleted(){
         return completed;
+    }
+    //@author A0090971Y
+    /**
+     * 
+     * @return the user input after the add command
+     */
+    public String getInput() {
+        return this.input;
     }
 }

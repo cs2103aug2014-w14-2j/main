@@ -8,13 +8,15 @@ import java.util.ListIterator;
 
 import org.joda.time.DateTime;
 
+import Parser.CommandInfo;
+
 //@author A0110546R
 /**
  * The manager that manipulates and contains the array list of Tasks.
  * 
  * @author Sun Wang Jun
  */
-class TaskManager {
+public class TaskManager {
     public static final char NORMAL_TASK_PREFIX = 'T';
     public static final char DATED_TASK_PREFIX = 'E';
     

@@ -7,6 +7,8 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import Parser.CommandInfo;
+import Parser.Parser;
 import UI.UIComponent;
 
 /**

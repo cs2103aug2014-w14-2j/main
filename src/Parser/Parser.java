@@ -1,4 +1,4 @@
-package application;
+package Parser;
 
 /** This class implements a Parser to parse an input string
  * 
@@ -11,6 +11,8 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 
+import application.MismatchedCommandException;
+
 public class Parser {
 
     private DateTimeParser parser;
@@ -21,7 +23,7 @@ public class Parser {
      * This constructs a parser object with an user input 
      * @param userInput   the one line command statement the user inputs
      */
-    Parser(){
+    public Parser(){
     }
 
     //@author A0090971Y
@@ -46,8 +48,9 @@ public class Parser {
             startDateTime = null;
         }
         boolean completed = getComplete(content);
+        String input = parseInput(userInput);
         try {
-        CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority,completed);
+        CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority,completed,input);
         return cmdInfo;
         }
         catch (MismatchedCommandException e) {
@@ -162,6 +165,17 @@ public class Parser {
             return true; 
         }
         return false;
+    }
+    
+    private String parseInput(String userInput){
+        if (parseCommandType(userInput).equalsIgnoreCase("add")){
+        String command = userInput.trim().split("\\s+")[0];
+        userInput = userInput.replace(command,"").trim();
+        }
+        else {
+            userInput = null;
+        }
+        return userInput;
     }
 }
 
