@@ -39,14 +39,14 @@ public class CommandInfo {
      * @param priority
      */
 
-    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, Date startDT,Date endDT, int priority,boolean isCompleted,String input) 
+    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, DateTime startDateTime,DateTime endDateTime, int priority,boolean isCompleted,String input) 
     throws MismatchedCommandException {  // edit
         try {
         this.commandType = commandType;
         this.taskIDs = upperCaseIDs(taskIDs);
         this.taskDesc = taskDesc;
-        this.startDateTime = getStartDateTime(startDT);
-        this.endDateTime = getEndDateTime(endDT);
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
         this.priority = priority;
         this.completed = isCompleted;
         this.input = input;
@@ -136,31 +136,7 @@ public class CommandInfo {
         }
     }
 
-    //@author A0090971Y
-    /**
-     * This returns the start date time of the task
-     * @return the start date time of a task with the type Date, null if there is no start date time
-     */
-    public DateTime getStartDateTime(Date startDT) {
-        DateTime dateTime = null;
-        if (startDT == null) {
-            return dateTime;
-        }
-        return (new DateTime(startDT));
-    }
 
-    //@author A0090971Y
-    /**
-     * This returns the end date time of the task
-     * @return the start date time of a task with the type Date, null if there is no end date time
-     */
-    private DateTime getEndDateTime(Date endDT) {
-        DateTime dateTime = null;
-        if (endDT == null) {
-            return dateTime;
-        }
-        return (new DateTime(endDT));
-    }
 
     private static String[] getValidCommandTypes() {
         return validCommandTypes;

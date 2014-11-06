@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 
 import application.MismatchedCommandException;
 
@@ -41,11 +42,12 @@ public class Parser {
         int priority = parsePriority(userInput,taskDesc);
         String content = parseContent(userInput,taskDesc);
         parser = new DateTimeParser(content);
-        Date startDateTime = parser.getStartDateTime();
-        Date endDateTime = parser.getEndDateTime();
+        DateTime startDateTime =changeToDateTime(parser.getStartDateTime());
+        DateTime endDateTime = changeToDateTime(parser.getEndDateTime());
         if (isDeadline(content,startDateTime,endDateTime)) {
             endDateTime = startDateTime;
             startDateTime = null;
+            endDateTime = formatEndDateTime(endDateTime,content);
         }
         boolean completed = getComplete(content);
         String input = parseInput(userInput);
@@ -56,6 +58,25 @@ public class Parser {
         catch (MismatchedCommandException e) {
             throw e;
         }
+    }
+
+    //@author A0090971Y
+    private DateTime formatEndDateTime(DateTime dt,String content) {
+        if(!content.matches(".*\\d.*")){
+            int year = Integer.parseInt(dt.toString().substring(0, 4));
+            int month =Integer.parseInt(dt.toString().substring(5, 7));
+            int day = Integer.parseInt(dt.toString().substring(8,10));       
+            dt = new DateTime(year,month, day,23,59,59);
+        }
+        return dt;
+    }
+    //@author A0090971Y
+    private DateTime changeToDateTime(Date date) {
+        DateTime dateTime = null;
+        if (date == null) {
+            return dateTime;
+        }
+        return (new DateTime(date));
     }
 
     //@author A0090971Y
@@ -84,7 +105,7 @@ public class Parser {
         return desc;
     }
 
-    private boolean isDeadline(String content,Date startDT, Date endDT) {
+    private boolean isDeadline(String content,DateTime startDT, DateTime endDT) {
         for (int i = 0; i<timePrepositions.length;i++) {
             if (content.indexOf(timePrepositions[i])>=0){
                 if (endDT == null)
