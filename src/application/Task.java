@@ -2,6 +2,8 @@ package application;
 
 import org.joda.time.DateTime;
 
+import Parser.CommandInfo;
+
 //@author A0110546R
 /**
  * The task object!
