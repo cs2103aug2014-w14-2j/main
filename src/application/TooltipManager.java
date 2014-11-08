@@ -17,9 +17,21 @@ public class TooltipManager {
     private static String TOOLTIP_SEARCH2 = "Tasks can be searched based on keywords, inserted between square brackets when searching.";
     private static String TOOLTIP_SEARCH3 = "Return to default view by typing HOME";
     
-    private static String TOOLTIP_MISC1 = "Typing the first letter of your command and <space> will auto-complete the command.";
+    private static String TOOLTIP_MISC1 = "Typing the first letter of your command and <space> will auto-complete the command type.";
     private static String TOOLTIP_MISC2 = "Enter QUIT command to terminate WaveWave.";
     private static String TOOLTIP_MISC3 = "After undoing, you can revert by entering UNDO again.";
+    private static String TOOLTIP_MISC4 = "All tasks are stored in an external file. You can directly modify it as well.";
+    private static String TOOLTIP_MISC5 = "\"by <day>\" is understood as 23:59pm of that day.";
+    private static String TOOLTIP_MISC6 = "Overdue tasks disappear after the day is passed. They can be viewed using SHOW command.";
+    private static String TOOLTIP_MISC7 = "WaveWave can understand most natural language input for date and time.";
+    private static String TOOLTIP_MISC8 = "All tasks are saved after each operation, so there is no need to manually save.";
+    private static String TOOLTIP_MISC9 = "Undoing twice will revert to the state before the first undo.";
+    private static String TOOLTIP_MISC10 = "Tasks with red icons are important ones.";
+    private static String TOOLTIP_MISC11 = "Deadlines can be indicated with different words like until, by, etc";
+    private static String TOOLTIP_MISC12 = "After typing description, press space twice to move out of square brackets and enter other details.";
+    private static String TOOLTIP_MISC13 = "If you don't know when an event will end, just indicate its start time and it will be registered as an event.";
+    private static String TOOLTIP_MISC14 = "Tasks with gray icons are the ones you completed.";
+    private static String TOOLTIP_MISC15 = "";
     
     private ArrayList<String> tooltipsAdd = new ArrayList<String>();
     private ArrayList<String> tooltipsEdit = new ArrayList<String>();
@@ -42,6 +54,17 @@ public class TooltipManager {
         tooltipsMisc.add(TOOLTIP_MISC1);
         tooltipsMisc.add(TOOLTIP_MISC2);
         tooltipsMisc.add(TOOLTIP_MISC3);
+        tooltipsMisc.add(TOOLTIP_MISC4);
+        tooltipsMisc.add(TOOLTIP_MISC5);
+        tooltipsMisc.add(TOOLTIP_MISC6);
+        tooltipsMisc.add(TOOLTIP_MISC7);
+        tooltipsMisc.add(TOOLTIP_MISC8);
+        tooltipsMisc.add(TOOLTIP_MISC9);
+        tooltipsMisc.add(TOOLTIP_MISC10);
+        tooltipsMisc.add(TOOLTIP_MISC11);
+        tooltipsMisc.add(TOOLTIP_MISC12);
+        tooltipsMisc.add(TOOLTIP_MISC13);
+        tooltipsMisc.add(TOOLTIP_MISC14);
     }
     
     private Integer getRandomInteger(int size) {
