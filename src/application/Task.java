@@ -1,7 +1,6 @@
 package application;
 
 import org.joda.time.DateTime;
-
 import Parser.CommandInfo;
 
 //@author A0110546R
@@ -10,7 +9,9 @@ import Parser.CommandInfo;
  * 
  * @author Sun Wang Jun
  */
-public class Task {
+public class Task {    
+    private static int idCounter = 0;
+    
     /* The following fields are not stored. */
     private int id;
     private String displayID;
@@ -25,9 +26,8 @@ public class Task {
     private DateTime createdAt;
     private DateTime modifiedAt;
     private DateTime completedAt;
-    
-    private static int idCounter = 0;
-    
+
+    //@author A0110546R
     /**
      * Constructor that creates a Task based on CommandInfo.
      * 
@@ -47,7 +47,8 @@ public class Task {
             this.priority = commandInfo.getPriority();
         }
     }
-    
+
+    //@author A0115864B
     /**
      * Constructor for cloning task object, used when storing past versions
      * @param original
@@ -67,6 +68,7 @@ public class Task {
         
     }
 
+    //@author A0110546R
     /**
      * Constructor that edits an existing Task based on CommandInfo and assigns the same id.
      * 
@@ -78,7 +80,8 @@ public class Task {
         this.id = id;
         Task.idCounter--; // Because we are editing, so do not increment the counter.
     }
-    
+
+    //@author A0110546R
     /**
      * Public default constructor.
      */
@@ -88,6 +91,7 @@ public class Task {
         this.modifiedAt = new DateTime();
     }
 
+    //@author A0110546R
     /**
      * Returns the id of the Task.
      * 
@@ -95,9 +99,8 @@ public class Task {
      */
     public int getID() { return this.id; }
 
-    // We may not want to expose any setting of ids.
-    // public void setId(String id) { this.id = id; }
 
+    //@author A0110546R
     /**
      * Returns the description of the Task.
      * 
@@ -105,6 +108,7 @@ public class Task {
      */
     public String getDescription() { return this.description; }
 
+    //@author A0110546R
     /**
      * Sets the description of the Task.
      * 
@@ -114,7 +118,8 @@ public class Task {
         this.description = description;
         this.modifiedAt = new DateTime();
     }    
-    
+
+    //@author A0110546R
     /**
      * Returns the displayID of the Task.
      * 
@@ -122,6 +127,7 @@ public class Task {
      */
     public String getDisplayID() { return this.displayID; }
 
+    //@author A0110546R
     /**
      * Sets the displayID of the Task.
      * 
@@ -132,6 +138,7 @@ public class Task {
         // this.modifiedAt = new DateTime(); // This does not modify the task. 
     }
 
+    //@author A0110546R
     /**
      * Returns the (start) date of the Task. Returns null if there is no date.
      * 
@@ -139,6 +146,7 @@ public class Task {
      */
     public DateTime getDate() { return this.date; }
 
+    //@author A0110546R
     /**
      * Sets the (start) date of the Task. Set as null to remove the date.
      * 
@@ -151,11 +159,7 @@ public class Task {
         this.modifiedAt = new DateTime();
     }
 
-    /**
-     * Removes the (start) date of the Task.
-     */
-    public void removeDate() { this.setDate(null); }
-
+    //@author A0110546R
     /**
      * Returns the end date of the Task. Returns null if there is no end date.
      * 
@@ -163,6 +167,7 @@ public class Task {
      */
     public DateTime getEndDate() { return this.endDate; }
 
+    //@author A0110546R
     /**
      * Sets the end date of the Task. Set as null to remove the date.
      * 
@@ -173,11 +178,7 @@ public class Task {
         this.modifiedAt = new DateTime();
     }
 
-    /**
-     * Removes the end date of the Task.
-     */
-    public void removeEndDate() { this.setEndDate(null); }
-
+    //@author A0110546R
     /**
      * Returns whether Task is completed.
      * 
@@ -185,6 +186,7 @@ public class Task {
      */
     public boolean isCompleted() { return completed; }
 
+    //@author A0110546R
     /**
      * Sets the completed status of the Task.
      * 
@@ -201,11 +203,13 @@ public class Task {
         }
     }
 
+    //@author A0110546R
     /**
      * Completes the task.
      */
     public void complete() { this.setCompleted(true); }
 
+    //@author A0110546R
     /**
      * Returns the priority of the Task.
      * 
@@ -213,6 +217,7 @@ public class Task {
      */
     public int getPriority() { return this.priority; }
 
+    //@author A0110546R
     /**
      * Sets the priority of the Task.
      * 
@@ -223,14 +228,16 @@ public class Task {
         this.priority = priority;
         this.modifiedAt = new DateTime();
     }
-    
+
+    //@author A0110546R
     /**
      * Returns the created date of the Task.
      * 
      * @return the created date of the Task.
      */
     public DateTime getCreatedAt() { return this.createdAt; }
-    
+
+    //@author A0110546R
     /**
      * Sets the created date of the Task.
      * Used only when retrieving tasks list from external file.
@@ -240,14 +247,16 @@ public class Task {
     public void setCreatedAt(DateTime createdDate) {
         this.createdAt = createdDate;
     }
-    
+
+    //@author A0110546R
     /**
      * Returns the last modified date of the Task.
      * 
      * @return the last modified date of the Task.
      */
     public DateTime getModifiedAt() { return this.modifiedAt; }
-    
+
+    //@author A0110546R
     /**
      * Sets the last modified date of the Task. 
      * Used only when retrieving tasks list from external file.
@@ -257,14 +266,16 @@ public class Task {
     public void setModifiedAt(DateTime modifiedDate) {
         this.modifiedAt = modifiedDate;
     }
-    
+
+    //@author A0110546R
     /**
      * Returns the completed date of the Task.
      * 
      * @return the completed date of the Task.
      */
     public DateTime getCompletedAt() { return this.completedAt; }
-    
+
+    //@author A0110546R
     /**
      * Sets the completed date of the Task.
      * Used only when retrieving tasks list from external file.
@@ -274,24 +285,27 @@ public class Task {
     public void setCompletedAt(DateTime completedDate) {
         this.completedAt = completedDate;
     }
-    
-    /**
-     * Used to reset the internal ID counter back to 0.
-     */
-    public static void resetIDCounter() { idCounter = 0; }
-    
+
+    //@author A0110546R
     /**
      * Returns whether this task is deleted.
      * 
      * @return whether this task is deleted.
      */
     public boolean isDeleted() { return this.deleted; }
-    
+
+    //@author A0110546R
     /**
      * Sets whether the Task is deleted.
      * @param deleted boolean whether to delete the Task.
      */
     public void setDeleted(boolean deleted) { this.deleted = deleted; }   
     
+
+    //@author A0110546R
+    /**
+     * Used to reset the internal ID counter back to 0.
+     */
+    public static void resetIDCounter() { idCounter = 0; }
 }
 
