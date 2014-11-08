@@ -127,6 +127,21 @@ public class Controller extends Application {
     }
     
     //@author A0110546R
+    /**
+     * For the UI to retrieve the Task given the display ID.
+     * @param displayID the displayID of the task.
+     */
+    public static Task getTaskFromDisplayID(String displayID) {
+        try {
+            return taskManager.getTaskFromDisplayID(displayID);
+        } catch (IllegalArgumentException e) {
+            uiComponent.setSuggestionText(e.getMessage());
+            // There is no need to log this.
+        }
+        return null;
+    }
+    
+    //@author A0110546R
     private static void setup() {
         dataStorage = new DataStorage();
         dataStorage.initiateFile();

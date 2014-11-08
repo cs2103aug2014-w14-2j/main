@@ -378,4 +378,16 @@ class TaskManager {
      */
     public void clearIDMapping() { this.idMapping.clear(); }
     
+    /**
+     * Returns the Task associated with this displayID.
+     * @param displayID the displayID of the task.
+     * @throws IllegalArgumentException if the displayID is not displayed in the views.
+     */
+    public Task getTaskFromDisplayID(String displayID) throws IllegalArgumentException {
+        if (!this.ensureValidDisplayID(displayID)) {
+            throw new IllegalArgumentException("There is no such display ID.");
+        }
+        return this.list.get(this.mapDisplayIDtoActualID(displayID));
+    }
+    
 }
