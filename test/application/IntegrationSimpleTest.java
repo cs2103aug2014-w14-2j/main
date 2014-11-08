@@ -2,13 +2,11 @@ package application;
 
 import static org.junit.Assert.*;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.After;
@@ -64,6 +62,8 @@ public class IntegrationSimpleTest extends Application {
     static TaskManager taskManager = new TaskManager();
     static DataStorage dataStorage = new DataStorage(TODO_TEST_JSON_FILENAME);
     static int FIXTURES_SIZE;
+    static int TASKS_SIZE;
+    static int EVENTS_SIZE;
   
     //@author A0110546R
     // This is used to set up integration testing.
@@ -76,13 +76,16 @@ public class IntegrationSimpleTest extends Application {
             e.printStackTrace();
         }
         
+        // Runs the setup methods to initialize other components.
+        ControllerReflector.methods.get("setup").invoke(null, EMPTY);
+        
         // Resets the ArrayList of Tasks to empty.
         ArrayList<Task> emptyTasks = new ArrayList<Task>();
         taskManager.initializeList(emptyTasks);
+        taskManager.clearIDMapping();
         dataStorage.saveTasks(emptyTasks);
+        taskManager.setDaysToDisplay(3);
         
-        // Runs the setup methods to initialize other components.
-        ControllerReflector.methods.get("setup").invoke(null, EMPTY);
         
         // Replaces the two static fields with our own stubs.
         ControllerReflector.fields.get("taskManager").set(null, taskManager);
@@ -124,8 +127,13 @@ public class IntegrationSimpleTest extends Application {
         dataStorage.saveTasks(fixtures);    
 
         FIXTURES_SIZE = fixtures.size();
+        TASKS_SIZE = 3; // Default view to the day itself.
+        EVENTS_SIZE = 0; // Default view to the day itself.
+
+        taskManager.setDaysToDisplay(3);
         
         // The following lines readies the hashtable.
+        taskManager.clearIDMapping();
         taskManager.getTasks();
         taskManager.getEvents();
         
@@ -133,25 +141,25 @@ public class IntegrationSimpleTest extends Application {
          * The fixture contains:
          * ****
          * 
-         * Left pane:
-         *   E1: Final CS2103T Lecture
-         *     Red !, 31st Oct Fri 14:00 to Fri 16:00
+         * Left pane:     
+         *   E1: CS2103T Final Exam
+         *     !, 26th Nov Wed 13:00 to Wed 15:00
          *     
-         *   E2: NUS Hackers free pizza
-         *     Green !, 31st Oct Fri 18:30
+         *   E2: Christmas shopping
+         *     23rd Dec Tues 10:00 to 17:00
          *     
-         *   E3: CS2103T Final Exam
-         *     Yellow !, 26th Nov Wed 13:00 to Wed 15:00
+         *   E3: Doctor's appointment
+         *     23rd Dec Tues 9:00
          *     
-         *   E4: Dental appointment
-         *     Green !, 29th Nov Sat 11:00
+         *   E4: New Year Countdown
+         *     31st Dec Wed 22:00
          *     
          * Right pane:
-         *   T1: Finish integration testing..., Red !
-         *   T2: Watch drama, 28th Oct 23:30, Red !
-         *   T3: Project Manual, 7th Nov 21:43, Yellow !
-         *   T4: Tidy room, Green !
-         *   T5: Learn new language, Green !
+         *   T1: Lucky draw application
+         *     by 17th Dec Wed 12:55
+         *   T2: Top up ezlink !
+         *   T3: Learn new language
+         *   T4: Buy new sweater
          *
          */
     }
@@ -176,8 +184,8 @@ public class IntegrationSimpleTest extends Application {
         
         assertEquals(FIXTURES_SIZE + 1, checkStorage.retrieveTasks().size());
         assertEquals(FIXTURES_SIZE + 1, taskManager.getSanitizedList().size());
-        assertEquals(5 + 1, taskManager.getTasks().size());
-        assertEquals(4, taskManager.getEvents().size());
+        assertEquals(TASKS_SIZE + 1, taskManager.getTasks().size());
+        assertEquals(EVENTS_SIZE, taskManager.getEvents().size());
     }
 
     //@author A0110546R
@@ -186,18 +194,17 @@ public class IntegrationSimpleTest extends Application {
         String commandInput = "add []";
         Controller.runCommandInput(commandInput);
         
-        // We have not fixed this, since empty task should not be added.
-        // assertEquals(taskManager.getList().size(), FIXTURES_SIZE);
+         assertEquals(FIXTURES_SIZE, taskManager.getSanitizedList().size());
     }
 
     //@author A0110546R
     @Test
     public void testCompleteTask() {
+        Controller.runCommandInput("show");
         String commandInput = "complete T2";
         Controller.runCommandInput(commandInput);
         
-        assertEquals(4, taskManager.getTasks().size());
-        //assertEquals(1, taskManager.getCompletedTasks().size());
+        assertEquals(TASKS_SIZE, taskManager.getTasks().size());
     }
     
     //@author A0110546R

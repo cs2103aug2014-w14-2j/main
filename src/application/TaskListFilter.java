@@ -217,6 +217,17 @@ class KeepTasksWithoutStartDate implements TaskFilter {
 }
 
 /**
+ * Filter to keep reminders (tasks without start and end time).
+ * @author Sun Wang Jun
+ */
+class KeepReminders implements TaskFilter {
+    @Override
+    public boolean apply(Task t) {
+        return t.getDate() == null && t.getEndDate() == null;
+    }
+}
+
+/**
  * Filter to ignore (soft-)deleted tasks. 
  * @author Sun Wang Jun
  */

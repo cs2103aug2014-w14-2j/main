@@ -197,7 +197,8 @@ public class TaskManager {
     public ArrayList<Task> getTasks() {
         TaskListFilter filter = new TaskListFilter(false); // Does a OR/|| filtering.
         filter.add(new KeepTasksCompletedToday()); // or,
-        filter.add(new KeepTasksNotCompleted());
+        filter.add(new KeepReminders());
+        filter.add(new KeepTasksBetween(this.daysToDisplay));
         this.tasksDisplay.replaceFilter(filter);
         
         return this.tasksDisplay.display(this.list, this.idMapping);
@@ -327,6 +328,7 @@ public class TaskManager {
      */
     public ArrayList<Task> initializeList(ArrayList<Task> storedList) {
         list = new ArrayList<Task>(storedList);
+        Task.resetIDCounter(list.size());
         return this.list;
     }
     

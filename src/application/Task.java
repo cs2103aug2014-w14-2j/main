@@ -306,6 +306,16 @@ public class Task {
     /**
      * Used to reset the internal ID counter back to 0.
      */
-    public static void resetIDCounter() { idCounter = 0; }
+    public static void resetIDCounter() { resetIDCounter(0); }
+    
+    //@author A0110546R
+    /**
+     * Used to set the internal ID counter.
+     * @param count the number to set to.
+     */
+    public static void resetIDCounter(int count) {
+        assert(count >= 0);
+        idCounter = count;
+    }
 }
 
