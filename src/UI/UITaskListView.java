@@ -47,7 +47,7 @@ public abstract class UITaskListView {
         taskList.setCellFactory(new Callback<ListView<UITaskListItem>, ListCell<UITaskListItem>>() {
             @Override
             public ListCell<UITaskListItem> call(ListView<UITaskListItem> list) {
-                return new TaskListCell();
+                return new UITaskListCell();
             }
         });
     }
