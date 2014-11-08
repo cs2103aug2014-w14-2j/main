@@ -34,7 +34,7 @@ public class DataStorage {
     private static final String KEY_DESCRIPTION = "Description";
     private static final String KEY_DATE = "Date";
     private static final String KEY_END = "End date";
-    private static final String KEY_PRIORITY = "Priority";
+    private static final String KEY_PRIORITY = "High-priority";
     private static final String KEY_ISCOMPLETED = "Completed";
     private static final String KEY_COMPLETED_DATE = "Completed date";
     private static final String KEY_CREATED_DATE = "Created date";
@@ -152,8 +152,12 @@ public class DataStorage {
                 
                 
                 if (obj.containsKey(KEY_PRIORITY)) {
-                    task.setPriority(((Long) obj.get(KEY_PRIORITY))
-                            .intValue());
+                    boolean highPriority = (boolean)obj.get(KEY_PRIORITY);
+                    if (highPriority) {
+                        task.setPriority(1);
+                    } else {
+                        task.setPriority(0);
+                    }
                 }
                 
                 boolean isCompleted = (boolean) obj.get(KEY_ISCOMPLETED);
@@ -196,7 +200,12 @@ public class DataStorage {
             
             try {
                 obj.put(KEY_DESCRIPTION, list.get(i).getDescription());
-                obj.put(KEY_PRIORITY, list.get(i).getPriority());
+                
+                if (list.get(i).getPriority() == 1) {
+                    obj.put(KEY_PRIORITY, true);
+                } else {
+                    obj.put(KEY_PRIORITY, false);
+                }
                 
                 if (list.get(i).getDate() != null) {
                     String date = fmt.print(list.get(i).getDate());
