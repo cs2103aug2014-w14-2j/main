@@ -6,6 +6,12 @@ import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.ListIterator;
 
+//@author A0110546R
+/**
+ * The list display class.
+ * @author Sun Wang Jun
+ *
+ */
 public class ListDisplay {
     protected char TASK_PREFIX = ' ';
     
@@ -22,18 +28,34 @@ public class ListDisplay {
         this.additionalFilter = new TaskListFilter(false);
     }
     
+    /**
+     * Adds a non-default comparator.
+     * @param comparator Comparator<Task>
+     */
     public void addComparator(Comparator<Task> comparator) {
         this.additionalComparators.add(comparator);
     }
     
+    /**
+     * Adds a non-default filter.
+     * @param filter TaskFilter
+     */
     public void addFilter(TaskFilter filter) {
         this.additionalFilter.add(filter);
     }
     
+    /**
+     * Replaces the entire task list filter.
+     * @param filter TaskListFilter
+     */
     public void replaceFilter(TaskListFilter filter) {
         this.additionalFilter = filter;
     }
     
+    /**
+     * Replaces the entire comparators list.
+     * @param comparators ArrayList of Comparator<Task>
+     */
     public void replaceComparators(ArrayList<Comparator<Task>> comparators) { 
         this.additionalComparators = comparators;
     }
@@ -45,6 +67,14 @@ public class ListDisplay {
         }
     }
     
+    /**
+     * First filters and sorts using the default filters and comparators, if any.
+     * Then filters and sorts using the additional filters and comparators, if any.
+     * 
+     * @param taskList the list to filter and sort.
+     * @param idMapping the Hashtable that maps displayID to internal ID.
+     * @return a filtered and sorted ArrayList<Task> 
+     */
     public ArrayList<Task> display(ArrayList<Task> taskList, Hashtable<String, Integer> idMapping) {
         ArrayList<Task> filteredTasks = this.defaultFilter.apply(taskList);
         runComparators(this.defaultComparators, filteredTasks);
@@ -67,6 +97,11 @@ public class ListDisplay {
     
 }
 
+/**
+ * Events display filters to keep tasks with start dates.
+ * Sorts primarily by day, then priority and completion status.
+ * @author Sun Wang Jun
+ */
 class EventListDisplay extends ListDisplay {    
     public EventListDisplay() {
         super();
@@ -80,6 +115,11 @@ class EventListDisplay extends ListDisplay {
     }
 }
 
+/**
+ * Tasks display filters to keep tasks without start dates.
+ * Sorts primarily by completion status, then end dates, then priority and last modified.
+ * @author Sun Wang Jun
+ */
 class TaskListDisplay extends ListDisplay {    
     public TaskListDisplay() {
         super();
