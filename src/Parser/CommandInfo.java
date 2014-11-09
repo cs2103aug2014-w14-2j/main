@@ -7,8 +7,8 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 
+import Task.TaskManager;
 import application.MismatchedCommandException;
-import application.TaskManager;
 
 /** This class stores all information that a Command object needs to execute a command 
  * 
@@ -148,7 +148,7 @@ public class CommandInfo {
      * @return command type
      */
     public String getCommandType(){
-        return commandType.toLowerCase();
+        return commandType.toUpperCase();
     }
 
     //@author A0090971Y

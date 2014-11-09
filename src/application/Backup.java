@@ -3,6 +3,8 @@ package application;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import Task.Task;
+
 public class Backup {
     
     private ArrayList<ArrayList<Task>> undoArrayList;
