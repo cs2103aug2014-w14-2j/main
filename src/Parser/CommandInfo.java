@@ -14,7 +14,7 @@ import application.TaskManager;
  * 
  * @author A0090971Y
  */
-
+//@author A0090971Y
 public class CommandInfo {
 
     private String commandType;
@@ -26,8 +26,7 @@ public class CommandInfo {
     private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","home","quit","search","show","undo","exit"};
     private String message = null;
     private boolean completed;
-    private String input;
-    
+
     //@author A0090971Y
     /**
      * constructor for CommandInfo class
@@ -38,35 +37,34 @@ public class CommandInfo {
      * @param endDateTime
      * @param priority
      */
-
-    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, DateTime startDateTime,DateTime endDateTime, int priority,boolean isCompleted,String input) 
-    throws MismatchedCommandException {  // edit
+    CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, DateTime startDateTime,DateTime endDateTime, int priority,boolean isCompleted) 
+            throws MismatchedCommandException {  // edit
         try {
-        this.commandType = commandType;
-        this.taskIDs = upperCaseIDs(taskIDs);
-        this.taskDesc = taskDesc;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
-        this.priority = priority;
-        this.completed = isCompleted;
-        this.input = input;
-        checkStartDateTime();
-        checkEndDateTime();
-        validateUserInput();
+            this.commandType = commandType;
+            this.taskIDs = upperCaseIDs(taskIDs);
+            this.taskDesc = taskDesc;
+            this.startDateTime = startDateTime;
+            this.endDateTime = endDateTime;
+            this.priority = priority;
+            this.completed = isCompleted;
+            checkStartDateTime();
+            checkEndDateTime();
+            validateUserInput();
         }
         catch (MismatchedCommandException e) {
             throw e;
         }
     }
-
+    //@author A0090971Y
     private ArrayList<String> upperCaseIDs(ArrayList<String> IDs) {
         for (int i = 0; i<IDs.size();i++) {
             String ID = IDs.get(i).toUpperCase();
             IDs.set(i,ID);
         }
         return IDs;
-        
+
     }
+    //@author A0090971Y
     private void checkStartDateTime() {
         if ((this.startDateTime != null ) && ((this.commandType.equalsIgnoreCase("add"))
                 || (this.commandType.equalsIgnoreCase("edit")))){
@@ -78,6 +76,7 @@ public class CommandInfo {
         }
     }
 
+    //@author A0090971Y
     private void checkEndDateTime() {
         if ((this.endDateTime != null ) && ((this.commandType.equalsIgnoreCase("add"))
                 || (this.commandType.equalsIgnoreCase("edit")))){
@@ -137,7 +136,7 @@ public class CommandInfo {
     }
 
 
-
+    //@author A0090971Y
     private static String[] getValidCommandTypes() {
         return validCommandTypes;
     }
@@ -185,18 +184,20 @@ public class CommandInfo {
     public String getKeyword(){
         return taskDesc;
     }
+    //@author A0090971Y
     public DateTime getStartDateTime() {
         return this.startDateTime;
     }
+    //@author A0090971Y
     public DateTime getEndDateTime() {
         return this.endDateTime;
     }
-
+    //@author A0090971Y
     private void setMessage(String m) {
         this.message = m;
     }
 
-    //@authour A0090971Y
+    //@author A0090971Y
     /**
      * 
      * @return a message when there is one otherwise return null
@@ -212,12 +213,5 @@ public class CommandInfo {
     public boolean isCompleted(){
         return completed;
     }
-    //@author A0090971Y
-    /**
-     * 
-     * @return the user input after the add command
-     */
-    public String getInput() {
-        return this.input;
-    }
+
 }

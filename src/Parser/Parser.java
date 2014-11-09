@@ -1,10 +1,6 @@
 package Parser;
 
-/** This class implements a Parser to parse an input string
- * 
- * @author Jinyu   A0090971
- * @version 3.0
- */
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,7 +10,9 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 
 import application.MismatchedCommandException;
-
+//@author A0090971Y
+/** This class implements a Parser to parse an input string
+ */
 public class Parser {
 
     private DateTimeParser parser;
@@ -52,9 +50,8 @@ public class Parser {
         }
         startDateTime = formatStartDateTime(startDateTime,content);
         boolean completed = getComplete(content);
-        String input = parseInput(userInput);
         try {
-            CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority,completed,input);
+            CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority,completed);
             return cmdInfo;
         }
         catch (MismatchedCommandException e) {
@@ -125,7 +122,7 @@ public class Parser {
         }
         return desc;
     }
-
+    //@author A0090971Y
     private boolean isDeadline(String content,DateTime startDT, DateTime endDT) {
         for (int i = 0; i<timePrepositions.length;i++) {
             if (content.indexOf(timePrepositions[i])>=0){
@@ -136,6 +133,7 @@ public class Parser {
         return false;
     }
 
+    //@author A0090971Y
     private String parseContent(String input,String desc) {
         String content;
         String firstWord = input.trim().split("\\s+")[0];
@@ -144,8 +142,8 @@ public class Parser {
             content = content.replace(parseTaskIDs(input).get(0),"").trim();
         }
         if (input.indexOf("]")>=0) {
-           int index = input.lastIndexOf("]");
-           content = input.substring(index+1);
+            int index = input.lastIndexOf("]");
+            content = input.substring(index+1);
         }
         return content;
     }
@@ -197,9 +195,13 @@ public class Parser {
         desc = desc.replace("]", "");
         input = input.replaceAll(desc, "");
         int priority = StringUtils.countMatches(input,"!");
+        if (priority>0) {
+            priority = 1;
+        }
         return priority;
     }
 
+    //@author A0090971Y
     private boolean getComplete(String content) {
         if (content.indexOf("complete")>=0) {
             return true; 
@@ -207,24 +209,6 @@ public class Parser {
         return false;
     }
 
-    private String parseInput(String userInput){
-        if (parseCommandType(userInput).equalsIgnoreCase("add")){
-            String command = userInput.trim().split("\\s+")[0];
-            userInput = userInput.replace(command,"").trim();
-        }
-        else if (parseCommandType(userInput).equalsIgnoreCase("edit")){
-            String command = userInput.trim().split("\\s+")[0];
-            String index = userInput.trim().split("\\s+")[1];
-            userInput = userInput.replaceAll(command, "");
-            userInput = userInput.replaceAll(index, "");
-            userInput = userInput.trim();
-        }
-        else {
-            userInput = null;
-        }
-
-        return userInput;
-    }
 }
 
 
