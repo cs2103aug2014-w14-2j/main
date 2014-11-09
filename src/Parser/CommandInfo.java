@@ -5,8 +5,8 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
-
 import Task.TaskManager;
+import application.InputCommands;
 import application.MismatchedCommandException;
 
 //@author A0090971Y
@@ -21,7 +21,6 @@ public class CommandInfo {
     private DateTime startDateTime;
     private DateTime endDateTime;
     private int priority;
-    private static String[] validCommandTypes = new String[] {"add","complete","edit","delete","home","quit","search","show","undo","exit"};
     private String message = null;
     private boolean completed;
 
@@ -36,7 +35,7 @@ public class CommandInfo {
      * @param priority
      */
     CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, DateTime startDateTime,DateTime endDateTime, int priority,boolean isCompleted) 
-            throws MismatchedCommandException {  // edit
+            throws MismatchedCommandException {  
         try {
             this.commandType = commandType;
             this.taskIDs = upperCaseIDs(taskIDs);
@@ -65,8 +64,8 @@ public class CommandInfo {
     
     //@author A0090971Y
     private void checkStartDateTime() {
-        if ((this.startDateTime != null ) && ((this.commandType.equalsIgnoreCase("add"))
-                || (this.commandType.equalsIgnoreCase("edit")))){
+        if ((this.startDateTime != null ) && ((this.commandType.equalsIgnoreCase(InputCommands.ADD))
+                || (this.commandType.equalsIgnoreCase(InputCommands.EDIT)))){
             DateTime currentDT = new DateTime();
             int result = DateTimeComparator.getInstance().compare(currentDT,this.startDateTime);
             if (result == 1) {   //currentDT is less than dateTime
@@ -77,8 +76,8 @@ public class CommandInfo {
 
     //@author A0090971Y
     private void checkEndDateTime() {
-        if ((this.endDateTime != null ) && ((this.commandType.equalsIgnoreCase("add"))
-                || (this.commandType.equalsIgnoreCase("edit")))){
+        if ((this.endDateTime != null ) && ((this.commandType.equalsIgnoreCase(InputCommands.ADD))
+                || (this.commandType.equalsIgnoreCase(InputCommands.EDIT)))){
             DateTime currentDT = new DateTime();
             int result = DateTimeComparator.getInstance().compare(currentDT,this.endDateTime);
             if (result == 1) {   //currentDT is less than dateTime
@@ -98,8 +97,8 @@ public class CommandInfo {
      */
     private void validateUserInput() throws MismatchedCommandException {
         boolean isValid = false;
-        for (int i = 0; i<CommandInfo.getValidCommandTypes().length; i++) {
-            if (this.commandType.equalsIgnoreCase(CommandInfo.getValidCommandTypes()[i])) {
+        for (int i = 0; i<InputCommands.getCommandList().size(); i++) {
+            if (this.commandType.equalsIgnoreCase(InputCommands.getCommandList().get(i))) {
                 isValid = true;
             }
         }
@@ -122,7 +121,7 @@ public class CommandInfo {
                     throw new MismatchedCommandException("Invalid Task ID Entered.");}
             }
         }
-        if (((this.commandType.equalsIgnoreCase("add")) || (this.commandType.equalsIgnoreCase("edit"))) 
+        if (((this.commandType.equalsIgnoreCase(InputCommands.ADD)) || (this.commandType.equalsIgnoreCase(InputCommands.EDIT))) 
                 && (this.taskDesc.equalsIgnoreCase(""))) {
             throw new MismatchedCommandException("Empty Task Description.");        
         }
@@ -132,11 +131,6 @@ public class CommandInfo {
                 throw new MismatchedCommandException("The End Time is before the Start Time.");
             }
         }
-    }
-
-    //@author A0090971Y
-    private static String[] getValidCommandTypes() {
-        return validCommandTypes;
     }
 
     //@author A0090971Y

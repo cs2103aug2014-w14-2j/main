@@ -2,9 +2,12 @@ package Parser;
 
 import java.util.ArrayList;
 import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
+
+import application.InputCommands;
 import application.MismatchedCommandException;
 
 //@author A0090971Y
@@ -101,8 +104,8 @@ public class Parser {
      */
     private String parseTaskDesc(String input,String cmdType) {
         String desc = null;
-        if ((cmdType.equalsIgnoreCase("add")) || (cmdType.equalsIgnoreCase("edit"))
-                || (cmdType.equalsIgnoreCase("search")) || (cmdType.equalsIgnoreCase("show"))){
+        if ((cmdType.equalsIgnoreCase(InputCommands.ADD)) || (cmdType.equalsIgnoreCase(InputCommands.EDIT))
+                || (cmdType.equalsIgnoreCase(InputCommands.SEARCH)) || (cmdType.equalsIgnoreCase(InputCommands.SHOW))){
             int startIndex = input.indexOf("[");
             int endIndex = input.indexOf("]");
             if ((startIndex>0) && (endIndex>0)) {
@@ -166,11 +169,11 @@ public class Parser {
         String command = parseCommandType(input);
         ArrayList<String> IDs = new ArrayList<String>();
         String taskID = null;
-        if (command.equalsIgnoreCase("edit")) {
+        if (command.equalsIgnoreCase(InputCommands.EDIT)) {
             taskID = input.trim().split("\\s+")[1];
             IDs.add(taskID);
         }
-        else if ((command.equalsIgnoreCase("complete")) || (command.equalsIgnoreCase("delete"))) {
+        else if ((command.equalsIgnoreCase(InputCommands.COMPLETE)) || (command.equalsIgnoreCase(InputCommands.DELETE))) {
             String[] array = input.trim().split("\\s+");
             for (int i = 1; i<array.length; i++) {
                 taskID = array[i];
@@ -199,7 +202,7 @@ public class Parser {
 
     //@author A0090971Y
     private boolean getComplete(String content) {
-        if (content.indexOf("complete")>=0) {
+        if (content.indexOf(InputCommands.COMPLETE)>=0) {
             return true; 
         }
         return false;
