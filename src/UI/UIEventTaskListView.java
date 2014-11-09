@@ -17,7 +17,7 @@ public class UIEventTaskListView extends UITaskListView {
 	
 	//@author A0111824R
     /**
-     *
+     * @param cmdInputBox - the inputbox object on the UI
      * @author Tan Young Sing
      */
 	public UIEventTaskListView(UICmdInputBox cmdInputBox) {
@@ -37,8 +37,10 @@ public class UIEventTaskListView extends UITaskListView {
 	
 	//@author A0111824R
     /**
-     *
+     * @param items - ArrayList of task to be displayed on the ListView
+     * @param isLeftPane - indicate if it is for the left panel
      * @author Tan Young Sing
+     * @return convert the arraylist of tasks into UITaskListItem
      */
 	protected ArrayList<UITaskListItem> generateEmptyList(ArrayList<Task> items, boolean isLeftPane) {
 		ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
@@ -50,8 +52,9 @@ public class UIEventTaskListView extends UITaskListView {
 	
 	//@author A0111824R
     /**
-     *
+     * @param takes in an arrayList of Tasks object to be displayed on the Listview
      * @author Tan Young Sing
+     * @return convert the arrayList of task to UITaskListItem
      */
     protected ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items) {
     	DateTime currentDate = null;
