@@ -2,6 +2,9 @@ package UI;
 
 import java.util.ArrayList;
 
+import application.Controller;
+import application.Task;
+
 //@author A0111824R
 /**
  * UIAutoComplete: Responsible for all autocomplete operations.
@@ -24,6 +27,7 @@ public class UIAutoComplete {
     final private String SHOW_COMMAND = "SHOW";
     final private String DISPLAY_COMMAND = "DISPLAY";
     final private String HOME_COMMAND = "HOME";
+    private final String UI_DATETIMEFORMAT = "dd MMM yyy, h:mm a";
     
     final private int FIRST_WORD_IN_CMD = 1;
     final private int SECOND_WORD_IN_CMD = 2;
@@ -100,20 +104,48 @@ public class UIAutoComplete {
                 this.acListener.setNextPossibleCmd(suggestedCmd);
             }
         } else if (isTheNWord(command, SECOND_WORD_IN_CMD) && cmdUsed.equalsIgnoreCase(EDIT_COMMAND)) {
-        	 String suggestedCmd = cmdInputBox.getText() + "[]";
+        	 Task selectedTask = Controller.getTaskFromDisplayID(getEditCommandIndex(command));
         	 
-        	 
-        	 
-        	 
-        	 
-        	 this.acListener.setNextPossibleCmd(suggestedCmd);
+        	 if(selectedTask != null) {
+            	 String taskDetails = parseEditText(selectedTask);
+            	 String suggestedCmd = cmdInputBox.getText() + taskDetails;
+            	 this.acListener.setNextPossibleCmd(suggestedCmd);
+        	 } else {
+        		 this.acListener.setNextPossibleCmd("");
+        	 }
         } else {
             this.acListener.setNextPossibleCmd("");
         }
     }
     
-   
+    //@author A0111824R
+    /** 
+     *
+     * @author Tan Young Sing
+     */
+    private String parseEditText(Task selectedTask) {
+    	String editText = " [ " + selectedTask.getDescription() + " ] ";
+    	
+    	if(selectedTask.getDate() != null && selectedTask.getEndDate() == null) {
+    		editText += selectedTask.getDate().toString(UI_DATETIMEFORMAT);
+    	} else if(selectedTask.getDate() != null && selectedTask.getEndDate() != null) {
+    		editText += selectedTask.getDate().toString(UI_DATETIMEFORMAT) + " TO " + selectedTask.getEndDate().toString(UI_DATETIMEFORMAT);
+    	} else if(selectedTask.getDate() == null && selectedTask.getEndDate() != null) {
+    		editText += "BY " + selectedTask.getEndDate().toString(UI_DATETIMEFORMAT);
+    	}
+    	
+    	if(selectedTask.getPriority() == 1) {
+    		editText += " !";
+    	}
     
+    	return editText;
+    }
+    
+    //@author A0111824R
+    /** 
+     *
+     * @author Tan Young Sing
+     */
     private String getEditCommandIndex(String cmd) {
     	String[] indexRetrieval = cmd.split(" ");
     	return indexRetrieval[EDIT_INDEX_POSITION];
