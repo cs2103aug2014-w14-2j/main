@@ -62,37 +62,37 @@ public class Controller extends Application {
 
         // Run the command.         
             switch (commandInfo.getCommandType()) {
-            case "add":
+            case InputCommands.ADD:
                 taskManager.add(commandInfo);
                 break;
-            case "delete":
+            case InputCommands.DELETE:
                 taskManager.delete(commandInfo);
                 feedback = new MessageNotifyDelete(commandInfo.getTaskIDs());
                 break;
-            case "edit":
+            case InputCommands.EDIT:
                 taskManager.edit(commandInfo);
                 feedback = new MessageNotifyEdit(commandInfo.getTaskIDs().get(0));
                 break;
-            case "undo":
+            case InputCommands.UNDO:
                 taskManager.undo(commandInfo, backup.getPastVersion());
                 feedback = new MessageNotifyUndo();
                 break;
-            case "complete":
+            case InputCommands.COMPLETE:
                 taskManager.complete(commandInfo);
                 feedback = new MessageNotifyComplete(commandInfo.getTaskIDs());
                 break;
-            case "home":
+            case InputCommands.HOME:
                 break;
-            case "show":
+            case InputCommands.SHOW:
                 taskManager.setDaysToDisplay(commandInfo, configManager);
                 // continues:
-            case "search":
+            case InputCommands.SEARCH:
                 taskManager.clearIDMapping();
                 uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
                 uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search results");
                 return;
-            case "quit":
-            case "exit":
+            case InputCommands.QUIT:
+            case InputCommands.EXIT:
                 Platform.exit();
                 return;
             	

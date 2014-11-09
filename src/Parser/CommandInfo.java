@@ -148,7 +148,7 @@ public class CommandInfo {
      * @return command type
      */
     public String getCommandType(){
-        return commandType.toLowerCase();
+        return commandType.toUpperCase();
     }
 
     //@author A0090971Y
