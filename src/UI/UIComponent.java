@@ -27,8 +27,8 @@ import javafx.scene.text.TextAlignment;
  */
 public class UIComponent {
     
-    private final String SUGGESTION_TEXT = "\u2022 Hello user! I am WaveWave.";
-    private final String GUIDE_TEXT = "\u2022 WaveWave is here to help you :D.";
+    private final String SUGGESTION_TEXT = "\u2022 Try adding a task with add [description]";
+    private final String GUIDE_TEXT = "\u2022 Hello user! I am WaveWave.";
     
     private WaveLogger logger;
 	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
@@ -231,7 +231,7 @@ public class UIComponent {
 		suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
 		guideMsgText = createText(GUIDE_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
 		
-		cmdInputBox = new UICmdInputBox(suggestionText, guideMsgText);
+		cmdInputBox = new UICmdInputBox(suggestionText, guideMsgText, this);
 		userInputComponentHolder.getChildren().addAll(cmdInputBox.getCmdInputBox(), guideMsgText, suggestionText);
 		return userInputComponentHolder;
 	}
@@ -318,6 +318,24 @@ public class UIComponent {
      *
      * @author Tan Young Sing
      */
+	public UITaskListView getRightView () {
+		return floatingTaskListView;
+	}
+	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
+	public UITaskListView getLeftView () {
+		return eventReminderTaskListView;
+	}
+	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	public void setSuggestionText(String text) {
 		suggestionText.setText(text);
 	}
@@ -334,9 +352,9 @@ public class UIComponent {
     		primaryStage.setTitle("WaveWave[0.5]");
     		primaryStage.show();
     		Controller.getTasks();
-        	logger.log(Level.INFO, "UI has been successfully displayed.");
+        	//logger.log(Level.INFO, "UI has been successfully displayed.");
     	} catch (Exception ex) {
-    		logger.log(Level.WARNING, "UI failed to initialize", ex);
+    		//logger.log(Level.WARNING, "UI failed to initialize", ex);
     	}
 
     }

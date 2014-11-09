@@ -1,5 +1,6 @@
 package UI;
 
+import application.InputCommands;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -19,10 +20,6 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     private UICmdInputBox cmdInputBox;
     private UIAutoComplete uiAutoComplete;
     private String nextPossibleCommand;
-    
-    final public String ADD_COMMAND = "ADD";
-    final private String EDIT_COMMAND = "EDIT";
-    final private String SEARCH_COMMAND = "SEARCH";
     
     final private int EDIT_COMMAND_STRUCTURE = 3;
      
@@ -64,7 +61,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
      * @return if the current command is an ADD command
      */
     private boolean isAddCommand(String next) {
-    	if(next.trim().equalsIgnoreCase(ADD_COMMAND)) {
+    	if(next.trim().equalsIgnoreCase(InputCommands.getAddCommand())) {
     		return true;
     	}
     	return false;
@@ -77,7 +74,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
      * @return if the current command is an SEARCH command
      */
     private boolean isSearchCommand(String next) {
-    	if(next.trim().equalsIgnoreCase(SEARCH_COMMAND)) {
+    	if(next.trim().equalsIgnoreCase(InputCommands.getSearchCommand())) {
     		return true;
     	}
     	return false;
@@ -92,7 +89,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     private boolean isEditCommand(String next) {
     	String[] cmdRetrieval = next.split(" ");
     	
-    	if(cmdRetrieval[0].equalsIgnoreCase(EDIT_COMMAND) && cmdRetrieval.length == EDIT_COMMAND_STRUCTURE) {
+    	if(cmdRetrieval[0].equalsIgnoreCase(InputCommands.getEditCommand()) && cmdRetrieval.length == EDIT_COMMAND_STRUCTURE) {
     		return true;
     	}
     	return false;
@@ -129,7 +126,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         	
             if(nextPossibleCommand.length() != 0) {
             	if(isAddCommand(nextPossibleCommand) || isSearchCommand(nextPossibleCommand)) {
-            		inputBox.setText(nextPossibleCommand + "[ ]");
+            		inputBox.setText(nextPossibleCommand + "[]");
             	} else {
             		inputBox.setText(nextPossibleCommand);
             	}

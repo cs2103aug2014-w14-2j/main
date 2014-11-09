@@ -15,6 +15,7 @@ public class InputCommands {
     public final static String SEARCH = "SEARCH";
     public final static String SHOW = "SHOW";
     public final static String DISPLAY = "DISPLAY";
+    public final static String HELP = "HELP";
     
     public final static String HOME = "HOME";
     
@@ -32,6 +33,27 @@ public class InputCommands {
         cmdList.add(SEARCH);
         cmdList.add(EXIT);
         cmdList.add(HOME);
+        cmdList.add(HELP);
         return cmdList;
+    }
+    
+    //@author A0111824R
+    public static String getEditCommand() {
+    	return EDIT;
+    }
+    
+    //@author A0111824R
+    public static String getAddCommand() {
+    	return ADD;
+    }
+    
+    //@author A0111824R
+    public static String getSearchCommand() {
+    	return SEARCH;
+    }   
+    
+    //@author A0111824R
+    public static String getHelpCommand() {
+    	return HELP;
     }
 }

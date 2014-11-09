@@ -104,6 +104,18 @@ public abstract class UITaskListView {
     	} 
     	taskList.setItems(convertedList);
     }
+    
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
+    public void overwriteView(ArrayList<UITaskListItem> listItem) {
+    	ObservableList<UITaskListItem> convertedList = FXCollections.observableArrayList();
+    	convertedList.setAll(listItem);
+    	
+    	taskList.setItems(convertedList);
+    }
 
 	//@author A0111824R
     /**

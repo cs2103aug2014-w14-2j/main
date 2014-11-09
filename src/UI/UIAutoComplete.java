@@ -3,6 +3,7 @@ package UI;
 import java.util.ArrayList;
 
 import application.Controller;
+import application.InputCommands;
 import Task.Task;
 
 //@author A0111824R
@@ -14,20 +15,9 @@ import Task.Task;
 public class UIAutoComplete {
     
     final private String MSG_COMMAND_SUGGESTION = "\u2022 Do you mean : %s. You can enter <space> key to complete.";
-    final private String MSG_COMMAND_NOT_SUPPORTED = "\u2022 WaveWave would only support these sets of command <add> <delete> <edit> <search> <show> <complete> <show>";
+    final private String MSG_COMMAND_NOT_SUPPORTED = "\u2022 WaveWave has only these set of commands : <add> <delete> <edit> <search> <show> <complete> <home>";
     final private String EDIT_TASKID_FOUND = "\u2022 Task ID : %s found, use the <space> key to autocomplete.";
     
-    final public String ADD_COMMAND = "ADD";
-    final private String DELETE_COMMAND = "DELETE";
-    final private String EDIT_COMMAND = "EDIT";
-    final private String UNDO_COMMAND = "UNDO";
-    final private String QUIT_COMMAND = "QUIT";
-    final private String EXIT_COMMAND = "EXIT";
-    final private String COMPLETE_COMMAND = "COMPLETE";
-    final private String SEARCH_COMMAND = "SEARCH";
-    final private String SHOW_COMMAND = "SHOW";
-    final private String DISPLAY_COMMAND = "DISPLAY";
-    final private String HOME_COMMAND = "HOME";
     private final String UI_DATETIMEFORMAT = "dd MMM yyy, h:mm a";
     
     final private int FIRST_WORD_IN_CMD = 1;
@@ -35,8 +25,8 @@ public class UIAutoComplete {
     final private int EDIT_INDEX_POSITION = 1;
     
     private UICmdInputBox cmdInputBox;
-    private ArrayList<String> commandList;
     private UIAutoCompleteListener acListener;
+    private ArrayList<String> commandList;
     
     
     //@author A0111824R
@@ -48,31 +38,8 @@ public class UIAutoComplete {
      */
     public UIAutoComplete(UICmdInputBox cmdInputBox, UIAutoCompleteListener acListener) {
         this.cmdInputBox = cmdInputBox;
-        this.commandList = getCommandList();
+        this.commandList = InputCommands.getCommandList();
         this.acListener = acListener;
-    }
-    
-    //@author A0111824R
-    /**
-     * UIAutoComplete: Constructor
-     * Takes in CmdInputBox Component to detect user input 
-     *
-     * @author Tan Young Sing
-     */
-    private ArrayList<String> getCommandList() {
-        ArrayList<String> cmdList = new ArrayList<String>();
-        cmdList.add(ADD_COMMAND);
-        cmdList.add(DELETE_COMMAND);
-        cmdList.add(EDIT_COMMAND);
-        cmdList.add(UNDO_COMMAND);
-        cmdList.add(COMPLETE_COMMAND);
-        cmdList.add(QUIT_COMMAND);
-        cmdList.add(DISPLAY_COMMAND);
-        cmdList.add(SHOW_COMMAND);
-        cmdList.add(SEARCH_COMMAND);
-        cmdList.add(EXIT_COMMAND);
-        cmdList.add(HOME_COMMAND);
-        return cmdList;
     }
     
     //@author A0111824R
@@ -104,7 +71,7 @@ public class UIAutoComplete {
                 cmdInputBox.setSuggestionText(String.format(MSG_COMMAND_SUGGESTION, suggestedCmd));
                 this.acListener.setNextPossibleCmd(suggestedCmd);
             }
-        } else if (isTheNWord(command, SECOND_WORD_IN_CMD) && cmdUsed.equalsIgnoreCase(EDIT_COMMAND)) {
+        } else if (isTheNWord(command, SECOND_WORD_IN_CMD) && cmdUsed.equalsIgnoreCase(InputCommands.getEditCommand())) {
         	 String taskID = getEditCommandIndex(command).toUpperCase();
         	 Task selectedTask = Controller.getTaskFromDisplayID(taskID);
         	 
