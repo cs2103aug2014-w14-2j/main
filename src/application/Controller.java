@@ -27,7 +27,6 @@ public class Controller extends Application {
     private static TaskManager taskManager;
     private static ConfigManager configManager;
     private static UIComponent uiComponent;
-    private static MessageManager messageManager;
     private static Backup backup;
     
     //@author A0110546R
@@ -55,8 +54,8 @@ public class Controller extends Application {
         ArrayList<String> invalidIDs = taskManager.getInvalidDisplayIDs(commandInfo.getTaskIDs());
         if (invalidIDs != null) {
             feedback = new MessageWarningInvalidID(invalidIDs);
-            uiComponent.setSuggestionText(messageManager.getMessage(feedback));
-            logger.log(messageManager.getMessage(feedback));
+            uiComponent.setSuggestionText(feedback.toString());
+            logger.log(feedback.toString());
             return;
         }
 
@@ -111,8 +110,8 @@ public class Controller extends Application {
         }
         
         if (feedback != null) {
-            uiComponent.setSuggestionText(messageManager.getMessage(feedback));
-            logger.log(messageManager.getMessage(feedback));
+            uiComponent.setSuggestionText(feedback.toString());
+            logger.log(feedback.toString());
         }
     }
     
@@ -148,8 +147,6 @@ public class Controller extends Application {
         
         taskManager = new TaskManager();
         taskManager.initializeList(dataStorage.retrieveTasks());
-        
-        messageManager = new MessageManager();
         
         configManager = new ConfigManager();
         taskManager.setDaysToDisplay(configManager.getHomeViewType());
