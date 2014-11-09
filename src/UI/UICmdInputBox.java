@@ -26,7 +26,8 @@ public class UICmdInputBox {
     
     //@author A0111824R
     /**
-     *
+     * @param suggestionText - the text label used to display suggestion text
+     * @param guideMsgText - the text label used to display guide messages
      * @author Tan Young Sing
      */
     public UICmdInputBox(Text suggestionText, Text guideMsgText) {
@@ -126,7 +127,7 @@ public class UICmdInputBox {
     
     //@author A0111824R
     /**
-     *
+     * @param text to be displayed on the input box
      * @author Tan Young Sing
      */
     public void setText(String text) {
@@ -135,7 +136,7 @@ public class UICmdInputBox {
     
     //@author A0111824R
     /**
-     *
+     * 
      * @author Tan Young Sing
      */
     public void resetPositionCaret() {
@@ -144,8 +145,9 @@ public class UICmdInputBox {
     
     //@author A0111824R
     /**
-     *
+     * 
      * @author Tan Young Sing
+     * @return if the inputbox is focused.
      */
     public boolean isFocused() {
     	return cmdInputBox.isFocused();
@@ -155,6 +157,7 @@ public class UICmdInputBox {
     /**
      *
      * @author Tan Young Sing
+     * @return return the inputbox node
      */
     public TextField getCmdInputBox() {
         return cmdInputBox;

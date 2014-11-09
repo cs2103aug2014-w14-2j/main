@@ -12,8 +12,6 @@ import javafx.scene.control.TextField;
  * @author Tan Young Sing
  */
 public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
-
-    final private String MSG_DEFAULT_PROMPT = "Ask WaveWave to do something ?";
     
     private static KeyCode previousKey;
     private boolean isDouble;
@@ -30,7 +28,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
      
     //@author A0111824R
     /**
-     *
+     * @param An inputbox object 
      * @author Tan Young Sing
      */
     public UIAutoCompleteListener(UICmdInputBox cmdInputBox) {
@@ -52,7 +50,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     
     //@author A0111824R
     /**
-     *
+     * @param the next possible command to be autocompleted.
      * @author Tan Young Sing
      */
     public void setNextPossibleCmd(String cmd) {
@@ -61,8 +59,9 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     
     //@author A0111824R
     /**
-     *
+     * @param the current command on the textbox
      * @author Tan Young Sing
+     * @return if the current command is an ADD command
      */
     private boolean isAddCommand(String next) {
     	if(next.trim().equalsIgnoreCase(ADD_COMMAND)) {
@@ -73,8 +72,9 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     
     //@author A0111824R
     /**
-     *
+     * @param the current command on the textbox
      * @author Tan Young Sing
+     * @return if the current command is an SEARCH command
      */
     private boolean isSearchCommand(String next) {
     	if(next.trim().equalsIgnoreCase(SEARCH_COMMAND)) {
@@ -85,8 +85,9 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     
     //@author A0111824R
     /**
-     *
+     * @param the current command on the textbox
      * @author Tan Young Sing
+     * @return if the current command is an EDIT command
      */
     private boolean isEditCommand(String next) {
     	String[] cmdRetrieval = next.split(" ");
