@@ -7,18 +7,18 @@ public class InputCommands {
     public final static String DELETE = "DELETE";
     public final static String EDIT = "EDIT";
     public final static String UNDO = "UNDO";
-    
+
     public final static String QUIT = "QUIT";
     public final static String EXIT = "EXIT";
-    
+
     public final static String COMPLETE = "COMPLETE";
     public final static String SEARCH = "SEARCH";
     public final static String SHOW = "SHOW";
     public final static String DISPLAY = "DISPLAY";
     public final static String HELP = "HELP";
-    
+
     public final static String HOME = "HOME";
-    
+
     //@author A0111824R
     public static ArrayList<String> getCommandList() {
         ArrayList<String> cmdList = new ArrayList<String>();
@@ -35,25 +35,5 @@ public class InputCommands {
         cmdList.add(HOME);
         cmdList.add(HELP);
         return cmdList;
-    }
-    
-    //@author A0111824R
-    public static String getEditCommand() {
-    	return EDIT;
-    }
-    
-    //@author A0111824R
-    public static String getAddCommand() {
-    	return ADD;
-    }
-    
-    //@author A0111824R
-    public static String getSearchCommand() {
-    	return SEARCH;
-    }   
-    
-    //@author A0111824R
-    public static String getHelpCommand() {
-    	return HELP;
     }
 }
