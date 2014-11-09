@@ -45,6 +45,16 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
      *
      * @author Tan Young Sing
      */
+    public String getCurrentCmd(String cmd) {
+    	String[] cmdRetrieval = cmd.split(" ");
+    	return cmdRetrieval[0].toUpperCase();
+    }
+    
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public void setNextPossibleCmd(String cmd) {
         this.nextPossibleCommand = cmd;
     }
@@ -129,9 +139,8 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
             		 inputBox.positionCaret(inputBox.getText().length()-1); 
             	}
             	
-                cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
                 nextPossibleCommand = "";
-                
+            	cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
                 isDouble = true;
             }
         }

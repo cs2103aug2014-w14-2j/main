@@ -13,8 +13,8 @@ import application.Task;
  */
 public class UIAutoComplete {
     
-    final private String MSG_COMMAND_SUGGESTION = "Do you mean : %s. You can enter <space> key to complete.";
-    final private String MSG_COMMAND_NOT_SUPPORTED = "WaveWave would only support these sets of command <add> <delete> <edit>";
+    final private String MSG_COMMAND_SUGGESTION = "\u2022 Do you mean : %s. You can enter <space> key to complete.";
+    final private String MSG_COMMAND_NOT_SUPPORTED = "\u2022 WaveWave would only support these sets of command <add> <delete> <edit> <search> <show> <complete> <show>";
     
     final public String ADD_COMMAND = "ADD";
     final private String DELETE_COMMAND = "DELETE";
