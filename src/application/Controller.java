@@ -133,7 +133,7 @@ public class Controller extends Application {
      */
     public static Task getTaskFromDisplayID(String displayID) {
         try {
-            return taskManager.getTaskFromDisplayID(displayID);
+            return taskManager.getTaskFromDisplayID(displayID.toUpperCase());
         } catch (IllegalArgumentException e) {
             uiComponent.setSuggestionText(e.getMessage());
             // There is no need to log this.
