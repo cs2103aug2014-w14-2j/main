@@ -1,4 +1,4 @@
-package application;
+package Task;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,11 @@ import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import Task.DateComparator;
+import Task.ModifiedAtComparator;
+import Task.PriorityComparator;
+import Task.Task;
 
 //@author A0110546R
 public class TaskComparatorTest {

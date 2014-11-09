@@ -12,6 +12,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import Task.Task;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

@@ -15,6 +15,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
+import Task.Task;
+
 /**
  * 
  * @author Kim Hyung Jon (matric number: A0115864B)

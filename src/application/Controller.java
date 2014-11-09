@@ -9,6 +9,8 @@ import java.util.logging.Level;
 
 import Parser.CommandInfo;
 import Parser.Parser;
+import Task.Task;
+import Task.TaskManager;
 import UI.UIComponent;
 
 /**
@@ -91,7 +93,7 @@ public class Controller extends Application {
             case "quit":
             case "exit":
                 Platform.exit();
-                break;
+                return;
             	
         }
         
