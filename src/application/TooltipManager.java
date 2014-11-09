@@ -31,7 +31,6 @@ public class TooltipManager {
     private static String TOOLTIP_MISC12 = "After typing description, press space twice to move out of square brackets and enter other details.";
     private static String TOOLTIP_MISC13 = "If you don't know when an event will end, just indicate its start time and it will be registered as an event.";
     private static String TOOLTIP_MISC14 = "Tasks with gray icons are the ones you completed.";
-    private static String TOOLTIP_MISC15 = "";
     
     private ArrayList<String> tooltipsAdd = new ArrayList<String>();
     private ArrayList<String> tooltipsEdit = new ArrayList<String>();
@@ -40,7 +39,11 @@ public class TooltipManager {
     private ArrayList<String> tooltipsSearch = new ArrayList<String>();
     private ArrayList<String> tooltipsMisc = new ArrayList<String>();
     
-    
+    //@author A0115864B
+    /**
+     * Constructor.
+     * Adds all tooltips and guide messages to respective ArrayLists.
+     */
     public TooltipManager() {
         tooltipsAdd.add(TOOLTIP_ADD1);
         tooltipsAdd.add(TOOLTIP_ADD2);
@@ -67,26 +70,63 @@ public class TooltipManager {
         tooltipsMisc.add(TOOLTIP_MISC14);
     }
     
+    //@author A0115864B
+    /**
+     * Returns a random index from 0 to the size of the ArrayList from which a message will be retrieved
+     * 
+     * @param size
+     * @return
+     */
     private Integer getRandomInteger(int size) {
         return rand.nextInt(size);
     }
     
+    //@author A0115864B
+    /**
+     * Retrieves a random message related to ADD command
+     * 
+     * @return String containing the message to display
+     */
     public String getTooltipsAdd() {
         return tooltipsAdd.get(getRandomInteger(tooltipsAdd.size()));
     }
     
+    //@author A0115864B
+    /**
+     * Retrieves a random message related to EDIT command
+     * 
+     * @returnString containing the message to display
+     */
     public String getTooltipsEdit() {
         return tooltipsEdit.get(getRandomInteger(tooltipsEdit.size()));
     }
     
+    //@author A0115864B
+    /**
+     * Retrieves a random message related to DELETE command
+     * 
+     * @return String containing the message to display
+     */
     public String getTooltipsDelete() {
         return tooltipsDelete.get(getRandomInteger(tooltipsDelete.size()));
     }
     
+    //@author A0115864B
+    /**
+     * Retrieves a random message related to SEARCH command
+     * 
+     * @return String containing the message to display
+     */
     public String getTooltipSearch() {
         return tooltipsSearch.get(getRandomInteger(tooltipsSearch.size()));
     }
     
+    //@author A0115864B
+    /**
+     * Retrieves a random tooltip
+     * 
+     * @return String containing the tooltip to display
+     */
     public String getTooltipMisc() {
         return tooltipsMisc.get(getRandomInteger(tooltipsMisc.size()));
     }

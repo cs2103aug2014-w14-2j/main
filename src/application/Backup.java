@@ -67,8 +67,8 @@ public class Backup {
      * Stores a copy of the tasks list in current state
      * Clones each Task object by copying all encapsulated information
      * 
-     * @param tasks ArrayList of all Task objects
-     * @return      copied ArrayList of all copied Task objects
+     * @param originalTasks ArrayList of all Task objects
+     * @return              copied ArrayList of all copied Task objects
      */
     public ArrayList<Task> copyTasks(ArrayList<Task> originalTasks) {
         ArrayList<Task> backup = new ArrayList<Task>();

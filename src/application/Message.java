@@ -26,6 +26,7 @@ public class Message {
 
     protected String outputMsg = "";
     
+    //@author A0115864B
     /**
      * Returns the message encapsulated by the selected Message object
      * 
@@ -39,6 +40,7 @@ public class Message {
 
 class MessageNotifyAdd extends Message {
     
+    //@author A0115864B
     /**
      * Constructor for message to be displayed when a task has been added successfully
      * 
@@ -51,6 +53,7 @@ class MessageNotifyAdd extends Message {
 
 class MessageNotifyDelete extends Message {
     
+    //@author A0115864B
     /**
      * Constructor for message to be displayed when tasks have been deleted successfully
      * 
@@ -70,6 +73,7 @@ class MessageNotifyDelete extends Message {
 
 class MessageNotifyEdit extends Message {
     
+    //@author A0115864B
     /**
      * Constructor for message to be displayed when a task has been edited successfully
      * 
@@ -82,6 +86,7 @@ class MessageNotifyEdit extends Message {
 
 class MessageNotifyComplete extends Message {
     
+    //@author A0115864B
     /**
      * Constructor for message to be displayed when tasks have been marked as complete
      * 
@@ -101,6 +106,7 @@ class MessageNotifyComplete extends Message {
 
 class MessageNotifyUndo extends Message {
     
+    //@author A0115864B
     /**
      * Constructor for message to be displayed when a user operation has been undone
      */
@@ -109,12 +115,9 @@ class MessageNotifyUndo extends Message {
     }
 }
 
-class MessageWarningAdd extends Message {
-    
-}
-
 class MessageWarningInvalidID extends Message {
     
+    //@author A0115864B
     /**
      * Constructor for message to be displayed when specified tasks cannot be found
      * and hence cannot be deleted or completed
@@ -134,9 +137,11 @@ class MessageWarningInvalidID extends Message {
 
 class MessageWarningInvalidDate extends Message {
     
+    //@author A0115864B
     /**
+     * Constructor used when the date entered when adding a task is invalid
      * 
-     * @param invalidDates ArrayList of either one or two date/times that were invalid
+     * @param invalidDates ArrayList of either one or both date/times that were invalid
      */
     MessageWarningInvalidDate(ArrayList<String> invalidDates) {
         outputMsg += WARNING_INVALID_DATE;
