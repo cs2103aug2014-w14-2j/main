@@ -20,6 +20,9 @@ public class TooltipManager {
     private static String TOOLTIP_MISC1 = "Typing the first letter of your command and <space> will auto-complete the command type.";
     private static String TOOLTIP_MISC2 = "Enter QUIT command to terminate WaveWave.";
     private static String TOOLTIP_MISC3 = "After undoing, you can revert by entering UNDO again.";
+
+    private static String TOOLTIP_BULLET = "\u2022 ";
+
     private static String TOOLTIP_MISC4 = "All tasks are stored in an external file. You can directly modify it as well.";
     private static String TOOLTIP_MISC5 = "\"by <day>\" is understood as 23:59pm of that day.";
     private static String TOOLTIP_MISC6 = "Overdue tasks disappear after the day is passed. They can be viewed using SHOW command.";
@@ -31,7 +34,7 @@ public class TooltipManager {
     private static String TOOLTIP_MISC12 = "After typing description, press space twice to move out of square brackets and enter other details.";
     private static String TOOLTIP_MISC13 = "If you don't know when an event will end, just indicate its start time and it will be registered as an event.";
     private static String TOOLTIP_MISC14 = "Tasks with gray icons are the ones you completed.";
-    
+
     private ArrayList<String> tooltipsAdd = new ArrayList<String>();
     private ArrayList<String> tooltipsEdit = new ArrayList<String>();
     private ArrayList<String> tooltipsDelete = new ArrayList<String>();
@@ -68,6 +71,17 @@ public class TooltipManager {
         tooltipsMisc.add(TOOLTIP_MISC12);
         tooltipsMisc.add(TOOLTIP_MISC13);
         tooltipsMisc.add(TOOLTIP_MISC14);
+    } 
+    
+    public String getToolTips(String command) {
+    	switch (command.toUpperCase()) {
+    		case "ADD" : return TOOLTIP_BULLET + getTooltipsAdd();
+    		case "EDIT" : return  TOOLTIP_BULLET + getTooltipsEdit();
+    		case "COMPLETE" : return  TOOLTIP_BULLET + getTooltipsComplete();
+    		case "DELETE" : return  TOOLTIP_BULLET + getTooltipsDelete();
+    		case "SEARCH": return  TOOLTIP_BULLET + getTooltipSearch();
+    		default: return  TOOLTIP_BULLET + getTooltipMisc();
+    	}
     }
     
     //@author A0115864B
@@ -113,6 +127,16 @@ public class TooltipManager {
     
     //@author A0115864B
     /**
+     * Retrieves a random message related to COMPLETE command
+     * 
+     * @return String containing the message to display
+     */
+    private String getTooltipsComplete() {
+        return tooltipsComplete.get(getRandomInteger(tooltipsComplete.size()));
+    }
+    
+    //@author A0115864B
+    /**
      * Retrieves a random message related to SEARCH command
      * 
      * @return String containing the message to display
@@ -130,7 +154,4 @@ public class TooltipManager {
     public String getTooltipMisc() {
         return tooltipsMisc.get(getRandomInteger(tooltipsMisc.size()));
     }
-    
-    
-    
 }

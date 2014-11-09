@@ -5,8 +5,8 @@ import javafx.stage.Stage;
 import java.util.logging.*;
 import java.util.ArrayList;
 
+import Task.Task;
 import application.Controller;
-import application.Task;
 import application.WaveLogger;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -57,6 +57,7 @@ public class UIComponent {
     /**
      *
      * @author Tan Young Sing
+     * @param return the scene object back to the Controller
      */
 	public Scene getScene() {
 		return scene;
@@ -66,6 +67,7 @@ public class UIComponent {
     /**
      *
      * @author Tan Young Sing
+     * @param return the panel that holds all the components
      */
 	public BorderPane getRootPane() {
 		return rootPane;
@@ -75,6 +77,7 @@ public class UIComponent {
     /**
      *
      * @author Tan Young Sing
+     * @param return inputBox 
      */
 	public UICmdInputBox getCmdInputBox() {
 		return cmdInputBox;
@@ -84,6 +87,7 @@ public class UIComponent {
     /**
      *
      * @author Tan Young Sing
+     * @param return the ListView on the right
      */
 	public UITaskListView getFloatingTaskListView() {
 		return floatingTaskListView;
@@ -93,6 +97,7 @@ public class UIComponent {
     /**
      *
      * @author Tan Young Sing
+     * @param return the ListView on the left
      */
 	public UITaskListView getEventReminderTaskListView() {
 		return eventReminderTaskListView;
@@ -281,51 +286,6 @@ public class UIComponent {
 	
     //@author A0111824R
     /**
-     * Update the title of the right panel (depreciated)
-     * 
-     * @param input the string to represent the title of the panel.
-     */
-	public void setFloatingTaskHeading(String title) {
-		floatingTaskTitle.setText(title);
-	}
-	
-    //@author A0111824R
-    /**
-     * Update the title of the left panel (depreciated)
-     * 
-     * @param input the string to represent the title of the panel.
-     */
-	public void setReminderTaskHeading(String title) {
-		reminderTaskTitle.setText(title);
-	}
-	
-    //@author A0111824R
-    /**
-     * Update the view for the right panel (depreciated)
-     * 
-     * @param input the arraylist of tasks to populate the listview.
-     */
-	public void updateTaskList(ArrayList<Task> items) {
-	    floatingTaskListView.populateTaskListWithData(items, false);
-	    floatingTaskListView.clearSelection();
-	    
-	    logger.log(Level.INFO, "Task ListView is updated.");
-	}
-	
-    //@author A0111824R
-    /**
-     * Update the view for the left panel (depreciated)
-     * 
-     * @param input the arraylist of tasks to be populated on the listview.
-     */
-	public void updateReminderList(ArrayList<Task> items) {
-	    eventReminderTaskListView.populateTaskListWithData(items, true);
-	    eventReminderTaskListView.clearSelection();    
-		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
-	}
-	
-    //@author A0111824R
-    /**
      * Update both the title and the view of the left panel
      * 
      * @param input the arraylist of tasks to be populated on the listview
@@ -364,7 +324,7 @@ public class UIComponent {
 	
     //@author A0111824R
     /**
-     *
+     * @param stage will be used to initialize the UI.
      * @author Tan Young Sing
      */
     public void showStage(Stage primaryStage) {

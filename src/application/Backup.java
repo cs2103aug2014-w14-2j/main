@@ -3,6 +3,8 @@ package application;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import Task.Task;
+
 /**
  * This component stores a past version of the tasks list as a backup
  * so that undo feature can be supported.

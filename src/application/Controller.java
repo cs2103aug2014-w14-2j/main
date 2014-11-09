@@ -2,6 +2,7 @@ package application;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ import java.util.logging.Level;
 
 import Parser.CommandInfo;
 import Parser.Parser;
+import Task.Task;
+import Task.TaskManager;
 import UI.UIComponent;
 
 /**
@@ -19,12 +22,12 @@ import UI.UIComponent;
 public class Controller extends Application {
     
     private static final WaveLogger logger = new WaveLogger("Controller");
+    private static String TOOLTIP_BULLET = "\u2022 ";
     
     private static DataStorage dataStorage;    
     private static TaskManager taskManager;
     private static ConfigManager configManager;
     private static UIComponent uiComponent;
-    private static MessageManager messageManager;
     private static Backup backup;
     
     //@author A0110546R
@@ -42,7 +45,7 @@ public class Controller extends Application {
         try {
             commandInfo = (new Parser()).getCommandInfo(input);
         } catch (MismatchedCommandException e) { // Need to change exception type.
-            uiComponent.setSuggestionText("Command is invalid");
+            uiComponent.setSuggestionText(TOOLTIP_BULLET + "Command is invalid");
             return;
         }
         
@@ -52,46 +55,46 @@ public class Controller extends Application {
         ArrayList<String> invalidIDs = taskManager.getInvalidDisplayIDs(commandInfo.getTaskIDs());
         if (invalidIDs != null) {
             feedback = new MessageWarningInvalidID(invalidIDs);
-            uiComponent.setSuggestionText(messageManager.getMessage(feedback));
-            logger.log(messageManager.getMessage(feedback));
+            uiComponent.setSuggestionText(feedback.toString());
+            logger.log(feedback.toString());
             return;
         }
 
         // Run the command.         
             switch (commandInfo.getCommandType()) {
-            case "add":
+            case InputCommands.ADD:
                 taskManager.add(commandInfo);
                 break;
-            case "delete":
+            case InputCommands.DELETE:
                 taskManager.delete(commandInfo);
                 feedback = new MessageNotifyDelete(commandInfo.getTaskIDs());
                 break;
-            case "edit":
+            case InputCommands.EDIT:
                 taskManager.edit(commandInfo);
                 feedback = new MessageNotifyEdit(commandInfo.getTaskIDs().get(0));
                 break;
-            case "undo":
+            case InputCommands.UNDO:
                 taskManager.undo(commandInfo, backup.getPastVersion());
                 feedback = new MessageNotifyUndo();
                 break;
-            case "complete":
+            case InputCommands.COMPLETE:
                 taskManager.complete(commandInfo);
                 feedback = new MessageNotifyComplete(commandInfo.getTaskIDs());
                 break;
-            case "home":
+            case InputCommands.HOME:
                 break;
-            case "show":
+            case InputCommands.SHOW:
                 taskManager.setDaysToDisplay(commandInfo, configManager);
                 // continues:
-            case "search":
+            case InputCommands.SEARCH:
                 taskManager.clearIDMapping();
                 uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
                 uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search results");
                 return;
-            case "quit":
-            case "exit":
+            case InputCommands.QUIT:
+            case InputCommands.EXIT:
                 Platform.exit();
-                break;
+                return;
             	
         }
         
@@ -108,8 +111,8 @@ public class Controller extends Application {
         }
         
         if (feedback != null) {
-            uiComponent.setSuggestionText(messageManager.getMessage(feedback));
-            logger.log(messageManager.getMessage(feedback));
+            uiComponent.setSuggestionText(feedback.toString());
+            logger.log(feedback.toString());
         }
     }
     
@@ -130,9 +133,9 @@ public class Controller extends Application {
      */
     public static Task getTaskFromDisplayID(String displayID) {
         try {
-            return taskManager.getTaskFromDisplayID(displayID);
+            return taskManager.getTaskFromDisplayID(displayID.toUpperCase());
         } catch (IllegalArgumentException e) {
-            uiComponent.setSuggestionText(e.getMessage());
+            uiComponent.setSuggestionText(TOOLTIP_BULLET  + e.getMessage());
             // There is no need to log this.
         }
         return null;
@@ -145,8 +148,6 @@ public class Controller extends Application {
         
         taskManager = new TaskManager();
         taskManager.initializeList(dataStorage.retrieveTasks());
-        
-        messageManager = new MessageManager();
         
         configManager = new ConfigManager();
         taskManager.setDaysToDisplay(configManager.getHomeViewType());
@@ -164,6 +165,7 @@ public class Controller extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         uiComponent = new UIComponent();
+        primaryStage.getIcons().add(new Image("/UI/wavewave.png"));
         uiComponent.showStage(primaryStage);
     }
 }

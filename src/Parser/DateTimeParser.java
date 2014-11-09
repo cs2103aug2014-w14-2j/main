@@ -6,10 +6,12 @@ import java.util.List;
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
 
+//@author A0090971Y
 public class DateTimeParser {
     private List<Date> dates = null;
     private String matchingValue = null;
-    
+
+    //@author A0090971Y
     /**
      * constructor for DateTimeParser class
      * @param userInput
@@ -24,8 +26,8 @@ public class DateTimeParser {
             }
         }
     }
-    
-    
+
+    //@author A0090971Y
     public Date getStartDateTime() {
         Date startDateTime;
         if (dates != null) {
@@ -37,6 +39,7 @@ public class DateTimeParser {
         return startDateTime;
     }
 
+    //@author A0090971Y
     public Date getEndDateTime() {
         Date endDateTime;
         if ((dates!= null)&& (dates.size() >=2)) {
@@ -46,15 +49,5 @@ public class DateTimeParser {
             endDateTime = null;
         }
         return endDateTime;
-    }
-
-    public String removeDateTime(String userInput){
-        if (matchingValue != null) {
-        String taskDesc = userInput.replaceAll(matchingValue, "");
-        return taskDesc;
-        }
-        else {
-            return userInput;
-        }
     }
 }

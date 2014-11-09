@@ -1,4 +1,4 @@
-package application;
+package Task;
 
 import org.joda.time.DateTime;
 import Parser.CommandInfo;
@@ -65,7 +65,6 @@ public class Task {
         modifiedAt = original.getModifiedAt();
         completedAt = original.getCompletedAt();
         deleted = original.isDeleted();
-        
     }
 
     //@author A0110546R
@@ -225,6 +224,8 @@ public class Task {
      */
     public void setPriority(int priority) {
         // Check if priority is negative.
+        if (priority > 0) { priority = 1; }
+        else { priority = 0; }
         this.priority = priority;
         this.modifiedAt = new DateTime();
     }
@@ -306,6 +307,16 @@ public class Task {
     /**
      * Used to reset the internal ID counter back to 0.
      */
-    public static void resetIDCounter() { idCounter = 0; }
+    public static void resetIDCounter() { resetIDCounter(0); }
+    
+    //@author A0110546R
+    /**
+     * Used to set the internal ID counter.
+     * @param count the number to set to.
+     */
+    public static void resetIDCounter(int count) {
+        assert(count >= 0);
+        idCounter = count;
+    }
 }
 

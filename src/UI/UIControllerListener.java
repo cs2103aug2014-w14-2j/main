@@ -37,21 +37,16 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
      */
     @Override
     public void handle(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.ENTER)) { 
+    	if (event.getCode().equals(KeyCode.ENTER)) { 
             Controller.runCommandInput(cmdInputBox.getText());
             cmdHistory.add(0, cmdInputBox.getText());
             cmdInputBox.setText("");
             cmdIndex = 0;
-            
-            cmdInputBox.setGuideMsgText(cmdInputBox.getToolTip());
-            UICmdInputBox.toolTipCounter++;
-            if(UICmdInputBox.toolTipCounter > 3) {
-            	UICmdInputBox.toolTipCounter = 0;
-            } 
         } 
         
         if (event.getCode().equals(KeyCode.ESCAPE)) {
         	cmdInputBox.setText("");
+        	cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
         }
         
         if (event.getCode().isArrowKey() && !cmdHistory.isEmpty()) {
@@ -65,10 +60,12 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
         		cmdInputBox.setText(cmdHistory.get(cmdIndex));
         		cmdInputBox.resetPositionCaret();
         		cmdIndex++;
+        		cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
         	} else if (event.getCode().toString().equals("DOWN")) {
         		cmdInputBox.setText(cmdHistory.get(cmdIndex));
         		cmdInputBox.resetPositionCaret();
         		cmdIndex--;
+        		cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
         	}
         }
     }

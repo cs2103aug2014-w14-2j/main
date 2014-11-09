@@ -1,6 +1,7 @@
 package UI;
 
-import application.Task;
+import Task.Task;
+
 import org.joda.time.DateTime;
 
 //@author A0111824R
@@ -12,7 +13,9 @@ public class UILeftTaskListItem extends UITaskListItem {
 	
     //@author A0111824R
     /**
-     *
+     * @param Task the task object to be displayed on the listview
+     * @param date of the assigned task
+     * @param isLeftPane to indicate if it is the listview on the left
      * @author Tan Young Sing
      */
 	public UILeftTaskListItem (Task task, DateTime date, boolean isLeftPane) {

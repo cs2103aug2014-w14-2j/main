@@ -35,6 +35,11 @@ public class Message {
     public String getMessage() {
         return outputMsg;
     }
+    
+    @Override
+    public String toString() {
+        return outputMsg;
+    }
 
 }
 

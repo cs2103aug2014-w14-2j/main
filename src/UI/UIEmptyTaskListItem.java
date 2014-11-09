@@ -2,7 +2,7 @@ package UI;
 
 import org.joda.time.DateTime;
 
-import application.Task;
+import Task.Task;
 
 //@author A0111824R
 /**
@@ -16,7 +16,9 @@ public class UIEmptyTaskListItem extends UITaskListItem {
 	
 	//@author A0111824R
     /**
-     *
+     * @param Task object to be displayed
+     * @param DateTime from JodaTime library
+     * @param isLeftPane to indicate the item to be positioned in which panel on the UI
      * @author Tan Young Sing
      */
 	public UIEmptyTaskListItem (Task task, DateTime date, boolean isLeftPane) {
