@@ -12,7 +12,7 @@ import application.MismatchedCommandException;
  */
 public class Parser {
     private DateTimeParser parser;
-    private static String[] timePrepositions = new String[] {"BY","DUE","TILL","UNTIL"};
+    private static String[] timePrepositions = new String[] {"BY","BEFORE","DUE","TILL","UNTIL"};
 
     //@author A0090971Y
     /**

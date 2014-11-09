@@ -16,7 +16,7 @@ public class DateTimeParser {
      * constructor for DateTimeParser class
      * @param userInput
      */
-    DateTimeParser(String userInput){
+    public DateTimeParser(String userInput){
         Parser parser = new Parser();
         List<DateGroup> groups = parser.parse(userInput);
         {

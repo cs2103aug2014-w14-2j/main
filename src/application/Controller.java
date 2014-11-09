@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import Parser.CommandInfo;
+import Parser.DateTimeParser;
 import Parser.Parser;
 import Task.Task;
 import Task.TaskManager;
@@ -154,6 +155,8 @@ public class Controller extends Application {
         
         backup = new Backup();
         backup.storeBackup(taskManager.getFullList());
+        
+        new DateTimeParser("start now");
     }
     
     //@author A0110546R
