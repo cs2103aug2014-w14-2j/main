@@ -7,7 +7,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import Task.TaskManager;
 import application.InputCommands;
-import application.MismatchedCommandException;
+import application.InvalidCommandException;
 
 //@author A0090971Y
 /** This class stores all information that a Command object needs to execute a command 
@@ -35,7 +35,7 @@ public class CommandInfo {
      * @param priority
      */
     CommandInfo(String commandType, ArrayList<String> taskIDs, String taskDesc, DateTime startDateTime,DateTime endDateTime, int priority,boolean isCompleted) 
-            throws MismatchedCommandException {  
+            throws InvalidCommandException {  
         try {
             this.commandType = commandType;
             this.taskIDs = upperCaseIDs(taskIDs);
@@ -48,7 +48,7 @@ public class CommandInfo {
             checkEndDateTime();
             validateUserInput();
         }
-        catch (MismatchedCommandException e) {
+        catch (InvalidCommandException e) {
             throw e;
         }
     }
@@ -92,10 +92,10 @@ public class CommandInfo {
 
     //@author A0090971Y
     /**
-     * throws MismatchedCommandException when the user input entered is invalid
-     * @throws MismatchedCommandException
+     * throws InvalidCommandException when the user input entered is invalid
+     * @throws InvalidCommandException
      */
-    private void validateUserInput() throws MismatchedCommandException {
+    private void validateUserInput() throws InvalidCommandException {
         boolean isValid = false;
         for (int i = 0; i<InputCommands.getCommandList().size(); i++) {
             if (this.commandType.equalsIgnoreCase(InputCommands.getCommandList().get(i))) {
@@ -103,7 +103,7 @@ public class CommandInfo {
             }
         }
         if (isValid == false) {
-            throw new MismatchedCommandException("Invalid Command Type Entered.");
+            throw new InvalidCommandException("Invalid Command Type Entered.");
         }
         for (int i = 0; i<this.taskIDs.size();i++) {
             if (this.taskIDs.get(i) != null) {
@@ -114,21 +114,21 @@ public class CommandInfo {
                     if ((StringUtils.isNumeric(ID)) && (!ID.equals("0"))) {
                     }
                     else {
-                        throw new MismatchedCommandException("Invalid Task ID Entered.");
+                        throw new InvalidCommandException("Invalid Task ID Entered.");
                     }
                 }
                 else {
-                    throw new MismatchedCommandException("Invalid Task ID Entered.");}
+                    throw new InvalidCommandException("Invalid Task ID Entered.");}
             }
         }
         if (((this.commandType.equalsIgnoreCase(InputCommands.ADD)) || (this.commandType.equalsIgnoreCase(InputCommands.EDIT))) 
                 && (this.taskDesc.equalsIgnoreCase(""))) {
-            throw new MismatchedCommandException("Empty Task Description.");        
+            throw new InvalidCommandException("Empty Task Description.");        
         }
         if ((startDateTime != null) && (endDateTime!=null)){
             int result = DateTimeComparator.getInstance().compare(this.startDateTime,this.endDateTime);
             if (result == 1) {   //currentDT is less than dateTime
-                throw new MismatchedCommandException("The End Time is before the Start Time.");
+                throw new InvalidCommandException("The End Time is before the Start Time.");
             }
         }
     }

@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 
 import application.InputCommands;
-import application.MismatchedCommandException;
+import application.InvalidCommandException;
 
 //@author A0090971Y
 /** This class implements a Parser to parse an input string
@@ -30,7 +30,7 @@ public class Parser {
      * return the object of CommandInfo class
      * @return the object of CommandInfo class 
      */
-    public CommandInfo getCommandInfo(String userInput) throws MismatchedCommandException {
+    public CommandInfo getCommandInfo(String userInput) throws InvalidCommandException {
         String commandType = parseCommandType(userInput);
         ArrayList<String> taskIDs = new ArrayList<String>();
         taskIDs = parseTaskIDs(userInput);
@@ -52,7 +52,7 @@ public class Parser {
             CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority,completed);
             return cmdInfo;
         }
-        catch (MismatchedCommandException e) {
+        catch (InvalidCommandException e) {
             throw e;
         }
     }
