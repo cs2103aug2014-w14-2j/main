@@ -2,6 +2,9 @@ package UI;
 
 import java.util.ArrayList;
 
+import application.Controller;
+import application.Task;
+
 //@author A0111824R
 /**
  * UIAutoComplete: Responsible for all autocomplete operations.
@@ -10,8 +13,9 @@ import java.util.ArrayList;
  */
 public class UIAutoComplete {
     
-    final private String MSG_COMMAND_SUGGESTION = "Do you mean : %s. You can enter <space> key to complete.";
-    final private String MSG_COMMAND_NOT_SUPPORTED = "WaveWave would only support these sets of command <add> <delete> <edit>";
+    final private String MSG_COMMAND_SUGGESTION = "\u2022 Do you mean : %s. You can enter <space> key to complete.";
+    final private String MSG_COMMAND_NOT_SUPPORTED = "\u2022 WaveWave would only support these sets of command <add> <delete> <edit> <search> <show> <complete> <show>";
+    final private String EDIT_TASKID_FOUND = "\u2022 Task ID : %s found, use the <space> key to autocomplete.";
     
     final public String ADD_COMMAND = "ADD";
     final private String DELETE_COMMAND = "DELETE";
@@ -24,9 +28,11 @@ public class UIAutoComplete {
     final private String SHOW_COMMAND = "SHOW";
     final private String DISPLAY_COMMAND = "DISPLAY";
     final private String HOME_COMMAND = "HOME";
+    private final String UI_DATETIMEFORMAT = "dd MMM yyy, h:mm a";
     
     final private int FIRST_WORD_IN_CMD = 1;
     final private int SECOND_WORD_IN_CMD = 2;
+    final private int EDIT_INDEX_POSITION = 1;
     
     private UICmdInputBox cmdInputBox;
     private ArrayList<String> commandList;
@@ -78,6 +84,7 @@ public class UIAutoComplete {
      */
     public void runAutoComplete(String command) {
     	String cmdUsed = getCommandText(command).trim();
+    	
     	if (isTheNWord(command, FIRST_WORD_IN_CMD)) {       
             String suggestedCmd = getSuggestions(command.toUpperCase());
             
@@ -98,11 +105,53 @@ public class UIAutoComplete {
                 this.acListener.setNextPossibleCmd(suggestedCmd);
             }
         } else if (isTheNWord(command, SECOND_WORD_IN_CMD) && cmdUsed.equalsIgnoreCase(EDIT_COMMAND)) {
-        	 String suggestedCmd = cmdInputBox.getText() + "[]";
-        	 this.acListener.setNextPossibleCmd(suggestedCmd);
+        	 String taskID = getEditCommandIndex(command).toUpperCase();
+        	 Task selectedTask = Controller.getTaskFromDisplayID(taskID);
+        	 
+        	 if(selectedTask != null) {
+        		 cmdInputBox.setSuggestionText(String.format(EDIT_TASKID_FOUND, taskID));
+            	 String taskDetails = parseEditText(selectedTask);
+            	 String suggestedCmd = cmdInputBox.getText() + taskDetails;
+            	 this.acListener.setNextPossibleCmd(suggestedCmd);
+        	 } else {
+        		 this.acListener.setNextPossibleCmd("");
+        	 }
         } else {
             this.acListener.setNextPossibleCmd("");
         }
+    }
+    
+    //@author A0111824R
+    /** 
+     *
+     * @author Tan Young Sing
+     */
+    private String parseEditText(Task selectedTask) {
+    	String editText = "[ " + selectedTask.getDescription() + " ] ";
+    	
+    	if(selectedTask.getDate() != null && selectedTask.getEndDate() == null) {
+    		editText += selectedTask.getDate().toString(UI_DATETIMEFORMAT);
+    	} else if(selectedTask.getDate() != null && selectedTask.getEndDate() != null) {
+    		editText += selectedTask.getDate().toString(UI_DATETIMEFORMAT) + " TO " + selectedTask.getEndDate().toString(UI_DATETIMEFORMAT);
+    	} else if(selectedTask.getDate() == null && selectedTask.getEndDate() != null) {
+    		editText += "BY " + selectedTask.getEndDate().toString(UI_DATETIMEFORMAT);
+    	}
+    	
+    	if(selectedTask.getPriority() == 1) {
+    		editText += " !";
+    	}
+    
+    	return editText;
+    }
+    
+    //@author A0111824R
+    /** 
+     *
+     * @author Tan Young Sing
+     */
+    private String getEditCommandIndex(String cmd) {
+    	String[] indexRetrieval = cmd.split(" ");
+    	return indexRetrieval[EDIT_INDEX_POSITION];
     }
     
     //@author A0111824R

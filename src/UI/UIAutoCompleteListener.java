@@ -12,8 +12,6 @@ import javafx.scene.control.TextField;
  * @author Tan Young Sing
  */
 public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
-
-    final private String MSG_DEFAULT_PROMPT = "Ask WaveWave to do something ?";
     
     private static KeyCode previousKey;
     private boolean isDouble;
@@ -25,10 +23,12 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     final public String ADD_COMMAND = "ADD";
     final private String EDIT_COMMAND = "EDIT";
     final private String SEARCH_COMMAND = "SEARCH";
+    
+    final private int EDIT_COMMAND_STRUCTURE = 3;
      
     //@author A0111824R
     /**
-     *
+     * @param An inputbox object 
      * @author Tan Young Sing
      */
     public UIAutoCompleteListener(UICmdInputBox cmdInputBox) {
@@ -43,14 +43,25 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
      *
      * @author Tan Young Sing
      */
+    public String getCurrentCmd(String cmd) {
+    	String[] cmdRetrieval = cmd.split(" ");
+    	return cmdRetrieval[0].toUpperCase();
+    }
+    
+    //@author A0111824R
+    /**
+     * @param the next possible command to be autocompleted.
+     * @author Tan Young Sing
+     */
     public void setNextPossibleCmd(String cmd) {
         this.nextPossibleCommand = cmd;
     }
     
     //@author A0111824R
     /**
-     *
+     * @param the current command on the textbox
      * @author Tan Young Sing
+     * @return if the current command is an ADD command
      */
     private boolean isAddCommand(String next) {
     	if(next.trim().equalsIgnoreCase(ADD_COMMAND)) {
@@ -61,8 +72,9 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     
     //@author A0111824R
     /**
-     *
+     * @param the current command on the textbox
      * @author Tan Young Sing
+     * @return if the current command is an SEARCH command
      */
     private boolean isSearchCommand(String next) {
     	if(next.trim().equalsIgnoreCase(SEARCH_COMMAND)) {
@@ -73,13 +85,14 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     
     //@author A0111824R
     /**
-     *
+     * @param the current command on the textbox
      * @author Tan Young Sing
+     * @return if the current command is an EDIT command
      */
     private boolean isEditCommand(String next) {
     	String[] cmdRetrieval = next.split(" ");
     	
-    	if(cmdRetrieval[0].equalsIgnoreCase(EDIT_COMMAND) && cmdRetrieval.length == 3) {
+    	if(cmdRetrieval[0].equalsIgnoreCase(EDIT_COMMAND) && cmdRetrieval.length == EDIT_COMMAND_STRUCTURE) {
     		return true;
     	}
     	return false;
@@ -116,7 +129,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         	
             if(nextPossibleCommand.length() != 0) {
             	if(isAddCommand(nextPossibleCommand) || isSearchCommand(nextPossibleCommand)) {
-            		inputBox.setText(nextPossibleCommand + "[]");
+            		inputBox.setText(nextPossibleCommand + "[ ]");
             	} else {
             		inputBox.setText(nextPossibleCommand);
             	}
@@ -127,9 +140,8 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
             		 inputBox.positionCaret(inputBox.getText().length()-1); 
             	}
             	
-                cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
                 nextPossibleCommand = "";
-                
+            	cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
                 isDouble = true;
             }
         }

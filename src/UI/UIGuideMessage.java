@@ -16,6 +16,8 @@ public class UIGuideMessage implements EventHandler<KeyEvent> {
 
     private UICmdInputBox cmdInputBox;
     private String guideMessage;
+    
+    private static String TOOLTIP_BULLET = "\u2022 ";
 
     public UIGuideMessage(UICmdInputBox cmdInputBox) {
         this.cmdInputBox = cmdInputBox;
@@ -78,9 +80,9 @@ public class UIGuideMessage implements EventHandler<KeyEvent> {
     
     private void setGuideMessage(String message) {
         this.guideMessage = message;
+        cmdInputBox.setGuideMsgText(TOOLTIP_BULLET + message);
     }
     public String getGuideMessage() {
         return this.guideMessage;
-    }
-    
+    } 
 }

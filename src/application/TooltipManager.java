@@ -20,6 +20,7 @@ public class TooltipManager {
     private static String TOOLTIP_MISC1 = "Typing the first letter of your command and <space> will auto-complete the command.";
     private static String TOOLTIP_MISC2 = "Enter QUIT command to terminate WaveWave.";
     private static String TOOLTIP_MISC3 = "After undoing, you can revert by entering UNDO again.";
+    private static String TOOLTIP_BULLET = "\u2022 ";
     
     private ArrayList<String> tooltipsAdd = new ArrayList<String>();
     private ArrayList<String> tooltipsEdit = new ArrayList<String>();
@@ -42,32 +43,44 @@ public class TooltipManager {
         tooltipsMisc.add(TOOLTIP_MISC1);
         tooltipsMisc.add(TOOLTIP_MISC2);
         tooltipsMisc.add(TOOLTIP_MISC3);
+    } 
+    
+    public String getToolTips(String command) {
+    	switch (command.toUpperCase()) {
+    		case "ADD" : return TOOLTIP_BULLET + getTooltipsAdd();
+    		case "EDIT" : return  TOOLTIP_BULLET + getTooltipsEdit();
+    		case "COMPLETE" : return  TOOLTIP_BULLET + getTooltipsComplete();
+    		case "DELETE" : return  TOOLTIP_BULLET + getTooltipsDelete();
+    		case "SEARCH": return  TOOLTIP_BULLET + getTooltipSearch();
+    		default: return  TOOLTIP_BULLET + getTooltipMisc();
+    	}
     }
     
     private Integer getRandomInteger(int size) {
         return rand.nextInt(size);
     }
     
-    public String getTooltipsAdd() {
+    private String getTooltipsAdd() {
         return tooltipsAdd.get(getRandomInteger(tooltipsAdd.size()));
     }
     
-    public String getTooltipsEdit() {
+    private String getTooltipsComplete() {
+        return tooltipsComplete.get(getRandomInteger(tooltipsComplete.size()));
+    }
+    
+    private String getTooltipsEdit() {
         return tooltipsEdit.get(getRandomInteger(tooltipsEdit.size()));
     }
     
-    public String getTooltipsDelete() {
+    private String getTooltipsDelete() {
         return tooltipsDelete.get(getRandomInteger(tooltipsDelete.size()));
     }
     
-    public String getTooltipSearch() {
+    private String getTooltipSearch() {
         return tooltipsSearch.get(getRandomInteger(tooltipsSearch.size()));
     }
     
-    public String getTooltipMisc() {
+    private String getTooltipMisc() {
         return tooltipsMisc.get(getRandomInteger(tooltipsMisc.size()));
     }
-    
-    
-    
 }

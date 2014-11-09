@@ -65,7 +65,6 @@ public class Task {
         modifiedAt = original.getModifiedAt();
         completedAt = original.getCompletedAt();
         deleted = original.isDeleted();
-        
     }
 
     //@author A0110546R

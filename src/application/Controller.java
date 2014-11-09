@@ -22,6 +22,7 @@ import UI.UIComponent;
 public class Controller extends Application {
     
     private static final WaveLogger logger = new WaveLogger("Controller");
+    private static String TOOLTIP_BULLET = "\u2022 ";
     
     private static DataStorage dataStorage;    
     private static TaskManager taskManager;
@@ -44,7 +45,7 @@ public class Controller extends Application {
         try {
             commandInfo = (new Parser()).getCommandInfo(input);
         } catch (MismatchedCommandException e) { // Need to change exception type.
-            uiComponent.setSuggestionText("Command is invalid");
+            uiComponent.setSuggestionText(TOOLTIP_BULLET + "Command is invalid");
             return;
         }
         
@@ -134,7 +135,7 @@ public class Controller extends Application {
         try {
             return taskManager.getTaskFromDisplayID(displayID.toUpperCase());
         } catch (IllegalArgumentException e) {
-            uiComponent.setSuggestionText(e.getMessage());
+            uiComponent.setSuggestionText(TOOLTIP_BULLET  + e.getMessage());
             // There is no need to log this.
         }
         return null;
