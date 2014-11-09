@@ -118,6 +118,7 @@ public class Parser {
         }
         return desc;
     }
+
     //@author A0090971Y
     private boolean isDeadline(String content,DateTime startDT, DateTime endDT) {
         for (int i = 0; i<timePrepositions.length;i++) {
@@ -199,10 +200,12 @@ public class Parser {
 
     //@author A0090971Y
     private boolean getComplete(String content) {
-        if (content.indexOf("complete")>=0) {
+        if (content.indexOf("COMPLETE")>=0) {
             return true; 
+        } 
+        else {
+            return false;
         }
-        return false;
     }
 }
 
