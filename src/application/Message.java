@@ -2,6 +2,13 @@ package application;
 
 import java.util.ArrayList;
 
+/**
+ * The class Message and its subclasses are objects passed by Controller to UI
+ * to display to the user what Controller did when user operation was accepted.
+ * 
+ * @author Kim Hyung Jon
+ *
+ */
 
 public class Message {
 
@@ -19,6 +26,11 @@ public class Message {
 
     protected String outputMsg = "";
     
+    /**
+     * Returns the message encapsulated by the selected Message object
+     * 
+     * @return message constructed by the Message object
+     */
     public String getMessage() {
         return outputMsg;
     }
@@ -33,6 +45,7 @@ public class Message {
 class MessageNotifyAdd extends Message {
     
     /**
+     * Constructor for message to be displayed when a task has been added successfully
      * 
      * @param ID Task ID assigned to the new task
      */
@@ -44,13 +57,14 @@ class MessageNotifyAdd extends Message {
 class MessageNotifyDelete extends Message {
     
     /**
+     * Constructor for message to be displayed when tasks have been deleted successfully
      * 
      * @param deletedTaskIDs ArrayList of deleted task IDs
      */
     MessageNotifyDelete(ArrayList<String> deletedTaskIDs) {
         outputMsg += NOTIFY_DELETED;
         
-        for (int i = 0; i < deletedTaskIDs.size(); i++) {
+        for (int i = 0 ; i < deletedTaskIDs.size() ; i++) {
             outputMsg += deletedTaskIDs.get(i);
             if (i < deletedTaskIDs.size() - 1) {
                 outputMsg += ", ";
@@ -62,6 +76,7 @@ class MessageNotifyDelete extends Message {
 class MessageNotifyEdit extends Message {
     
     /**
+     * Constructor for message to be displayed when a task has been edited successfully
      * 
      * @param ID Task ID of edited task
      */
@@ -73,13 +88,14 @@ class MessageNotifyEdit extends Message {
 class MessageNotifyComplete extends Message {
     
     /**
+     * Constructor for message to be displayed when tasks have been marked as complete
      * 
      * @param completedTaskIDs ArrayList of completed task IDs
      */
     MessageNotifyComplete(ArrayList<String> completedTaskIDs) {
         outputMsg += NOTIFY_COMPLETED;
         
-        for (int i = 0; i < completedTaskIDs.size(); i++) {
+        for (int i = 0 ; i < completedTaskIDs.size() ; i++) {
             outputMsg += completedTaskIDs.get(i);
             if (i < completedTaskIDs.size() - 1) {
                 outputMsg += ", ";
@@ -91,7 +107,7 @@ class MessageNotifyComplete extends Message {
 class MessageNotifyUndo extends Message {
     
     /**
-     * 
+     * Constructor for message to be displayed when a user operation has been undone
      */
     MessageNotifyUndo() {
         outputMsg += NOTIFY_UNDO;
@@ -105,12 +121,14 @@ class MessageWarningAdd extends Message {
 class MessageWarningInvalidID extends Message {
     
     /**
+     * Constructor for message to be displayed when specified tasks cannot be found
+     * and hence cannot be deleted or completed
      * 
      * @param invalidTaskIDs ArrayList of task IDs that couldn't be found
      */
     MessageWarningInvalidID(ArrayList<String> invalidTaskIDs) {
         outputMsg += WARNING_INVALID_ID;
-        for (int i = 0; i < invalidTaskIDs.size(); i++) {
+        for (int i = 0 ; i < invalidTaskIDs.size() ; i++) {
             outputMsg += invalidTaskIDs.get(i);
             if (i < invalidTaskIDs.size() - 1) {
                 outputMsg += ", ";
@@ -127,7 +145,7 @@ class MessageWarningInvalidDate extends Message {
      */
     MessageWarningInvalidDate(ArrayList<String> invalidDates) {
         outputMsg += WARNING_INVALID_DATE;
-        for (int i = 0; i < invalidDates.size(); i++) {
+        for (int i = 0 ; i < invalidDates.size() ; i++) {
             outputMsg += invalidDates.get(i);
             if (i < invalidDates.size() - 1) {
                 outputMsg += " and ";
