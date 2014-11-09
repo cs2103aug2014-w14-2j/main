@@ -5,6 +5,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.TextField;
 
+//@author A0111824R
 /**
  * UIAutoCompleteListener: ActionHandler acts as a middle man between UIAutoComplete & UIComponent.
  * 
@@ -22,21 +23,35 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     private String nextPossibleCommand;
     
     final public String ADD_COMMAND = "ADD";
-    final private String DELETE_COMMAND = "DELETE";
     final private String EDIT_COMMAND = "EDIT";
-      
+    final private String SEARCH_COMMAND = "SEARCH";
+     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public UIAutoCompleteListener(UICmdInputBox cmdInputBox) {
         this.uiAutoComplete = new UIAutoComplete(cmdInputBox, this);
         this.cmdInputBox = cmdInputBox;
         this.nextPossibleCommand = "";
-        this.previousKey = null;
         this.isDouble = false;
     }
     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public void setNextPossibleCmd(String cmd) {
         this.nextPossibleCommand = cmd;
     }
     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     private boolean isAddCommand(String next) {
     	if(next.trim().equalsIgnoreCase(ADD_COMMAND)) {
     		return true;
@@ -44,6 +59,23 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     	return false;
     }
     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
+    private boolean isSearchCommand(String next) {
+    	if(next.trim().equalsIgnoreCase(SEARCH_COMMAND)) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     private boolean isEditCommand(String next) {
     	String[] cmdRetrieval = next.split(" ");
     	
@@ -53,6 +85,11 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     	return false;
     }
     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     @Override
     public void handle(KeyEvent event) {
         TextField inputBox = cmdInputBox.getCmdInputBox();
@@ -78,7 +115,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         	}
         	
             if(nextPossibleCommand.length() != 0) {
-            	if(isAddCommand(nextPossibleCommand)) {
+            	if(isAddCommand(nextPossibleCommand) || isSearchCommand(nextPossibleCommand)) {
             		inputBox.setText(nextPossibleCommand + "[]");
             	} else {
             		inputBox.setText(nextPossibleCommand);
@@ -86,8 +123,8 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
             	
                 inputBox.positionCaret(inputBox.getText().length());
 
-            	if(isAddCommand(nextPossibleCommand) || isEditCommand(nextPossibleCommand)) {
-            		 inputBox.positionCaret(inputBox.getText().length()-1);
+            	if(isAddCommand(nextPossibleCommand) || isEditCommand(nextPossibleCommand) || isSearchCommand(nextPossibleCommand)) {
+            		 inputBox.positionCaret(inputBox.getText().length()-1); 
             	}
             	
                 cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);

@@ -1,12 +1,15 @@
 package application;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.ListIterator;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+
+import Parser.CommandInfo;
 
 //@author A0110546R
 /**
@@ -14,23 +17,59 @@ import org.joda.time.DateTime;
  * 
  * @author Sun Wang Jun
  */
-class TaskManager {
+public class TaskManager {
     public static final char NORMAL_TASK_PREFIX = 'T';
     public static final char DATED_TASK_PREFIX = 'E';
     
     private ArrayList<Task> list;
-    private Task task; // Maybe this can act as "last modified task".
+    private Task lastModifiedTask;
     private Hashtable<String, Integer> idMapping;
     
-    public TaskManager() { // Maybe singleton this.
+    private ListDisplay eventsDisplay;
+    private ListDisplay tasksDisplay;
+    
+    private int daysToDisplay = 3;
+    
+    /**
+     * Initializes and sets up the task manager.
+     */
+    public TaskManager() {
         this.idMapping = new Hashtable<String, Integer>();
+        this.eventsDisplay = new EventListDisplay();
+        this.tasksDisplay = new TaskListDisplay();
+    }
+    
+    /**
+     * Sets the number of days to display in the default view.
+     * @param days number of days.
+     */
+    public void setDaysToDisplay(int days) {
+        this.daysToDisplay = days;
+    }
+    
+    /**
+     * Sets the number of days to display in the default view.
+     * @param commandInfo Use start and end time to determine the number of days.
+     * @param configManager The config manager to update and save the information to.
+     */
+    public void setDaysToDisplay(CommandInfo commandInfo, ConfigManager configManager) {
+        LocalDate today = new LocalDate();
+        LocalDate startDay = new LocalDate();
+        if (commandInfo.getStartDateTime() != null) {
+            startDay = commandInfo.getStartDateTime().toLocalDate();
+        }
+        if (startDay.equals(today) && commandInfo.getEndDateTime() != null) {
+            LocalDate endDay = commandInfo.getEndDateTime().toLocalDate();
+            this.daysToDisplay = Days.daysBetween(startDay, endDay).getDays();
+            configManager.setHomeViewType(this.daysToDisplay);
+        }
     }
     
     /**
      * Checks if the task displayID entered is valid.
      * 
      * @param displayID the task displayID the user entered.
-     * @return whether it exists in idMapping
+     * @return whether it exists in idMapping.
      */
     public boolean ensureValidDisplayID(String displayID) {
         return this.idMapping.containsKey(displayID);
@@ -39,8 +78,8 @@ class TaskManager {
     /**
      * Used to map displayID to actual taskID.
      * 
-     * @param displayID
-     * @return taskID
+     * @param displayID the display ID that is shown in the list view.
+     * @return taskID the internal ID of the Task.
      */
     private int mapDisplayIDtoActualID(String displayID) {
         assert(this.idMapping.containsKey(displayID) == true);
@@ -54,13 +93,10 @@ class TaskManager {
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "add".
      */
-    public ArrayList<Task> add(CommandInfo commandInfo) throws MismatchedCommandException {
-        if (!"add".equals(commandInfo.getCommandType())) {
-            throw new MismatchedCommandException();
-        }
-        
-        this.task = new Task(commandInfo);
-        this.list.add(this.task);
+    public ArrayList<Task> add(CommandInfo commandInfo) {
+        assert(commandInfo.getCommandType() == "add");
+        this.lastModifiedTask = new Task(commandInfo);
+        this.list.add(this.lastModifiedTask);
         
         return this.list;
     }
@@ -72,16 +108,12 @@ class TaskManager {
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "edit".
      */
-    public ArrayList<Task> edit(CommandInfo commandInfo) throws MismatchedCommandException {
-        if (!"edit".equals(commandInfo.getCommandType())) {
-            throw new MismatchedCommandException();
-        }
-        
-        // Waiting for proper sequence flow.
+    public ArrayList<Task> edit(CommandInfo commandInfo) {  
+        assert(commandInfo.getCommandType() == "edit");
         int taskId = this.mapDisplayIDtoActualID(commandInfo.getTaskIDs().get(0));       
-        this.task = new Task(commandInfo, taskId);
+        this.lastModifiedTask = new Task(commandInfo, taskId);
         
-        this.list.set(taskId, this.task); // Replaces the task.
+        this.list.set(taskId, this.lastModifiedTask); // Replaces the task.
         
         return this.list;
     }
@@ -93,11 +125,8 @@ class TaskManager {
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "delete".
      */
-    public ArrayList<Task> delete(CommandInfo commandInfo) throws MismatchedCommandException {
-        if (!"delete".equals(commandInfo.getCommandType())) {
-            throw new MismatchedCommandException();
-        }
-        
+    public ArrayList<Task> delete(CommandInfo commandInfo) {
+        assert(commandInfo.getCommandType() == "delete");
         ListIterator<String> li = commandInfo.getTaskIDs().listIterator();
         while (li.hasNext()) {
             String displayID = li.next();
@@ -115,11 +144,8 @@ class TaskManager {
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "complete".
      */
-    public ArrayList<Task> complete(CommandInfo commandInfo) throws MismatchedCommandException {
-        if (!"complete".equals(commandInfo.getCommandType())) {
-            throw new MismatchedCommandException();
-        }
-        
+    public ArrayList<Task> complete(CommandInfo commandInfo) {   
+        assert(commandInfo.getCommandType() == "complete");
         ListIterator<String> li = commandInfo.getTaskIDs().listIterator();
         while (li.hasNext()) {
             String displayID = li.next();
@@ -138,31 +164,17 @@ class TaskManager {
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "undo".
      */
-    public ArrayList<Task> undo(CommandInfo commandInfo, ArrayList<Task> backup) 
-            throws MismatchedCommandException {
-        if (!"undo".equals(commandInfo.getCommandType())) {
-            throw new MismatchedCommandException();
-        }
+    public ArrayList<Task> undo(CommandInfo commandInfo, ArrayList<Task> backup) {
+        assert(commandInfo.getCommandType() == "undo");
         this.list = new ArrayList<Task>(backup);
         return this.list;
     }
     
     /**
-     * Displays completed tasks. (temporary)
-     * 
-     * @param commandInfo of type "search complete" and contains task id.
-     * @return the updated list of tasks.
-     * @throws MismatchedCommandException if not of type "search complete"
+     * Returns the full list of tasks, including the deleted tasks.
+     * @return the full list of tasks, including the deleted tasks.
      */
-    public ArrayList<Task> display(CommandInfo commandInfo) throws MismatchedCommandException {
-        if (!"search complete".equals(commandInfo.getCommandType())) {
-            throw new MismatchedCommandException();
-        }
-        
-        return this.list;
-    }
-    
-    public ArrayList<Task> getAll() {
+    public ArrayList<Task> getFullList() {
         return this.list;
     }
 
@@ -171,10 +183,10 @@ class TaskManager {
      * 
      * @return the full list of tasks, ignoring the deleted tasks.
      */
-    public ArrayList<Task> getList() {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
+    public ArrayList<Task> getSanitizedList() {
+        TaskListFilter filter = new TaskListFilter(true); // Does a AND/&& filtering.
         filter.add(new IgnoreTasksDeleted());
-        return filter.apply();
+        return filter.apply(this.list);
     }
     
     /**
@@ -183,33 +195,12 @@ class TaskManager {
      * @return the tasks without start dates.
      */
     public ArrayList<Task> getTasks() {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
-        filter.add(new IgnoreTasksDeleted()); // and,
-        filter.add(new KeepTasksWithoutStartDate());
-        ArrayList<Task> filteredTasks = filter.apply();
-        
-        filter = new TaskListFilter(filteredTasks, false); // Does a OR/|| filtering.
+        TaskListFilter filter = new TaskListFilter(false); // Does a OR/|| filtering.
         filter.add(new KeepTasksCompletedToday()); // or,
         filter.add(new KeepTasksNotCompleted());
-        filteredTasks = filter.apply();
-                
-        // Sort by modified at date first, then priority.
-        Collections.sort(filteredTasks, new ModifiedAtComparator());
-        Collections.sort(filteredTasks, new PriorityComparator());
-        Collections.sort(filteredTasks, new EndDateComparator());
-        Collections.sort(filteredTasks, new CompletedAtComparator());
+        this.tasksDisplay.replaceFilter(filter);
         
-        int i = 1;
-        ListIterator<Task> li = filteredTasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            String displayID = NORMAL_TASK_PREFIX + "" + i;
-            this.idMapping.put(displayID, t.getID());
-            t.setDisplayID(displayID);
-            i++;
-        }
-        
-        return filteredTasks;
+        return this.tasksDisplay.display(this.list, this.idMapping);
     }
     
     /**
@@ -217,33 +208,14 @@ class TaskManager {
      * 
      * @return the tasks with start dates.
      */
-    public ArrayList<Task> getReminders() {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // Does a AND/&& filtering.
-        filter.add(new IgnoreTasksDeleted()); // and,
-        filter.add(new KeepTasksWithStartDate());
-        ArrayList<Task> filteredTasks = filter.apply();
-        
-        Collections.sort(filteredTasks, new CompletedAtComparator());
-        Collections.sort(filteredTasks, new DayPriorityComparator());
-        
-        filter = new TaskListFilter(filteredTasks, false); // Does a OR/|| filtering.
+    public ArrayList<Task> getEvents() {
+        TaskListFilter filter = new TaskListFilter(false); // Does a OR/|| filtering.
         filter.add(new KeepTasksCompletedToday()); // or,
-        filter.add(new KeepTasksToShowToday()); // or,
-        filter.add(new KeepTasksToShowTheNextDay());
-        filteredTasks = filter.apply();
-
+        filter.add(new KeepTasksOutstanding());
+        filter.add(new KeepTasksBetween(this.daysToDisplay));
+        this.eventsDisplay.replaceFilter(filter);
         
-        int i = 1;
-        ListIterator<Task> li = filteredTasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            String displayID = DATED_TASK_PREFIX + "" + i;
-            this.idMapping.put(displayID, t.getID());
-            t.setDisplayID(displayID);
-            i++;
-        }
-        
-        return filteredTasks;
+        return this.eventsDisplay.display(this.list, this.idMapping);
     }
     
     /**
@@ -251,15 +223,9 @@ class TaskManager {
      * 
      * @return the tasks given in the search parameters.
      */
-    public ArrayList<Task> getSearchedTasks(CommandInfo commandInfo) {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // AND filter.
-        filter.add(new IgnoreTasksDeleted()); // and, 
-        filter.add(new KeepTasksWithoutStartDate());
-        ArrayList<Task> filteredTasks = filter.apply();
-        
-        ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
-        
-        filter = new TaskListFilter(filteredTasks, true); // AND filter.
+    public ArrayList<Task> getSearchedTasks(CommandInfo commandInfo) {        
+        ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();        
+        TaskListFilter filter = new TaskListFilter(true); // AND filter.
         
         // Filtering of dates:
         DateTime start = commandInfo.getStartDateTime();
@@ -279,6 +245,11 @@ class TaskManager {
             filter.add(new KeepTasksBetween(start, end));
             comparators.add(new EndDateComparator());
         }
+
+        // Whether to show priority:
+        if (commandInfo.getPriority() > 0) {
+            filter.add(new KeepTasksWithPriority());
+        }
         
         // Whether to show completed only:
         if (commandInfo.isCompleted()) { // For completed tasks only.
@@ -286,37 +257,15 @@ class TaskManager {
             comparators.add(new CompletedAtComparator());
         }
         
-        // Whether to show priority, inclusive:
-        if (commandInfo.getPriority() > 0) {
-            filter.add(new KeepTasksWithPriority());
-        }
-        
         // Searching by keywords:
         if (commandInfo.getTaskDesc() != null) {
             filter.add(new KeepTasksWithKeyword(commandInfo.getTaskDesc()));
         }
         
-        filteredTasks = filter.apply();
+        this.tasksDisplay.replaceFilter(filter);
+        this.tasksDisplay.replaceComparators(comparators);
         
-        // Sorting.
-        ListIterator<Comparator<Task>> liComparator = comparators.listIterator();
-        while (liComparator.hasNext()) {
-            Collections.sort(filteredTasks, liComparator.next());
-        }
-        
-        // For displaying.
-        int i = 1;
-        ListIterator<Task> li = filteredTasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            String displayID = NORMAL_TASK_PREFIX + "" + i;
-            this.idMapping.put(displayID, t.getID());
-            t.setDisplayID(displayID);
-            i++;
-        }
-        
-        return filteredTasks;
-        
+        return this.tasksDisplay.display(this.list, this.idMapping);
     }
     
     /**
@@ -325,34 +274,9 @@ class TaskManager {
      * @return the events given in the search parameters.
      */
     public ArrayList<Task> getSearchedEvents(CommandInfo commandInfo) {
-        TaskListFilter filter = new TaskListFilter(this.list, true); // AND filter.
-        filter.add(new IgnoreTasksDeleted()); // and, 
-        filter.add(new KeepTasksWithStartDate());
-        ArrayList<Task> filteredTasks = filter.apply();
-        
         ArrayList<Comparator<Task>> comparators = new ArrayList<Comparator<Task>>();
-        
-        filter = new TaskListFilter(filteredTasks, true); // AND filter.
-        
-        // Filtering of dates:
-        DateTime start = commandInfo.getStartDateTime();
-        DateTime end = commandInfo.getEndDateTime();
-        if (start != null && end != null) {
-            filter.add(new KeepTasksBetween(start, end));
-            comparators.add(new EndDateComparator());
-        }
-        else if (start != null) { // end is null,
-            end = start.withTimeAtStartOfDay().plusDays(1);
-            start = start.withTimeAtStartOfDay().minusMillis(1); // Millisecond before today.
-            filter.add(new KeepTasksBetween(start, end));
-            comparators.add(new EndDateComparator());
-        }
-        else if (end != null) { // start is null, not possible here but whatever,
-            start = new DateTime();
-            filter.add(new KeepTasksBetween(start, end));
-            comparators.add(new EndDateComparator());
-        }
-        
+        TaskListFilter filter = new TaskListFilter(true); // AND filter.
+
         // Whether to show completed only:
         if (commandInfo.isCompleted()) { // For completed tasks only.
             filter.add(new KeepTasksCompleted());
@@ -364,32 +288,34 @@ class TaskManager {
             filter.add(new KeepTasksWithPriority());
         }
         
+        // Filtering of dates:
+        DateTime start = commandInfo.getStartDateTime();
+        DateTime end = commandInfo.getEndDateTime();
+        if (start != null && end != null) {
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new DateComparator());
+        }
+        else if (start != null) { // end is null,
+            end = start.withTimeAtStartOfDay().plusDays(1);
+            start = start.withTimeAtStartOfDay().minusMillis(1); // Millisecond before today.
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new DateComparator());
+        }
+        else if (end != null) { // start is null, not possible here but whatever,
+            start = new DateTime();
+            filter.add(new KeepTasksBetween(start, end));
+            comparators.add(new DateComparator());
+        }
+        
         // Searching by keywords:
         if (commandInfo.getTaskDesc() != null) {
             filter.add(new KeepTasksWithKeyword(commandInfo.getTaskDesc()));
         }
         
-        filteredTasks = filter.apply();
+        this.eventsDisplay.replaceFilter(filter);
+        this.eventsDisplay.replaceComparators(comparators);
         
-        // Sorting.
-        ListIterator<Comparator<Task>> liComparator = comparators.listIterator();
-        while (liComparator.hasNext()) {
-            Collections.sort(filteredTasks, liComparator.next());
-        }
-        
-        // For displaying.
-        int i = 1;
-        ListIterator<Task> li = filteredTasks.listIterator();
-        while (li.hasNext()) {
-            Task t = li.next();
-            String displayID = DATED_TASK_PREFIX + "" + i;
-            this.idMapping.put(displayID, t.getID());
-            t.setDisplayID(displayID);
-            i++;
-        }
-        
-        return filteredTasks;
-        
+        return this.eventsDisplay.display(this.list, this.idMapping);
     }
     
 
@@ -409,7 +335,7 @@ class TaskManager {
      * @return the last task modified.
      */    
     public Task getLastModifiedTask() {
-        return this.task;
+        return this.lastModifiedTask;
     }
     
     
@@ -438,5 +364,17 @@ class TaskManager {
      * Clears the ID mapping hashtable.
      */
     public void clearIDMapping() { this.idMapping.clear(); }
+    
+    /**
+     * Returns the Task associated with this displayID.
+     * @param displayID the displayID of the task.
+     * @throws IllegalArgumentException if the displayID is not displayed in the views.
+     */
+    public Task getTaskFromDisplayID(String displayID) throws IllegalArgumentException {
+        if (!this.ensureValidDisplayID(displayID)) {
+            throw new IllegalArgumentException("There is no such display ID.");
+        }
+        return this.list.get(this.mapDisplayIDtoActualID(displayID));
+    }
     
 }

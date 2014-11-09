@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+//@author A0111824R
 /**
  * Middle man between UIComponent and Controller.
  * 
@@ -18,17 +19,29 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
     private ArrayList<String> cmdHistory;
     private static int cmdIndex = 0;
     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     public UIControllerListener(UICmdInputBox cmdInputBox) {
         this.cmdInputBox = cmdInputBox;
         this.cmdHistory = new ArrayList<String>();
+        this.cmdHistory.add("");
     }
     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     @Override
     public void handle(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) { 
             Controller.runCommandInput(cmdInputBox.getText());
-            cmdHistory.add(cmdInputBox.getText());
+            cmdHistory.add(0, cmdInputBox.getText());
             cmdInputBox.setText("");
+            cmdIndex = 0;
             
             cmdInputBox.setGuideMsgText(cmdInputBox.getToolTip());
             UICmdInputBox.toolTipCounter++;

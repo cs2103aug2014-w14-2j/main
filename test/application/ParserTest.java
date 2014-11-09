@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import Parser.Parser;
+
 public class ParserTest {
     
     Parser test = new Parser();

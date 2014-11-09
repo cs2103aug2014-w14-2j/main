@@ -2,6 +2,7 @@ package UI;
 
 import java.util.ArrayList;
 
+//@author A0111824R
 /**
  * UIAutoComplete: Responsible for all autocomplete operations.
  * 
@@ -11,7 +12,6 @@ public class UIAutoComplete {
     
     final private String MSG_COMMAND_SUGGESTION = "Do you mean : %s. You can enter <space> key to complete.";
     final private String MSG_COMMAND_NOT_SUPPORTED = "WaveWave would only support these sets of command <add> <delete> <edit>";
-    final private String MSG_DEFAULT_PROMPT = "Ask WaveWave to do something ?";
     
     final public String ADD_COMMAND = "ADD";
     final private String DELETE_COMMAND = "DELETE";
@@ -32,12 +32,27 @@ public class UIAutoComplete {
     private ArrayList<String> commandList;
     private UIAutoCompleteListener acListener;
     
+    
+    //@author A0111824R
+    /**
+     * UIAutoComplete: Constructor
+     * Takes in CmdInputBox Component to detect user input 
+     *
+     * @author Tan Young Sing
+     */
     public UIAutoComplete(UICmdInputBox cmdInputBox, UIAutoCompleteListener acListener) {
         this.cmdInputBox = cmdInputBox;
         this.commandList = getCommandList();
         this.acListener = acListener;
     }
     
+    //@author A0111824R
+    /**
+     * UIAutoComplete: Constructor
+     * Takes in CmdInputBox Component to detect user input 
+     *
+     * @author Tan Young Sing
+     */
     private ArrayList<String> getCommandList() {
         ArrayList<String> cmdList = new ArrayList<String>();
         cmdList.add(ADD_COMMAND);
@@ -54,6 +69,13 @@ public class UIAutoComplete {
         return cmdList;
     }
     
+    //@author A0111824R
+    /**
+     * UIAutoComplete: Constructor
+     * Takes in CmdInputBox Component to detect user input 
+     *
+     * @author Tan Young Sing
+     */
     public void runAutoComplete(String command) {
     	String cmdUsed = getCommandText(command).trim();
     	if (isTheNWord(command, FIRST_WORD_IN_CMD)) {       
@@ -82,7 +104,12 @@ public class UIAutoComplete {
             this.acListener.setNextPossibleCmd("");
         }
     }
-
+    
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     private String getSuggestions(String word) {
         if(word.trim().length() == 0) {
             return "";
@@ -98,12 +125,21 @@ public class UIAutoComplete {
         return output;
     }
     
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     private String getCommandText(String cmd) {
     	String[] cmdRetrieval = cmd.split(" ");
     	return cmdRetrieval[0];
     }
 
-    
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
     private boolean isTheNWord(String cmd, int n) {
         String[] oneWordChecker = cmd.split(" ");
         return (oneWordChecker.length == n);
