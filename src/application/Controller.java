@@ -2,6 +2,7 @@ package application;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -166,6 +167,7 @@ public class Controller extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         uiComponent = new UIComponent();
+        primaryStage.getIcons().add(new Image("/UI/wavewave.png"));
         uiComponent.showStage(primaryStage);
     }
 }
