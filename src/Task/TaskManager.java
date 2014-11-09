@@ -21,6 +21,7 @@ import Parser.CommandInfo;
 public class TaskManager {
     public static final char NORMAL_TASK_PREFIX = 'T';
     public static final char DATED_TASK_PREFIX = 'E';
+    public static final int DEFAULT_DAYS_TO_DISPLAY = 3;
     
     private ArrayList<Task> list;
     private Task lastModifiedTask;
@@ -29,7 +30,7 @@ public class TaskManager {
     private ListDisplay eventsDisplay;
     private ListDisplay tasksDisplay;
     
-    private int daysToDisplay = 3;
+    private int daysToDisplay = DEFAULT_DAYS_TO_DISPLAY;
     
     /**
      * Initializes and sets up the task manager.
