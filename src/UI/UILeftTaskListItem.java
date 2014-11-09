@@ -1,6 +1,7 @@
 package UI;
 
-import application.Task;
+import Task.Task;
+
 import org.joda.time.DateTime;
 
 //@author A0111824R

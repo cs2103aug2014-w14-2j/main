@@ -13,6 +13,14 @@ import org.json.simple.parser.ParseException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * ConfigManager stores the default view type for WaveWave into an external json file.
+ * View type is stored separately so that the view is maintained for next sessions.
+ * JSON is used because of possible future expansions that include more settings to offer.
+ * 
+ * @author Kim Hyung Jon
+ */
+
 public class ConfigManager {
     
     private static File file;
@@ -20,13 +28,21 @@ public class ConfigManager {
     private static WaveLogger logger = new WaveLogger("Config");
     private static String filename;
     
+    //@author A0115864B
+    /**
+     * Constructor
+     */
     public ConfigManager() {
         filename = "Config.json";
-        initiateFile(filename);
+        initiateFile();
     }
     
-    public void initiateFile(String name) {
-        file = new File(name);
+    //@author A0115864B
+    /**
+     * Confirm that the external json file exists. If not, create it.
+     */
+    public void initiateFile() {
+        file = new File(filename);
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -37,6 +53,12 @@ public class ConfigManager {
         }
     }
     
+    //@author A0115864B
+    /**
+     * Read json file to retrieve the setting for home view type
+     * 
+     * @return integer representing a particular view type
+     */
     public int getHomeViewType() {
         int setting = 0;
         try {
@@ -52,6 +74,12 @@ public class ConfigManager {
         return setting;
     }
     
+    //@author A0115864B
+    /**
+     * Stores the setting for home view type to the json file
+     * 
+     * @param type integer representing a particular view type
+     */
     public void setHomeViewType(int type) {
         JSONObject homeSetting = new JSONObject();
         homeSetting.put(KEY_HOME_VIEW_TYPE, type);
