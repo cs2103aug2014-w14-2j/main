@@ -5,11 +5,13 @@ import java.util.List;
 
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
+
 //@author A0090971Y
 public class DateTimeParser {
     private List<Date> dates = null;
     private String matchingValue = null;
 
+    //@author A0090971Y
     /**
      * constructor for DateTimeParser class
      * @param userInput
@@ -47,16 +49,5 @@ public class DateTimeParser {
             endDateTime = null;
         }
         return endDateTime;
-    }
-
-    //@author A0090971Y
-    public String removeDateTime(String userInput){
-        if (matchingValue != null) {
-            String taskDesc = userInput.replaceAll(matchingValue, "");
-            return taskDesc;
-        }
-        else {
-            return userInput;
-        }
     }
 }

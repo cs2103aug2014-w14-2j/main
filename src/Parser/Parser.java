@@ -1,20 +1,16 @@
 package Parser;
 
-
-
 import java.util.ArrayList;
 import java.util.Date;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
-
 import application.MismatchedCommandException;
+
 //@author A0090971Y
 /** This class implements a Parser to parse an input string
  */
 public class Parser {
-
     private DateTimeParser parser;
     private static String[] timePrepositions = new String[] {"BY","DUE","TILL","UNTIL"};
 
@@ -32,7 +28,6 @@ public class Parser {
      * @return the object of CommandInfo class 
      */
     public CommandInfo getCommandInfo(String userInput) throws MismatchedCommandException {
-
         String commandType = parseCommandType(userInput);
         ArrayList<String> taskIDs = new ArrayList<String>();
         taskIDs = parseTaskIDs(userInput);
@@ -88,6 +83,7 @@ public class Parser {
         }
         return dt;
     }
+
     //@author A0090971Y
     private DateTime changeToDateTime(Date date) {
         DateTime dateTime = null;
@@ -208,7 +204,6 @@ public class Parser {
         }
         return false;
     }
-
 }
 
 

@@ -2,21 +2,18 @@ package Parser;
 
 import java.util.ArrayList;
 import java.util.Date;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
-
 import application.MismatchedCommandException;
 import application.TaskManager;
 
+//@author A0090971Y
 /** This class stores all information that a Command object needs to execute a command 
  * 
- * @author A0090971Y
+ * 
  */
-//@author A0090971Y
 public class CommandInfo {
-
     private String commandType;
     private ArrayList<String> taskIDs = new ArrayList<String>();
     private String taskDesc;
@@ -55,6 +52,7 @@ public class CommandInfo {
             throw e;
         }
     }
+
     //@author A0090971Y
     private ArrayList<String> upperCaseIDs(ArrayList<String> IDs) {
         for (int i = 0; i<IDs.size();i++) {
@@ -62,8 +60,8 @@ public class CommandInfo {
             IDs.set(i,ID);
         }
         return IDs;
-
     }
+    
     //@author A0090971Y
     private void checkStartDateTime() {
         if ((this.startDateTime != null ) && ((this.commandType.equalsIgnoreCase("add"))
@@ -135,7 +133,6 @@ public class CommandInfo {
         }
     }
 
-
     //@author A0090971Y
     private static String[] getValidCommandTypes() {
         return validCommandTypes;
@@ -158,6 +155,7 @@ public class CommandInfo {
     public ArrayList<String> getTaskIDs() {
         return taskIDs;
     }
+    
     //@author A0090971Y
     /**
      * 
@@ -184,14 +182,25 @@ public class CommandInfo {
     public String getKeyword(){
         return taskDesc;
     }
+    
     //@author A0090971Y
+    /**
+     * 
+     * @return the start time in Joda-Time DateTime format
+     */
     public DateTime getStartDateTime() {
         return this.startDateTime;
     }
+    
     //@author A0090971Y
+    /**
+     * 
+     * @return the end time in Joda-Time DateTime format
+     */
     public DateTime getEndDateTime() {
         return this.endDateTime;
     }
+    
     //@author A0090971Y
     private void setMessage(String m) {
         this.message = m;
@@ -205,6 +214,7 @@ public class CommandInfo {
     public String getMessage() {
         return this.message;
     }
+    
     //@author A0090971Y
     /**
      * 
@@ -213,5 +223,4 @@ public class CommandInfo {
     public boolean isCompleted(){
         return completed;
     }
-
 }
