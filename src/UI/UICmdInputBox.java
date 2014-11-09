@@ -2,6 +2,7 @@ package UI;
 
 import java.util.ArrayList;
 
+import application.TooltipManager;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
@@ -17,15 +18,11 @@ public class UICmdInputBox {
     private Text suggestionText;
     private Text guideMsgText;
     
-    private String tooltip_one = "You can add a new task by using ADD [description]";
-    private String tooltip_two = "You can complete a task by using COMPLETE [description]";
-    private String tooltip_three = "You can edit a task by using EDIT ID [description]";
-    private String tooltip_four = "You can delete a task by using DELETE ID";
-    private ArrayList<String> toolTip = new ArrayList<String>();
-    public static int toolTipCounter = 0;
-    
     private final int CMDINPUT_HEIGHT = 35;
-    private final String CMDINPUT_PROMPT_TEXT = "Ask WaveWave to do something ?";
+    private final String CMDINPUT_PROMPT_TEXT = "Ask WaveWave to do something.";
+    private TooltipManager toolTipManage;
+    private UIAutoCompleteListener autoCompleteListener;
+
     
     //@author A0111824R
     /**
@@ -36,26 +33,13 @@ public class UICmdInputBox {
         this.suggestionText = suggestionText;
         this.guideMsgText = guideMsgText;
         this.cmdInputBox = new TextField();
+        this.toolTipManage = new TooltipManager();
+        this.autoCompleteListener = new UIAutoCompleteListener(this);
         
         setInputBoxProperty();
         addKeyPressedListener();
         addKeyTypedListener();
         addKeyReleasedListener();
-        initializeToolTip();
-        setGuideMsgText(this.getToolTip());
-        toolTipCounter++;
-    }
-    
-    //@author A0111824R
-    /**
-     *
-     * @author Tan Young Sing
-     */
-    private void initializeToolTip() {
-    	toolTip.add(tooltip_one);
-    	toolTip.add(tooltip_two);
-    	toolTip.add(tooltip_three);
-    	toolTip.add(tooltip_four);
     }
     
     //@author A0111824R
@@ -64,7 +48,7 @@ public class UICmdInputBox {
      * @author Tan Young Sing
      */
     public String getToolTip() {
-    	return toolTip.get(toolTipCounter);
+    	return toolTipManage.getToolTips(autoCompleteListener.getCurrentCmd(cmdInputBox.getText()));
     }
     
     //@author A0111824R
@@ -92,7 +76,7 @@ public class UICmdInputBox {
      * @author Tan Young Sing
      */
     private void addKeyReleasedListener() {
-        cmdInputBox.setOnKeyReleased(new UIAutoCompleteListener(this));
+        cmdInputBox.setOnKeyReleased(autoCompleteListener);
     }
     
     //@author A0111824R
@@ -110,7 +94,7 @@ public class UICmdInputBox {
      * @author Tan Young Sing
      */
     public void setSuggestionText(String output) {
-        suggestionText.setText("\u2022 " + output);
+        suggestionText.setText(output);
     }
     
     //@author A0111824R
@@ -119,7 +103,7 @@ public class UICmdInputBox {
      * @author Tan Young Sing
      */
     public void setGuideMsgText(String output) {
-    	guideMsgText.setText("\u2022 " + output);
+    	guideMsgText.setText(output);
     }
     
     //@author A0111824R
