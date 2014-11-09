@@ -123,12 +123,13 @@ class KeepTasksWithKeyword implements TaskFilter {
      * @author Sun Wang Jun
      */
     public KeepTasksWithKeyword(String keyword) {
-        this.keyword = keyword;
+        this.keyword = keyword.toUpperCase();
     }
     
     @Override
     public boolean apply(Task t) {
-        return t.getDescription().indexOf(this.keyword) > -1;        
+        String uppercaseDescription = t.getDescription().toUpperCase();
+        return uppercaseDescription.indexOf(this.keyword) > -1;        
     }
 }
 
