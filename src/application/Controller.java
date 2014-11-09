@@ -43,7 +43,7 @@ public class Controller extends Application {
         try {
             commandInfo = (new Parser()).getCommandInfo(input);
         } catch (MismatchedCommandException e) { // Need to change exception type.
-            uiComponent.setSuggestionText("Command is invalid");
+            uiComponent.setSuggestionText(TOOLTIP_BULLET + "Command is invalid");
             return;
         }
         
