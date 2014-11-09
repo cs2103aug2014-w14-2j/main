@@ -27,6 +27,7 @@ public class UIAutoComplete {
     
     final private int FIRST_WORD_IN_CMD = 1;
     final private int SECOND_WORD_IN_CMD = 2;
+    final private int EDIT_INDEX_POSITION = 1;
     
     private UICmdInputBox cmdInputBox;
     private ArrayList<String> commandList;
@@ -78,6 +79,7 @@ public class UIAutoComplete {
      */
     public void runAutoComplete(String command) {
     	String cmdUsed = getCommandText(command).trim();
+    	
     	if (isTheNWord(command, FIRST_WORD_IN_CMD)) {       
             String suggestedCmd = getSuggestions(command.toUpperCase());
             
@@ -99,10 +101,22 @@ public class UIAutoComplete {
             }
         } else if (isTheNWord(command, SECOND_WORD_IN_CMD) && cmdUsed.equalsIgnoreCase(EDIT_COMMAND)) {
         	 String suggestedCmd = cmdInputBox.getText() + "[]";
+        	 
+        	 
+        	 
+        	 
+        	 
         	 this.acListener.setNextPossibleCmd(suggestedCmd);
         } else {
             this.acListener.setNextPossibleCmd("");
         }
+    }
+    
+   
+    
+    private String getEditCommandIndex(String cmd) {
+    	String[] indexRetrieval = cmd.split(" ");
+    	return indexRetrieval[EDIT_INDEX_POSITION];
     }
     
     //@author A0111824R

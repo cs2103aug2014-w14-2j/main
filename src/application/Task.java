@@ -62,7 +62,6 @@ public class Task {
         modifiedAt = original.getModifiedAt();
         completedAt = original.getCompletedAt();
         deleted = original.isDeleted();
-        
     }
 
     /**

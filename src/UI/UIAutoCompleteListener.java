@@ -25,6 +25,8 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     final public String ADD_COMMAND = "ADD";
     final private String EDIT_COMMAND = "EDIT";
     final private String SEARCH_COMMAND = "SEARCH";
+    
+    final private int EDIT_COMMAND_STRUCTURE = 3;
      
     //@author A0111824R
     /**
@@ -79,7 +81,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     private boolean isEditCommand(String next) {
     	String[] cmdRetrieval = next.split(" ");
     	
-    	if(cmdRetrieval[0].equalsIgnoreCase(EDIT_COMMAND) && cmdRetrieval.length == 3) {
+    	if(cmdRetrieval[0].equalsIgnoreCase(EDIT_COMMAND) && cmdRetrieval.length == EDIT_COMMAND_STRUCTURE) {
     		return true;
     	}
     	return false;
