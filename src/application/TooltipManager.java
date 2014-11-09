@@ -19,6 +19,7 @@ public class TooltipManager {
     
     private static String TOOLTIP_MISC1 = "Typing the first letter of your command and <space> will auto-complete the command.";
     private static String TOOLTIP_MISC2 = "Enter QUIT command to terminate WaveWave.";
+    private static String TOOLTIP_MISC3 = "After undoing, you can revert by entering UNDO again.";
     
     private ArrayList<String> tooltipsAdd = new ArrayList<String>();
     private ArrayList<String> tooltipsEdit = new ArrayList<String>();
@@ -40,6 +41,7 @@ public class TooltipManager {
         tooltipsSearch.add(TOOLTIP_SEARCH3);
         tooltipsMisc.add(TOOLTIP_MISC1);
         tooltipsMisc.add(TOOLTIP_MISC2);
+        tooltipsMisc.add(TOOLTIP_MISC3);
     }
     
     private Integer getRandomInteger(int size) {

@@ -37,12 +37,15 @@ public class Controller extends Application {
         logger.log(Level.FINE, "runCommandInput(input: {0} )", input);
 
         CommandInfo commandInfo = null;
+        
+        // Ensures valid command input.
         try {
             commandInfo = (new Parser()).getCommandInfo(input);
         } catch (MismatchedCommandException e) { // Need to change exception type.
             uiComponent.setSuggestionText("Command is invalid");
             return;
         }
+        
         Message feedback = null;
         
         // Check for invalid IDs.
@@ -54,60 +57,52 @@ public class Controller extends Application {
             return;
         }
 
-        // Really should command pattern this now!
-        // Run the command.
-        try {            
+        // Run the command.         
             switch (commandInfo.getCommandType()) {
-                case "add":
-                    taskManager.add(commandInfo);
-                    // feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getID() + "");
-                    break;
-                case "delete":
-                    taskManager.delete(commandInfo);
-                    feedback = new MessageNotifyDelete(commandInfo.getTaskIDs());
-                    break;
-                case "edit":
-                    taskManager.edit(commandInfo);
-                    feedback = new MessageNotifyEdit(commandInfo.getTaskIDs().get(0));
-                    break;
-                case "undo":
-                    taskManager.undo(commandInfo, backup.getPastVersion());
-                    feedback = new MessageNotifyUndo();
-                    break;
-                case "complete":
-                    taskManager.complete(commandInfo);
-                    feedback = new MessageNotifyComplete(commandInfo.getTaskIDs());
-                    break;
-                case "home":
-                    break;
-                case "search":
-                    taskManager.clearIDMapping();
-                    uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
-                    uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search results");
-                case "show":
-                    taskManager.clearIDMapping();
-                    taskManager.setDaysToDisplay(commandInfo, configManager);
-                    uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
-                    uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search results");
-                    return;
-                case "quit":
-                case "exit":
-                    Platform.exit();
-                    break;
-                	
-            }
-        } catch (MismatchedCommandException e) {
-            logger.log(Level.SEVERE, e.toString(), e);
-            e.printStackTrace();
+            case "add":
+                taskManager.add(commandInfo);
+                break;
+            case "delete":
+                taskManager.delete(commandInfo);
+                feedback = new MessageNotifyDelete(commandInfo.getTaskIDs());
+                break;
+            case "edit":
+                taskManager.edit(commandInfo);
+                feedback = new MessageNotifyEdit(commandInfo.getTaskIDs().get(0));
+                break;
+            case "undo":
+                taskManager.undo(commandInfo, backup.getPastVersion());
+                feedback = new MessageNotifyUndo();
+                break;
+            case "complete":
+                taskManager.complete(commandInfo);
+                feedback = new MessageNotifyComplete(commandInfo.getTaskIDs());
+                break;
+            case "home":
+                break;
+            case "show":
+                taskManager.setDaysToDisplay(commandInfo, configManager);
+                // continues:
+            case "search":
+                taskManager.clearIDMapping();
+                uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
+                uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search results");
+                return;
+            case "quit":
+            case "exit":
+                Platform.exit();
+                break;
+            	
         }
         
         taskManager.clearIDMapping();
         uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
-        uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
+        uiComponent.updateLeftPanel(taskManager.getEvents(), "Events");
         
-        backup.storeBackup(taskManager.getAll());
-        dataStorage.saveTasks(taskManager.getList());
+        backup.storeBackup(taskManager.getFullList());
+        dataStorage.saveTasks(taskManager.getSanitizedList());
         
+        // Can only get display id after displaying.
         if ("add".equals(commandInfo.getCommandType())) {
             feedback = new MessageNotifyAdd(taskManager.getLastModifiedTask().getDisplayID());
         }
@@ -125,7 +120,22 @@ public class Controller extends Application {
      */
     public static void getTasks() {
         uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
-        uiComponent.updateLeftPanel(taskManager.getReminders(), "Events");
+        uiComponent.updateLeftPanel(taskManager.getEvents(), "Events");
+    }
+    
+    //@author A0110546R
+    /**
+     * For the UI to retrieve the Task given the display ID.
+     * @param displayID the displayID of the task.
+     */
+    public static Task getTaskFromDisplayID(String displayID) {
+        try {
+            return taskManager.getTaskFromDisplayID(displayID);
+        } catch (IllegalArgumentException e) {
+            uiComponent.setSuggestionText(e.getMessage());
+            // There is no need to log this.
+        }
+        return null;
     }
     
     //@author A0110546R
@@ -142,7 +152,7 @@ public class Controller extends Application {
         taskManager.setDaysToDisplay(configManager.getHomeViewType());
         
         backup = new Backup();
-        backup.storeBackup(taskManager.getAll());
+        backup.storeBackup(taskManager.getFullList());
     }
     
     //@author A0110546R
