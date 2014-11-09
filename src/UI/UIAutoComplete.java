@@ -15,6 +15,7 @@ public class UIAutoComplete {
     
     final private String MSG_COMMAND_SUGGESTION = "\u2022 Do you mean : %s. You can enter <space> key to complete.";
     final private String MSG_COMMAND_NOT_SUPPORTED = "\u2022 WaveWave would only support these sets of command <add> <delete> <edit> <search> <show> <complete> <show>";
+    final private String EDIT_TASKID_FOUND = "\u2022 Task ID : %s found, use the <space> key to autocomplete.";
     
     final public String ADD_COMMAND = "ADD";
     final private String DELETE_COMMAND = "DELETE";
@@ -104,9 +105,11 @@ public class UIAutoComplete {
                 this.acListener.setNextPossibleCmd(suggestedCmd);
             }
         } else if (isTheNWord(command, SECOND_WORD_IN_CMD) && cmdUsed.equalsIgnoreCase(EDIT_COMMAND)) {
-        	 Task selectedTask = Controller.getTaskFromDisplayID(getEditCommandIndex(command));
+        	 String taskID = getEditCommandIndex(command).toUpperCase();
+        	 Task selectedTask = Controller.getTaskFromDisplayID(taskID);
         	 
         	 if(selectedTask != null) {
+        		 cmdInputBox.setSuggestionText(String.format(EDIT_TASKID_FOUND, taskID));
             	 String taskDetails = parseEditText(selectedTask);
             	 String suggestedCmd = cmdInputBox.getText() + taskDetails;
             	 this.acListener.setNextPossibleCmd(suggestedCmd);
@@ -124,7 +127,7 @@ public class UIAutoComplete {
      * @author Tan Young Sing
      */
     private String parseEditText(Task selectedTask) {
-    	String editText = " [ " + selectedTask.getDescription() + " ] ";
+    	String editText = "[ " + selectedTask.getDescription() + " ] ";
     	
     	if(selectedTask.getDate() != null && selectedTask.getEndDate() == null) {
     		editText += selectedTask.getDate().toString(UI_DATETIMEFORMAT);

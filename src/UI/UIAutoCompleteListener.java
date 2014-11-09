@@ -129,7 +129,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
         	
             if(nextPossibleCommand.length() != 0) {
             	if(isAddCommand(nextPossibleCommand) || isSearchCommand(nextPossibleCommand)) {
-            		inputBox.setText(nextPossibleCommand + "[]");
+            		inputBox.setText(nextPossibleCommand + "[ ]");
             	} else {
             		inputBox.setText(nextPossibleCommand);
             	}
