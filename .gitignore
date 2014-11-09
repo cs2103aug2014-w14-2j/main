@@ -44,3 +44,8 @@ local.properties
 
 # Console output list
 consoleOutput.txt
+
+# Build files
+/build
+*.exe
+*.jar

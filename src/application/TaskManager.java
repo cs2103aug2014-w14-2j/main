@@ -9,18 +9,20 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
+import Parser.CommandInfo;
+
 //@author A0110546R
 /**
  * The manager that manipulates and contains the array list of Tasks.
  * 
  * @author Sun Wang Jun
  */
-class TaskManager {
+public class TaskManager {
     public static final char NORMAL_TASK_PREFIX = 'T';
     public static final char DATED_TASK_PREFIX = 'E';
     
     private ArrayList<Task> list;
-    private Task task; // Maybe this can act as "last modified task".
+    private Task lastModifiedTask;
     private Hashtable<String, Integer> idMapping;
     
     private ListDisplay eventsDisplay;
@@ -28,16 +30,28 @@ class TaskManager {
     
     private int daysToDisplay = 3;
     
-    public TaskManager() { // Maybe singleton this.
+    /**
+     * Initializes and sets up the task manager.
+     */
+    public TaskManager() {
         this.idMapping = new Hashtable<String, Integer>();
         this.eventsDisplay = new EventListDisplay();
         this.tasksDisplay = new TaskListDisplay();
     }
     
+    /**
+     * Sets the number of days to display in the default view.
+     * @param days number of days.
+     */
     public void setDaysToDisplay(int days) {
         this.daysToDisplay = days;
     }
     
+    /**
+     * Sets the number of days to display in the default view.
+     * @param commandInfo Use start and end time to determine the number of days.
+     * @param configManager The config manager to update and save the information to.
+     */
     public void setDaysToDisplay(CommandInfo commandInfo, ConfigManager configManager) {
         LocalDate today = new LocalDate();
         LocalDate startDay = new LocalDate();
@@ -55,7 +69,7 @@ class TaskManager {
      * Checks if the task displayID entered is valid.
      * 
      * @param displayID the task displayID the user entered.
-     * @return whether it exists in idMapping
+     * @return whether it exists in idMapping.
      */
     public boolean ensureValidDisplayID(String displayID) {
         return this.idMapping.containsKey(displayID);
@@ -64,8 +78,8 @@ class TaskManager {
     /**
      * Used to map displayID to actual taskID.
      * 
-     * @param displayID
-     * @return taskID
+     * @param displayID the display ID that is shown in the list view.
+     * @return taskID the internal ID of the Task.
      */
     private int mapDisplayIDtoActualID(String displayID) {
         assert(this.idMapping.containsKey(displayID) == true);
@@ -79,13 +93,10 @@ class TaskManager {
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "add".
      */
-    public ArrayList<Task> add(CommandInfo commandInfo) throws MismatchedCommandException {
-        if (!"add".equals(commandInfo.getCommandType())) {
-            throw new MismatchedCommandException();
-        }
-        
-        this.task = new Task(commandInfo);
-        this.list.add(this.task);
+    public ArrayList<Task> add(CommandInfo commandInfo) {
+        assert(commandInfo.getCommandType() == "add");
+        this.lastModifiedTask = new Task(commandInfo);
+        this.list.add(this.lastModifiedTask);
         
         return this.list;
     }
@@ -97,16 +108,12 @@ class TaskManager {
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "edit".
      */
-    public ArrayList<Task> edit(CommandInfo commandInfo) throws MismatchedCommandException {
-        if (!"edit".equals(commandInfo.getCommandType())) {
-            throw new MismatchedCommandException();
-        }
-        
-        // Waiting for proper sequence flow.
+    public ArrayList<Task> edit(CommandInfo commandInfo) {  
+        assert(commandInfo.getCommandType() == "edit");
         int taskId = this.mapDisplayIDtoActualID(commandInfo.getTaskIDs().get(0));       
-        this.task = new Task(commandInfo, taskId);
+        this.lastModifiedTask = new Task(commandInfo, taskId);
         
-        this.list.set(taskId, this.task); // Replaces the task.
+        this.list.set(taskId, this.lastModifiedTask); // Replaces the task.
         
         return this.list;
     }
@@ -118,11 +125,8 @@ class TaskManager {
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "delete".
      */
-    public ArrayList<Task> delete(CommandInfo commandInfo) throws MismatchedCommandException {
-        if (!"delete".equals(commandInfo.getCommandType())) {
-            throw new MismatchedCommandException();
-        }
-        
+    public ArrayList<Task> delete(CommandInfo commandInfo) {
+        assert(commandInfo.getCommandType() == "delete");
         ListIterator<String> li = commandInfo.getTaskIDs().listIterator();
         while (li.hasNext()) {
             String displayID = li.next();
@@ -140,11 +144,8 @@ class TaskManager {
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "complete".
      */
-    public ArrayList<Task> complete(CommandInfo commandInfo) throws MismatchedCommandException {
-        if (!"complete".equals(commandInfo.getCommandType())) {
-            throw new MismatchedCommandException();
-        }
-        
+    public ArrayList<Task> complete(CommandInfo commandInfo) {   
+        assert(commandInfo.getCommandType() == "complete");
         ListIterator<String> li = commandInfo.getTaskIDs().listIterator();
         while (li.hasNext()) {
             String displayID = li.next();
@@ -163,31 +164,17 @@ class TaskManager {
      * @return the updated list of tasks.
      * @throws MismatchedCommandException if not of type "undo".
      */
-    public ArrayList<Task> undo(CommandInfo commandInfo, ArrayList<Task> backup) 
-            throws MismatchedCommandException {
-        if (!"undo".equals(commandInfo.getCommandType())) {
-            throw new MismatchedCommandException();
-        }
+    public ArrayList<Task> undo(CommandInfo commandInfo, ArrayList<Task> backup) {
+        assert(commandInfo.getCommandType() == "undo");
         this.list = new ArrayList<Task>(backup);
         return this.list;
     }
     
     /**
-     * Displays completed tasks. (temporary)
-     * 
-     * @param commandInfo of type "search complete" and contains task id.
-     * @return the updated list of tasks.
-     * @throws MismatchedCommandException if not of type "search complete"
+     * Returns the full list of tasks, including the deleted tasks.
+     * @return the full list of tasks, including the deleted tasks.
      */
-    public ArrayList<Task> display(CommandInfo commandInfo) throws MismatchedCommandException {
-        if (!"search complete".equals(commandInfo.getCommandType())) {
-            throw new MismatchedCommandException();
-        }
-        
-        return this.list;
-    }
-    
-    public ArrayList<Task> getAll() {
+    public ArrayList<Task> getFullList() {
         return this.list;
     }
 
@@ -196,7 +183,7 @@ class TaskManager {
      * 
      * @return the full list of tasks, ignoring the deleted tasks.
      */
-    public ArrayList<Task> getList() {
+    public ArrayList<Task> getSanitizedList() {
         TaskListFilter filter = new TaskListFilter(true); // Does a AND/&& filtering.
         filter.add(new IgnoreTasksDeleted());
         return filter.apply(this.list);
@@ -221,7 +208,7 @@ class TaskManager {
      * 
      * @return the tasks with start dates.
      */
-    public ArrayList<Task> getReminders() {
+    public ArrayList<Task> getEvents() {
         TaskListFilter filter = new TaskListFilter(false); // Does a OR/|| filtering.
         filter.add(new KeepTasksCompletedToday()); // or,
         filter.add(new KeepTasksOutstanding());
@@ -348,7 +335,7 @@ class TaskManager {
      * @return the last task modified.
      */    
     public Task getLastModifiedTask() {
-        return this.task;
+        return this.lastModifiedTask;
     }
     
     
@@ -377,5 +364,17 @@ class TaskManager {
      * Clears the ID mapping hashtable.
      */
     public void clearIDMapping() { this.idMapping.clear(); }
+    
+    /**
+     * Returns the Task associated with this displayID.
+     * @param displayID the displayID of the task.
+     * @throws IllegalArgumentException if the displayID is not displayed in the views.
+     */
+    public Task getTaskFromDisplayID(String displayID) throws IllegalArgumentException {
+        if (!this.ensureValidDisplayID(displayID)) {
+            throw new IllegalArgumentException("There is no such display ID.");
+        }
+        return this.list.get(this.mapDisplayIDtoActualID(displayID));
+    }
     
 }
