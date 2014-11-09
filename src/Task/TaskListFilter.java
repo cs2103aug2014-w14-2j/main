@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 
 //@author A0110546R
 interface TaskFilter {
@@ -141,56 +140,6 @@ class KeepTasksWithPriority implements TaskFilter {
     @Override
     public boolean apply(Task t) {
          return t.getPriority() > 0;
-    }
-}
-
-/**
- * Filter to keep today's events. 
- * @author Sun Wang Jun
- */
-class KeepTasksToShowToday implements TaskFilter {
-    private LocalDate today;
-    public KeepTasksToShowToday() {
-        this.today = new LocalDate();
-    }
-    
-    @Override
-    public boolean apply(Task t) {
-        LocalDate date = new LocalDate(t.getDate());
-        LocalDate endDate = new LocalDate(t.getEndDate());
-        
-        if (date.equals(this.today)) {
-            return true;
-        }
-        // If start date is before today, and end date is today or after,
-        else if (date.isBefore(this.today) &&
-                (endDate.equals(this.today) || endDate.isAfter(this.today))) {
-            return true;
-        }
-        return false;
-    }
-}
-
-/**
- * Filter to keep the next day's events. 
- * @author Sun Wang Jun
- */
-class KeepTasksToShowTheNextDay implements TaskFilter {
-    private LocalDate today;
-    private LocalDate nextDay;
-    public KeepTasksToShowTheNextDay() {
-        this.today = new LocalDate();
-    }
-    @Override
-    public boolean apply(Task t) {
-        LocalDate date = new LocalDate(t.getDate());
-        if (date.isAfter(this.today) && this.nextDay == null) { // Different date,
-            this.nextDay = date; // Set the next day's date.
-        }
-        if (this.nextDay != null && date.equals(this.nextDay)) { // Same as next day,
-            return true; // Show the task/
-        }
-        return false;
     }
 }
 

@@ -43,6 +43,9 @@ public class TaskComparatorTest {
         assertEquals("b is behind", b, tasks.get(1));
     }
 
+    /**
+     * Tests that the start date comparator works as it should.
+     */
     @Test
     public void testStartDateComparator() {
         DateTime date = new DateTime(2014, 10, 30, 12, 44, 0); // 30 October 2014, 12:44:00
@@ -56,6 +59,9 @@ public class TaskComparatorTest {
         assertEquals("a is now behind", a, tasks.get(1));
     }
     
+    /**
+     * Tests that the end date comparator works as it should. 
+     */
     @Test
     public void testEndDateComparator() {
         DateTime date = new DateTime(2014, 10, 30, 12, 44, 0); // 30 October 2014, 12:44:00
@@ -73,10 +79,13 @@ public class TaskComparatorTest {
         assertEquals("b is now in front", b, tasks.get(0));
     }
     
+    /**
+     * Tests that the priority comparator works as it should.
+     */
     @Test
     public void testPriorityComparator() {
-        a.setPriority(1);
-        b.setPriority(3);
+        a.setPriority(0);
+        b.setPriority(1);
         
         Collections.sort(tasks, new PriorityComparator());
         
@@ -84,15 +93,16 @@ public class TaskComparatorTest {
         assertEquals("a is now behind", a, tasks.get(1));        
     }
     
+    /**
+     * Tests that the modified at comparator works as it should.
+     */
     @Test
     public void testModifiedAtComparator() {
         try {
-            Thread.sleep(100);
-        } catch (Exception e) {
-            // ???
-        }
+            Thread.sleep(100); // So that modified at time is significantly different.
+        } catch (Exception e) {}
         
-        b.setPriority(0);
+        b.setPriority(0); // So that b is "updated".
         
         Collections.sort(tasks, new ModifiedAtComparator());
         

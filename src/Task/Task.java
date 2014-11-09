@@ -225,6 +225,8 @@ public class Task {
      */
     public void setPriority(int priority) {
         // Check if priority is negative.
+        if (priority > 0) { priority = 1; }
+        else { priority = 0; }
         this.priority = priority;
         this.modifiedAt = new DateTime();
     }
