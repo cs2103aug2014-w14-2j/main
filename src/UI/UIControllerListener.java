@@ -42,8 +42,6 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
             cmdHistory.add(0, cmdInputBox.getText());
             cmdInputBox.setText("");
             cmdIndex = 0;
-            
-            cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
         } 
         
         if (event.getCode().equals(KeyCode.ESCAPE)) {
