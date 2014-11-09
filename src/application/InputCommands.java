@@ -36,4 +36,24 @@ public class InputCommands {
         cmdList.add(HELP);
         return cmdList;
     }
+    
+    //@author A0111824R
+    public static String getEditCommand() {
+        return EDIT;
+    }
+    
+    //@author A0111824R
+    public static String getAddCommand() {
+        return ADD;
+    }
+    
+    //@author A0111824R
+    public static String getSearchCommand() {
+        return SEARCH;
+    }   
+    
+    //@author A0111824R
+    public static String getHelpCommand() {
+        return HELP;
+    }
 }
