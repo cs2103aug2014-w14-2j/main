@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import application.InputCommands;
 import edu.emory.mathcs.backport.java.util.Collections;
 
+//@author A0111824R
 public class UIHelp { 
 	private ArrayList<String> commandList;
 	private int midPoint;
@@ -20,12 +21,14 @@ public class UIHelp {
 	private final String UI_HELP_UNDO = "undo: to undo a previous operation";
 	private final String UI_HELP_QUIT = "quit: to quit the program.";
 	
+	//@author A0111824R
 	public UIHelp() {
 		commandList = InputCommands.getCommandList();
 		Collections.sort(commandList);
 		this.midPoint = this.commandList.size()/2;
 	}
 	
+	//@author A0111824R
 	public ArrayList<UITaskListItem> generateLeftHelpList() {
 		ArrayList<UITaskListItem> helpList = new ArrayList<UITaskListItem>();
 		
@@ -44,6 +47,7 @@ public class UIHelp {
 		return helpList;
 	}
 	
+	//@author A0111824R
 	public ArrayList<UITaskListItem> generateRightHelpList() {
 		ArrayList<UITaskListItem> helpList = new ArrayList<UITaskListItem>();
 		
@@ -63,6 +67,7 @@ public class UIHelp {
 		return helpList;
 	}
 	
+	//@author A0111824R
 	private String getHelpText(String cmd) {
 		switch(cmd.toUpperCase()) {
 			case "ADD": return UI_HELP_ADD;
@@ -76,9 +81,5 @@ public class UIHelp {
 			case "QUIT": return UI_HELP_QUIT;
 			default: return "";
 		}
-	}
-	
-	
-	
-    
+	}  
 }

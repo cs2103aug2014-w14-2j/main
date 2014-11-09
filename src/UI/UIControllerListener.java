@@ -69,7 +69,10 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
         
         if (event.getCode().equals(KeyCode.ESCAPE)) {
         	cmdInputBox.setText("");
-        	cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
+        	
+        	if(cmdInputBox.getText().length() != 0) {
+        		cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
+        	}
         }
         
         if (event.getCode().isArrowKey() && !cmdHistory.isEmpty()) {
@@ -83,12 +86,18 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
         		cmdInputBox.setText(cmdHistory.get(cmdIndex));
         		cmdInputBox.resetPositionCaret();
         		cmdIndex++;
-        		cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
+        		
+        		if(cmdInputBox.getText().length() != 0) { 
+        			cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
+        		}
         	} else if (event.getCode().toString().equals("DOWN")) {
         		cmdInputBox.setText(cmdHistory.get(cmdIndex));
         		cmdInputBox.resetPositionCaret();
         		cmdIndex--;
-        		cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
+        		
+        		if(cmdInputBox.getText().length() != 0) { 
+        			cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
+        		}
         	}
         }
     }
