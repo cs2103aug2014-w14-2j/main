@@ -318,6 +318,24 @@ public class UIComponent {
      *
      * @author Tan Young Sing
      */
+	public void setRightPanelTitle(String title) {
+		floatingTaskTitle.setText(title);
+	}
+	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
+	public void setLeftPanelTitle(String title) {
+		reminderTaskTitle.setText(title);
+	}
+	
+    //@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
 	public UITaskListView getRightView () {
 		return floatingTaskListView;
 	}

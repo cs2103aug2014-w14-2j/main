@@ -43,6 +43,8 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
     private void displayHelpLists() {
     	ui.getLeftView().overwriteView(uiHelp.generateLeftHelpList());
     	ui.getRightView().overwriteView(uiHelp.generateRightHelpList());
+    	ui.setLeftPanelTitle("COMMAND (A-E)");
+    	ui.setRightPanelTitle("COMMAND (F-Z)");
     }
     
     //@author A0111824R
