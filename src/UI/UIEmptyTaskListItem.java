@@ -11,7 +11,7 @@ import task.Task;
  */
 public class UIEmptyTaskListItem extends UITaskListItem {
     
-	private final String LISTITEM_HEADER_TITLE_RIGHT =  "No Scheduled Task";
+	private final String LISTITEM_HEADER_TITLE_RIGHT =  "No Scheduled To-Dos";
 	private final String LISTITEM_HEADER_TITLE_LEFT =  "No Scheduled Event";
 	
 	//@author A0111824R

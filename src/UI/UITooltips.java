@@ -27,7 +27,7 @@ public class UITooltips {
     private static String TOOLTIP_MISC2 = "Enter QUIT command to terminate WaveWave.";
     private static String TOOLTIP_MISC3 = "After undoing, you can revert by entering UNDO again.";
 
-    private static String TOOLTIP_BULLET = "\u2022 ";
+    public static String TOOLTIP_BULLET = "\u2022 ";
 
     private static String TOOLTIP_MISC4 = "All tasks are stored in an external file. You can directly modify it as well.";
     private static String TOOLTIP_MISC5 = "\"by <day>\" is understood as 23:59pm of that day.";

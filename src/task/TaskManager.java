@@ -240,6 +240,7 @@ public class TaskManager {
     public ArrayList<Task> getTasks() {
         TaskListFilter filter = new TaskListFilter(false); // Does a OR/|| filtering.
         filter.add(new KeepTasksCompletedToday()); // or,
+        filter.add(new KeepTasksOutstanding());
         filter.add(new KeepReminders());
         filter.add(new KeepTasksBetween(this.daysToDisplay));
         this.tasksDisplay.replaceFilter(filter);

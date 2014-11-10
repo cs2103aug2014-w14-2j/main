@@ -31,7 +31,6 @@ public class Controller extends Application {
     private static final String NAME_SEARCH_RESULTS = "search results";
     
     private static final WaveLogger logger = new WaveLogger("Controller");
-    private static String TOOLTIP_BULLET = "\u2022 ";
     
     private static DataStorage dataStorage;    
     private static TaskManager taskManager;
@@ -145,7 +144,7 @@ public class Controller extends Application {
         try {
             return taskManager.getTaskFromDisplayID(displayID.toUpperCase());
         } catch (IllegalArgumentException e) {
-            uiComponent.setSuggestionText(TOOLTIP_BULLET  + e.getMessage());
+            uiComponent.setSuggestionText(e.getMessage());
             // There is no need to log this.
         }
         return null;

@@ -355,7 +355,7 @@ public class UIComponent {
      * @author Tan Young Sing
      */
 	public void setSuggestionText(String text) {
-		suggestionText.setText(text);
+		suggestionText.setText(UITooltips.TOOLTIP_BULLET + text);
 	}
 	
     //@author A0111824R
