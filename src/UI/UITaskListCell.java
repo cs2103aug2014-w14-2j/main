@@ -42,7 +42,7 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
     private final String UI_TIMEFORMAT = "h:mm a";
     private final String UI_DATETIMEFORMAT = "dd MMM yyy, h:mm a";
     
-    private final String UI_OVERDUE_LABEL = "Outstanding";
+    private final String UI_OVERDUE_LABEL = "Overdue";
     private final String UI_DEFAULT_PADDING = "-fx-padding: 0 5 0 5;";
     private final String UI_HEADING_STYLE = " -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;";
     private final String UI_EMPTY_TASK_STYLE = "-fx-background-color: rgb(227, 227, 227, 1);";
@@ -50,7 +50,7 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
     private final String UI_HELP_TASK_DESIGN = "-fx-padding: 3 0 3 0; -fx-background-color: #44b6ae;";
     
     private final int UI_OUTSTANDING_HEIGHT = 15;
-    private final int UI_OUTSTANDING_WIDTH = 290;
+    private final int UI_OUTSTANDING_WIDTH = 235;
    
 	private final String LISTITEM_HEADER = "header";
 	private final String LISTITEM_DEFAULT = "default";
@@ -233,12 +233,11 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
      */
     private StackPane createOutstandingLabel() {
     	Rectangle outstandingLabel = createRectangle(UI_OUTSTANDING_WIDTH, UI_OUTSTANDING_HEIGHT, 0, 0, Color.web(COLOR_OUTSTANDING));
-    	Text labelText = createText(UI_OVERDUE_LABEL, 190, 10, UI_DESCRIPTION_FONT, FontWeight.BOLD, Color.WHITE);
+    	Text labelText = createText(UI_OVERDUE_LABEL, 225, 10, UI_DESCRIPTION_FONT, FontWeight.BOLD, Color.WHITE);
     	
 		StackPane stack = new StackPane();
-		StackPane.setAlignment(outstandingLabel, Pos.TOP_LEFT);
-		StackPane.setMargin(labelText, new Insets(0, 50, 0, 70));
 		stack.getChildren().addAll(outstandingLabel, labelText);
+		StackPane.setAlignment(labelText, Pos.CENTER);
     	
     	return stack;
     }
