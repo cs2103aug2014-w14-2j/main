@@ -14,8 +14,6 @@ import application.Message;
 
 //@author A0090971Y
 /** This class stores all information that a Command object needs to execute a command 
- * 
- * 
  */
 public class CommandInfo {
     private String commandType;
@@ -192,7 +190,7 @@ public class CommandInfo {
     
     //@author A0090971Y
     /**
-     * 
+     * This returns the end time of the task 
      * @return the end time in Joda-Time DateTime format
      */
     public DateTime getEndDateTime() {
@@ -206,7 +204,7 @@ public class CommandInfo {
 
     //@author A0090971Y
     /**
-     * 
+     * This returns the start time of the task
      * @return a message when there is one otherwise return null
      */
     public String getMessage() {
