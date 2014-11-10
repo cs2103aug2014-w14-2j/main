@@ -91,7 +91,7 @@ public class DataStorageTest {
     
     //@author A0115864B
     @Test
-    public void testConvert1() {
+    public void testConvertTaskToJSONObject() {
         test = new DataStorage();
         
         Task task = new Task();
@@ -123,7 +123,7 @@ public class DataStorageTest {
     
     //@author A0115864B
     @Test
-    public void testConvert2() {
+    public void testConvertJSONObjectToTask() {
         test = new DataStorage();
         
         JSONObject obj = new JSONObject();
