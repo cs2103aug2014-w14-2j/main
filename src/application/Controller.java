@@ -26,6 +26,9 @@ import UI.UIComponent;
  * @author Sun Wang Jun
  */
 public class Controller extends Application {
+    private static final String NAME_TODOS = "To-dos";
+    private static final String NAME_EVENTS = "Events";
+    private static final String NAME_SEARCH_RESULTS = "search results";
     
     private static final WaveLogger logger = new WaveLogger("Controller");
     private static String TOOLTIP_BULLET = "\u2022 ";
@@ -95,8 +98,8 @@ public class Controller extends Application {
                 // continues:
             case InputCommands.SEARCH:
                 taskManager.clearIDMapping();
-                uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), "Tasks search results");
-                uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), "Events search results");
+                uiComponent.updateRightPanel(taskManager.getSearchedTasks(commandInfo), NAME_TODOS + " " + NAME_SEARCH_RESULTS);
+                uiComponent.updateLeftPanel(taskManager.getSearchedEvents(commandInfo), NAME_EVENTS + " " + NAME_SEARCH_RESULTS);
                 return;
             case InputCommands.QUIT:
             case InputCommands.EXIT:
@@ -106,8 +109,8 @@ public class Controller extends Application {
         }
         
         taskManager.clearIDMapping();
-        uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
-        uiComponent.updateLeftPanel(taskManager.getEvents(), "Events");
+        uiComponent.updateRightPanel(taskManager.getTasks(), NAME_TODOS);
+        uiComponent.updateLeftPanel(taskManager.getEvents(), NAME_EVENTS);
         
         backup.storeBackup(taskManager.getFullList());
         dataStorage.saveTasks(taskManager.getSanitizedList());
@@ -129,8 +132,8 @@ public class Controller extends Application {
      * For the UI to retrieve the list of tasks after it is initialized.
      */
     public static void getTasks() {
-        uiComponent.updateRightPanel(taskManager.getTasks(), "Tasks");
-        uiComponent.updateLeftPanel(taskManager.getEvents(), "Events");
+        uiComponent.updateRightPanel(taskManager.getTasks(), NAME_TODOS);
+        uiComponent.updateLeftPanel(taskManager.getEvents(), NAME_EVENTS);
     }
     
     //@author A0110546R
@@ -162,7 +165,7 @@ public class Controller extends Application {
         backup = new Backup();
         backup.storeBackup(taskManager.getFullList());
         
-        new DateTimeParser("start now");
+        new DateTimeParser("start now"); // To reduce lag on adding the first event.
     }
     
     //@author A0110546R
