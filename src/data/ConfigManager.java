@@ -1,4 +1,4 @@
-package application;
+package data;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,8 @@ import java.util.logging.Level;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import application.WaveLogger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
