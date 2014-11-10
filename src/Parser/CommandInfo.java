@@ -10,6 +10,7 @@ import org.joda.time.DateTimeComparator;
 import task.TaskManager;
 import application.InputCommands;
 import application.InvalidCommandException;
+import application.Message;
 
 //@author A0090971Y
 /** This class stores all information that a Command object needs to execute a command 
@@ -98,7 +99,7 @@ public class CommandInfo {
      * @throws InvalidCommandException
      */
     private void validateUserInput() throws InvalidCommandException {
-        boolean isValid = false;
+        boolean isValid = false;  
         for (int i = 0; i<InputCommands.getCommandList().size(); i++) {
             if (this.commandType.equalsIgnoreCase(InputCommands.getCommandList().get(i))) {
                 isValid = true;
@@ -146,7 +147,7 @@ public class CommandInfo {
 
     //@author A0090971Y
     /**
-     * 
+     * This returns the list of task IDs 
      * @return an ArrayList of task IDs
      */
     public ArrayList<String> getTaskIDs() {
@@ -155,7 +156,7 @@ public class CommandInfo {
     
     //@author A0090971Y
     /**
-     * 
+     * This returns the priority of the task, 1 indicates high, 0 indicates no priority
      * @return an integer indicate the level of priority, the larger the integer, the higher the priority
      */
     public int getPriority(){
@@ -214,7 +215,7 @@ public class CommandInfo {
     
     //@author A0090971Y
     /**
-     * 
+     * This returns the boolean to indicate if the user searches a completed task.
      * @return a boolean to indicate if the user searches a completed task, true for searching completed tasks, false for searching not completed tasks
      */
     public boolean isCompleted(){

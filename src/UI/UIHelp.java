@@ -63,7 +63,6 @@ public class UIHelp {
 				helpList.add(helpDescriptionItem);
 			}
 		}
-		
 		return helpList;
 	}
 	

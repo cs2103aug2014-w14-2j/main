@@ -43,10 +43,10 @@ public class Parser {
         DateTime endDateTime = changeToDateTime(parser.getEndDateTime());
         if (isDeadline(content,startDateTime,endDateTime)) {
             endDateTime = startDateTime;
-            startDateTime = null;
-            endDateTime = formatEndDateTime(endDateTime,content);
+            startDateTime = null;          
         }
         startDateTime = formatStartDateTime(startDateTime,content);
+        endDateTime = formatEndDateTime(endDateTime,content);
         boolean completed = getComplete(content);
         try {
             CommandInfo cmdInfo = new CommandInfo(commandType, taskIDs, taskDesc,startDateTime,endDateTime, priority,completed);
@@ -58,7 +58,13 @@ public class Parser {
     }
 
     //@author A0090971Y
-    private DateTime formatEndDateTime(DateTime dt,String content) {
+    /**
+     * format the end time to 23:59 if the user only enters the end date which does not contain digits
+     * @param dt
+     * @param content
+     * @return
+     */
+    private DateTime formatEndDateTime(DateTime dt,String content) {  
         if (dt == null) {
             return dt;
         }
@@ -72,6 +78,12 @@ public class Parser {
     }
 
     //@author A0090971Y
+    /**
+     * format the start time to 12:00am if the user only enters the start date which does not contain digits
+     * @param dt
+     * @param content
+     * @return
+     */
     private DateTime formatStartDateTime(DateTime dt,String content) {
         if (dt == null) {
             return dt;
@@ -121,6 +133,7 @@ public class Parser {
         }
         return desc;
     }
+    
     //@author A0090971Y
     private boolean isDeadline(String content,DateTime startDT, DateTime endDT) {
         for (int i = 0; i<timePrepositions.length;i++) {
