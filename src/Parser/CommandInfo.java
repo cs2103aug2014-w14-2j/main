@@ -10,6 +10,7 @@ import org.joda.time.DateTimeComparator;
 import task.TaskManager;
 import application.InputCommands;
 import application.InvalidCommandException;
+import application.Message;
 
 //@author A0090971Y
 /** This class stores all information that a Command object needs to execute a command 
@@ -98,7 +99,7 @@ public class CommandInfo {
      * @throws InvalidCommandException
      */
     private void validateUserInput() throws InvalidCommandException {
-        boolean isValid = false;
+        boolean isValid = false;  
         for (int i = 0; i<InputCommands.getCommandList().size(); i++) {
             if (this.commandType.equalsIgnoreCase(InputCommands.getCommandList().get(i))) {
                 isValid = true;
