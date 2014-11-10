@@ -1,5 +1,6 @@
 package UI;
 
+import java.util.ArrayList;
 import application.TooltipManager;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -18,7 +19,7 @@ public class UICmdInputBox {
     
     private final int CMDINPUT_HEIGHT = 35;
     private final String CMDINPUT_PROMPT_TEXT = "Ask WaveWave to do something.";
-    private TooltipManager toolTipManage;
+    private UITooltips toolTipManage;
     private UIAutoCompleteListener autoCompleteListener;
     private UIComponent ui;
 
@@ -33,7 +34,7 @@ public class UICmdInputBox {
         this.suggestionText = suggestionText;
         this.guideMsgText = guideMsgText;
         this.cmdInputBox = new TextField();
-        this.toolTipManage = new TooltipManager();
+        this.toolTipManage = new UITooltips();
         this.autoCompleteListener = new UIAutoCompleteListener(this);
         this.ui = ui;
         

@@ -15,6 +15,7 @@ import application.WaveLogger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+//@author A0115864B
 /**
  * ConfigManager stores the default view type for WaveWave into an external json file.
  * View type is stored separately so that the view is maintained for next sessions.
@@ -36,6 +37,18 @@ public class ConfigManager {
      */
     public ConfigManager() {
         filename = "Config.json";
+        initiateFile();
+    }
+    
+    //@author A0115864B
+    /**
+     * Constructor when filename is specified
+     * Used only for unit testing
+     * 
+     * @param name filename to use for testing
+     */
+    public ConfigManager(String name) {
+        filename = name;
         initiateFile();
     }
     
@@ -97,5 +110,4 @@ public class ConfigManager {
             logger.log(Level.SEVERE, e.toString(), e);
         }
     }
-
 }

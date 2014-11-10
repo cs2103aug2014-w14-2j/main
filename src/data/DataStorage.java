@@ -23,6 +23,7 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import task.Task;
 
+//@author A0115864B
 /**
  * Data storage component that delivers data between Controller and external storage.
  * 
@@ -133,8 +134,7 @@ public class DataStorage {
     public ArrayList<Task> convertJSONArrayToArrayList(JSONArray array) {
         ArrayList<Task> list = new ArrayList<Task>();
         for (int i = 0 ; i < array.size() ; i++) {
-            JSONObject obj = (JSONObject) array.get(i);
-            list.add(convertJSONObjectToTask(obj));
+            list.add(convertJSONObjectToTask((JSONObject) array.get(i)));
         }
         return list;
     }
@@ -149,8 +149,7 @@ public class DataStorage {
     public JSONArray convertArrayListToJSONArray(ArrayList<Task> list) {
         tasks.clear();
         for (int i = 0 ; i < list.size() ; i++) {
-            Task task = list.get(i);
-            tasks.add((JSONObject) convertTaskToJSONObject(task));
+            tasks.add(convertTaskToJSONObject(list.get(i)));
         }
         return tasks;
     }

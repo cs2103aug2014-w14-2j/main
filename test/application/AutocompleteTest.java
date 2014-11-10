@@ -15,7 +15,7 @@ import org.hamcrest.Matcher;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import Task.Task;
+import task.Task;
 import UI.UIAutoComplete;
 import UI.UIAutoCompleteListener;
 import UI.UICmdInputBox;
