@@ -1,7 +1,7 @@
 /**
  * 
  */
-package Task;
+package task;
 
 import static org.junit.Assert.*;
 
@@ -10,7 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import Task.Task;
+import task.Task;
 
 //@author A0110546R
 /**
@@ -30,7 +30,7 @@ public class TaskTest {
     }
 
     /**
-     * Test method for {@link Task.Task#getID()}.
+     * Test method for {@link task.Task#getID()}.
      */
     @Test
     public void testGetId() {
@@ -38,7 +38,7 @@ public class TaskTest {
     }
     
     /**
-     * Test method for {@link Task.Task#displayID()}.
+     * Test method for {@link task.Task#displayID()}.
      */
     @Test
     public void testDisplayId() {
@@ -50,7 +50,7 @@ public class TaskTest {
     }
 
     /**
-     * Test method for {@link Task.Task#description}.
+     * Test method for {@link task.Task#description}.
      */
     @Test
     public void testDescription() {
@@ -62,7 +62,7 @@ public class TaskTest {
     }
 
     /**
-     * Test method for {@link Task.Task#date}.
+     * Test method for {@link task.Task#date}.
      */
     @Test
     public void testDate() {
@@ -77,7 +77,7 @@ public class TaskTest {
     }
 
     /**
-     * Test method for {@link Task.Task#endDate}.
+     * Test method for {@link task.Task#endDate}.
      */
     @Test
     public void testEndDate() {
@@ -92,7 +92,7 @@ public class TaskTest {
     }
 
     /**
-     * Test method for {@link Task.Task#completed}.
+     * Test method for {@link task.Task#completed}.
      */
     @Test
     public void testCompleted() {
@@ -106,7 +106,7 @@ public class TaskTest {
     }
 
     /**
-     * Test method for {@link Task.Task#priority}.
+     * Test method for {@link task.Task#priority}.
      */
     @Test
     public void testPriority() {

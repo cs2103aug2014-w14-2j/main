@@ -2,7 +2,7 @@ package UI;
 
 import org.joda.time.DateTime;
 
-import Task.Task;
+import task.Task;
 
 //@author A0111824R
 /**
@@ -25,7 +25,6 @@ public class UIEmptyTaskListItem extends UITaskListItem {
 		super(task, date, isLeftPane);
 		this.isLeftPane = isLeftPane;
 		init(task, date);
-		
 	}
 	
 	//@author A0111824R

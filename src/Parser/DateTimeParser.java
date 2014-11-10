@@ -2,7 +2,6 @@ package Parser;
 
 import java.util.Date;
 import java.util.List;
-
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
 
@@ -16,7 +15,7 @@ public class DateTimeParser {
      * constructor for DateTimeParser class
      * @param userInput
      */
-    DateTimeParser(String userInput){
+    public DateTimeParser(String userInput){
         Parser parser = new Parser();
         List<DateGroup> groups = parser.parse(userInput);
         {

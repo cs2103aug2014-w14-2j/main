@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
@@ -32,15 +33,22 @@ public class WaveLogger {
      */
     public WaveLogger(String name) {
         this.logger = Logger.getLogger(name);
+        
+        try { // Creates the log directory if it does not exist.
+            new File("log").mkdirs();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+        
         try {
             this.fileHandler = new FileHandler("log\\" + name + ".log");
             this.fileHandler.setFormatter(new SimpleFormatter());
             this.logger.addHandler(this.fileHandler);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // This will log to the console.
             logger.log(Level.SEVERE, null, e);
         }
+        
         this.logger.setLevel(Level.FINEST);
         
         // If not in console output list...

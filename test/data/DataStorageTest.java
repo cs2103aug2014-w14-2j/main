@@ -15,7 +15,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
-import Task.Task;
+import task.Task;
 import data.DataStorage;
 
 //@author A0115864B

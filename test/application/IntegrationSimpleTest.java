@@ -12,9 +12,9 @@ import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.Test;
 
+import task.Task;
+import task.TaskManager;
 import data.DataStorage;
-import Task.Task;
-import Task.TaskManager;
 import UI.UIComponent;
 
 import java.lang.reflect.Field;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 
-import Task.Task;
+import task.Task;
 
 //@author A0111824R
 /**
@@ -34,7 +34,6 @@ public class UIEventTaskListView extends UITaskListView {
 		taskList.setOnKeyPressed(new UITaskListViewListener(CMD_DELETE_EVENT_TASK, cmdInputBox, this));
 	}
 	
-	
 	//@author A0111824R
     /**
      * @param items - ArrayList of task to be displayed on the ListView
@@ -48,8 +47,7 @@ public class UIEventTaskListView extends UITaskListView {
 	    listItems.add(item);
 	    return listItems;
 	}
-		
-	
+			
 	//@author A0111824R
     /**
      * @param takes in an arrayList of Tasks object to be displayed on the Listview
@@ -86,6 +84,4 @@ public class UIEventTaskListView extends UITaskListView {
 
     	return listItems;
     }
-	
-
 }

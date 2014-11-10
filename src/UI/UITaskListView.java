@@ -2,7 +2,7 @@ package UI;
 
 import java.util.ArrayList;
 
-import Task.Task;
+import task.Task;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
@@ -102,6 +102,18 @@ public abstract class UITaskListView {
     	} else {
     		convertedList.setAll(generateListItems(items));
     	} 
+    	taskList.setItems(convertedList);
+    }
+    
+	//@author A0111824R
+    /**
+     *
+     * @author Tan Young Sing
+     */
+    public void overwriteView(ArrayList<UITaskListItem> listItem) {
+    	ObservableList<UITaskListItem> convertedList = FXCollections.observableArrayList();
+    	convertedList.setAll(listItem);
+    	
     	taskList.setItems(convertedList);
     }
 

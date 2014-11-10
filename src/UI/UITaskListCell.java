@@ -16,7 +16,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;
 
-import Task.Task;
+import task.Task;
 
 //@author A0111824R
 /**
@@ -46,7 +46,8 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
     private final String UI_DEFAULT_PADDING = "-fx-padding: 0 5 0 5;";
     private final String UI_HEADING_STYLE = " -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;";
     private final String UI_EMPTY_TASK_STYLE = "-fx-background-color: rgb(227, 227, 227, 1);";
-    private final String UI_EMPTY_TASKS = "-fx-padding: 3 0 3 0; -fx-background-color: #FFB347;";
+    private final String UI_EMPTY_TASKS_DESIGN = "-fx-padding: 3 0 3 0; -fx-background-color: #FFB347;";
+    private final String UI_HELP_TASK_DESIGN = "-fx-padding: 3 0 3 0; -fx-background-color: #44b6ae;";
     
     private final int UI_OUTSTANDING_HEIGHT = 15;
     private final int UI_OUTSTANDING_WIDTH = 290;
@@ -141,8 +142,6 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
     	return stack;
     }
     
-    
-   
 	//@author A0111824R
     /**
      *
@@ -177,23 +176,23 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
     
 	//@author A0111824R
     /**
-     *
+     * calculate the height of the task items based on content length
      * @author Tan Young Sing
      */
     private int getContentHeight(int length) {
-    	if(length < 80) {
+    	if(length <= 80) {
     		return 70;
     	} else if (length > 80 && length < 140) {
     		return 110;
-    	} else if (length > 140 && length < 200) {
+    	} else if (length >= 140 && length < 200) {
     		return 160;
-    	} else if (length > 200 && length < 260){
+    	} else if (length >= 200 && length < 260){
     		return 210;
-    	} else if (length > 260 && length < 320) {
+    	} else if (length >= 260 && length < 320) {
     		return 260;
-    	} else if (length > 320 && length < 380){
+    	} else if (length >= 320 && length < 380){
     		return 310;
-    	} else if (length > 380 && length < 440){
+    	} else if (length >= 380 && length < 440){
     		return 360;
     	} else {
     		return 410;
@@ -253,8 +252,45 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
     public void updateItem(UITaskListItem item, boolean empty) {
     	super.updateItem(item, empty);
     	
-    	if(!empty) {
-    		if (item != null && item.getType().equals(LISTITEM_DEFAULT)) {
+    	if(!empty) {	
+    		if(item instanceof UIHelpListItem) {
+    			UIHelpListItem helpItem = (UIHelpListItem) item;
+    			if(helpItem.isTitle()) {
+        			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
+        			this.setStyle(UI_HELP_TASK_DESIGN + cellHeight);
+        			String output = helpItem.getDescription();
+        			Text text = createText(output, 0, 15,  UI_DESCRIPTION_FONT, FontWeight.BOLD, Color.WHITE);
+        			
+        			StackPane stack = new StackPane();
+        			stack.getChildren().addAll(text);
+        			StackPane.setAlignment(text, Pos.TOP_LEFT);
+        			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
+        			setGraphic(stack);
+    			} else {
+        			VBox descriptionBox = new VBox(2);
+        			Text descriptionText = createText(helpItem.getDescription(), 250, 14, "", FontWeight.NORMAL, Color.BLACK);
+        			int height = getContentHeight(helpItem.getDescription().length());
+        			this.setStyle(UI_DEFAULT_PADDING + String.format(CONTAINER_HEIGHT, height));
+        			contentPlaceHolder = createRectangle(270, height-10, 5, 5, Color.WHITE);
+        			descriptionBox.getChildren().addAll(descriptionText);
+        			
+           			HBox taskInnerContentHolder = new HBox();
+        			VBox.setMargin(descriptionText, new Insets(1, 1, 5, 1));
+        			VBox vbox = new VBox(10);
+        			vbox.getChildren().addAll(descriptionBox);
+        			VBox.setMargin(descriptionText, new Insets(0, 0, 0, 10));
+        			
+        			taskInnerContentHolder.getChildren().addAll(vbox);
+        			
+        			StackPane stack = new StackPane();
+        			StackPane.setMargin(taskInnerContentHolder, new Insets(5, 0, 0, 0));
+        			stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
+        			stack.setPrefWidth(TASK_CONTAINER_WIDTH);
+        			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
+        			setGraphic(stack);
+    			}	
+    			
+    		} else if (item != null && item.getType().equals(LISTITEM_DEFAULT)) {
     			Task taskItem = item.getTask();
     			boolean isOutstanding = false;
     			
@@ -303,7 +339,6 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
     		
     			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height, taskItem), vbox);
     			
-    			
     			StackPane stack = new StackPane();
     			StackPane.setMargin(taskInnerContentHolder, new Insets(5, 0, 0, 0));
     			stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
@@ -337,8 +372,8 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
     			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
     			
     			if(item instanceof UIEmptyTaskListItem) {
-    				StackPane.setMargin(text, new Insets(0, 70, 0, 70));
-    				this.setStyle(UI_EMPTY_TASKS + cellHeight);
+    				StackPane.setMargin(text, new Insets(0, 60, 0, 60));
+    				this.setStyle(UI_EMPTY_TASKS_DESIGN + cellHeight);
     			}
     			
     			setGraphic(stack);

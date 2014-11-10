@@ -8,12 +8,16 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+
+import task.Task;
+import task.TaskManager;
+
 import data.ConfigManager;
 import data.DataStorage;
+
 import Parser.CommandInfo;
+import Parser.DateTimeParser;
 import Parser.Parser;
-import Task.Task;
-import Task.TaskManager;
 import UI.UIComponent;
 
 /**
@@ -46,7 +50,7 @@ public class Controller extends Application {
         // Ensures valid command input.
         try {
             commandInfo = (new Parser()).getCommandInfo(input);
-        } catch (MismatchedCommandException e) { // Need to change exception type.
+        } catch (InvalidCommandException e) { // Need to change exception type.
             uiComponent.setSuggestionText(TOOLTIP_BULLET + "Command is invalid");
             return;
         }
@@ -156,6 +160,8 @@ public class Controller extends Application {
         
         backup = new Backup();
         backup.storeBackup(taskManager.getFullList());
+        
+        new DateTimeParser("start now");
     }
     
     //@author A0110546R

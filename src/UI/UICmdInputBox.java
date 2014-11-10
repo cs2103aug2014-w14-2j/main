@@ -1,7 +1,11 @@
 package UI;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 
+=======
+import application.TooltipManager;
+>>>>>>> 66c2cb3a4ab17f7d04b11c97c5b4d0c92dae98b9
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
@@ -21,6 +25,7 @@ public class UICmdInputBox {
     private final String CMDINPUT_PROMPT_TEXT = "Ask WaveWave to do something.";
     private UITooltips toolTipManage;
     private UIAutoCompleteListener autoCompleteListener;
+    private UIComponent ui;
 
     
     //@author A0111824R
@@ -29,12 +34,13 @@ public class UICmdInputBox {
      * @param guideMsgText - the text label used to display guide messages
      * @author Tan Young Sing
      */
-    public UICmdInputBox(Text suggestionText, Text guideMsgText) {
+    public UICmdInputBox(Text suggestionText, Text guideMsgText, UIComponent ui) {
         this.suggestionText = suggestionText;
         this.guideMsgText = guideMsgText;
         this.cmdInputBox = new TextField();
         this.toolTipManage = new UITooltips();
         this.autoCompleteListener = new UIAutoCompleteListener(this);
+        this.ui = ui;
         
         setInputBoxProperty();
         addKeyPressedListener();
@@ -67,7 +73,7 @@ public class UICmdInputBox {
      * @author Tan Young Sing
      */
     private void addKeyPressedListener() {
-        cmdInputBox.setOnKeyPressed(new UIControllerListener(this));
+        cmdInputBox.setOnKeyPressed(new UIControllerListener(this, ui));
     }
     
     //@author A0111824R
