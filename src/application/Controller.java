@@ -50,10 +50,11 @@ public class Controller extends Application {
         // Ensures valid command input.
         try {
             commandInfo = (new Parser()).getCommandInfo(input);
-        } catch (InvalidCommandException e) { // Need to change exception type.
-            uiComponent.setSuggestionText(TOOLTIP_BULLET + "Command is invalid");
+        } catch (InvalidCommandException e) {
+            uiComponent.setSuggestionText(e.getMessage());
             return;
         }
+        assert(commandInfo != null);
         
         Message feedback = null;
         
@@ -61,13 +62,13 @@ public class Controller extends Application {
         ArrayList<String> invalidIDs = taskManager.getInvalidDisplayIDs(commandInfo.getTaskIDs());
         if (invalidIDs != null) {
             feedback = new MessageWarningInvalidID(invalidIDs);
-            uiComponent.setSuggestionText(feedback.toString());
-            logger.log(feedback.toString());
+            uiComponent.setSuggestionText(feedback.getMessage());
+            logger.log(feedback.getMessage());
             return;
         }
 
         // Run the command.         
-            switch (commandInfo.getCommandType()) {
+        switch (commandInfo.getCommandType()) {
             case InputCommands.ADD:
                 taskManager.add(commandInfo);
                 break;
@@ -117,8 +118,8 @@ public class Controller extends Application {
         }
         
         if (feedback != null) {
-            uiComponent.setSuggestionText(feedback.toString());
-            logger.log(feedback.toString());
+            uiComponent.setSuggestionText(feedback.getMessage());
+            logger.log(feedback.getMessage());
         }
     }
     
@@ -170,6 +171,7 @@ public class Controller extends Application {
         launch(args);
     }
 
+    //@author A0110546R
     @Override
     public void start(Stage primaryStage) throws Exception {
         uiComponent = new UIComponent();
