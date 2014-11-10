@@ -2,6 +2,7 @@ package application;
 
 import static org.junit.Assert.*;
 import javafx.application.Application;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -15,6 +16,9 @@ import org.junit.Test;
 import task.Task;
 import task.TaskManager;
 import data.DataStorage;
+import UI.UIAutoComplete;
+import UI.UIAutoCompleteListener;
+import UI.UICmdInputBox;
 import UI.UIComponent;
 
 import java.lang.reflect.Field;
@@ -67,7 +71,10 @@ public class IntegrationSimpleTest extends Application {
     static int FIXTURES_SIZE;
     static int TASKS_SIZE;
     static int EVENTS_SIZE;
-  
+	static UIAutoComplete autocomplete;
+	static UICmdInputBox inputBox;
+	static UIAutoCompleteListener acListener;
+	
     //@author A0110546R
     // This is used to set up integration testing.
     // This method will always run once before the tests begin.
@@ -124,6 +131,10 @@ public class IntegrationSimpleTest extends Application {
     // This method will be run once before each test.
     @Before
     public void readyTasks() {
+		inputBox = new UICmdInputBox(new Text(), new Text(), uiComponent);
+		acListener = new UIAutoCompleteListener(inputBox);
+		autocomplete = new UIAutoComplete(inputBox, acListener);
+		
         DataStorage fixtureStorage = new DataStorage(SAMPLE_TEST_JSON_FILENAME);
         ArrayList<Task> fixtures = fixtureStorage.retrieveTasks();
         taskManager.initializeList(fixtures);
@@ -221,5 +232,49 @@ public class IntegrationSimpleTest extends Application {
         assertEquals(FIXTURES_SIZE - 1, checkStorage.retrieveTasks().size());        
         assertEquals(FIXTURES_SIZE - 1, taskManager.getSanitizedList().size());        
     }
+    
+    //@author A0111824R
+	@Test
+	public void testRunAutoComplete() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		
+	    Method method = UIAutoComplete.class.getDeclaredMethod("runAutoComplete", String.class);
+	    method.setAccessible(true);
+	    
+	    String userInput = "a";
+	    String result = (String) method.invoke(autocomplete, userInput);	
+	    assertEquals(result.trim(), "ADD");
+	    
+	    userInput = "e";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "EDIT");
 
+	    userInput = "d";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "DELETE");
+	    
+	    userInput = "z";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "");
+	    
+	    userInput = "se";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "SEARCH");
+	    
+	    userInput = "sh";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "SHOW");
+	    
+	    userInput = "q";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "QUIT");
+	    
+	    userInput = "h";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "HOME");
+	    
+	    userInput = "he";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "HELP");
+	    
+	}
 }
