@@ -60,7 +60,7 @@ public class ConfigManager {
      * @return integer representing a particular view type
      */
     public int getHomeViewType() {
-        int setting = 0;
+        int setting = Task.TaskManager.DEFAULT_DAYS_TO_DISPLAY;
         try {
             JSONParser parser = new JSONParser();
             JSONObject homeSetting = (JSONObject) parser.parse(new FileReader(filename));
