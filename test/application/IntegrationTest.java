@@ -61,7 +61,7 @@ class ControllerReflector {
  * @author Sun Wang Jun
  *
  */
-public class IntegrationSimpleTest extends Application {
+public class IntegrationTest extends Application {
     private static final String TODO_TEST_JSON_FILENAME = "Todo.test.json"; // To be used in tests.
     private static final String SAMPLE_TEST_JSON_FILENAME = "SampleTodo.test.json"; // To be loaded in tests.
     private static final Object[] EMPTY = {};
@@ -105,7 +105,7 @@ public class IntegrationSimpleTest extends Application {
         Thread t = new Thread("JavaFX Background") {
             @Override
             public void run() {
-                launch(IntegrationSimpleTest.class);
+                launch(IntegrationTest.class);
             }
         };
         t.setDaemon(true);
@@ -214,7 +214,7 @@ public class IntegrationSimpleTest extends Application {
     //@author A0110546R
     @Test
     public void testCompleteTask() {
-        Controller.runCommandInput("show");
+        Controller.runCommandInput("show"); // So that all tasks will be shown.
         String commandInput = "complete T2";
         Controller.runCommandInput(commandInput);
         
