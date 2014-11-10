@@ -2,7 +2,7 @@ package UI;
 
 import org.joda.time.DateTime;
 
-import Task.Task;
+import task.Task;
 
 public class UIHelpListItem extends UITaskListItem {
 	

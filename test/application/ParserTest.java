@@ -28,7 +28,7 @@ public class ParserTest {
     public void testParseTaskDesc() throws NoSuchMethodException,     
     InvocationTargetException, IllegalAccessException {
         Method method = Parser.class.getDeclaredMethod("parseTaskDesc", String.class,String.class);
-        method.setAccessible(true);
+        method.setAccessible(true); 
 
         Object input1_1 = "Add [drink tea]";
         Object input1_2 = "ADD";
