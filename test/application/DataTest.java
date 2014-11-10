@@ -15,15 +15,14 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
+import data.DataStorage;
 import Task.Task;
 
 /**
  * 
  * @author Kim Hyung Jon (matric number: A0115864B)
  * JUnit test file for test-driven development of DataStorage class
- * One test for each method in DataStorage
- * Note: As of V0.2, priority and completion setting are not fully implemented.
- * Therefore this test also excludes those settings for now.
+ * The test cases do not deal with all fields
  *
  */
 

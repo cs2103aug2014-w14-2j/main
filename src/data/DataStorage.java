@@ -1,4 +1,4 @@
-package application;
+package data;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import Task.Task;
+import application.WaveLogger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

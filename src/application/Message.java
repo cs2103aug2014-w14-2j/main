@@ -12,17 +12,17 @@ import java.util.ArrayList;
 
 public class Message {
 
-    protected final String NOTIFY_ADDED = "Added as ";
-    protected final String NOTIFY_DELETED = "Deleted ";
-    protected final String NOTIFY_EDITED = "edited successfully";
-    protected final String NOTIFY_COMPLETED = "finished ";
-    protected final String NOTIFY_UNDO = "Change unmade";
+    protected static final String NOTIFY_ADDED = "Added as ";
+    protected static final String NOTIFY_DELETED = "Deleted ";
+    protected static final String NOTIFY_EDITED = "edited successfully";
+    protected static final String NOTIFY_COMPLETED = "finished ";
+    protected static final String NOTIFY_UNDO = "Change unmade";
 
-    protected final String WARNING_INVALID_ID = "Cannot find tasks ";
-    protected final String WARNING_INVALID_DATE = "Cannot understand time ";
-    protected final String WARNING_PASSED_DATE = "Task %s has already begun";
-    protected final String WARNING_PASSED_END_DATE = "Task %s has already passed";
-    protected final String WARNING_IS_THIS_MISTAKE = "If this is a mistake, please edit";
+    protected static final String WARNING_INVALID_ID = "Cannot find tasks ";
+    protected static final String WARNING_INVALID_DATE = "Cannot understand time ";
+    protected static final String WARNING_PASSED_DATE = "Task %s has already begun";
+    protected static final String WARNING_PASSED_END_DATE = "Task %s has already passed";
+    protected static final String WARNING_IS_THIS_MISTAKE = "If this is a mistake, please edit";
 
     protected String outputMsg = "";
     
@@ -65,6 +65,7 @@ class MessageNotifyDelete extends Message {
      * @param deletedTaskIDs ArrayList of deleted task IDs
      */
     MessageNotifyDelete(ArrayList<String> deletedTaskIDs) {
+        assert deletedTaskIDs.size() > 0;
         outputMsg += NOTIFY_DELETED;
         
         for (int i = 0 ; i < deletedTaskIDs.size() ; i++) {
@@ -98,6 +99,7 @@ class MessageNotifyComplete extends Message {
      * @param completedTaskIDs ArrayList of completed task IDs
      */
     MessageNotifyComplete(ArrayList<String> completedTaskIDs) {
+        assert completedTaskIDs.size() > 0;
         outputMsg += NOTIFY_COMPLETED;
         
         for (int i = 0 ; i < completedTaskIDs.size() ; i++) {
@@ -130,6 +132,7 @@ class MessageWarningInvalidID extends Message {
      * @param invalidTaskIDs ArrayList of task IDs that couldn't be found
      */
     MessageWarningInvalidID(ArrayList<String> invalidTaskIDs) {
+        assert invalidTaskIDs.size() > 0;
         outputMsg += WARNING_INVALID_ID;
         for (int i = 0 ; i < invalidTaskIDs.size() ; i++) {
             outputMsg += invalidTaskIDs.get(i);

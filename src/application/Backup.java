@@ -15,7 +15,7 @@ import Task.Task;
 public class Backup {
     
     private ArrayList<ArrayList<Task>> undoArrayList;
-    private static final Integer undoArrayList_MAX_SIZE = 2;
+    private static final Integer UNDOARRAYLIST_MAX_SIZE = 2;
     private static WaveLogger logger = new WaveLogger("Backup");
     
     //@author A0115864B
@@ -44,9 +44,9 @@ public class Backup {
      * by removing any excess version(s)
      */
     public void manageUndoArrayListSize() {
-        if (undoArrayList.size() > undoArrayList_MAX_SIZE) {
+        if (undoArrayList.size() > UNDOARRAYLIST_MAX_SIZE) {
             logger.log(Level.INFO, "Deleting older saved versions");
-            for (int i = undoArrayList.size() ; i > undoArrayList_MAX_SIZE ; i--) {
+            for (int i = undoArrayList.size() ; i > UNDOARRAYLIST_MAX_SIZE ; i--) {
                 undoArrayList.remove(0);
             }
         }

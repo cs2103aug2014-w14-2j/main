@@ -9,7 +9,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
-import application.ConfigManager;
+import data.ConfigManager;
 import Parser.CommandInfo;
 
 //@author A0110546R
