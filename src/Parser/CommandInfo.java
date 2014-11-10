@@ -70,7 +70,7 @@ public class CommandInfo {
             DateTime currentDT = new DateTime();
             int result = DateTimeComparator.getInstance().compare(currentDT,this.startDateTime);
             if (result == 1) {   //currentDT is less than dateTime
-                setMessage("The Time Specified is before the Current Time.");
+                setMessage("The time specified should not be before the current time.");
             }
         }
     }
@@ -82,7 +82,7 @@ public class CommandInfo {
             DateTime currentDT = new DateTime();
             int result = DateTimeComparator.getInstance().compare(currentDT,this.endDateTime);
             if (result == 1) {   //currentDT is less than dateTime
-                setMessage("The End Time Specified is before the Current Time.");
+                setMessage("The end time specified should not be before the current time.");
             }
             else {
                 String m = null;
@@ -104,7 +104,7 @@ public class CommandInfo {
             }
         }
         if (isValid == false) {
-            throw new InvalidCommandException("Invalid Command Type Entered.");
+            throw new InvalidCommandException("You have entered an invalid command.");
         }
         for (int i = 0; i<this.taskIDs.size();i++) {
             if (this.taskIDs.get(i) != null) {
@@ -115,21 +115,21 @@ public class CommandInfo {
                     if ((StringUtils.isNumeric(ID)) && (!ID.equals("0"))) {
                     }
                     else {
-                        throw new InvalidCommandException("Invalid Task ID Entered.");
+                        throw new InvalidCommandException("You have entered invalid task ID(s).");
                     }
                 }
                 else {
-                    throw new InvalidCommandException("Invalid Task ID Entered.");}
+                    throw new InvalidCommandException("You have entered invalid task ID(s).");}
             }
         }
         if (((this.commandType.equalsIgnoreCase(InputCommands.ADD)) || (this.commandType.equalsIgnoreCase(InputCommands.EDIT))) 
                 && (this.taskDesc.equalsIgnoreCase(""))) {
-            throw new InvalidCommandException("Empty Task Description.");        
+            throw new InvalidCommandException("Task description should not be empty..");        
         }
         if ((startDateTime != null) && (endDateTime!=null)){
             int result = DateTimeComparator.getInstance().compare(this.startDateTime,this.endDateTime);
             if (result == 1) {   //currentDT is less than dateTime
-                throw new InvalidCommandException("The End Time is before the Start Time.");
+                throw new InvalidCommandException("The end time specified should not be before the start time.");
             }
         }
     }

@@ -81,7 +81,7 @@ class MessageNotifyEdit extends Message {
 
 class MessageNotifyComplete extends Message {
 
-    private static final String NOTIFY_COMPLETED = "finished ";
+    private static final String NOTIFY_COMPLETED = "Finished ";
     
     //@author A0115864B
     /**

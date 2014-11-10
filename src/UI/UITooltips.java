@@ -20,8 +20,8 @@ public class UITooltips {
     private static String TOOLTIP_COMPLETE1 = "Multiple tasks can be completed together.";
     private static String TOOLTIP_COMPLETE2 = "Completed tasks can be reviewed by the command SHOW complete";
     private static String TOOLTIP_SEARCH1 = "Search supports keyword, start and end times, priority.";
-    private static String TOOLTIP_SEARCH2 = "Tasks can be searched based on keywords, inserted between square brackets when searching.";
-    private static String TOOLTIP_SEARCH3 = "Return to default view by typing HOME";
+    private static String TOOLTIP_SEARCH2 = "Show allows you to change the number of days to display for your default view.";
+    private static String TOOLTIP_SEARCH3 = "Return to default view by typing HOME.";
     
     private static String TOOLTIP_MISC1 = "Typing the first letter of your command and <space> will auto-complete the command type.";
     private static String TOOLTIP_MISC2 = "Enter QUIT command to terminate WaveWave.";
@@ -31,12 +31,12 @@ public class UITooltips {
 
     private static String TOOLTIP_MISC4 = "All tasks are stored in an external file. You can directly modify it as well.";
     private static String TOOLTIP_MISC5 = "\"by <day>\" is understood as 23:59pm of that day.";
-    private static String TOOLTIP_MISC6 = "Overdue tasks disappear after the day is passed. They can be viewed using SHOW command.";
+    private static String TOOLTIP_MISC6 = "Enter HELP command to view the list of commands and their explanations.";
     private static String TOOLTIP_MISC7 = "WaveWave can understand most natural language input for date and time.";
     private static String TOOLTIP_MISC8 = "All tasks are saved after each operation, so there is no need to manually save.";
     private static String TOOLTIP_MISC9 = "Undoing twice will revert to the state before the first undo.";
     private static String TOOLTIP_MISC10 = "Tasks with red icons are important ones.";
-    private static String TOOLTIP_MISC11 = "Deadlines can be indicated with different words like until, by, etc";
+    private static String TOOLTIP_MISC11 = "Deadlines can be indicated with different words like until, by, etc.";
     private static String TOOLTIP_MISC12 = "After typing description, press space twice to move out of square brackets and enter other details.";
     private static String TOOLTIP_MISC13 = "If you don't know when an event will end, just indicate its start time and it will be registered as an event.";
     private static String TOOLTIP_MISC14 = "Tasks with gray icons are the ones you completed.";

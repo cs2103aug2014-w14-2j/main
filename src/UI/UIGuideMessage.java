@@ -24,13 +24,13 @@ public class UIGuideMessage implements EventHandler<KeyEvent> {
         String input = this.cmdInputBox.getText();
         if((input.equalsIgnoreCase("a"))||(input.equalsIgnoreCase("ad"))
                || (input.equalsIgnoreCase("add"))) {
-            setGuideMessage("Enter task description inside square brackets.");
+            setGuideMessage("Enter task description inside the square brackets.");
         }
         else if (input.equalsIgnoreCase("add []")) {
             setGuideMessage("Type double space to get out of the square brackets.");
         } 
         else if ((input.indexOf("] ")>=0)&& (input.indexOf("ADD")>=0)) {
-            setGuideMessage("(Optional)Enter a time for the task.");
+            setGuideMessage("Enter a time for the task. (Optional)");
         }
         else if(input.equalsIgnoreCase("e")) {
             setGuideMessage("Enter task ID and press Space.");
@@ -45,13 +45,13 @@ public class UIGuideMessage implements EventHandler<KeyEvent> {
             setGuideMessage("To undo, press Enter.");
         }
         else if (input.equalsIgnoreCase("co")) {
-            setGuideMessage("Enter task ID(s)(seperated by space) to complete them.");
+            setGuideMessage("Enter task ID(s) (seperated by a space) to complete them.");
         }
         else if (input.equalsIgnoreCase("del")) {
-            setGuideMessage("Enter task ID(s)(seperated by space) to delete them.");
+            setGuideMessage("Enter task ID(s) (seperated by a space) to delete them.");
         }
         else if (input.equalsIgnoreCase("se")) {
-            setGuideMessage("Enter a search keyword inside the square brackets.");
+            setGuideMessage("Enter the search keyword inside the square brackets.");
         }
         else if (input.equalsIgnoreCase("search []")) {
             setGuideMessage("Type double space to get out of the square brackets.");
