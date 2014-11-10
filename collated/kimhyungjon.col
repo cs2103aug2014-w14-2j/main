@@ -1,0 +1,154 @@
+//@author: kimhyungjon
+
+
+
+	/**
+	 * origin: .\src\application\Backup.java
+	 */
+
+ *
+ */
+public class Backup {
+    
+    private ArrayList<ArrayList<Task>> undoArrayList;
+    private static final Integer UNDOARRAYLIST_MAX_SIZE = 2;
+    private static WaveLogger logger = new WaveLogger("Backup");
+    
+	// End of segment: .\src\application\Backup.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Message.java
+	 */
+
+ *
+ */
+
+	// End of segment: .\src\application\Message.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\ConfigManager.java
+	 */
+
+ */
+
+public class ConfigManager {
+    
+    private static File file;
+    private static final String KEY_HOME_VIEW_TYPE = "Home view setting";
+    private static WaveLogger logger = new WaveLogger("Config");
+    private static String filename;
+    
+	// End of segment: .\src\data\ConfigManager.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITooltips.java
+	 */
+
+ *
+ */
+public class UITooltips {
+    
+    Random rand = new Random();
+    
+    private static String TOOLTIP_ADD1 = "A task can have a start time, end time, both or neither.";
+    private static String TOOLTIP_ADD2 = "The square brackets contain task description. Other information is outside.";
+    private static String TOOLTIP_EDIT1 = "To edit, specify task ID and press space to view the syntax.";
+    private static String TOOLTIP_DELETE1 = "Multiple tasks can be deleted together.";
+    private static String TOOLTIP_COMPLETE1 = "Multiple tasks can be completed together.";
+    private static String TOOLTIP_COMPLETE2 = "Completed tasks can be reviewed by the command SHOW complete";
+    private static String TOOLTIP_SEARCH1 = "Search supports keyword, start and end times, priority.";
+    private static String TOOLTIP_SEARCH2 = "Show allows you to change the number of days to display for your default view.";
+    private static String TOOLTIP_SEARCH3 = "Return to default view by typing HOME.";
+    
+    private static String TOOLTIP_MISC1 = "Typing the first letter of your command and <space> will auto-complete the command type.";
+    private static String TOOLTIP_MISC2 = "Enter QUIT command to terminate WaveWave.";
+    private static String TOOLTIP_MISC3 = "After undoing, you can revert by entering UNDO again.";
+
+    public static String TOOLTIP_BULLET = "\u2022 ";
+
+    private static String TOOLTIP_MISC4 = "All tasks are stored in an external file. You can directly modify it as well.";
+    private static String TOOLTIP_MISC5 = "\"by <day>\" is understood as 23:59pm of that day.";
+    private static String TOOLTIP_MISC6 = "Enter HELP command to view the list of commands and their explanations.";
+    private static String TOOLTIP_MISC7 = "WaveWave can understand most natural language input for date and time.";
+    private static String TOOLTIP_MISC8 = "All tasks are saved after each operation, so there is no need to manually save.";
+    private static String TOOLTIP_MISC9 = "Undoing twice will revert to the state before the first undo.";
+    private static String TOOLTIP_MISC10 = "Tasks with red icons are important ones.";
+    private static String TOOLTIP_MISC11 = "Deadlines can be indicated with different words like until, by, etc.";
+    private static String TOOLTIP_MISC12 = "After typing description, press space twice to move out of square brackets and enter other details.";
+    private static String TOOLTIP_MISC13 = "If you don't know when an event will end, just indicate its start time and it will be registered as an event.";
+    private static String TOOLTIP_MISC14 = "Tasks with gray icons are the ones you completed.";
+
+    private ArrayList<String> tooltipsAdd = new ArrayList<String>();
+    private ArrayList<String> tooltipsEdit = new ArrayList<String>();
+    private ArrayList<String> tooltipsDelete = new ArrayList<String>();
+    private ArrayList<String> tooltipsComplete = new ArrayList<String>();
+    private ArrayList<String> tooltipsSearch = new ArrayList<String>();
+    private ArrayList<String> tooltipsMisc = new ArrayList<String>();
+    
+	// End of segment: .\src\UI\UITooltips.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\MessageTest.java
+	 */
+
+ *
+ */
+public class MessageTest {
+    
+    Message message;
+
+	// End of segment: .\test\application\MessageTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\data\ConfigManagerTest.java
+	 */
+
+ *
+ */
+public class ConfigManagerTest {
+
+    ConfigManager test;
+    
+	// End of segment: .\test\data\ConfigManagerTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\data\DataStorageTest.java
+	 */
+
+ *
+ */
+public class DataStorageTest {
+    
+    DataStorage test;
+    DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+
+	// End of segment: .\test\data\DataStorageTest.java
+
+
+
+
+

@@ -1,0 +1,19 @@
+//@author: a009071y
+
+
+
+	/**
+	 * origin: .\src\UI\UIGuideMessage.java
+	 */
+
+    private void setGuideMessage(String message) {
+        this.guideMessage = message;
+        cmdInputBox.setGuideMsgText(TOOLTIP_BULLET + message);
+    }
+    
+	// End of segment: .\src\UI\UIGuideMessage.java
+
+
+
+
+

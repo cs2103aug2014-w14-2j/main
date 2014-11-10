@@ -1,0 +1,2555 @@
+//@author: tanyoungsing
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+ */
+public class UIAutoComplete {
+    
+    final private String MSG_COMMAND_SUGGESTION = "\u2022 Do you mean : %s. You can enter <space> key to complete.";
+    final private String MSG_COMMAND_NOT_SUPPORTED = "\u2022 WaveWave has only these set of commands : <add> <delete> <edit> <search> <show> <complete> <home>";
+    final private String EDIT_TASKID_FOUND = "\u2022 Task ID : %s found, use the <space> key to autocomplete.";
+    
+    private final String UI_DATETIMEFORMAT = "dd MMM yyy, h:mm a";
+    
+    final private int FIRST_WORD_IN_CMD = 1;
+    final private int SECOND_WORD_IN_CMD = 2;
+    final private int EDIT_INDEX_POSITION = 1;
+    
+    private UICmdInputBox cmdInputBox;
+    private UIAutoCompleteListener acListener;
+    private ArrayList<String> commandList;
+    
+    
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+     */
+    public UIAutoComplete(UICmdInputBox cmdInputBox, UIAutoCompleteListener acListener) {
+        this.cmdInputBox = cmdInputBox;
+        this.commandList = InputCommands.getCommandList();
+        this.acListener = acListener;
+    }
+    
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+     */
+    public String runAutoComplete(String command) {
+    	String cmdUsed = getCommandText(command).trim();
+    	
+    	if (isTheNWord(command, FIRST_WORD_IN_CMD)) {       
+            String suggestedCmd = getSuggestions(command.toUpperCase());
+            
+            //case 1 : suggestedCmd returns empty strings 
+            if(suggestedCmd.length() == 0) {
+            	//case 1a : the command typed in is not supported by wavewave
+            	if(!suggestedCmd.equalsIgnoreCase(command)) {
+                    cmdInputBox.setSuggestionText(MSG_COMMAND_NOT_SUPPORTED);
+                    this.acListener.setNextPossibleCmd("");
+                    return "";
+            	} else {
+            		//case 1b : the command typed in is the right command so do nothing as of now
+                    this.acListener.setNextPossibleCmd("");
+                    return "";
+            	}
+            } else {
+            	//case 2 : autocomplete found a close match and had gave a suggestions
+                cmdInputBox.setSuggestionText(String.format(MSG_COMMAND_SUGGESTION, suggestedCmd));
+                this.acListener.setNextPossibleCmd(suggestedCmd);
+                return suggestedCmd;
+            }
+        } else if (isTheNWord(command, SECOND_WORD_IN_CMD) && cmdUsed.equalsIgnoreCase(InputCommands.getEditCommand())) {
+        	 String taskID = getEditCommandIndex(command).toUpperCase();
+        	 Task selectedTask = Controller.getTaskFromDisplayID(taskID);
+        	 
+        	 if(selectedTask != null) {
+        		 cmdInputBox.setSuggestionText(String.format(EDIT_TASKID_FOUND, taskID));
+            	 String taskDetails = parseEditText(selectedTask);
+            	 String suggestedCmd = cmdInputBox.getText() + taskDetails;
+            	 this.acListener.setNextPossibleCmd(suggestedCmd);
+            	 return suggestedCmd;
+        	 } else {
+        		 this.acListener.setNextPossibleCmd("");
+        		 return "";
+        	 }
+        } else {
+            this.acListener.setNextPossibleCmd("");
+            return "";
+        }
+    }
+    
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+     */
+    private String parseEditText(Task selectedTask) {
+    	String editText = "[" + selectedTask.getDescription() + "] ";
+    	
+    	if(selectedTask.getDate() != null && selectedTask.getEndDate() == null) {
+    		editText += selectedTask.getDate().toString(UI_DATETIMEFORMAT);
+    	} else if(selectedTask.getDate() != null && selectedTask.getEndDate() != null) {
+    		editText += selectedTask.getDate().toString(UI_DATETIMEFORMAT) + " TO " + selectedTask.getEndDate().toString(UI_DATETIMEFORMAT);
+    	} else if(selectedTask.getDate() == null && selectedTask.getEndDate() != null) {
+    		editText += "BY " + selectedTask.getEndDate().toString(UI_DATETIMEFORMAT);
+    	}
+    	
+    	if(selectedTask.getPriority() == 1) {
+    		editText += " !";
+    	}
+    
+    	return editText;
+    }
+    
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+     */
+    private String getEditCommandIndex(String cmd) {
+    	String[] indexRetrieval = cmd.split(" ");
+    	return indexRetrieval[EDIT_INDEX_POSITION];
+    }
+    
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+     */
+    private String getSuggestions(String word) {
+        if(word.trim().length() == 0) {
+            return "";
+        }
+        
+        String output = "";
+        for (String command : commandList) {
+           if(command.startsWith(word)) {
+               output += command + " ";
+               break;
+           }
+        }
+        return output;
+    }
+    
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+     */
+    private String getCommandText(String cmd) {
+    	String[] cmdRetrieval = cmd.split(" ");
+    	return cmdRetrieval[0];
+    }
+
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+     */
+    private boolean isTheNWord(String cmd, int n) {
+        String[] oneWordChecker = cmd.split(" ");
+        return (oneWordChecker.length == n);
+    }
+    
+}
+
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+ */
+public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
+    
+    private static KeyCode previousKey;
+    private boolean isDouble;
+    
+    private UICmdInputBox cmdInputBox;
+    private UIAutoComplete uiAutoComplete;
+    private String nextPossibleCommand;
+    
+    final private int EDIT_COMMAND_STRUCTURE = 3;
+     
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+     */
+    public UIAutoCompleteListener(UICmdInputBox cmdInputBox) {
+        this.uiAutoComplete = new UIAutoComplete(cmdInputBox, this);
+        this.cmdInputBox = cmdInputBox;
+        this.nextPossibleCommand = "";
+        this.isDouble = false;
+    }
+    
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+     */
+    public String getCurrentCmd(String cmd) {
+    	String[] cmdRetrieval = cmd.split(" ");
+    	return cmdRetrieval[0].toUpperCase();
+    }
+    
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+     */
+    public void setNextPossibleCmd(String cmd) {
+        this.nextPossibleCommand = cmd;
+    }
+    
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+     * @return if the current command is an ADD command
+     */
+    private boolean isAddCommand(String next) {
+    	if(next.trim().equalsIgnoreCase(InputCommands.getAddCommand())) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+     * @return if the current command is an SEARCH command
+     */
+    private boolean isSearchCommand(String next) {
+    	if(next.trim().equalsIgnoreCase(InputCommands.getSearchCommand())) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+     * @return if the current command is an EDIT command
+     */
+    private boolean isEditCommand(String next) {
+    	String[] cmdRetrieval = next.split(" ");
+    	
+    	if(cmdRetrieval[0].equalsIgnoreCase(InputCommands.getEditCommand()) && cmdRetrieval.length == EDIT_COMMAND_STRUCTURE) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+     */
+    @Override
+    public void handle(KeyEvent event) {
+        TextField inputBox = cmdInputBox.getCmdInputBox();
+        this.uiAutoComplete.runAutoComplete(inputBox.getText().trim());  
+        
+        if(event.getCode().equals(KeyCode.SPACE)) {
+        	
+        	if( previousKey != null ) {
+        		if(previousKey.equals(KeyCode.SPACE)) {
+        			int indexToShift = inputBox.getText().lastIndexOf("]");
+        			if(indexToShift != -1) {
+        				String currentText = inputBox.getText();
+        				String extract = " [" + currentText.substring(currentText.indexOf("[") + 1, currentText.indexOf("]")).trim() + "]";
+        				String front = currentText.substring(0, currentText.indexOf("[")-1);
+        				String replaceString = front + extract + " ";
+        				
+        				inputBox.setText(replaceString);
+        				inputBox.positionCaret(replaceString.length()+1);
+        			}
+        				
+        			isDouble = true;
+        		} 
+        	}
+        	
+            if(nextPossibleCommand.length() != 0) {
+            	if(isAddCommand(nextPossibleCommand) || isSearchCommand(nextPossibleCommand)) {
+            		inputBox.setText(nextPossibleCommand + "[]");
+            	} else {
+            		inputBox.setText(nextPossibleCommand);
+            	}
+            	
+                inputBox.positionCaret(inputBox.getText().length());
+
+            	if(isAddCommand(nextPossibleCommand) || isEditCommand(nextPossibleCommand) || isSearchCommand(nextPossibleCommand)) {
+            		 inputBox.positionCaret(inputBox.getText().length()-1); 
+            	}
+            	
+                nextPossibleCommand = "";
+            	cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
+                isDouble = true;
+            }
+        }
+        
+        if(!isDouble) {
+        	previousKey = event.getCode();
+        } else {
+        	previousKey = null;
+        	isDouble = false;
+        }
+    }
+}
+
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+ */
+public class UICmdInputBox {
+
+    private TextField cmdInputBox;
+    private Text suggestionText;
+    private Text guideMsgText;
+    
+    private final int CMDINPUT_HEIGHT = 35;
+    private final String CMDINPUT_PROMPT_TEXT = "Ask WaveWave to do something.";
+    private UITooltips toolTipManage;
+    private UIAutoCompleteListener autoCompleteListener;
+    private UIComponent ui;
+
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     */
+    public UICmdInputBox(Text suggestionText, Text guideMsgText, UIComponent ui) {
+        this.suggestionText = suggestionText;
+        this.guideMsgText = guideMsgText;
+        this.cmdInputBox = new TextField();
+        this.toolTipManage = new UITooltips();
+        this.autoCompleteListener = new UIAutoCompleteListener(this);
+        this.ui = ui;
+        
+        setInputBoxProperty();
+        addKeyPressedListener();
+        addKeyTypedListener();
+        addKeyReleasedListener();
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     */
+    public String getToolTip() {
+    	return toolTipManage.getToolTips(autoCompleteListener.getCurrentCmd(cmdInputBox.getText()));
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     */
+    private void setInputBoxProperty() {
+        cmdInputBox.setPrefHeight(CMDINPUT_HEIGHT);
+        cmdInputBox.setPromptText(CMDINPUT_PROMPT_TEXT);
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     */
+    private void addKeyPressedListener() {
+        cmdInputBox.setOnKeyPressed(new UIControllerListener(this, ui));
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     */
+    private void addKeyReleasedListener() {
+        cmdInputBox.setOnKeyReleased(autoCompleteListener);
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     */
+    private void addKeyTypedListener() {
+    	cmdInputBox.setOnKeyTyped(new UIGuideMessage(this));
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     */
+    public void setSuggestionText(String output) {
+        suggestionText.setText(output);
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     */
+    public void setGuideMsgText(String output) {
+    	guideMsgText.setText(output);
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     */
+    public void focusCommandInputBox() {
+        cmdInputBox.requestFocus();
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     */
+    public String getText() {
+    	return cmdInputBox.getText();
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     */
+    public void setText(String text) {
+    	cmdInputBox.setText(text);
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     */
+    public void resetPositionCaret() {
+    	cmdInputBox.positionCaret(this.getText().length());
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     * @return if the inputbox is focused.
+     */
+    public boolean isFocused() {
+    	return cmdInputBox.isFocused();
+    }
+    
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+     * @return return the inputbox node
+     */
+    public TextField getCmdInputBox() {
+        return cmdInputBox;
+    }
+}
+
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+ */
+public class UIComponent {
+    
+    private final String SUGGESTION_TEXT = "\u2022 Try adding a task with add [description]";
+    private final String GUIDE_TEXT = "\u2022 Hello user! I am WaveWave.";
+    
+    private WaveLogger logger;
+	private final int LISTVIEW_DISPLAY_HEIGHT = 550;
+	private final String LISTVIEW_STYLESHEET = "taskDisplay_outer";
+	private final String ROOTPANE_STYLESHEET = "rootPane";
+	
+	private final int APPLICATION_WIDTH = 650;
+	private final int APPLICATION_HEIGHT = 700;
+	
+	private final String APP_DEFAULT_FONT = "Ariel";
+	private final String APP_DEFAULT_STYLESHEET = "application.css";
+	private final String CMDINPUT_PLACEHOLDER_STYLESHEET = "cmdBox_outer";
+	
+	private Scene scene;
+	private BorderPane rootPane;
+	private Text suggestionText, guideMsgText;
+	private UICmdInputBox cmdInputBox;
+	private UITaskListView floatingTaskListView, eventReminderTaskListView;
+	
+	private final String LISTVIEW_HEADING_REMINDER = "Events";
+	private final String LISTVIEW_HEADING_TASK = "Tasks";
+	
+	private Text reminderTaskTitle,floatingTaskTitle;
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     * @param return the scene object back to the Controller
+     */
+	public Scene getScene() {
+		return scene;
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     * @param return the panel that holds all the components
+     */
+	public BorderPane getRootPane() {
+		return rootPane;
+	}
+
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     * @param return inputBox 
+     */
+	public UICmdInputBox getCmdInputBox() {
+		return cmdInputBox;
+	}
+
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     * @param return the ListView on the right
+     */
+	public UITaskListView getFloatingTaskListView() {
+		return floatingTaskListView;
+	}
+
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     * @param return the ListView on the left
+     */
+	public UITaskListView getEventReminderTaskListView() {
+		return eventReminderTaskListView;
+	}
+
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	public UIComponent() {
+		initializeLoggerFileHandler();
+		initializeComponents();
+		setupScene();
+		initializeStyleSheet();
+	}
+
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	private void initializeStyleSheet() {
+		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
+		rootPane.getStyleClass().add(ROOTPANE_STYLESHEET);
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	private void initializeLoggerFileHandler() {
+        try {
+        	logger = new WaveLogger("UIComponent");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	private void setupScene() {
+		scene = new Scene(rootPane, APPLICATION_WIDTH, APPLICATION_HEIGHT);
+		scene.setOnKeyPressed(new UISceneListener(cmdInputBox));
+		logger.log(Level.INFO, "The Scene is created.");
+	}
+
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	private void initializeComponents() {
+		rootPane = new BorderPane();
+		rootPane.setCenter(getMainComponentHolder());
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	private VBox createVBox(int spacing, Insets padding, int prefWidth, int prefHeight, String style) {
+		VBox vBox = new VBox(spacing);
+		vBox.setPadding(padding);
+		vBox.getStyleClass().add(style);
+		vBox.setPrefHeight(prefHeight);
+		
+		if(prefWidth != 0) {
+			vBox.setPrefWidth(prefWidth);
+		} else {
+			vBox.setFillWidth(true);
+		}
+		
+		logger.log(Level.INFO, "A VBox is created.");
+		return vBox;
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	private HBox createHBox(int spacing, Insets padding, int prefWidth, int prefHeight, String style) {
+		HBox hBox = new HBox(spacing);
+		hBox.setPadding(padding);
+		hBox.getStyleClass().add(style);
+		hBox.setPrefWidth(prefWidth);
+		
+		if(prefHeight != 0) {
+			hBox.setPrefHeight(prefHeight);
+		} else {
+			hBox.setFillHeight(true);
+		}
+		
+		logger.log(Level.INFO, "A HBox is created.");
+		return hBox;
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	private Text createText(String text, int size, FontWeight weight, String fontFamily, Color color) {
+		Text textLabel = new Text(text);
+		textLabel.setTextAlignment(TextAlignment.JUSTIFY);
+		textLabel.setFont(Font.font(fontFamily, weight, size));
+		
+		if(color == null) {
+			color = Color.WHITE;
+		}
+		
+		textLabel.setFill(color);
+		
+		logger.log(Level.INFO, "A Text label is created.");
+		return textLabel;
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	private VBox getUserInputComponentHolder() {
+		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_PLACEHOLDER_STYLESHEET);
+		suggestionText = createText(SUGGESTION_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
+		guideMsgText = createText(GUIDE_TEXT, 12, FontWeight.NORMAL, APP_DEFAULT_FONT, null);
+		
+		cmdInputBox = new UICmdInputBox(suggestionText, guideMsgText, this);
+		userInputComponentHolder.getChildren().addAll(cmdInputBox.getCmdInputBox(), guideMsgText, suggestionText);
+		return userInputComponentHolder;
+	}
+
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	private VBox getMainComponentHolder() {
+		HBox taskListViewComponentHolder = createHBox(10, new Insets(10, 0, 10, 0), 0, 0, "");
+		VBox mainComponentHolder = createVBox(5, new Insets(15, 15, 0, 15), 0, 0, "");
+
+		VBox userInputComponentHolder = getUserInputComponentHolder();
+		VBox timedAndDeadlineTaskHolder = getTimedAndDeadlineTaskHolder();
+		VBox floatingTaskListViewHolder = getFloatingTaskListViewHolder();
+		
+		taskListViewComponentHolder.getChildren().addAll(timedAndDeadlineTaskHolder, floatingTaskListViewHolder);
+		mainComponentHolder.getChildren().addAll(userInputComponentHolder, taskListViewComponentHolder);
+		return mainComponentHolder;
+	}
+
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	private VBox getFloatingTaskListViewHolder() {
+		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
+		floatingTaskTitle = createText(LISTVIEW_HEADING_TASK, 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
+
+		floatingTaskListView = new UIFloatingTaskListView(cmdInputBox);
+		innerBox.getChildren().addAll(floatingTaskTitle, floatingTaskListView.getListView());
+		
+		return innerBox;
+	}
+
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	private VBox getTimedAndDeadlineTaskHolder() {
+		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
+		reminderTaskTitle = createText(LISTVIEW_HEADING_REMINDER, 15, FontWeight.BOLD, APP_DEFAULT_FONT, null);
+		
+		eventReminderTaskListView = new UIEventTaskListView(cmdInputBox);
+		innerBox.getChildren().addAll(reminderTaskTitle, eventReminderTaskListView.getListView());
+
+		return innerBox;
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	public void setRightPanelTitle(String title) {
+		floatingTaskTitle.setText(title);
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	public void setLeftPanelTitle(String title) {
+		reminderTaskTitle.setText(title);
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	public UITaskListView getRightView () {
+		return floatingTaskListView;
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	public UITaskListView getLeftView () {
+		return eventReminderTaskListView;
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+	public void setSuggestionText(String text) {
+		suggestionText.setText(UITooltips.TOOLTIP_BULLET + text);
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+     */
+    public void showStage(Stage primaryStage) {
+    	try {
+    		primaryStage.setScene(this.getScene());
+    		primaryStage.setResizable(false);
+    		primaryStage.setTitle("WaveWave");
+    		primaryStage.show();
+    		Controller.getTasks();
+        	//logger.log(Level.INFO, "UI has been successfully displayed.");
+    	} catch (Exception ex) {
+    		//logger.log(Level.WARNING, "UI failed to initialize", ex);
+    	}
+
+    }
+}
+
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIControllerListener.java
+	 */
+
+ */
+public class UIControllerListener implements EventHandler<KeyEvent> {
+    
+    private UICmdInputBox cmdInputBox;
+    private ArrayList<String> cmdHistory;
+    private static int cmdIndex = 0;
+    private UIHelp uiHelp;
+    private UIComponent ui;
+    
+	// End of segment: .\src\UI\UIControllerListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIControllerListener.java
+	 */
+
+     */
+    public UIControllerListener(UICmdInputBox cmdInputBox, UIComponent ui) {
+        this.cmdInputBox = cmdInputBox;
+        this.cmdHistory = new ArrayList<String>();
+        this.cmdHistory.add("");
+        this.uiHelp = new UIHelp();
+        this.ui = ui;
+    }
+    
+	// End of segment: .\src\UI\UIControllerListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIControllerListener.java
+	 */
+
+     */
+    private void displayHelpLists() {
+    	ui.getLeftView().overwriteView(uiHelp.generateLeftHelpList());
+    	ui.getRightView().overwriteView(uiHelp.generateRightHelpList());
+    	ui.setLeftPanelTitle("COMMAND (A-E)");
+    	ui.setRightPanelTitle("COMMAND (F-Z)");
+    }
+    
+	// End of segment: .\src\UI\UIControllerListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIControllerListener.java
+	 */
+
+     */
+    @Override
+    public void handle(KeyEvent event) {
+    	if (event.getCode().equals(KeyCode.ENTER)) { 
+    		
+    		if(InputCommands.getHelpCommand().equals(cmdInputBox.getText().toUpperCase().trim())) {
+    			displayHelpLists();
+    		} else {
+                Controller.runCommandInput(cmdInputBox.getText());
+    		}
+    	
+            cmdHistory.add(0, cmdInputBox.getText());
+            cmdInputBox.setText("");
+            cmdIndex = 0;
+        } 
+        
+        if (event.getCode().equals(KeyCode.ESCAPE)) {
+        	cmdInputBox.setText("");
+        	
+        	if(cmdInputBox.getText().length() != 0) {
+        		cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
+        	}
+        }
+        
+        if (event.getCode().isArrowKey() && !cmdHistory.isEmpty()) {
+        	if (cmdIndex >= cmdHistory.size()) {
+        		cmdIndex = 0;
+        	} else if (cmdIndex < 0) {
+        		cmdIndex = cmdHistory.size()-1;
+        	}
+        	
+        	if (event.getCode().toString().equals("UP")) {
+        		cmdInputBox.setText(cmdHistory.get(cmdIndex));
+        		cmdInputBox.resetPositionCaret();
+        		cmdIndex++;
+        		
+        		if(cmdInputBox.getText().length() != 0) { 
+        			cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
+        		}
+        	} else if (event.getCode().toString().equals("DOWN")) {
+        		cmdInputBox.setText(cmdHistory.get(cmdIndex));
+        		cmdInputBox.resetPositionCaret();
+        		cmdIndex--;
+        		
+        		if(cmdInputBox.getText().length() != 0) { 
+        			cmdInputBox.setSuggestionText(cmdInputBox.getToolTip());
+        		}
+        	}
+        }
+    }
+}
+
+	// End of segment: .\src\UI\UIControllerListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEmptyTaskListItem.java
+	 */
+
+ */
+public class UIEmptyTaskListItem extends UITaskListItem {
+    
+	private final String LISTITEM_HEADER_TITLE_RIGHT =  "No Scheduled To-Dos";
+	private final String LISTITEM_HEADER_TITLE_LEFT =  "No Scheduled Event";
+	
+	// End of segment: .\src\UI\UIEmptyTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEmptyTaskListItem.java
+	 */
+
+     */
+	public UIEmptyTaskListItem (Task task, DateTime date, boolean isLeftPane) {
+		super(task, date, isLeftPane);
+		this.isLeftPane = isLeftPane;
+		init(task, date);
+	}
+	
+	// End of segment: .\src\UI\UIEmptyTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEmptyTaskListItem.java
+	 */
+
+     */
+	private void init(Task task, DateTime date) {
+		super.setType(LISTITEM_SEPARATOR);
+		
+		if(isLeftPane) {
+			super.setSeparatorTitle(LISTITEM_HEADER_TITLE_LEFT);
+		} else {
+			super.setSeparatorTitle(LISTITEM_HEADER_TITLE_RIGHT);
+		}
+	}
+
+}
+
+	// End of segment: .\src\UI\UIEmptyTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEventTaskListView.java
+	 */
+
+ */
+public class UIEventTaskListView extends UITaskListView {
+	
+	private final String CMD_DELETE_EVENT_TASK = "DELETE %s";
+	
+	// End of segment: .\src\UI\UIEventTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEventTaskListView.java
+	 */
+
+     */
+	public UIEventTaskListView(UICmdInputBox cmdInputBox) {
+		super(cmdInputBox);
+		initializeListener();
+	}
+	
+	// End of segment: .\src\UI\UIEventTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEventTaskListView.java
+	 */
+
+     */
+	private void initializeListener() {
+		taskList.setOnKeyPressed(new UITaskListViewListener(CMD_DELETE_EVENT_TASK, cmdInputBox, this));
+	}
+	
+	// End of segment: .\src\UI\UIEventTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEventTaskListView.java
+	 */
+
+     * @return convert the arraylist of tasks into UITaskListItem
+     */
+	protected ArrayList<UITaskListItem> generateEmptyList(ArrayList<Task> items, boolean isLeftPane) {
+		ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+	    UITaskListItem item = new UIEmptyTaskListItem(null, null, true);
+	    listItems.add(item);
+	    return listItems;
+	}
+			
+	// End of segment: .\src\UI\UIEventTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEventTaskListView.java
+	 */
+
+     * @return convert the arrayList of task to UITaskListItem
+     */
+    protected ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items) {
+    	DateTime currentDate = null;
+    	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+    	UITaskListItem currentHeader = null;
+    	
+    	for(int i = 0; i<items.size(); i++) {
+    		Task t = items.get(i);
+    		if(currentHeader == null) {
+        		currentDate = t.getDate();
+        		currentHeader = new UILeftTaskListItem(null, t.getDate(), true);
+        		listItems.add(currentHeader);
+    		} else {
+    			if(currentDate.toString("y").equals(t.getDate().toString("y"))) {
+    				if(!currentDate.toString("D").equals(t.getDate().toString("D"))) {
+    					currentDate = t.getDate();
+    					currentHeader = new UILeftTaskListItem(null, t.getDate(), true);
+    					listItems.add(currentHeader);
+    				}
+    			} else {
+    				currentDate = t.getDate();
+    				currentHeader = new UILeftTaskListItem(null, t.getDate(), true);
+    				listItems.add(currentHeader);
+    			}
+    		}	
+    		listItems.add(new UILeftTaskListItem(t, t.getDate(), true));
+    		currentHeader.incrementNumOfTask();
+    	}
+
+    	return listItems;
+    }
+}
+
+	// End of segment: .\src\UI\UIEventTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIFloatingTaskListView.java
+	 */
+
+ */
+public class UIFloatingTaskListView extends UITaskListView {
+	
+	private final String CMD_DELETE_FLOATING_TASK = "DELETE %s";
+	private final String UI_SEPARATOR_REMINDER = "REMINDERS";
+	private final String UI_SEPARATOR_DEADLINE = "DEADLINES";
+	
+	// End of segment: .\src\UI\UIFloatingTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIFloatingTaskListView.java
+	 */
+
+     */
+	public UIFloatingTaskListView(UICmdInputBox cmdInputBox) {
+		super(cmdInputBox);
+		initializeListener();
+	}
+	
+	// End of segment: .\src\UI\UIFloatingTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIFloatingTaskListView.java
+	 */
+
+     */
+	private void initializeListener() {
+		taskList.setOnKeyPressed(new UITaskListViewListener(CMD_DELETE_FLOATING_TASK, cmdInputBox, this));
+	}
+	
+	// End of segment: .\src\UI\UIFloatingTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIFloatingTaskListView.java
+	 */
+
+     */
+    protected ArrayList<UITaskListItem> generateEmptyList(ArrayList<Task> items, boolean isLeftPane) {
+    	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+    	UITaskListItem item = new UIEmptyTaskListItem(null, null, false);
+    	listItems.add(item);
+    	return listItems;
+    }
+	
+    protected ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items) {
+    	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();
+    	UITaskListItem currentHeader = null;
+    	
+    	for(int i =0; i<items.size(); i++) {
+    		Task listItem = items.get(i);
+    		
+    		if(currentHeader == null) {
+    			if(listItem.getEndDate() == null) {
+    				currentHeader = new UIRightTaskListItem(null, null, false);
+    				listItems.add(currentHeader);
+    			} else if(listItem.getEndDate() != null) {
+    				currentHeader = new UIRightTaskListItem(null, listItem.getEndDate(), false);
+    				listItems.add(currentHeader);
+    			} 
+    		} else {
+    			if(listItem.getEndDate() != null && !currentHeader.getSeparatorTitle().equalsIgnoreCase(UI_SEPARATOR_DEADLINE)) {
+    				currentHeader = new UIRightTaskListItem(null, listItem.getEndDate(), false);
+    				listItems.add(currentHeader);
+    			} else if(listItem.getEndDate() == null && !currentHeader.getSeparatorTitle().equalsIgnoreCase(UI_SEPARATOR_REMINDER)){
+    				currentHeader = new UIRightTaskListItem(null, null, false);
+    				listItems.add(currentHeader);
+    			}
+    		}
+    	
+    		listItems.add(new UIRightTaskListItem(listItem, listItem.getDate(), false));
+    		currentHeader.incrementNumOfTask();
+    	}
+    
+    	return listItems;
+    }
+}
+
+	// End of segment: .\src\UI\UIFloatingTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UILeftTaskListItem.java
+	 */
+
+ */
+public class UILeftTaskListItem extends UITaskListItem {
+	
+	// End of segment: .\src\UI\UILeftTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UILeftTaskListItem.java
+	 */
+
+     */
+	public UILeftTaskListItem (Task task, DateTime date, boolean isLeftPane) {
+		super(task, date, isLeftPane);
+		init(task, date);
+	}
+	
+	// End of segment: .\src\UI\UILeftTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UILeftTaskListItem.java
+	 */
+
+     */
+	private void init(Task task, DateTime date) {
+		if (task == null) {
+			super.setType(LISTITEM_HEADER);
+			super.setDate(date);
+		} else {
+			super.setType(LISTITEM_DEFAULT);
+		}
+	}
+}
+
+	// End of segment: .\src\UI\UILeftTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIRightTaskListItem.java
+	 */
+
+ */
+public class UIRightTaskListItem extends UITaskListItem {
+
+	private final String LISTITEM_HEADER_TITLE_DEADLINE =  "DEADLINES";
+	private final String LISTITEM_HEADER_TITLE_REMINDER =  "REMINDERS";
+	
+	// End of segment: .\src\UI\UIRightTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIRightTaskListItem.java
+	 */
+
+     */
+	public UIRightTaskListItem (Task task, DateTime date, boolean isLeftPane) {
+		super(task, date, isLeftPane);
+		init(task, date);
+	}
+	
+	// End of segment: .\src\UI\UIRightTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIRightTaskListItem.java
+	 */
+
+     */
+	private void init(Task task, DateTime date) {
+		if (task == null && date != null) {
+			super.setType(LISTITEM_SEPARATOR);
+			super.setSeparatorTitle(LISTITEM_HEADER_TITLE_DEADLINE);
+		} else if(task == null && date == null) { 
+			super.setType(LISTITEM_SEPARATOR);
+			super.setSeparatorTitle(LISTITEM_HEADER_TITLE_REMINDER);
+		}else {
+			super.setType(LISTITEM_DEFAULT);
+		}
+	}
+}
+
+	// End of segment: .\src\UI\UIRightTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UISceneListener.java
+	 */
+
+ */
+public class UISceneListener implements EventHandler<KeyEvent>{
+	
+	private UICmdInputBox cmdInputBox;
+	
+	// End of segment: .\src\UI\UISceneListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UISceneListener.java
+	 */
+
+     */
+	public UISceneListener(UICmdInputBox cmdInputBox) {
+		this.cmdInputBox = cmdInputBox;
+	}
+	
+	// End of segment: .\src\UI\UISceneListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UISceneListener.java
+	 */
+
+     */
+	private boolean isValidFocusCharacter(KeyCode keyCode) {
+		if(keyCode.isDigitKey() || keyCode.isLetterKey()) {
+			return true;
+		}
+		return false;
+	}
+	
+	// End of segment: .\src\UI\UISceneListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UISceneListener.java
+	 */
+
+     */
+	 @Override 
+     public void handle(KeyEvent ke) { 
+         String currentText = cmdInputBox.getText();
+         
+         if((!cmdInputBox.isFocused() && isValidFocusCharacter(ke.getCode()))) {
+             cmdInputBox.focusCommandInputBox();
+             cmdInputBox.setText(currentText);
+             cmdInputBox.resetPositionCaret();
+         }
+     } 
+}
+
+	// End of segment: .\src\UI\UISceneListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+ */
+public class UITaskListCell extends ListCell<UITaskListItem> { 
+    static private final int TASK_CONTAINER_WIDTH = 260;
+    static private final int TASK_CONTAINER_HEIGHT = 70;
+    
+    private final int UI_OFFSET = 10;
+    private final int UI_NON_PRIORITY = 0;
+    
+    private final String UI_DEFAULT_FONT = "Bemio";
+    private final String UI_DESCRIPTION_FONT = "Raleway";
+    
+    private final int UI_MAXWIDTH_PRIORITY_INDICATOR = 40;
+    
+    private final int UI_PERIOD_ONE = 1;
+    private final int UI_PERIOD_WEEK = 7;
+    
+    private final String UI_DATEFORMAT = "dd MMM yyyy";
+    private final String UI_TIMEFORMAT = "h:mm a";
+    private final String UI_DATETIMEFORMAT = "dd MMM yyy, h:mm a";
+    
+    private final String UI_OVERDUE_LABEL = "Overdue";
+    private final String UI_DEFAULT_PADDING = "-fx-padding: 0 5 0 5;";
+    private final String UI_HEADING_STYLE = " -fx-padding: 3 0 3 0; -fx-background-color: #b3b3b3;";
+    private final String UI_EMPTY_TASK_STYLE = "-fx-background-color: rgb(227, 227, 227, 1);";
+    private final String UI_EMPTY_TASKS_DESIGN = "-fx-padding: 3 0 3 0; -fx-background-color: #FFB347;";
+    private final String UI_HELP_TASK_DESIGN = "-fx-padding: 3 0 3 0; -fx-background-color: #44b6ae;";
+    
+    private final int UI_OUTSTANDING_HEIGHT = 15;
+    private final int UI_OUTSTANDING_WIDTH = 235;
+   
+	private final String LISTITEM_HEADER = "header";
+	private final String LISTITEM_DEFAULT = "default";
+	private final String LISTITEM_SEPARATOR = "float_separator";
+
+    private final String CONTAINER_HEIGHT = "-fx-cell-size: %s;";
+
+    private String COLOR_DEFAULT_PRIORITY = "rgba(37, 232, 154, 1)";
+    private String COLOR_HIGH_PRIORITY = "rgba(249, 104, 114, 1)";
+    private String COLOR_COMPLETED = "rgba(188, 187, 185, 1)";
+    private String COLOR_OUTSTANDING = "rgba(255, 120, 120, 1)";
+    
+    private Rectangle contentPlaceHolder;
+    private Text indexLabel;
+    
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+     */
+    private Rectangle createRectangle(int width, int height, int arcWidth, int arcHeight, Color c) {
+    	Rectangle rect = new Rectangle(width, height);
+        rect.setArcHeight(arcHeight);
+        rect.setArcWidth(arcWidth);
+        rect.setFill(c);
+        return rect;
+    }
+
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+     */
+    private Text createText(String text, int textWidth, int size, String fontFamily, FontWeight weight, Color color) {
+        Text textLabel = new Text(text);
+        textLabel.setWrappingWidth(textWidth);
+        textLabel.setFont(Font.font(fontFamily, weight, size));
+        textLabel.setFill(color);
+        return textLabel;
+    }
+    
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+     */
+    private StackPane getPriorityIndicator(int priority, String displayID, int height, Task item) {
+    	String indicator_color = COLOR_DEFAULT_PRIORITY;
+    	
+    	if(item.isCompleted()) {
+    		indicator_color = COLOR_COMPLETED;
+    	} else {
+    		if(priority == UI_NON_PRIORITY) {
+    			 indicator_color = COLOR_DEFAULT_PRIORITY;
+    		} else if (priority != UI_NON_PRIORITY) {
+    			indicator_color = COLOR_HIGH_PRIORITY;
+    		}
+    	}
+    	
+    	Rectangle priorityIndicator = createRectangle(UI_MAXWIDTH_PRIORITY_INDICATOR, height-UI_OFFSET, 0, 0, Color.web(indicator_color));
+    	indexLabel = createText(displayID, 0, 20, UI_DEFAULT_FONT, FontWeight.BOLD, Color.WHITE);
+
+    	StackPane stack = new StackPane();
+    	stack.setPadding(new Insets(0, 0, 0, 0));
+		stack.setMaxHeight(height-UI_OFFSET);
+		stack.setMaxWidth(UI_MAXWIDTH_PRIORITY_INDICATOR);
+    	
+		StackPane.setAlignment(priorityIndicator, Pos.TOP_LEFT);
+    	StackPane.setAlignment(indexLabel, Pos.CENTER);
+		stack.getChildren().addAll(priorityIndicator, indexLabel);	
+ 
+    	return stack;
+    }
+    
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+     */
+    private String getDateString(DateTime currentDate) {
+    	String output = "";
+    	DateTime systemTime = new DateTime();
+    	
+    	DateTime taskDate = new DateTime(currentDate.getYear(), currentDate.getMonthOfYear(), currentDate.getDayOfMonth(), 0, 0);
+    	DateTime today = new DateTime(systemTime.getYear(), systemTime.getMonthOfYear(), systemTime.getDayOfMonth(), 0, 0);
+    	DateTime tomorrow = today.plus(Period.days(UI_PERIOD_ONE));
+    	
+    	DateTime end = today.plus(Period.days(UI_PERIOD_WEEK));
+    	
+    	Interval interval = new Interval(today, end);
+    	
+    	if(interval.contains(currentDate)) {
+    		if(taskDate.equals(today)) {
+    			output = "Today - " + taskDate.toString(UI_DATEFORMAT);
+    		} else if (taskDate.equals(tomorrow)) {
+    			output = "Tomorrow - " + taskDate.toString(UI_DATEFORMAT);
+    		} else {
+        		output = currentDate.dayOfWeek().getAsText();
+    		}
+    	} else {
+    		output = currentDate.toString(UI_DATEFORMAT);
+    	}
+    	
+    	return output;
+    }
+    
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+     */
+    private int getContentHeight(int length) {
+    	if(length <= 80) {
+    		return 70;
+    	} else if (length > 80 && length < 140) {
+    		return 110;
+    	} else if (length >= 140 && length < 200) {
+    		return 160;
+    	} else if (length >= 200 && length < 260){
+    		return 210;
+    	} else if (length >= 260 && length < 320) {
+    		return 260;
+    	} else if (length >= 320 && length < 380){
+    		return 310;
+    	} else if (length >= 380 && length < 440){
+    		return 360;
+    	} else {
+    		return 410;
+    	}
+    }
+    
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+     */
+    private String generateTaskDate(Task item) {
+    	String output = "";
+    	
+    	if(item.getDate() != null && item.getEndDate() == null) {
+    		output += item.getDate().toString(UI_TIMEFORMAT);
+    	} else if(item.getDate() != null && item.getEndDate() != null) {
+    		output += item.getDate().toString(UI_TIMEFORMAT);
+    	}
+    	
+    	if(item.getDate() == null && item.getEndDate() != null) {
+    		output += "Due on: " + item.getEndDate().toString(UI_DATETIMEFORMAT);
+    	} else if(item.getDate() != null && item.getEndDate() != null) {
+    		if(item.getDate().equals(item.getEndDate())) {
+    			output += " - " + item.getEndDate().toString(UI_TIMEFORMAT);
+    		} else {
+    			output += " - " + item.getEndDate().toString(UI_DATETIMEFORMAT);
+    		}
+    	} 
+    	
+    	return output;
+    }
+    
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+     */
+    private StackPane createOutstandingLabel() {
+    	Rectangle outstandingLabel = createRectangle(UI_OUTSTANDING_WIDTH, UI_OUTSTANDING_HEIGHT, 0, 0, Color.web(COLOR_OUTSTANDING));
+    	Text labelText = createText(UI_OVERDUE_LABEL, 225, 10, UI_DESCRIPTION_FONT, FontWeight.BOLD, Color.WHITE);
+    	
+		StackPane stack = new StackPane();
+		stack.getChildren().addAll(outstandingLabel, labelText);
+		StackPane.setAlignment(labelText, Pos.CENTER);
+    	
+    	return stack;
+    }
+
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+     */
+    @Override
+    public void updateItem(UITaskListItem item, boolean empty) {
+    	super.updateItem(item, empty);
+    	
+    	if(!empty) {	
+    		if(item instanceof UIHelpListItem) {
+    			UIHelpListItem helpItem = (UIHelpListItem) item;
+    			if(helpItem.isTitle()) {
+        			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
+        			this.setStyle(UI_HELP_TASK_DESIGN + cellHeight);
+        			String output = helpItem.getDescription();
+        			Text text = createText(output, 0, 15,  UI_DESCRIPTION_FONT, FontWeight.BOLD, Color.WHITE);
+        			
+        			StackPane stack = new StackPane();
+        			stack.getChildren().addAll(text);
+        			StackPane.setAlignment(text, Pos.TOP_LEFT);
+        			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
+        			setGraphic(stack);
+    			} else {
+        			VBox descriptionBox = new VBox(2);
+        			Text descriptionText = createText(helpItem.getDescription(), 250, 14, "", FontWeight.NORMAL, Color.BLACK);
+        			int height = getContentHeight(helpItem.getDescription().length());
+        			this.setStyle(UI_DEFAULT_PADDING + String.format(CONTAINER_HEIGHT, height));
+        			contentPlaceHolder = createRectangle(270, height-10, 5, 5, Color.WHITE);
+        			descriptionBox.getChildren().addAll(descriptionText);
+        			
+           			HBox taskInnerContentHolder = new HBox();
+        			VBox.setMargin(descriptionText, new Insets(1, 1, 5, 1));
+        			VBox vbox = new VBox(10);
+        			vbox.getChildren().addAll(descriptionBox);
+        			VBox.setMargin(descriptionText, new Insets(0, 0, 0, 10));
+        			
+        			taskInnerContentHolder.getChildren().addAll(vbox);
+        			
+        			StackPane stack = new StackPane();
+        			StackPane.setMargin(taskInnerContentHolder, new Insets(5, 0, 0, 0));
+        			stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
+        			stack.setPrefWidth(TASK_CONTAINER_WIDTH);
+        			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
+        			setGraphic(stack);
+    			}	
+    			
+    		} else if (item != null && item.getType().equals(LISTITEM_DEFAULT)) {
+    			Task taskItem = item.getTask();
+    			boolean isOutstanding = false;
+    			
+    			VBox descriptionBox = new VBox(2);
+    			
+    		    if(!taskItem.isCompleted()) {
+    				if(taskItem.getEndDate() != null) {	
+    					if(taskItem.getEndDate().isBeforeNow()) {
+    						//outstanding
+    						descriptionBox.getChildren().addAll(createOutstandingLabel());
+    						isOutstanding = true;
+    					} 
+    	        	}else if(taskItem.getDate() != null){
+    					if(taskItem.getDate().isBeforeNow()) {
+    						//outstanding
+    						descriptionBox.getChildren().addAll(createOutstandingLabel());
+    						isOutstanding = true;
+    					} 
+            		}
+    			}
+    			
+    			String dateString = generateTaskDate(taskItem);
+    			if(dateString.trim().length() != 0) {
+        			Text descriptionDate = createText(dateString, 190, 11, "", FontWeight.BOLD, Color.CADETBLUE);
+        			descriptionBox.getChildren().addAll(descriptionDate);
+        			VBox.setMargin(descriptionDate, new Insets(0, 0, 0, 10));
+    			}
+    			
+    			Text descriptionText = createText(taskItem.getDescription(), 190, 14, "", FontWeight.NORMAL, Color.BLACK);
+    			
+    			int height = getContentHeight(taskItem.getDescription().length());
+    			
+    			if(isOutstanding) {
+    				height += UI_OUTSTANDING_HEIGHT;
+    			}
+    			
+    			this.setStyle(UI_DEFAULT_PADDING + String.format(CONTAINER_HEIGHT, height));
+    			contentPlaceHolder = createRectangle(270, height-10, 5, 5, Color.WHITE);
+    			descriptionBox.getChildren().addAll(descriptionText);
+    			
+    			HBox taskInnerContentHolder = new HBox();
+    			VBox.setMargin(descriptionText, new Insets(1, 1, 5, 1));
+    			VBox vbox = new VBox(10);
+    			vbox.getChildren().addAll(descriptionBox);
+    			VBox.setMargin(descriptionText, new Insets(0, 0, 0, 10));
+    		
+    			taskInnerContentHolder.getChildren().addAll(getPriorityIndicator(taskItem.getPriority(), taskItem.getDisplayID(), height, taskItem), vbox);
+    			
+    			StackPane stack = new StackPane();
+    			StackPane.setMargin(taskInnerContentHolder, new Insets(5, 0, 0, 0));
+    			stack.setPrefHeight(TASK_CONTAINER_HEIGHT);
+    			stack.setPrefWidth(TASK_CONTAINER_WIDTH);
+    			stack.getChildren().addAll(contentPlaceHolder, taskInnerContentHolder);
+    			setGraphic(stack);
+    			
+    		} else if(item != null && item.getType().equals(LISTITEM_HEADER)) {	
+    			
+    			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
+    			this.setStyle(UI_HEADING_STYLE + cellHeight);
+    			String output = getDateString(item.getDate()) + " (" + item.getNumberTask() + ")";
+    			Text text = createText(output, 0, 15, "Ariel", FontWeight.BOLD, Color.WHITE);
+    			
+    			StackPane stack = new StackPane();
+    			stack.getChildren().addAll(text);
+    			StackPane.setAlignment(text, Pos.TOP_LEFT);
+    			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
+    			setGraphic(stack);
+    			
+    		} else if(item.getTask() == null && item.getType().equals(LISTITEM_SEPARATOR)) {
+    			
+    			String cellHeight = String.format(CONTAINER_HEIGHT, "10px");
+    			this.setStyle(UI_HEADING_STYLE + cellHeight);
+    			String output = item.getSeparatorTitle() + " (" + item.getNumberTask() + ")";
+    			Text text = createText(output, 0, 15,  UI_DESCRIPTION_FONT, FontWeight.BOLD, Color.WHITE);
+    			
+    			StackPane stack = new StackPane();
+    			stack.getChildren().addAll(text);
+    			StackPane.setAlignment(text, Pos.TOP_LEFT);
+    			StackPane.setMargin(text, new Insets(0, 0, 0, 10));
+    			
+    			if(item instanceof UIEmptyTaskListItem) {
+    				StackPane.setMargin(text, new Insets(0, 60, 0, 60));
+    				this.setStyle(UI_EMPTY_TASKS_DESIGN + cellHeight);
+    			}
+    			
+    			setGraphic(stack);
+    		}
+        } else {
+        	this.setStyle(UI_EMPTY_TASK_STYLE);
+    		setGraphic(null);
+    	}
+    }
+}
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+ */
+public class UITaskListItem {
+	
+	protected final String LISTITEM_HEADER = "header";
+	protected final String LISTITEM_DEFAULT = "default";
+	protected final String LISTITEM_SEPARATOR = "float_separator";
+	
+	private Task task;
+	private DateTime date;
+	private String type;
+	private int numOfTasks;
+	private String separatorTitle;
+	protected boolean isLeftPane;
+
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+     */
+	public UITaskListItem(Task task, DateTime date, boolean isLeftPane) {
+		this.isLeftPane = isLeftPane;
+		this.numOfTasks = 0;
+		this.task = task;
+	}
+	
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+     */
+	public boolean isLeftPane() {
+		return this.isLeftPane;
+	}
+	
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+     */
+	public String getSeparatorTitle() {
+		return this.separatorTitle;
+	}
+	
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+     */
+	protected void setSeparatorTitle(String title) {
+		this.separatorTitle = title;
+	}
+	
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+     */
+    protected void setType(String type) {
+		this.type = type;
+	}
+
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+     */
+	public int getNumberTask() {
+		return this.numOfTasks;
+	}
+	
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+     */
+	public void incrementNumOfTask() {
+		numOfTasks++;
+	}
+
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+     */
+	public Task getTask() {
+		return task;
+	}
+
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+     */
+	public DateTime getDate() {
+		return date;
+	}
+
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+     */
+    protected void setDate(DateTime date) {
+		this.date = date;
+	}
+
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+     */
+	public String getType() {
+		return type;
+	}
+}
+
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+ */
+public abstract class UITaskListView {
+
+    protected ListView<UITaskListItem> taskList;
+    protected UICmdInputBox cmdInputBox;
+    private final String TASKLIST_DEFAULT_STYLE = "taskList_style";
+
+    private final int DISPLAY_WIDTH = 300;
+    private final int DISPLAY_HEIGHT = 500;
+
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+     */
+    public UITaskListView(UICmdInputBox cmdInputBox) {
+        taskList = new ListView<UITaskListItem>();
+        this.cmdInputBox = cmdInputBox;
+        setTaskListProperty();
+    }
+
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+     */
+    private void setTaskListProperty() {
+        taskList.setPrefHeight(DISPLAY_HEIGHT);
+        taskList.setPrefWidth(DISPLAY_WIDTH);
+        taskList.getStyleClass().add(TASKLIST_DEFAULT_STYLE);
+
+        taskList.setCellFactory(new Callback<ListView<UITaskListItem>, ListCell<UITaskListItem>>() {
+            @Override
+            public ListCell<UITaskListItem> call(ListView<UITaskListItem> list) {
+                return new UITaskListCell();
+            }
+        });
+    }
+
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+     */
+    public boolean isFocused() {
+    	return taskList.isFocused();
+    }
+    
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+     */
+    public void clearSelection() {
+    	taskList.getSelectionModel().clearSelection();
+    }
+    
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+     */
+    public int getSelectedItemIndex() {
+    	return taskList.getSelectionModel().getSelectedIndex();
+    }
+    
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+     */
+    public ObservableList<UITaskListItem> getSelectedItem() {
+    	return taskList.getSelectionModel().getSelectedItems();
+    }
+   
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+     */
+    public void populateTaskListWithData(ArrayList<Task> items, boolean isLeftPane) {
+    	ObservableList<UITaskListItem> convertedList = FXCollections.observableArrayList();
+    	
+    	if(items.size() == 0) {
+    		convertedList.setAll(generateEmptyList(items, isLeftPane));
+    	} else {
+    		convertedList.setAll(generateListItems(items));
+    	} 
+    	taskList.setItems(convertedList);
+    }
+    
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+     */
+    public void overwriteView(ArrayList<UITaskListItem> listItem) {
+    	ObservableList<UITaskListItem> convertedList = FXCollections.observableArrayList();
+    	convertedList.setAll(listItem);
+    	
+    	taskList.setItems(convertedList);
+    }
+
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+     */
+    public ListView<UITaskListItem> getListView() {
+        return taskList;
+    }
+    
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+     */
+    protected abstract ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items);
+    
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+     */
+    protected abstract ArrayList<UITaskListItem> generateEmptyList(ArrayList<Task> items, boolean isLeftPane);
+}
+
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListViewListener.java
+	 */
+
+ */
+public class UITaskListViewListener implements EventHandler<KeyEvent> {
+
+	private String msg;
+	private UICmdInputBox cmdInput;
+	private UITaskListView taskList;
+	
+	// End of segment: .\src\UI\UITaskListViewListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListViewListener.java
+	 */
+
+     */
+	public UITaskListViewListener(String msg, UICmdInputBox cmdInput, UITaskListView lv) {
+		this.cmdInput = cmdInput;
+		this.msg = msg;
+		this.taskList = lv;
+	}
+
+	
+	// End of segment: .\src\UI\UITaskListViewListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListViewListener.java
+	 */
+
+     */
+	private String formatIndexIntoCmd(ObservableList<UITaskListItem> items) {
+		String output = "";
+		for (UITaskListItem item : items) {
+			output += item.getTask().getDisplayID() + " ";
+		}
+		return output.trim();
+	}
+	
+	// End of segment: .\src\UI\UITaskListViewListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListViewListener.java
+	 */
+
+     */
+	@Override
+	public void handle(KeyEvent ke) {
+    	if(ke.getCode() == KeyCode.DELETE) {
+    		String cmdOutput = formatIndexIntoCmd(taskList.getSelectedItem());		
+     		cmdInput.getCmdInputBox().setText(String.format(msg, cmdOutput));
+     		cmdInput.focusCommandInputBox();
+     		cmdInput.resetPositionCaret();
+    	}
+	}
+}
+
+	// End of segment: .\src\UI\UITaskListViewListener.java
+
+
+
+
+

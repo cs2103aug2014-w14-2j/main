@@ -1,0 +1,1347 @@
+//@author: a0115864b
+
+
+
+	/**
+	 * origin: .\src\application\Backup.java
+	 */
+
+/**
+ * This component stores a past version of the tasks list as a backup
+ * so that undo feature can be supported.
+ * 
+	// End of segment: .\src\application\Backup.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Backup.java
+	 */
+
+    /**
+     * Constructor
+     * Prepares an ArrayList of ArrayList of Task objects to store a past version
+     */
+    public Backup() {
+        undoArrayList = new ArrayList<ArrayList<Task>>();
+    }
+    
+	// End of segment: .\src\application\Backup.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Backup.java
+	 */
+
+    /**
+     * Stores the tasks list as backup
+     * 
+     * @param tasks ArrayList of all Task objects
+     */
+    public void storeBackup(ArrayList<Task> tasks) {
+        undoArrayList.add(copyTasks(tasks));
+        manageUndoArrayListSize();
+    }
+
+	// End of segment: .\src\application\Backup.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Backup.java
+	 */
+
+    /**
+     * Maintains the number of stored backup versions to 2
+     * by removing any excess version(s)
+     */
+    public void manageUndoArrayListSize() {
+        if (undoArrayList.size() > UNDOARRAYLIST_MAX_SIZE) {
+            logger.log(Level.INFO, "Deleting older saved versions");
+            for (int i = undoArrayList.size() ; i > UNDOARRAYLIST_MAX_SIZE ; i--) {
+                undoArrayList.remove(0);
+            }
+        }
+    }
+    
+	// End of segment: .\src\application\Backup.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Backup.java
+	 */
+
+    /**
+     * Returns a past saved version when "undo" command is received
+     * 
+     * @return backup ArrayList of tasks that was saved before last operation
+     */
+    public ArrayList<Task> getPastVersion() {
+        ArrayList<Task> pastVersion = undoArrayList.remove(0);
+        logger.log(Level.INFO, "Backup version retrieved");
+        return pastVersion;
+    }
+    
+	// End of segment: .\src\application\Backup.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Backup.java
+	 */
+
+    /**
+     * Stores a copy of the tasks list in current state
+     * Clones each Task object by copying all encapsulated information
+     * 
+     * @param originalTasks ArrayList of all Task objects
+     * @return              copied ArrayList of all copied Task objects
+     */
+    public ArrayList<Task> copyTasks(ArrayList<Task> originalTasks) {
+        ArrayList<Task> backup = new ArrayList<Task>();
+        for (int i = 0 ; i < originalTasks.size() ; i++) {
+            backup.add(new Task(originalTasks.get(i), i));
+        }
+        return backup;
+    }
+
+}
+
+	// End of segment: .\src\application\Backup.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Message.java
+	 */
+
+public abstract class Message {
+
+    protected String outputMsg = "";
+    
+	// End of segment: .\src\application\Message.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Message.java
+	 */
+
+    /**
+     * Returns the message encapsulated by the selected Message object
+     * 
+     * @return message constructed by the Message object
+     */
+    public String getMessage() {
+        return outputMsg;
+    }
+}
+
+class MessageNotifyAdd extends Message {
+    
+    private static final String NOTIFY_ADDED = "Added as ";
+    
+	// End of segment: .\src\application\Message.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Message.java
+	 */
+
+    /**
+     * Constructor for message to be displayed when a task has been added successfully
+     * 
+     * @param ID Task ID assigned to the new task
+     */
+    MessageNotifyAdd(String ID) {
+        outputMsg += NOTIFY_ADDED + ID;
+    }
+}
+
+class MessageNotifyDelete extends Message {
+
+    private static final String NOTIFY_DELETED = "Deleted ";
+    
+	// End of segment: .\src\application\Message.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Message.java
+	 */
+
+    /**
+     * Constructor for message to be displayed when tasks have been deleted successfully
+     * 
+     * @param deletedTaskIDs ArrayList of deleted task IDs
+     */
+    MessageNotifyDelete(ArrayList<String> deletedTaskIDs) {
+        assert deletedTaskIDs.size() > 0;
+        outputMsg += NOTIFY_DELETED;
+        
+        for (int i = 0 ; i < deletedTaskIDs.size() ; i++) {
+            outputMsg += deletedTaskIDs.get(i);
+            if (i < deletedTaskIDs.size() - 1) {
+                outputMsg += ", ";
+            }
+        }
+    }
+}
+
+class MessageNotifyEdit extends Message {
+
+    private static final String NOTIFY_EDITED = "edited successfully";
+    
+	// End of segment: .\src\application\Message.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Message.java
+	 */
+
+    /**
+     * Constructor for message to be displayed when a task has been edited successfully
+     * 
+     * @param ID Task ID of edited task
+     */
+    MessageNotifyEdit(String ID) {
+        outputMsg += ID + " " + NOTIFY_EDITED;
+    }
+}
+
+class MessageNotifyComplete extends Message {
+
+    private static final String NOTIFY_COMPLETED = "Finished ";
+    
+	// End of segment: .\src\application\Message.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Message.java
+	 */
+
+    /**
+     * Constructor for message to be displayed when tasks have been marked as complete
+     * 
+     * @param completedTaskIDs ArrayList of completed task IDs
+     */
+    MessageNotifyComplete(ArrayList<String> completedTaskIDs) {
+        assert completedTaskIDs.size() > 0;
+        outputMsg += NOTIFY_COMPLETED;
+        
+        for (int i = 0 ; i < completedTaskIDs.size() ; i++) {
+            outputMsg += completedTaskIDs.get(i);
+            if (i < completedTaskIDs.size() - 1) {
+                outputMsg += ", ";
+            }
+        }
+    }
+}
+
+class MessageNotifyUndo extends Message {
+
+    private static final String NOTIFY_UNDO = "Change unmade";
+    
+	// End of segment: .\src\application\Message.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Message.java
+	 */
+
+    /**
+     * Constructor for message to be displayed when a user operation has been undone
+     */
+    MessageNotifyUndo() {
+        outputMsg += NOTIFY_UNDO;
+    }
+}
+
+class MessageWarningInvalidID extends Message {
+
+    private static final String WARNING_INVALID_ID = "Cannot find tasks ";
+    
+	// End of segment: .\src\application\Message.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\Message.java
+	 */
+
+    /**
+     * Constructor for message to be displayed when specified tasks cannot be found
+     * and hence cannot be deleted or completed
+     * 
+     * @param invalidTaskIDs ArrayList of task IDs that couldn't be found
+     */
+    MessageWarningInvalidID(ArrayList<String> invalidTaskIDs) {
+        assert invalidTaskIDs.size() > 0;
+        outputMsg += WARNING_INVALID_ID;
+        for (int i = 0 ; i < invalidTaskIDs.size() ; i++) {
+            outputMsg += invalidTaskIDs.get(i);
+            if (i < invalidTaskIDs.size() - 1) {
+                outputMsg += ", ";
+            }
+        }
+    }
+}
+	// End of segment: .\src\application\Message.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\ConfigManager.java
+	 */
+
+/**
+ * ConfigManager stores the default view type for WaveWave into an external json file.
+ * View type is stored separately so that the view is maintained for next sessions.
+ * JSON is used because of possible future expansions that include more settings to offer.
+ * 
+	// End of segment: .\src\data\ConfigManager.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\ConfigManager.java
+	 */
+
+    /**
+     * Constructor
+     */
+    public ConfigManager() {
+        filename = "Config.json";
+        initiateFile();
+    }
+    
+	// End of segment: .\src\data\ConfigManager.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\ConfigManager.java
+	 */
+
+    /**
+     * Constructor when filename is specified
+     * Used only for unit testing
+     * 
+     * @param name filename to use for testing
+     */
+    public ConfigManager(String name) {
+        filename = name;
+        initiateFile();
+    }
+    
+	// End of segment: .\src\data\ConfigManager.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\ConfigManager.java
+	 */
+
+    /**
+     * Confirm that the external json file exists. If not, create it.
+     */
+    public void initiateFile() {
+        file = new File(filename);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            logger.log(Level.INFO, "Config file ready");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+    
+	// End of segment: .\src\data\ConfigManager.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\ConfigManager.java
+	 */
+
+    /**
+     * Read json file to retrieve the setting for home view type
+     * 
+     * @return integer representing a particular view type
+     */
+    public int getHomeViewType() {
+        int setting = task.TaskManager.DEFAULT_DAYS_TO_DISPLAY;
+        try {
+            JSONParser parser = new JSONParser();
+            JSONObject homeSetting = (JSONObject) parser.parse(new FileReader(filename));
+            setting = (int)(long) homeSetting.get(KEY_HOME_VIEW_TYPE);
+            logger.log(Level.INFO, "Default home view setting retrieved");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        } catch (ParseException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
+        return setting;
+    }
+    
+	// End of segment: .\src\data\ConfigManager.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\ConfigManager.java
+	 */
+
+    /**
+     * Stores the setting for home view type to the json file
+     * 
+     * @param type integer representing a particular view type
+     */
+    public void setHomeViewType(int type) {
+        JSONObject homeSetting = new JSONObject();
+        homeSetting.put(KEY_HOME_VIEW_TYPE, type);
+        try {
+            FileWriter fw = new FileWriter(file, false);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String output = gson.toJson(homeSetting);
+            fw.write(output);
+            fw.flush();
+            fw.close();
+            logger.log(Level.INFO, "Default home view setting saved");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+}
+
+	// End of segment: .\src\data\ConfigManager.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\DataStorage.java
+	 */
+
+/**
+ * Data storage component that delivers data between Controller and external storage.
+ * 
+	// End of segment: .\src\data\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\DataStorage.java
+	 */
+
+    /**
+     * Constructor.
+     */
+    public DataStorage() {
+        filename = "WaveWaveTasks.json";
+        initiateFile();
+    }
+
+	// End of segment: .\src\data\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\DataStorage.java
+	 */
+
+    /**
+     * Constructor when filename for external json storage is provided. For unit testing.
+     * 
+     * @param name name of the json file for storing the tasks
+     */
+    public DataStorage(String name) {
+        filename = name;
+        initiateFile();
+    }
+
+	// End of segment: .\src\data\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\DataStorage.java
+	 */
+
+    /**
+     * Confirm that the external json file exists. If not, create it.
+     */
+    public void initiateFile() {
+        File file = new File(filename);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            logger.log(Level.INFO, "Storage file ready");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+
+	// End of segment: .\src\data\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\DataStorage.java
+	 */
+
+    /**
+     * Read json file. Retrieve all tasks and store them in JSONArray.
+     * 
+     * @return ArrayList of Task objects
+     */
+    public ArrayList<Task> retrieveTasks() {
+        tasks.clear();
+        JSONParser parser = new JSONParser();
+        try {
+            tasks = (JSONArray) parser.parse(new FileReader(filename));
+            logger.log(Level.INFO, "Contents of storage file retrieved");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        } catch (ParseException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
+        return convertJSONArrayToArrayList(tasks);
+    }
+
+	// End of segment: .\src\data\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\DataStorage.java
+	 */
+
+    /**
+     * Store tasks to external json file
+     * 
+     * @param array ArrayList of Task objects
+     */
+    public void saveTasks(ArrayList<Task> array) {
+        convertArrayListToJSONArray(array);
+        try {
+            FileWriter fw = new FileWriter(filename, false);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String output = gson.toJson(tasks);
+            fw.write(output);
+            fw.flush();
+            fw.close();
+            logger.log(Level.INFO, "Tasks written to external file");
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
+    }
+
+	// End of segment: .\src\data\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\DataStorage.java
+	 */
+
+    /**
+     * Converts JSONArray containing the tasks to a form that Controller can understand
+     * 
+     * @param array JSONArray of JSONObjects, each containing information of task details
+     * @return      ArrayList of Task objects
+     */
+    public ArrayList<Task> convertJSONArrayToArrayList(JSONArray array) {
+        ArrayList<Task> list = new ArrayList<Task>();
+        for (int i = 0 ; i < array.size() ; i++) {
+            list.add(convertJSONObjectToTask((JSONObject) array.get(i)));
+        }
+        return list;
+    }
+
+	// End of segment: .\src\data\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\DataStorage.java
+	 */
+
+    /**
+     * Converts ArrayList to JSONArray that can be saved to external json file
+     * 
+     * @param list ArrayList of Task objects
+     * @return     JSONArray of JSONObjects each corresponding to a particular task
+     */
+    public JSONArray convertArrayListToJSONArray(ArrayList<Task> list) {
+        tasks.clear();
+        for (int i = 0 ; i < list.size() ; i++) {
+            tasks.add(convertTaskToJSONObject(list.get(i)));
+        }
+        return tasks;
+    }
+    
+	// End of segment: .\src\data\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\DataStorage.java
+	 */
+
+    /**
+     * Converts JSONObject to a Task object that Controller can operate on
+     * 
+     * @param obj JSONObject corresponding to a task saved in external file
+     * @return    Task object that encapsulates the same data as parameter obj
+     */
+    public Task convertJSONObjectToTask(JSONObject obj) {
+        Task task = new Task();
+        try {
+            task.setDescription((String) obj.get(KEY_DESCRIPTION));
+            
+            if (obj.containsKey(KEY_DATE)) {
+                String dateString = (String) obj.get(KEY_DATE);
+                DateTime date = fmt.parseDateTime(dateString);
+                task.setDate(date);
+            }
+            
+            if (obj.containsKey(KEY_END)) {
+                String endString = (String) obj.get(KEY_END);
+                DateTime end = fmt.parseDateTime(endString);
+                task.setEndDate(end);
+            }
+            
+            
+            if (obj.containsKey(KEY_PRIORITY)) {
+                boolean highPriority = (boolean)obj.get(KEY_PRIORITY);
+                if (highPriority) {
+                    task.setPriority(1);
+                } else {
+                    task.setPriority(0);
+                }
+            }
+            
+            boolean isCompleted = (boolean) obj.get(KEY_ISCOMPLETED);
+            task.setCompleted(isCompleted);
+            if (isCompleted) {
+                String compString = (String) obj.get(KEY_COMPLETED_DATE);
+                DateTime completedTime = fmt.parseDateTime(compString);
+                task.setCompletedAt(completedTime);
+            }
+            
+            String modString = (String) obj.get(KEY_LAST_MODIFIED_DATE);
+            DateTime modTime = fmt.parseDateTime(modString);
+            task.setModifiedAt(modTime);
+            
+            String createdString = (String) obj.get(KEY_CREATED_DATE);
+            DateTime createdTime = fmt.parseDateTime(createdString);
+            task.setCreatedAt(createdTime);
+            
+            logger.log(Level.INFO,
+                    "JSONArray converted to ArrayList of tasks");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
+        return task;
+    }
+    
+	// End of segment: .\src\data\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\data\DataStorage.java
+	 */
+
+    /**
+     * Converts Task object to JSONObject that can be stored in external json file
+     * 
+     * @param task Task object to convert
+     * @return     JSONObject corresponding to parameter task
+     */
+    public JSONObject convertTaskToJSONObject(Task task) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put(KEY_DESCRIPTION, task.getDescription());
+            
+            if (task.getPriority() == 1) {
+                obj.put(KEY_PRIORITY, true);
+            } else {
+                obj.put(KEY_PRIORITY, false);
+            }
+            
+            if (task.getDate() != null) {
+                String date = fmt.print(task.getDate());
+                obj.put(KEY_DATE, date);
+            }
+            
+            if (task.getEndDate() != null) {
+                String end = fmt.print(task.getEndDate());
+                obj.put(KEY_END, end);
+            }
+            
+            boolean isCompleted = task.isCompleted();
+            obj.put(KEY_ISCOMPLETED, isCompleted);
+            if (isCompleted) {
+                String comp = fmt.print(task.getCompletedAt());
+                obj.put(KEY_COMPLETED_DATE, comp);
+            }
+            
+            String mod = fmt.print(task.getModifiedAt());
+            obj.put(KEY_LAST_MODIFIED_DATE, mod);
+            String cr = fmt.print(task.getCreatedAt());
+            obj.put(KEY_CREATED_DATE, cr);
+            
+            logger.log(Level.INFO,
+                    "ArrayList of tasks converted to JSONArray");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }
+        return obj;
+    }
+
+}
+
+	// End of segment: .\src\data\DataStorage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\task\Task.java
+	 */
+
+    /**
+     * Constructor for cloning task object, used when storing past versions
+     * @param original
+     */
+    public Task(Task original, int originalID) {
+        id = originalID;
+        description = original.getDescription();
+        displayID = original.getDisplayID();
+        date = original.getDate();
+        endDate = original.getEndDate();
+        completed = original.isCompleted();
+        priority = original.getPriority();
+        createdAt = original.getCreatedAt();
+        modifiedAt = original.getModifiedAt();
+        completedAt = original.getCompletedAt();
+        deleted = original.isDeleted();
+    }
+
+	// End of segment: .\src\task\Task.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITooltips.java
+	 */
+
+/**
+ * Stores and returns random tooltips
+	// End of segment: .\src\UI\UITooltips.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITooltips.java
+	 */
+
+    /**
+     * Constructor.
+     * Adds all tooltips and guide messages to respective ArrayLists.
+     */
+    public UITooltips() {
+        tooltipsAdd.add(TOOLTIP_ADD1);
+        tooltipsAdd.add(TOOLTIP_ADD2);
+        tooltipsEdit.add(TOOLTIP_EDIT1);
+        tooltipsDelete.add(TOOLTIP_DELETE1);
+        tooltipsComplete.add(TOOLTIP_COMPLETE1);
+        tooltipsComplete.add(TOOLTIP_COMPLETE2);
+        tooltipsSearch.add(TOOLTIP_SEARCH1);
+        tooltipsSearch.add(TOOLTIP_SEARCH2);
+        tooltipsSearch.add(TOOLTIP_SEARCH3);
+        tooltipsMisc.add(TOOLTIP_MISC1);
+        tooltipsMisc.add(TOOLTIP_MISC2);
+        tooltipsMisc.add(TOOLTIP_MISC3);
+        tooltipsMisc.add(TOOLTIP_MISC4);
+        tooltipsMisc.add(TOOLTIP_MISC5);
+        tooltipsMisc.add(TOOLTIP_MISC6);
+        tooltipsMisc.add(TOOLTIP_MISC7);
+        tooltipsMisc.add(TOOLTIP_MISC8);
+        tooltipsMisc.add(TOOLTIP_MISC9);
+        tooltipsMisc.add(TOOLTIP_MISC10);
+        tooltipsMisc.add(TOOLTIP_MISC11);
+        tooltipsMisc.add(TOOLTIP_MISC12);
+        tooltipsMisc.add(TOOLTIP_MISC13);
+        tooltipsMisc.add(TOOLTIP_MISC14);
+    } 
+    
+	// End of segment: .\src\UI\UITooltips.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITooltips.java
+	 */
+
+    /**
+     * Returns a tooltip that helps the user finish the command in proper syntax
+     * 
+     * @param command command type entered by the user
+     * @return        tooltip of type corresponding to command
+     */
+    public String getToolTips(String command) {
+    	switch (command.toUpperCase()) {
+    		case "ADD" : return TOOLTIP_BULLET + getTooltipsAdd();
+    		case "EDIT" : return  TOOLTIP_BULLET + getTooltipsEdit();
+    		case "COMPLETE" : return  TOOLTIP_BULLET + getTooltipsComplete();
+    		case "DELETE" : return  TOOLTIP_BULLET + getTooltipsDelete();
+    		case "SEARCH": return  TOOLTIP_BULLET + getTooltipSearch();
+    		default: return  TOOLTIP_BULLET + getTooltipMisc();
+    	}
+    }
+    
+	// End of segment: .\src\UI\UITooltips.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITooltips.java
+	 */
+
+    /**
+     * Returns a random index from 0 to the size of the ArrayList from which a message will be retrieved
+     * 
+     * @param size
+     * @return
+     */
+    private Integer getRandomInteger(int size) {
+        return rand.nextInt(size);
+    }
+    
+	// End of segment: .\src\UI\UITooltips.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITooltips.java
+	 */
+
+    /**
+     * Retrieves a random message related to ADD command
+     * 
+     * @return String containing the message to display
+     */
+    public String getTooltipsAdd() {
+        return tooltipsAdd.get(getRandomInteger(tooltipsAdd.size()));
+    }
+    
+	// End of segment: .\src\UI\UITooltips.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITooltips.java
+	 */
+
+    /**
+     * Retrieves a random message related to EDIT command
+     * 
+     * @returnString containing the message to display
+     */
+    public String getTooltipsEdit() {
+        return tooltipsEdit.get(getRandomInteger(tooltipsEdit.size()));
+    }
+    
+	// End of segment: .\src\UI\UITooltips.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITooltips.java
+	 */
+
+    /**
+     * Retrieves a random message related to DELETE command
+     * 
+     * @return String containing the message to display
+     */
+    public String getTooltipsDelete() {
+        return tooltipsDelete.get(getRandomInteger(tooltipsDelete.size()));
+    }
+    
+	// End of segment: .\src\UI\UITooltips.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITooltips.java
+	 */
+
+    /**
+     * Retrieves a random message related to COMPLETE command
+     * 
+     * @return String containing the message to display
+     */
+    private String getTooltipsComplete() {
+        return tooltipsComplete.get(getRandomInteger(tooltipsComplete.size()));
+    }
+    
+	// End of segment: .\src\UI\UITooltips.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITooltips.java
+	 */
+
+    /**
+     * Retrieves a random message related to SEARCH command
+     * 
+     * @return String containing the message to display
+     */
+    public String getTooltipSearch() {
+        return tooltipsSearch.get(getRandomInteger(tooltipsSearch.size()));
+    }
+    
+	// End of segment: .\src\UI\UITooltips.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITooltips.java
+	 */
+
+    /**
+     * Retrieves a random tooltip
+     * 
+     * @return String containing the tooltip to display
+     */
+    public String getTooltipMisc() {
+        return tooltipsMisc.get(getRandomInteger(tooltipsMisc.size()));
+    }
+}
+	// End of segment: .\src\UI\UITooltips.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\MessageTest.java
+	 */
+
+/**
+ * Unit test for class Message and selected subclasses
+	// End of segment: .\test\application\MessageTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\MessageTest.java
+	 */
+
+    @Test
+    public void testNotifyAdd() {
+        message = new MessageNotifyAdd("T2");
+        assertEquals("Added as T2", message.getMessage());
+    }
+
+	// End of segment: .\test\application\MessageTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\MessageTest.java
+	 */
+
+    @Test
+    public void testNotifyDelete() {
+        ArrayList<String> deleted = new ArrayList<String>();
+        deleted.add("T1");
+        deleted.add("E1");
+        deleted.add("E4");
+        message = new MessageNotifyDelete(deleted);
+        assertEquals("Deleted T1, E1, E4", message.getMessage());
+    }
+
+	// End of segment: .\test\application\MessageTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\MessageTest.java
+	 */
+
+    @Test
+    public void testNotifyUndo() {
+        message = new MessageNotifyUndo();
+        assertEquals("Change unmade", message.getMessage());
+    }
+
+	// End of segment: .\test\application\MessageTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\MessageTest.java
+	 */
+
+    @Test
+    public void testWarningInvalidID() {
+        ArrayList<String> failed = new ArrayList<String>();
+        failed.add("T3");
+        failed.add("E3");
+        failed.add("E5");
+        failed.add("T12");
+        message = new MessageWarningInvalidID(failed);
+        assertEquals("Cannot find tasks T3, E3, E5, T12", message.getMessage());
+    }
+
+}
+
+	// End of segment: .\test\application\MessageTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\data\ConfigManagerTest.java
+	 */
+
+/**
+ * Unit test for class ConfigManager
+ * 
+	// End of segment: .\test\data\ConfigManagerTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\data\ConfigManagerTest.java
+	 */
+
+    @Test
+    public void testGetConfig() {
+        test = new ConfigManager("configTest.json");
+        assertEquals(1, test.getHomeViewType());
+    }
+    
+	// End of segment: .\test\data\ConfigManagerTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\data\ConfigManagerTest.java
+	 */
+
+    @Test
+    public void testSetConfig() {
+        test = new ConfigManager("configOutput.json");
+        test.setHomeViewType(4);
+        
+        byte b1 = 0;
+        byte b2 = 1;
+        try {
+            FileInputStream f1 = new FileInputStream("ConfigOutput.json");
+            FileInputStream f2 = new FileInputStream("ConfigOutputExpected.json");
+            DataInputStream d1 = new DataInputStream(f1);
+            DataInputStream d2 = new DataInputStream(f2);
+            b1 = d1.readByte();
+            b2 = d2.readByte();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        assertEquals(b1, b2);
+        
+    }
+
+}
+
+	// End of segment: .\test\data\ConfigManagerTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\data\DataStorageTest.java
+	 */
+
+/**
+ * 
+	// End of segment: .\test\data\DataStorageTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\data\DataStorageTest.java
+	 */
+
+    @Test
+    public void testInitiateFile() {
+        test = new DataStorage("testInitiateFile.json");
+        test.initiateFile();
+        boolean fileExists = false;
+        File storage = new File("testInitiateFile.json");
+        if(storage.isFile() && storage.exists()) {
+            fileExists = true;
+        }
+        // After initiateFile() is called, external storage must exist
+        assertEquals(true, fileExists);
+    }
+    
+	// End of segment: .\test\data\DataStorageTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\data\DataStorageTest.java
+	 */
+
+    @Test
+    public void testRetrieveTasks() {
+        test = new DataStorage("testRetrieveTasks.json");
+        test.initiateFile();
+        ArrayList<Task> tasks = test.retrieveTasks();
+        assertEquals(1, tasks.size());
+        
+        Task task = tasks.get(0);
+        assertEquals("submit WaveWave v0.5", task.getDescription());
+        assertEquals("2014-11-10T23:59:00.000+08:00", task.getEndDate().toString());
+        assertEquals(false, task.isCompleted());
+        assertEquals(1, task.getPriority());
+        assertEquals(null, task.getDate());
+    }
+    
+	// End of segment: .\test\data\DataStorageTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\data\DataStorageTest.java
+	 */
+
+    @Test
+    public void testSaveTasks() {
+        test = new DataStorage("testSaveTasks.json");
+        Task task = new Task();
+        task.setDescription("CS2103T software demo");
+        DateTime date = formatter.parseDateTime("12/11/2014 14:00:00");
+        task.setDate(date);
+        task.setPriority(1);
+        task.setCompleted(false);
+        
+        ArrayList<Task> list = new ArrayList<Task>();
+        list.add(task);
+        test.saveTasks(list);
+        
+        byte b1 = 0;
+        byte b2 = 1;
+        try {
+            FileInputStream f1 = new FileInputStream("testSaveTasks.json");
+            FileInputStream f2 = new FileInputStream("testSaveTasksExpected.json");
+            DataInputStream d1 = new DataInputStream(f1);
+            DataInputStream d2 = new DataInputStream(f2);
+            b1 = d1.readByte();
+            b2 = d2.readByte();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        assertEquals(b1, b2);
+    }
+    
+	// End of segment: .\test\data\DataStorageTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\data\DataStorageTest.java
+	 */
+
+    @Test
+    public void testConvertTaskToJSONObject() {
+        test = new DataStorage();
+        
+        Task task = new Task();
+        task.setDescription("CS2103T lecture");
+        DateTime date = formatter.parseDateTime("24/10/2014 14:00:00");
+        task.setDate(date);
+        DateTime end = formatter.parseDateTime("24/10/2014 16:00:00");
+        task.setEndDate(end);
+        task.setPriority(1);
+        task.setCompleted(true);
+        
+        JSONObject obj = test.convertTaskToJSONObject(task);
+        
+        boolean isHighPriority = (boolean) obj.get("High-priority");
+        int priority;
+        if (isHighPriority) {
+            priority = 1;
+        } else {
+            priority = 0;
+        }
+        
+        assertEquals(task.getDescription(), obj.get("Description"));
+        assertEquals(task.getDate().toString(), obj.get("Date"));
+        assertEquals(task.getEndDate().toString(), obj.get("End date"));
+        assertEquals(1, priority);
+        assertEquals(true, obj.get("Completed"));
+        
+    }
+    
+	// End of segment: .\test\data\DataStorageTest.java
+
+
+
+
+
+	/**
+	 * origin: .\test\data\DataStorageTest.java
+	 */
+
+    @Test
+    public void testConvertJSONObjectToTask() {
+        test = new DataStorage();
+        
+        JSONObject obj = new JSONObject();
+        obj.put("Description", "Submit project manual");
+        obj.put("End date", "2014-11-10T23:59:59.999+08:00");
+        obj.put("High-priority", true);
+        obj.put("Completed", true);
+        
+        Task task = test.convertJSONObjectToTask(obj);
+        
+        int priority = task.getPriority();
+        boolean isHighPriority;
+        if (priority == 1) {
+            isHighPriority = true;
+        } else {
+            isHighPriority = false;
+        }
+        
+        assertEquals(obj.get("Description"), task.getDescription());
+        assertEquals(obj.get("End date"), task.getEndDate().toString());
+        assertEquals(true, isHighPriority);
+        assertEquals(true, task.isCompleted());
+        
+    }
+    
+}
+
+	// End of segment: .\test\data\DataStorageTest.java
+
+
+
+
+

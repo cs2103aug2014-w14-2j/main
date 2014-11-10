@@ -1,0 +1,1751 @@
+//@author: a0111824r
+
+
+
+	/**
+	 * origin: .\src\application\InputCommands.java
+	 */
+
+    public static ArrayList<String> getCommandList() {
+        ArrayList<String> cmdList = new ArrayList<String>();
+        cmdList.add(ADD);
+        cmdList.add(DELETE);
+        cmdList.add(EDIT);
+        cmdList.add(UNDO);
+        cmdList.add(COMPLETE);
+        cmdList.add(QUIT);
+        cmdList.add(DISPLAY);
+        cmdList.add(SHOW);
+        cmdList.add(SEARCH);
+        cmdList.add(EXIT);
+        cmdList.add(HOME);
+        cmdList.add(HELP);
+        return cmdList;
+    }
+    
+	// End of segment: .\src\application\InputCommands.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\InputCommands.java
+	 */
+
+    public static String getEditCommand() {
+        return EDIT;
+    }
+    
+	// End of segment: .\src\application\InputCommands.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\InputCommands.java
+	 */
+
+    public static String getAddCommand() {
+        return ADD;
+    }
+    
+	// End of segment: .\src\application\InputCommands.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\InputCommands.java
+	 */
+
+    public static String getSearchCommand() {
+        return SEARCH;
+    }   
+    
+	// End of segment: .\src\application\InputCommands.java
+
+
+
+
+
+	/**
+	 * origin: .\src\application\InputCommands.java
+	 */
+
+    public static String getHelpCommand() {
+        return HELP;
+    }
+}
+
+	// End of segment: .\src\application\InputCommands.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+/**
+ * UIAutoComplete: Responsible for all autocomplete operations.
+ * 
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+    /**
+     * UIAutoComplete: Constructor
+     * Takes in CmdInputBox Component to detect user input 
+     *
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+    /**
+     * UIAutoComplete: Constructor
+     * Takes in CmdInputBox Component to detect user input 
+     *
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+    /** 
+     *
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+    /** 
+     *
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoComplete.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIAutoComplete.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+/**
+ * UIAutoCompleteListener: ActionHandler acts as a middle man between UIAutoComplete & UIComponent.
+ * 
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+    /**
+     * @param An inputbox object 
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+    /**
+     * @param the next possible command to be autocompleted.
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+    /**
+     * @param the current command on the textbox
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+    /**
+     * @param the current command on the textbox
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+    /**
+     * @param the current command on the textbox
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIAutoCompleteListener.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIAutoCompleteListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+/**
+ * Abstracted TextField Class.
+ * 
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     * @param suggestionText - the text label used to display suggestion text
+     * @param guideMsgText - the text label used to display guide messages
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     * @param text to be displayed on the input box
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     * 
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     * 
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UICmdInputBox.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UICmdInputBox.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     * Update both the title and the view of the left panel
+     * 
+     * @param input the arraylist of tasks to be populated on the listview
+     *        input the String to replace the current title of the heading
+     */
+	public void updateLeftPanel(ArrayList<Task> items, String title) {
+		reminderTaskTitle.setText(title);
+	    eventReminderTaskListView.populateTaskListWithData(items, true);
+	    eventReminderTaskListView.clearSelection();    
+		logger.log(Level.INFO, "Reminder & Event ListView is updated.");
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     * Update both the title and the view of the right panel
+     * 
+     * @param input the arraylist of tasks to be populated on the listview
+     *        input the String to replace the current title of the heading
+     */
+	public void updateRightPanel(ArrayList<Task> items, String title) {
+		floatingTaskTitle.setText(title);
+		floatingTaskListView.populateTaskListWithData(items, false);
+	    floatingTaskListView.clearSelection();
+	    
+	    logger.log(Level.INFO, "Task ListView is updated.");
+	}
+	
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIComponent.java
+	 */
+
+    /**
+     * @param stage will be used to initialize the UI.
+	// End of segment: .\src\UI\UIComponent.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIControllerListener.java
+	 */
+
+/**
+ * Middle man between UIComponent and Controller.
+ * 
+	// End of segment: .\src\UI\UIControllerListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIControllerListener.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIControllerListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIControllerListener.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIControllerListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIControllerListener.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIControllerListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEmptyTaskListItem.java
+	 */
+
+/**
+ *
+	// End of segment: .\src\UI\UIEmptyTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEmptyTaskListItem.java
+	 */
+
+    /**
+     * @param Task object to be displayed
+     * @param DateTime from JodaTime library
+     * @param isLeftPane to indicate the item to be positioned in which panel on the UI
+	// End of segment: .\src\UI\UIEmptyTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEmptyTaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIEmptyTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEventTaskListView.java
+	 */
+
+/**
+ *
+	// End of segment: .\src\UI\UIEventTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEventTaskListView.java
+	 */
+
+    /**
+     * @param cmdInputBox - the inputbox object on the UI
+	// End of segment: .\src\UI\UIEventTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEventTaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIEventTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEventTaskListView.java
+	 */
+
+    /**
+     * @param items - ArrayList of task to be displayed on the ListView
+     * @param isLeftPane - indicate if it is for the left panel
+	// End of segment: .\src\UI\UIEventTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIEventTaskListView.java
+	 */
+
+    /**
+     * @param takes in an arrayList of Tasks object to be displayed on the Listview
+	// End of segment: .\src\UI\UIEventTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIFloatingTaskListView.java
+	 */
+
+/**
+ *
+	// End of segment: .\src\UI\UIFloatingTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIFloatingTaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIFloatingTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIFloatingTaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIFloatingTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIFloatingTaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIFloatingTaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIHelp.java
+	 */
+
+public class UIHelp { 
+	private ArrayList<String> commandList;
+	private int midPoint;
+	
+	private final String UI_HELP_NOTICE = "Note: both uppercase and lowercase commands are supported.";
+	private final String UI_HELP_ADD =  "add [enter task description here] time/period (optional) ! : Use an exclamation mark to set priority as high (optional).";
+	private final String UI_HELP_COMPLETE = "complete task ID(s): to mark a task or multiple tasks as completed. Task IDs are separated by a single space.";
+	private final String UI_HELP_DELETE = "delete task ID(s): to delete a task or multiple tasks. Task IDs are separated by a single space.";
+	private final String UI_HELP_EDIT = "edit task ID: press the Spacebar after entering the task ID, description and corresponding time will be auto-completed for you. Task can then be edited accordingly.";
+	private final String UI_HELP_HOME = "home: go to the home view where your tasks for the next few days are displayed.";
+	private final String UI_HELP_SEARCH = "search [enter keyword here] time/period(optional) !(optional) complete(optional) : A combination of search keyword, time, priority and completed are supported. ";
+	private final String UI_HELP_SHOW = "show time/period: to show tasks at a specific time or within a period of time in your home view.";
+	private final String UI_HELP_UNDO = "undo: to undo a previous operation.";
+	private final String UI_HELP_QUIT = "quit: to quit the program.";
+	
+	// End of segment: .\src\UI\UIHelp.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIHelp.java
+	 */
+
+	public UIHelp() {
+		commandList = InputCommands.getCommandList();
+		Collections.sort(commandList);
+		this.midPoint = this.commandList.size()/2;
+	}
+	
+	// End of segment: .\src\UI\UIHelp.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIHelp.java
+	 */
+
+	public ArrayList<UITaskListItem> generateLeftHelpList() {
+		ArrayList<UITaskListItem> helpList = new ArrayList<UITaskListItem>();
+		
+		for(int i = 0; i < midPoint; i++) {
+			String cmd = commandList.get(i);
+			String description = getHelpText(cmd);
+			
+			if(description.length() != 0) {
+				UITaskListItem titleListItem = new UIHelpListItem(cmd, null, null, true, true);
+				helpList.add(titleListItem);
+			
+				UITaskListItem helpDescriptionItem = new UIHelpListItem(description, null, null, true, false);
+				helpList.add(helpDescriptionItem);
+			}
+		}	
+		return helpList;
+	}
+	
+	// End of segment: .\src\UI\UIHelp.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIHelp.java
+	 */
+
+	public ArrayList<UITaskListItem> generateRightHelpList() {
+		ArrayList<UITaskListItem> helpList = new ArrayList<UITaskListItem>();
+		
+		for (int i= midPoint; i < commandList.size(); i++) {
+			String cmd = commandList.get(i);
+			String description = getHelpText(cmd);
+			
+			if(description.length() != 0) {
+				UITaskListItem titleListItem = new UIHelpListItem(cmd, null, null, true, true);
+				helpList.add(titleListItem);
+			
+				UITaskListItem helpDescriptionItem = new UIHelpListItem(description, null, null, true, false);
+				helpList.add(helpDescriptionItem);
+			}
+		}
+		return helpList;
+	}
+	
+	// End of segment: .\src\UI\UIHelp.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIHelp.java
+	 */
+
+	private String getHelpText(String cmd) {
+		switch(cmd.toUpperCase()) {
+			case "ADD": return UI_HELP_ADD;
+			case "COMPLETE": return UI_HELP_COMPLETE;
+			case "DELETE": return UI_HELP_DELETE;
+			case "EDIT": return UI_HELP_EDIT;
+			case "HOME": return UI_HELP_HOME;
+			case "SEARCH": return UI_HELP_SEARCH;
+			case "SHOW": return UI_HELP_SHOW;
+			case "UNDO": return UI_HELP_UNDO;
+			case "QUIT": return UI_HELP_QUIT;
+			default: return "";
+		}
+	}  
+}
+
+	// End of segment: .\src\UI\UIHelp.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UILeftTaskListItem.java
+	 */
+
+/**
+ *
+	// End of segment: .\src\UI\UILeftTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UILeftTaskListItem.java
+	 */
+
+    /**
+     * @param Task the task object to be displayed on the listview
+     * @param date of the assigned task
+     * @param isLeftPane to indicate if it is the listview on the left
+	// End of segment: .\src\UI\UILeftTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UILeftTaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UILeftTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIRightTaskListItem.java
+	 */
+
+/**
+ *
+	// End of segment: .\src\UI\UIRightTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIRightTaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIRightTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIRightTaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UIRightTaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UISceneListener.java
+	 */
+
+/**
+ * Handles all Scene Events triggered by users.
+ * 
+	// End of segment: .\src\UI\UISceneListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UISceneListener.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UISceneListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UISceneListener.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UISceneListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UISceneListener.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UISceneListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+/**
+ * This class will override the default ListCell generate for the LISTVIEW component
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+    /**
+     * Creates a Rectangle Object
+     * @param width : Width of the rectangle
+     *  	  height : Height of the rectangle
+     *   	  arcWidth : Curve Border Top Half
+     *        arcHeight : Curve Border Bottom Half
+     *        Color : Color of the Rectangle
+     * @return Rectangle
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+    /**
+     * Create a Text Object
+     * @param text : String of the text
+     * 		  textWidth: Word Wrap Width
+     * 		  size : font size
+     *    	  fontFamily: font-family of the display text
+     *        fontWeight: weight of the font default: NORMAL
+     *        color : color of the text
+     * @return Text
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+    /**
+     * @param priority : (0,1) 0 is non prioritize and 1 is prioritize
+     *  	  displayID : Task ID
+     *        height : height of the priority Indicator
+     *        item : Task object that will retrieve all specific data for display
+     * @return StackPane
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+    /**
+     * calculate the height of the task items based on content length
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListCell.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListCell.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+/**
+ * 
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListItem.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListItem.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+/**
+ * Abstracted ListView Class
+ * 
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListView.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListView.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListViewListener.java
+	 */
+
+/**
+ * ListView Event Handler.
+ * 
+	// End of segment: .\src\UI\UITaskListViewListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListViewListener.java
+	 */
+
+    /**
+     * @param taskList - ListView from the UI
+	// End of segment: .\src\UI\UITaskListViewListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListViewListener.java
+	 */
+
+    /**
+     *
+	// End of segment: .\src\UI\UITaskListViewListener.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UITaskListViewListener.java
+	 */
+
+    /**
+     * @param KeyEvent triggered only on keyboard event
+	// End of segment: .\src\UI\UITaskListViewListener.java
+
+
+
+
+
+	/**
+	 * origin: .\test\application\IntegrationTest.java
+	 */
+
+	@Test
+	public void testRunAutoComplete() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		
+	    Method method = UIAutoComplete.class.getDeclaredMethod("runAutoComplete", String.class);
+	    method.setAccessible(true);
+	    
+	    String userInput = "a";
+	    String result = (String) method.invoke(autocomplete, userInput);	
+	    assertEquals(result.trim(), "ADD");
+	    
+	    userInput = "e";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "EDIT");
+
+	    userInput = "d";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "DELETE");
+	    
+	    userInput = "z";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "");
+	    
+	    userInput = "se";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "SEARCH");
+	    
+	    userInput = "sh";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "SHOW");
+	    
+	    userInput = "q";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "QUIT");
+	    
+	    userInput = "h";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "HOME");
+	    
+	    userInput = "he";
+	    result = (String) method.invoke(autocomplete, userInput);
+	    assertEquals(result.trim(), "HELP");
+	    
+	}
+}
+
+	// End of segment: .\test\application\IntegrationTest.java
+
+
+
+
+
