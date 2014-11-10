@@ -44,7 +44,7 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
     
     private final String UI_OVERDUE_LABEL = "Overdue";
     private final String UI_DEFAULT_PADDING = "-fx-padding: 0 5 0 5;";
-    private final String UI_HEADING_STYLE = " -fx-padding: 3 0 3 0; -fx-background-color: #bcbbb9;";
+    private final String UI_HEADING_STYLE = " -fx-padding: 3 0 3 0; -fx-background-color: #b3b3b3;";
     private final String UI_EMPTY_TASK_STYLE = "-fx-background-color: rgb(227, 227, 227, 1);";
     private final String UI_EMPTY_TASKS_DESIGN = "-fx-padding: 3 0 3 0; -fx-background-color: #FFB347;";
     private final String UI_HELP_TASK_DESIGN = "-fx-padding: 3 0 3 0; -fx-background-color: #44b6ae;";
