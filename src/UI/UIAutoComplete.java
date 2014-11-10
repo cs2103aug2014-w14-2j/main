@@ -49,7 +49,7 @@ public class UIAutoComplete {
      *
      * @author Tan Young Sing
      */
-    public void runAutoComplete(String command) {
+    public String runAutoComplete(String command) {
     	String cmdUsed = getCommandText(command).trim();
     	
     	if (isTheNWord(command, FIRST_WORD_IN_CMD)) {       
@@ -61,15 +61,17 @@ public class UIAutoComplete {
             	if(!suggestedCmd.equalsIgnoreCase(command)) {
                     cmdInputBox.setSuggestionText(MSG_COMMAND_NOT_SUPPORTED);
                     this.acListener.setNextPossibleCmd("");
+                    return "";
             	} else {
             		//case 1b : the command typed in is the right command so do nothing as of now
-                    //cmdInputBox.setSuggestionText(MSG_DEFAULT_PROMPT);
                     this.acListener.setNextPossibleCmd("");
+                    return "";
             	}
             } else {
             	//case 2 : autocomplete found a close match and had gave a suggestions
                 cmdInputBox.setSuggestionText(String.format(MSG_COMMAND_SUGGESTION, suggestedCmd));
                 this.acListener.setNextPossibleCmd(suggestedCmd);
+                return suggestedCmd;
             }
         } else if (isTheNWord(command, SECOND_WORD_IN_CMD) && cmdUsed.equalsIgnoreCase(InputCommands.getEditCommand())) {
         	 String taskID = getEditCommandIndex(command).toUpperCase();
@@ -80,11 +82,14 @@ public class UIAutoComplete {
             	 String taskDetails = parseEditText(selectedTask);
             	 String suggestedCmd = cmdInputBox.getText() + taskDetails;
             	 this.acListener.setNextPossibleCmd(suggestedCmd);
+            	 return suggestedCmd;
         	 } else {
         		 this.acListener.setNextPossibleCmd("");
+        		 return "";
         	 }
         } else {
             this.acListener.setNextPossibleCmd("");
+            return "";
         }
     }
     
