@@ -12,8 +12,6 @@ import java.util.ArrayList;
 
 public abstract class Message {
 
-    protected static final String WARNING_IS_THIS_MISTAKE = "If this is a mistake, please edit";
-
     protected String outputMsg = "";
     
     //@author A0115864B
