@@ -2,10 +2,12 @@ package Parser;
 
 import java.util.ArrayList;
 import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
-import Task.TaskManager;
+
+import task.TaskManager;
 import application.InputCommands;
 import application.InvalidCommandException;
 

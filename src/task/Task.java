@@ -1,4 +1,4 @@
-package Task;
+package task;
 
 import org.joda.time.DateTime;
 import Parser.CommandInfo;

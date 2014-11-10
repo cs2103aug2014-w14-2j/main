@@ -16,7 +16,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;
 
-import Task.Task;
+import task.Task;
 
 //@author A0111824R
 /**

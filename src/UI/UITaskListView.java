@@ -2,7 +2,7 @@ package UI;
 
 import java.util.ArrayList;
 
-import Task.Task;
+import task.Task;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;

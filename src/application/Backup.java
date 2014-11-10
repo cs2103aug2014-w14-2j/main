@@ -3,7 +3,7 @@ package application;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import Task.Task;
+import task.Task;
 
 /**
  * This component stores a past version of the tasks list as a backup
