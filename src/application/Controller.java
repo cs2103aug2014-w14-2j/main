@@ -50,10 +50,11 @@ public class Controller extends Application {
         // Ensures valid command input.
         try {
             commandInfo = (new Parser()).getCommandInfo(input);
-        } catch (InvalidCommandException e) { // Need to change exception type.
-            uiComponent.setSuggestionText(TOOLTIP_BULLET + "Command is invalid");
+        } catch (InvalidCommandException e) {
+            uiComponent.setSuggestionText(e.getMessage());
             return;
         }
+        assert(commandInfo != null);
         
         Message feedback = null;
         
@@ -170,6 +171,7 @@ public class Controller extends Application {
         launch(args);
     }
 
+    //@author A0110546R
     @Override
     public void start(Stage primaryStage) throws Exception {
         uiComponent = new UIComponent();
