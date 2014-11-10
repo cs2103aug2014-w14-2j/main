@@ -4,16 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.FileWriter;
+
 import java.util.logging.Level;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import application.WaveLogger;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import application.WaveLogger;
 
 //@author A0115864B
 /**

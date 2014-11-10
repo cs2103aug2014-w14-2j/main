@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileReader;
 import java.io.FileWriter;
+
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -52,7 +53,7 @@ public class DataStorage {
      * Constructor.
      */
     public DataStorage() {
-        filename = "Todo.json";
+        filename = "WaveWaveTasks.json";
         initiateFile();
     }
 

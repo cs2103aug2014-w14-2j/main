@@ -79,6 +79,13 @@ public class UITooltips {
         tooltipsMisc.add(TOOLTIP_MISC14);
     } 
     
+    //@author A0115864B
+    /**
+     * Returns a tooltip that helps the user finish the command in proper syntax
+     * 
+     * @param command command type entered by the user
+     * @return        tooltip of type corresponding to command
+     */
     public String getToolTips(String command) {
     	switch (command.toUpperCase()) {
     		case "ADD" : return TOOLTIP_BULLET + getTooltipsAdd();

@@ -1,11 +1,5 @@
 package UI;
 
-<<<<<<< HEAD
-import java.util.ArrayList;
-
-=======
-import application.TooltipManager;
->>>>>>> 66c2cb3a4ab17f7d04b11c97c5b4d0c92dae98b9
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
