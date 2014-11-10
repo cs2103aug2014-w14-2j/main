@@ -61,13 +61,13 @@ public class Controller extends Application {
         ArrayList<String> invalidIDs = taskManager.getInvalidDisplayIDs(commandInfo.getTaskIDs());
         if (invalidIDs != null) {
             feedback = new MessageWarningInvalidID(invalidIDs);
-            uiComponent.setSuggestionText(feedback.toString());
-            logger.log(feedback.toString());
+            uiComponent.setSuggestionText(feedback.getMessage());
+            logger.log(feedback.getMessage());
             return;
         }
 
         // Run the command.         
-            switch (commandInfo.getCommandType()) {
+        switch (commandInfo.getCommandType()) {
             case InputCommands.ADD:
                 taskManager.add(commandInfo);
                 break;
@@ -117,8 +117,8 @@ public class Controller extends Application {
         }
         
         if (feedback != null) {
-            uiComponent.setSuggestionText(feedback.toString());
-            logger.log(feedback.toString());
+            uiComponent.setSuggestionText(feedback.getMessage());
+            logger.log(feedback.getMessage());
         }
     }
     
