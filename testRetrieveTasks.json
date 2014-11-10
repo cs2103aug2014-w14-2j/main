@@ -1,1 +1,10 @@
-[{"Description":"Birthday party preparation","Date":"2015-01-16T01:34:23.000+08:00"},{"Description":"CS2103T tutorial","End date":"2014-10-15T15:00:00.000+08:00","Date":"2014-10-15T14:00:00.000+08:00"},{"Description":"Remember to feed dog"}]
+[
+  {
+    "Last modified date": "2014-11-10T20:18:58.468+08:00",
+    "Description": "submit WaveWave v0.5",
+    "End date": "2014-11-10T23:59:00.000+08:00",
+    "Created date": "2014-11-10T20:18:58.467+08:00",
+    "Completed": false,
+    "High-priority": true
+  }
+]
