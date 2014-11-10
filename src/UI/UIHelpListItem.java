@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 
 import task.Task;
 
+//@author A0111824R
 public class UIHelpListItem extends UITaskListItem {
 	
 	private String description;

@@ -12,7 +12,7 @@ interface TaskFilter {
 
 /**
  * Filter to keep completed tasks in the list. 
- * @author Sun Wang Jun
+ 
  */
 class KeepTasksCompleted implements TaskFilter {
     @Override
@@ -23,7 +23,7 @@ class KeepTasksCompleted implements TaskFilter {
 
 /**
  * Filter to keep tasks which are completed in the past 24 hours. 
- * @author Sun Wang Jun
+ 
  */
 class KeepTasksCompletedToday implements TaskFilter {
     private DateTime oneDayAgo;
@@ -39,7 +39,7 @@ class KeepTasksCompletedToday implements TaskFilter {
 
 /**
  * Filter to keep tasks which are over due. 
- * @author Sun Wang Jun
+ 
  */
 class KeepTasksOutstanding implements TaskFilter {
     private DateTime now;
@@ -65,7 +65,7 @@ class KeepTasksOutstanding implements TaskFilter {
 
 /**
  * Filter to keep tasks between a start and end time. 
- * @author Sun Wang Jun
+ 
  */
 class KeepTasksBetween implements TaskFilter {
     private DateTime start, end;
@@ -73,7 +73,7 @@ class KeepTasksBetween implements TaskFilter {
      * This constructor uses two specific date times.
      * @param start start Datetime
      * @param end end DateTime
-     * @author Sun Wang Jun
+     
      */
     public KeepTasksBetween(DateTime start, DateTime end) {
         this.start = start;
@@ -82,7 +82,7 @@ class KeepTasksBetween implements TaskFilter {
     /**
      * This constructor accepts a number to use the current time and number of days later.
      * @param numDays the number of days from the current time to number of days later.
-     * @author Sun Wang Jun
+     
      */
     public KeepTasksBetween(int numDays) {
         this.start = new DateTime();
@@ -113,14 +113,14 @@ class KeepTasksBetween implements TaskFilter {
 
 /**
  * Filter to keep tasks that contain the keyword. 
- * @author Sun Wang Jun
+ 
  */
 class KeepTasksWithKeyword implements TaskFilter {
     private String keyword;
 
     /**
      * @param keyword the String keyword. 
-     * @author Sun Wang Jun
+     
      */
     public KeepTasksWithKeyword(String keyword) {
         this.keyword = keyword.toUpperCase();
@@ -135,7 +135,7 @@ class KeepTasksWithKeyword implements TaskFilter {
 
 /**
  * Filter to keep tasks that have priority. 
- * @author Sun Wang Jun
+ 
  */
 class KeepTasksWithPriority implements TaskFilter {    
     @Override
@@ -146,7 +146,7 @@ class KeepTasksWithPriority implements TaskFilter {
 
 /**
  * Filter to keep events.
- * @author Sun Wang Jun
+ 
  */
 class KeepTasksWithStartDate implements TaskFilter {
     @Override
@@ -157,7 +157,7 @@ class KeepTasksWithStartDate implements TaskFilter {
 
 /**
  * Filter to keep tasks. 
- * @author Sun Wang Jun
+ 
  */
 class KeepTasksWithoutStartDate implements TaskFilter {
     @Override
@@ -168,7 +168,7 @@ class KeepTasksWithoutStartDate implements TaskFilter {
 
 /**
  * Filter to keep reminders (tasks without start and end time).
- * @author Sun Wang Jun
+ 
  */
 class KeepReminders implements TaskFilter {
     @Override
@@ -179,7 +179,7 @@ class KeepReminders implements TaskFilter {
 
 /**
  * Filter to ignore (soft-)deleted tasks. 
- * @author Sun Wang Jun
+ 
  */
 class IgnoreTasksDeleted implements TaskFilter { // Keep tasks which are not deleted.
     @Override
@@ -190,7 +190,7 @@ class IgnoreTasksDeleted implements TaskFilter { // Keep tasks which are not del
 
 /**
  * Filter to keep uncompleted tasks. 
- * @author Sun Wang Jun
+ 
  */
 class KeepTasksNotCompleted implements TaskFilter {
     @Override
@@ -201,7 +201,7 @@ class KeepTasksNotCompleted implements TaskFilter {
 
 /**
  * The main class to store and run the filters. 
- * @author Sun Wang Jun
+ 
  */
 public class TaskListFilter {
     private ArrayList<TaskFilter> filters;
@@ -209,7 +209,7 @@ public class TaskListFilter {
 
     /**
      * @param strongFilter true to use &&/AND filtering, false to use ||/OR filtering. 
-     * @author Sun Wang Jun
+     
      */
     public TaskListFilter(boolean strongFilter) {
         this.filters = new ArrayList<TaskFilter>();
@@ -218,7 +218,7 @@ public class TaskListFilter {
 
     /**
      * @param filter adds the filter into the list. 
-     * @author Sun Wang Jun
+     
      */
     public void add(TaskFilter filter) {
         this.filters.add(filter);
@@ -228,7 +228,7 @@ public class TaskListFilter {
      * Runs the filters.
      * @param taskList the ArrayList to filter.
      * @return the filtered ArrayList of tasks.
-     * @author Sun Wang Jun
+     
      */
     public ArrayList<Task> apply(ArrayList<Task> taskList) {
         ArrayList<Task> filteredTaskList = new ArrayList<Task>();

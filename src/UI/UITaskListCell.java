@@ -21,7 +21,7 @@ import task.Task;
 //@author A0111824R
 /**
  * This class will override the default ListCell generate for the LISTVIEW component
- * @author Tan Young Sing
+ 
  */
 public class UITaskListCell extends ListCell<UITaskListItem> { 
     static private final int TASK_CONTAINER_WIDTH = 260;
@@ -75,7 +75,7 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
      *        arcHeight : Curve Border Bottom Half
      *        Color : Color of the Rectangle
      * @return Rectangle
-     * @author Tan Young Sing
+     
      */
     private Rectangle createRectangle(int width, int height, int arcWidth, int arcHeight, Color c) {
     	Rectangle rect = new Rectangle(width, height);
@@ -95,7 +95,7 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
      *        fontWeight: weight of the font default: NORMAL
      *        color : color of the text
      * @return Text
-     * @author Tan Young Sing
+     
      */
     private Text createText(String text, int textWidth, int size, String fontFamily, FontWeight weight, Color color) {
         Text textLabel = new Text(text);
@@ -112,7 +112,7 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
      *        height : height of the priority Indicator
      *        item : Task object that will retrieve all specific data for display
      * @return StackPane
-     * @author Tan Young Sing
+     
      */
     private StackPane getPriorityIndicator(int priority, String displayID, int height, Task item) {
     	String indicator_color = COLOR_DEFAULT_PRIORITY;
@@ -145,7 +145,7 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     private String getDateString(DateTime currentDate) {
     	String output = "";
@@ -177,7 +177,7 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
 	//@author A0111824R
     /**
      * calculate the height of the task items based on content length
-     * @author Tan Young Sing
+     
      */
     private int getContentHeight(int length) {
     	if(length <= 80) {
@@ -202,7 +202,7 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     private String generateTaskDate(Task item) {
     	String output = "";
@@ -229,7 +229,7 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     private StackPane createOutstandingLabel() {
     	Rectangle outstandingLabel = createRectangle(UI_OUTSTANDING_WIDTH, UI_OUTSTANDING_HEIGHT, 0, 0, Color.web(COLOR_OUTSTANDING));
@@ -245,7 +245,7 @@ public class UITaskListCell extends ListCell<UITaskListItem> {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     @Override
     public void updateItem(UITaskListItem item, boolean empty) {

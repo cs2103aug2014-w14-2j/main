@@ -14,7 +14,6 @@ import task.Task;
 
 //@author A0110546R
 /**
- * @author Sun Wang Jun
  *
  */
 public class TaskTest {

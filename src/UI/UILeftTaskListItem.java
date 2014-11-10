@@ -7,7 +7,7 @@ import task.Task;
 //@author A0111824R
 /**
  *
- * @author Tan Young Sing
+ 
  */
 public class UILeftTaskListItem extends UITaskListItem {
 	
@@ -16,7 +16,7 @@ public class UILeftTaskListItem extends UITaskListItem {
      * @param Task the task object to be displayed on the listview
      * @param date of the assigned task
      * @param isLeftPane to indicate if it is the listview on the left
-     * @author Tan Young Sing
+     
      */
 	public UILeftTaskListItem (Task task, DateTime date, boolean isLeftPane) {
 		super(task, date, isLeftPane);
@@ -26,7 +26,7 @@ public class UILeftTaskListItem extends UITaskListItem {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private void init(Task task, DateTime date) {
 		if (task == null) {

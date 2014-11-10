@@ -8,7 +8,6 @@ import org.joda.time.LocalDate;
 /**
  * The comparator class used to sort Tasks by their date.
  * 
- * @author Sun Wang Jun
  */
 class DateComparator implements Comparator<Task> {
     @Override
@@ -35,7 +34,6 @@ class DateComparator implements Comparator<Task> {
 //@author A0110546R
 /**
  * The comparator class used to sort Tasks by their end date.
- * @author Sun Wang Jun
  *
  */
 class EndDateComparator implements Comparator<Task> {
@@ -61,7 +59,6 @@ class EndDateComparator implements Comparator<Task> {
 //@author A0110546R
 /**
  * The comparator class used to sort Tasks by their completed at date.
- * @author Sun Wang Jun
  * 
  */
 class CompletedAtComparator implements Comparator<Task> {
@@ -88,7 +85,6 @@ class CompletedAtComparator implements Comparator<Task> {
 /**
  * The comparator class used to sort Tasks by their created at date.
  * 
- * @author Sun Wang Jun
  */
 class ModifiedAtComparator implements Comparator<Task> {
     @Override
@@ -106,7 +102,6 @@ class ModifiedAtComparator implements Comparator<Task> {
 /**
  * The comparator class used to sort Tasks by their priority.
  * 
- * @author Sun Wang Jun
  */
 class PriorityComparator implements Comparator<Task> {
     @Override
@@ -120,7 +115,6 @@ class PriorityComparator implements Comparator<Task> {
 /**
  * The comparator class used to sort Tasks by days and within each day, by priority.
  * 
- * @author Sun Wang Jun
  */
 class DayPriorityComparator implements Comparator<Task> {
     @Override

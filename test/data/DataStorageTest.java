@@ -20,7 +20,6 @@ import data.DataStorage;
 //@author A0115864B
 /**
  * 
- * @author Kim Hyung Jon
  *
  */
 public class DataStorageTest {

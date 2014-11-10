@@ -9,7 +9,7 @@ import task.Task;
 //@author A0111824R
 /**
  *
- * @author Tan Young Sing
+ 
  */
 public class UIEventTaskListView extends UITaskListView {
 	
@@ -18,7 +18,7 @@ public class UIEventTaskListView extends UITaskListView {
 	//@author A0111824R
     /**
      * @param cmdInputBox - the inputbox object on the UI
-     * @author Tan Young Sing
+     
      */
 	public UIEventTaskListView(UICmdInputBox cmdInputBox) {
 		super(cmdInputBox);
@@ -28,7 +28,7 @@ public class UIEventTaskListView extends UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private void initializeListener() {
 		taskList.setOnKeyPressed(new UITaskListViewListener(CMD_DELETE_EVENT_TASK, cmdInputBox, this));
@@ -38,7 +38,7 @@ public class UIEventTaskListView extends UITaskListView {
     /**
      * @param items - ArrayList of task to be displayed on the ListView
      * @param isLeftPane - indicate if it is for the left panel
-     * @author Tan Young Sing
+     
      * @return convert the arraylist of tasks into UITaskListItem
      */
 	protected ArrayList<UITaskListItem> generateEmptyList(ArrayList<Task> items, boolean isLeftPane) {
@@ -51,7 +51,7 @@ public class UIEventTaskListView extends UITaskListView {
 	//@author A0111824R
     /**
      * @param takes in an arrayList of Tasks object to be displayed on the Listview
-     * @author Tan Young Sing
+     
      * @return convert the arrayList of task to UITaskListItem
      */
     protected ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items) {

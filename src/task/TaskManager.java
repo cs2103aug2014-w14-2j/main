@@ -16,7 +16,6 @@ import Parser.CommandInfo;
 /**
  * The manager that manipulates and contains the array list of Tasks.
  * 
- * @author Sun Wang Jun
  */
 public class TaskManager {
     public static final char NORMAL_TASK_PREFIX = 'T';

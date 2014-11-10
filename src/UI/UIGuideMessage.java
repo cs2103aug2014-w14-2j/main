@@ -64,7 +64,7 @@ public class UIGuideMessage implements EventHandler<KeyEvent> {
         }
     }
     
-    //@author A009071Y
+    //@author A0090971Y
     private void setGuideMessage(String message) {
         this.guideMessage = message;
         cmdInputBox.setGuideMsgText(TOOLTIP_BULLET + message);

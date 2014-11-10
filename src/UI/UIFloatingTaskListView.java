@@ -7,7 +7,7 @@ import task.Task;
 //@author A0111824R
 /**
  *
- * @author Tan Young Sing
+ 
  */
 public class UIFloatingTaskListView extends UITaskListView {
 	
@@ -18,7 +18,7 @@ public class UIFloatingTaskListView extends UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public UIFloatingTaskListView(UICmdInputBox cmdInputBox) {
 		super(cmdInputBox);
@@ -28,7 +28,7 @@ public class UIFloatingTaskListView extends UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private void initializeListener() {
 		taskList.setOnKeyPressed(new UITaskListViewListener(CMD_DELETE_FLOATING_TASK, cmdInputBox, this));
@@ -37,7 +37,7 @@ public class UIFloatingTaskListView extends UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     protected ArrayList<UITaskListItem> generateEmptyList(ArrayList<Task> items, boolean isLeftPane) {
     	ArrayList<UITaskListItem> listItems = new ArrayList<UITaskListItem>();

@@ -9,8 +9,6 @@ import task.Task;
 /**
  * This component stores a past version of the tasks list as a backup
  * so that undo feature can be supported.
- * 
- * @author Kim Hyung Jon
  *
  */
 public class Backup {

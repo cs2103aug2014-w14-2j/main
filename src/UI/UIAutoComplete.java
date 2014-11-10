@@ -10,7 +10,6 @@ import application.InputCommands;
 /**
  * UIAutoComplete: Responsible for all autocomplete operations.
  * 
- * @author Tan Young Sing
  */
 public class UIAutoComplete {
     
@@ -34,7 +33,7 @@ public class UIAutoComplete {
      * UIAutoComplete: Constructor
      * Takes in CmdInputBox Component to detect user input 
      *
-     * @author Tan Young Sing
+     
      */
     public UIAutoComplete(UICmdInputBox cmdInputBox, UIAutoCompleteListener acListener) {
         this.cmdInputBox = cmdInputBox;
@@ -47,7 +46,7 @@ public class UIAutoComplete {
      * UIAutoComplete: Constructor
      * Takes in CmdInputBox Component to detect user input 
      *
-     * @author Tan Young Sing
+     
      */
     public String runAutoComplete(String command) {
     	String cmdUsed = getCommandText(command).trim();
@@ -96,7 +95,7 @@ public class UIAutoComplete {
     //@author A0111824R
     /** 
      *
-     * @author Tan Young Sing
+     
      */
     private String parseEditText(Task selectedTask) {
     	String editText = "[" + selectedTask.getDescription() + "] ";
@@ -119,7 +118,7 @@ public class UIAutoComplete {
     //@author A0111824R
     /** 
      *
-     * @author Tan Young Sing
+     
      */
     private String getEditCommandIndex(String cmd) {
     	String[] indexRetrieval = cmd.split(" ");
@@ -129,7 +128,6 @@ public class UIAutoComplete {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
      */
     private String getSuggestions(String word) {
         if(word.trim().length() == 0) {
@@ -149,7 +147,6 @@ public class UIAutoComplete {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
      */
     private String getCommandText(String cmd) {
     	String[] cmdRetrieval = cmd.split(" ");
@@ -159,7 +156,7 @@ public class UIAutoComplete {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     private boolean isTheNWord(String cmd, int n) {
         String[] oneWordChecker = cmd.split(" ");

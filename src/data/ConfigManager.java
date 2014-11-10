@@ -22,7 +22,6 @@ import application.WaveLogger;
  * View type is stored separately so that the view is maintained for next sessions.
  * JSON is used because of possible future expansions that include more settings to offer.
  * 
- * @author Kim Hyung Jon
  */
 
 public class ConfigManager {

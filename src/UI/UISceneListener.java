@@ -8,7 +8,7 @@ import javafx.scene.input.KeyEvent;
 /**
  * Handles all Scene Events triggered by users.
  * 
- * @author Tan Young Sing
+ 
  */
 public class UISceneListener implements EventHandler<KeyEvent>{
 	
@@ -17,7 +17,7 @@ public class UISceneListener implements EventHandler<KeyEvent>{
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public UISceneListener(UICmdInputBox cmdInputBox) {
 		this.cmdInputBox = cmdInputBox;
@@ -26,7 +26,7 @@ public class UISceneListener implements EventHandler<KeyEvent>{
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private boolean isValidFocusCharacter(KeyCode keyCode) {
 		if(keyCode.isDigitKey() || keyCode.isLetterKey()) {
@@ -38,7 +38,7 @@ public class UISceneListener implements EventHandler<KeyEvent>{
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	 @Override 
      public void handle(KeyEvent ke) { 

@@ -5,8 +5,7 @@ import java.util.ArrayList;
 /**
  * The class Message and its subclasses are objects passed by Controller to UI
  * to display to the user what Controller did when user operation was accepted.
- * 
- * @author Kim Hyung Jon
+
  *
  */
 

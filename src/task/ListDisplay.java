@@ -9,7 +9,6 @@ import java.util.ListIterator;
 //@author A0110546R
 /**
  * The list display class.
- * @author Sun Wang Jun
  *
  */
 public class ListDisplay {
@@ -100,7 +99,6 @@ public class ListDisplay {
 /**
  * Events display filters to keep tasks with start dates.
  * Sorts primarily by day, then priority and completion status.
- * @author Sun Wang Jun
  */
 class EventListDisplay extends ListDisplay {    
     public EventListDisplay() {
@@ -118,7 +116,6 @@ class EventListDisplay extends ListDisplay {
 /**
  * Tasks display filters to keep tasks without start dates.
  * Sorts primarily by completion status, then end dates, then priority and last modified.
- * @author Sun Wang Jun
  */
 class TaskListDisplay extends ListDisplay {    
     public TaskListDisplay() {

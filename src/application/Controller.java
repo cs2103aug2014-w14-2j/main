@@ -23,7 +23,6 @@ import UI.UIComponent;
 /**
  * The controller logic that integrates UI, Storage and Parser.
  * 
- * @author Sun Wang Jun
  */
 public class Controller extends Application {
     private static final String NAME_TODOS = "To-dos";

@@ -12,7 +12,7 @@ import javafx.scene.input.KeyEvent;
 /**
  * Middle man between UIComponent and Controller.
  * 
- * @author Tan Young Sing
+ 
  */
 public class UIControllerListener implements EventHandler<KeyEvent> {
     
@@ -25,7 +25,7 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public UIControllerListener(UICmdInputBox cmdInputBox, UIComponent ui) {
         this.cmdInputBox = cmdInputBox;
@@ -38,7 +38,7 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     private void displayHelpLists() {
     	ui.getLeftView().overwriteView(uiHelp.generateLeftHelpList());
@@ -50,7 +50,7 @@ public class UIControllerListener implements EventHandler<KeyEvent> {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     @Override
     public void handle(KeyEvent event) {

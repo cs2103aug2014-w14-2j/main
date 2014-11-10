@@ -845,6 +845,21 @@ public class UIGuideMessage implements EventHandler<KeyEvent> {
 	 * origin: .\src\UI\UIGuideMessage.java
 	 */
 
+    private void setGuideMessage(String message) {
+        this.guideMessage = message;
+        cmdInputBox.setGuideMsgText(TOOLTIP_BULLET + message);
+    }
+    
+	// End of segment: .\src\UI\UIGuideMessage.java
+
+
+
+
+
+	/**
+	 * origin: .\src\UI\UIGuideMessage.java
+	 */
+
     /**
      * 
      * @return the guide message to be displayed 

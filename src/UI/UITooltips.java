@@ -6,8 +6,6 @@ import java.util.ArrayList;
 //@author A0115864B
 /**
  * Stores and returns random tooltips
- * @author Kim Hyung Jon
- *
  */
 public class UITooltips {
     

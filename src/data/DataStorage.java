@@ -28,7 +28,6 @@ import task.Task;
 /**
  * Data storage component that delivers data between Controller and external storage.
  * 
- * @author Kim Hyung Jon (matric number: A0115864B)
  * 
  */
 public class DataStorage {

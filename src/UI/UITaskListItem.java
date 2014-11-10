@@ -7,7 +7,7 @@ import task.Task;
 //@author A0111824R
 /**
  * 
- * @author Tan Young Sing
+ 
  */
 public class UITaskListItem {
 	
@@ -25,7 +25,7 @@ public class UITaskListItem {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public UITaskListItem(Task task, DateTime date, boolean isLeftPane) {
 		this.isLeftPane = isLeftPane;
@@ -36,7 +36,7 @@ public class UITaskListItem {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public boolean isLeftPane() {
 		return this.isLeftPane;
@@ -45,7 +45,7 @@ public class UITaskListItem {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public String getSeparatorTitle() {
 		return this.separatorTitle;
@@ -54,7 +54,7 @@ public class UITaskListItem {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	protected void setSeparatorTitle(String title) {
 		this.separatorTitle = title;
@@ -63,7 +63,7 @@ public class UITaskListItem {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     protected void setType(String type) {
 		this.type = type;
@@ -72,7 +72,7 @@ public class UITaskListItem {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public int getNumberTask() {
 		return this.numOfTasks;
@@ -81,7 +81,7 @@ public class UITaskListItem {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public void incrementNumOfTask() {
 		numOfTasks++;
@@ -90,7 +90,7 @@ public class UITaskListItem {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public Task getTask() {
 		return task;
@@ -99,7 +99,7 @@ public class UITaskListItem {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public DateTime getDate() {
 		return date;
@@ -108,7 +108,7 @@ public class UITaskListItem {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     protected void setDate(DateTime date) {
 		this.date = date;
@@ -117,7 +117,7 @@ public class UITaskListItem {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public String getType() {
 		return type;

@@ -28,7 +28,6 @@ import java.lang.reflect.Method;
 //@author A0110546R
 /**
  * This class is used to reflect all the private static fields and methods of the Controller class.
- * @author Sun Wang Jun
  *
  */
 class ControllerReflector {
@@ -58,7 +57,6 @@ class ControllerReflector {
 //@author A0110546R
 /**
  * Mocks the UIComponent class.
- * @author Sun Wang Jun
  *
  */
 public class IntegrationTest extends Application {

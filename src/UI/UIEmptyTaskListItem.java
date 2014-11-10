@@ -7,7 +7,7 @@ import task.Task;
 //@author A0111824R
 /**
  *
- * @author Tan Young Sing
+ 
  */
 public class UIEmptyTaskListItem extends UITaskListItem {
     
@@ -19,7 +19,7 @@ public class UIEmptyTaskListItem extends UITaskListItem {
      * @param Task object to be displayed
      * @param DateTime from JodaTime library
      * @param isLeftPane to indicate the item to be positioned in which panel on the UI
-     * @author Tan Young Sing
+     
      */
 	public UIEmptyTaskListItem (Task task, DateTime date, boolean isLeftPane) {
 		super(task, date, isLeftPane);
@@ -30,7 +30,7 @@ public class UIEmptyTaskListItem extends UITaskListItem {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private void init(Task task, DateTime date) {
 		super.setType(LISTITEM_SEPARATOR);

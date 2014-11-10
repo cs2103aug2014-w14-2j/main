@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 /**
  * UIAutoCompleteListener: ActionHandler acts as a middle man between UIAutoComplete & UIComponent.
  * 
- * @author Tan Young Sing
+ 
  */
 public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     
@@ -26,7 +26,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     //@author A0111824R
     /**
      * @param An inputbox object 
-     * @author Tan Young Sing
+     
      */
     public UIAutoCompleteListener(UICmdInputBox cmdInputBox) {
         this.uiAutoComplete = new UIAutoComplete(cmdInputBox, this);
@@ -38,7 +38,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public String getCurrentCmd(String cmd) {
     	String[] cmdRetrieval = cmd.split(" ");
@@ -48,7 +48,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     //@author A0111824R
     /**
      * @param the next possible command to be autocompleted.
-     * @author Tan Young Sing
+     
      */
     public void setNextPossibleCmd(String cmd) {
         this.nextPossibleCommand = cmd;
@@ -57,7 +57,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     //@author A0111824R
     /**
      * @param the current command on the textbox
-     * @author Tan Young Sing
+     
      * @return if the current command is an ADD command
      */
     private boolean isAddCommand(String next) {
@@ -70,7 +70,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     //@author A0111824R
     /**
      * @param the current command on the textbox
-     * @author Tan Young Sing
+     
      * @return if the current command is an SEARCH command
      */
     private boolean isSearchCommand(String next) {
@@ -83,7 +83,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     //@author A0111824R
     /**
      * @param the current command on the textbox
-     * @author Tan Young Sing
+     
      * @return if the current command is an EDIT command
      */
     private boolean isEditCommand(String next) {
@@ -98,7 +98,7 @@ public class UIAutoCompleteListener implements EventHandler<KeyEvent> {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     @Override
     public void handle(KeyEvent event) {

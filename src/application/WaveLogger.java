@@ -15,7 +15,6 @@ import java.util.logging.SimpleFormatter;
  * Control loggers that output to the console by adding their
  * names into consoleOutput.txt.
  * 
- * @author Sun Wang Jun
  *
  */
 public class WaveLogger {

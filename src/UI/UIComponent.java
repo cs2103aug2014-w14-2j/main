@@ -23,7 +23,7 @@ import javafx.scene.text.TextAlignment;
  * Main Class for the UI, That integrates all components into one and return 
  * a scene instance back to the Controller for display
  * 
- * @author Tan Young Sing
+ 
  */
 public class UIComponent {
     
@@ -56,7 +56,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      * @param return the scene object back to the Controller
      */
 	public Scene getScene() {
@@ -66,7 +66,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      * @param return the panel that holds all the components
      */
 	public BorderPane getRootPane() {
@@ -76,7 +76,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      * @param return inputBox 
      */
 	public UICmdInputBox getCmdInputBox() {
@@ -86,7 +86,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      * @param return the ListView on the right
      */
 	public UITaskListView getFloatingTaskListView() {
@@ -96,7 +96,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      * @param return the ListView on the left
      */
 	public UITaskListView getEventReminderTaskListView() {
@@ -106,7 +106,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public UIComponent() {
 		initializeLoggerFileHandler();
@@ -118,7 +118,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private void initializeStyleSheet() {
 		scene.getStylesheets().add(getClass().getResource(APP_DEFAULT_STYLESHEET).toExternalForm());
@@ -128,7 +128,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private void initializeLoggerFileHandler() {
         try {
@@ -141,7 +141,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private void setupScene() {
 		scene = new Scene(rootPane, APPLICATION_WIDTH, APPLICATION_HEIGHT);
@@ -152,7 +152,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private void initializeComponents() {
 		rootPane = new BorderPane();
@@ -162,7 +162,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private VBox createVBox(int spacing, Insets padding, int prefWidth, int prefHeight, String style) {
 		VBox vBox = new VBox(spacing);
@@ -183,7 +183,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private HBox createHBox(int spacing, Insets padding, int prefWidth, int prefHeight, String style) {
 		HBox hBox = new HBox(spacing);
@@ -204,7 +204,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private Text createText(String text, int size, FontWeight weight, String fontFamily, Color color) {
 		Text textLabel = new Text(text);
@@ -224,7 +224,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private VBox getUserInputComponentHolder() {
 		VBox userInputComponentHolder = createVBox(8, new Insets(15, 15, 15, 15), 0, 120, CMDINPUT_PLACEHOLDER_STYLESHEET);
@@ -239,7 +239,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private VBox getMainComponentHolder() {
 		HBox taskListViewComponentHolder = createHBox(10, new Insets(10, 0, 10, 0), 0, 0, "");
@@ -257,7 +257,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private VBox getFloatingTaskListViewHolder() {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
@@ -272,7 +272,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private VBox getTimedAndDeadlineTaskHolder() {
 		VBox innerBox = createVBox(10, new Insets(5, 10, 30, 10), 0, LISTVIEW_DISPLAY_HEIGHT, LISTVIEW_STYLESHEET); 
@@ -316,7 +316,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public void setRightPanelTitle(String title) {
 		floatingTaskTitle.setText(title);
@@ -325,7 +325,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public void setLeftPanelTitle(String title) {
 		reminderTaskTitle.setText(title);
@@ -334,7 +334,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public UITaskListView getRightView () {
 		return floatingTaskListView;
@@ -343,7 +343,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public UITaskListView getLeftView () {
 		return eventReminderTaskListView;
@@ -352,7 +352,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	public void setSuggestionText(String text) {
 		suggestionText.setText(UITooltips.TOOLTIP_BULLET + text);
@@ -361,7 +361,7 @@ public class UIComponent {
     //@author A0111824R
     /**
      * @param stage will be used to initialize the UI.
-     * @author Tan Young Sing
+     
      */
     public void showStage(Stage primaryStage) {
     	try {

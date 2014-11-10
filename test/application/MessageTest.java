@@ -9,7 +9,6 @@ import org.junit.Test;
 //@author A0115864B
 /**
  * Unit test for class Message and selected subclasses
- * @author Kim Hyung Jon
  *
  */
 public class MessageTest {

@@ -13,7 +13,7 @@ import javafx.util.Callback;
 /**
  * Abstracted ListView Class
  * 
- * @author Tan Young Sing
+ 
  */
 public abstract class UITaskListView {
 
@@ -27,7 +27,7 @@ public abstract class UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public UITaskListView(UICmdInputBox cmdInputBox) {
         taskList = new ListView<UITaskListItem>();
@@ -38,7 +38,7 @@ public abstract class UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     private void setTaskListProperty() {
         taskList.setPrefHeight(DISPLAY_HEIGHT);
@@ -56,7 +56,7 @@ public abstract class UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public boolean isFocused() {
     	return taskList.isFocused();
@@ -65,7 +65,7 @@ public abstract class UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public void clearSelection() {
     	taskList.getSelectionModel().clearSelection();
@@ -74,7 +74,7 @@ public abstract class UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public int getSelectedItemIndex() {
     	return taskList.getSelectionModel().getSelectedIndex();
@@ -83,7 +83,7 @@ public abstract class UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public ObservableList<UITaskListItem> getSelectedItem() {
     	return taskList.getSelectionModel().getSelectedItems();
@@ -92,7 +92,7 @@ public abstract class UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public void populateTaskListWithData(ArrayList<Task> items, boolean isLeftPane) {
     	ObservableList<UITaskListItem> convertedList = FXCollections.observableArrayList();
@@ -108,7 +108,7 @@ public abstract class UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public void overwriteView(ArrayList<UITaskListItem> listItem) {
     	ObservableList<UITaskListItem> convertedList = FXCollections.observableArrayList();
@@ -120,7 +120,7 @@ public abstract class UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public ListView<UITaskListItem> getListView() {
         return taskList;
@@ -129,14 +129,14 @@ public abstract class UITaskListView {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     protected abstract ArrayList<UITaskListItem> generateListItems(ArrayList<Task> items);
     
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     protected abstract ArrayList<UITaskListItem> generateEmptyList(ArrayList<Task> items, boolean isLeftPane);
 }

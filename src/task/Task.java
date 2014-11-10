@@ -7,7 +7,6 @@ import Parser.CommandInfo;
 /**
  * The task object!
  * 
- * @author Sun Wang Jun
  */
 public class Task {    
     private static int idCounter = 0;

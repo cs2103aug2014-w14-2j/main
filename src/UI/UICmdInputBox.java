@@ -7,7 +7,7 @@ import javafx.scene.text.Text;
 /**
  * Abstracted TextField Class.
  * 
- * @author Tan Young Sing
+ 
  */
 public class UICmdInputBox {
 
@@ -26,7 +26,7 @@ public class UICmdInputBox {
     /**
      * @param suggestionText - the text label used to display suggestion text
      * @param guideMsgText - the text label used to display guide messages
-     * @author Tan Young Sing
+     
      */
     public UICmdInputBox(Text suggestionText, Text guideMsgText, UIComponent ui) {
         this.suggestionText = suggestionText;
@@ -45,7 +45,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public String getToolTip() {
     	return toolTipManage.getToolTips(autoCompleteListener.getCurrentCmd(cmdInputBox.getText()));
@@ -54,7 +54,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     private void setInputBoxProperty() {
         cmdInputBox.setPrefHeight(CMDINPUT_HEIGHT);
@@ -64,7 +64,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     private void addKeyPressedListener() {
         cmdInputBox.setOnKeyPressed(new UIControllerListener(this, ui));
@@ -73,7 +73,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     private void addKeyReleasedListener() {
         cmdInputBox.setOnKeyReleased(autoCompleteListener);
@@ -82,7 +82,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     private void addKeyTypedListener() {
     	cmdInputBox.setOnKeyTyped(new UIGuideMessage(this));
@@ -91,7 +91,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public void setSuggestionText(String output) {
         suggestionText.setText(output);
@@ -100,7 +100,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public void setGuideMsgText(String output) {
     	guideMsgText.setText(output);
@@ -109,7 +109,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public void focusCommandInputBox() {
         cmdInputBox.requestFocus();
@@ -118,7 +118,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
     public String getText() {
     	return cmdInputBox.getText();
@@ -127,7 +127,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      * @param text to be displayed on the input box
-     * @author Tan Young Sing
+     
      */
     public void setText(String text) {
     	cmdInputBox.setText(text);
@@ -136,7 +136,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      * 
-     * @author Tan Young Sing
+     
      */
     public void resetPositionCaret() {
     	cmdInputBox.positionCaret(this.getText().length());
@@ -145,7 +145,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      * 
-     * @author Tan Young Sing
+     
      * @return if the inputbox is focused.
      */
     public boolean isFocused() {
@@ -155,7 +155,7 @@ public class UICmdInputBox {
     //@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      * @return return the inputbox node
      */
     public TextField getCmdInputBox() {

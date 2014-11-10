@@ -9,7 +9,7 @@ import javafx.scene.input.KeyEvent;
 /**
  * ListView Event Handler.
  * 
- * @author Tan Young Sing
+ 
  */
 public class UITaskListViewListener implements EventHandler<KeyEvent> {
 
@@ -20,7 +20,7 @@ public class UITaskListViewListener implements EventHandler<KeyEvent> {
 	//@author A0111824R
     /**
      * @param taskList - ListView from the UI
-     * @author Tan Young Sing
+     
      */
 	public UITaskListViewListener(String msg, UICmdInputBox cmdInput, UITaskListView lv) {
 		this.cmdInput = cmdInput;
@@ -32,7 +32,7 @@ public class UITaskListViewListener implements EventHandler<KeyEvent> {
 	//@author A0111824R
     /**
      *
-     * @author Tan Young Sing
+     
      */
 	private String formatIndexIntoCmd(ObservableList<UITaskListItem> items) {
 		String output = "";
@@ -45,7 +45,7 @@ public class UITaskListViewListener implements EventHandler<KeyEvent> {
 	//@author A0111824R
     /**
      * @param KeyEvent triggered only on keyboard event
-     * @author Tan Young Sing
+     
      */
 	@Override
 	public void handle(KeyEvent ke) {

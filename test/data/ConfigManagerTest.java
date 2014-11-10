@@ -13,7 +13,6 @@ import java.io.IOException;
 /**
  * Unit test for class ConfigManager
  * 
- * @author Kim Hyung Jon
  *
  */
 public class ConfigManagerTest {
