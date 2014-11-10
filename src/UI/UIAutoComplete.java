@@ -94,7 +94,7 @@ public class UIAutoComplete {
      * @author Tan Young Sing
      */
     private String parseEditText(Task selectedTask) {
-    	String editText = "[ " + selectedTask.getDescription() + " ] ";
+    	String editText = "[" + selectedTask.getDescription() + "] ";
     	
     	if(selectedTask.getDate() != null && selectedTask.getEndDate() == null) {
     		editText += selectedTask.getDate().toString(UI_DATETIMEFORMAT);
