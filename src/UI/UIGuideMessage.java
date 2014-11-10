@@ -27,7 +27,7 @@ public class UIGuideMessage implements EventHandler<KeyEvent> {
             setGuideMessage("Enter task description inside the square brackets.");
         }
         else if (input.equalsIgnoreCase("add []")) {
-            setGuideMessage("Type double space to get out of the square brackets.");
+            setGuideMessage("Press space twice once you are done writing the description to get out of the square brackets.");
         } 
         else if ((input.indexOf("] ")>=0)&& (input.indexOf("ADD")>=0)) {
             setGuideMessage("Enter a time for the task. (Optional)");
@@ -35,9 +35,6 @@ public class UIGuideMessage implements EventHandler<KeyEvent> {
         else if(input.equalsIgnoreCase("e")) {
             setGuideMessage("Enter task ID and press Space.");
         }
-        else if (input.equalsIgnoreCase("add []")) {
-            setGuideMessage("Type double space to get out of the square brackets.");
-        } 
         else if ((input.indexOf("]")>=0)&& (input.indexOf("EDIT")>=0)) {
             setGuideMessage("You can edit the task.");
         }
@@ -54,7 +51,7 @@ public class UIGuideMessage implements EventHandler<KeyEvent> {
             setGuideMessage("Enter the search keyword inside the square brackets.");
         }
         else if (input.equalsIgnoreCase("search []")) {
-            setGuideMessage("Type double space to get out of the square brackets.");
+            setGuideMessage("Press space twice once you are done writing the keyword to get out of the square brackets.");
         } 
         else if ((input.indexOf("] ")>=0)&& (input.indexOf("SEARCH")>=0)) {
             setGuideMessage("SEARCH [KEYWORD] time(optional) ! (priority optional) ");

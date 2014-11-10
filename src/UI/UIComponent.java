@@ -367,7 +367,7 @@ public class UIComponent {
     	try {
     		primaryStage.setScene(this.getScene());
     		primaryStage.setResizable(false);
-    		primaryStage.setTitle("WaveWave[0.5]");
+    		primaryStage.setTitle("WaveWave");
     		primaryStage.show();
     		Controller.getTasks();
         	//logger.log(Level.INFO, "UI has been successfully displayed.");
