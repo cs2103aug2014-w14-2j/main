@@ -14,8 +14,6 @@ import application.Message;
 
 //@author A0090971Y
 /** This class stores all information that a Command object needs to execute a command 
- * 
- * 
  */
 public class CommandInfo {
     private String commandType;
@@ -25,7 +23,7 @@ public class CommandInfo {
     private DateTime endDateTime;
     private int priority;
     private String message = null;
-    private boolean completed;
+    private boolean isCompleted;
 
     //@author A0090971Y
     /**
@@ -46,7 +44,7 @@ public class CommandInfo {
             this.startDateTime = startDateTime;
             this.endDateTime = endDateTime;
             this.priority = priority;
-            this.completed = isCompleted;
+            this.isCompleted = isCompleted;
             checkStartDateTime();
             checkEndDateTime();
             validateUserInput();
@@ -192,7 +190,7 @@ public class CommandInfo {
     
     //@author A0090971Y
     /**
-     * 
+     * This returns the end time of the task 
      * @return the end time in Joda-Time DateTime format
      */
     public DateTime getEndDateTime() {
@@ -206,7 +204,7 @@ public class CommandInfo {
 
     //@author A0090971Y
     /**
-     * 
+     * This returns the start time of the task
      * @return a message when there is one otherwise return null
      */
     public String getMessage() {
@@ -219,6 +217,6 @@ public class CommandInfo {
      * @return a boolean to indicate if the user searches a completed task, true for searching completed tasks, false for searching not completed tasks
      */
     public boolean isCompleted(){
-        return completed;
+        return this.isCompleted;
     }
 }

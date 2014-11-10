@@ -8,7 +8,6 @@ import com.joestelmach.natty.Parser;
 //@author A0090971Y
 public class DateTimeParser {
     private List<Date> dates = null;
-    private String matchingValue = null;
 
     //@author A0090971Y
     /**
@@ -21,7 +20,6 @@ public class DateTimeParser {
         {
             for (DateGroup group : groups) {
                 dates = group.getDates();
-                matchingValue = group.getText();
             }
         }
     }
