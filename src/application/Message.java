@@ -10,6 +10,7 @@ import java.util.ArrayList;
  *
  */
 
+//@author A0115864B
 public abstract class Message {
 
     protected String outputMsg = "";
@@ -23,7 +24,6 @@ public abstract class Message {
     public String getMessage() {
         return outputMsg;
     }
-
 }
 
 class MessageNotifyAdd extends Message {
