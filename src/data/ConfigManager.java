@@ -42,6 +42,18 @@ public class ConfigManager {
     
     //@author A0115864B
     /**
+     * Constructor when filename is specified
+     * Used only for unit testing
+     * 
+     * @param name filename to use for testing
+     */
+    public ConfigManager(String name) {
+        filename = name;
+        initiateFile();
+    }
+    
+    //@author A0115864B
+    /**
      * Confirm that the external json file exists. If not, create it.
      */
     public void initiateFile() {

@@ -3,13 +3,16 @@ package data;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.junit.Test;
 
 import Task.Task;
@@ -37,7 +40,7 @@ public class DataStorageTest {
             fileExists = true;
         }
         // After initiateFile() is called, external storage must exist
-        assertEquals(fileExists, true);
+        assertEquals(true, fileExists);
     }
     
     //@author A0115864B
@@ -46,14 +49,45 @@ public class DataStorageTest {
         test = new DataStorage("testRetrieveTasks.json");
         test.initiateFile();
         ArrayList<Task> tasks = test.retrieveTasks();
-        assertEquals(tasks.size(), 1);
+        assertEquals(1, tasks.size());
         
         Task task = tasks.get(0);
-        assertEquals(task.getDescription(), "submit WaveWave v0.5");
-        assertEquals(task.getEndDate().toString(), "2014-11-10T23:59:00.000+08:00");
-        assertEquals(task.isCompleted(), false);
-        assertEquals(task.getPriority(), 1);
-        assertEquals(task.getDate(), null);
+        assertEquals("submit WaveWave v0.5", task.getDescription());
+        assertEquals("2014-11-10T23:59:00.000+08:00", task.getEndDate().toString());
+        assertEquals(false, task.isCompleted());
+        assertEquals(1, task.getPriority());
+        assertEquals(null, task.getDate());
+    }
+    
+    //@author A0115864B
+    @Test
+    public void testSaveTasks() {
+        test = new DataStorage("testSaveTasks.json");
+        Task task = new Task();
+        task.setDescription("CS2103T software demo");
+        DateTime date = formatter.parseDateTime("12/11/2014 14:00:00");
+        task.setDate(date);
+        task.setPriority(1);
+        task.setCompleted(false);
+        
+        ArrayList<Task> list = new ArrayList<Task>();
+        list.add(task);
+        test.saveTasks(list);
+        
+        byte b1 = 0;
+        byte b2 = 1;
+        try {
+            FileInputStream f1 = new FileInputStream("testSaveTasks.json");
+            FileInputStream f2 = new FileInputStream("testSaveTasksExpected.json");
+            DataInputStream d1 = new DataInputStream(f1);
+            DataInputStream d2 = new DataInputStream(f2);
+            b1 = d1.readByte();
+            b2 = d2.readByte();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        assertEquals(b1, b2);
     }
     
     //@author A0115864B
@@ -80,11 +114,11 @@ public class DataStorageTest {
             priority = 0;
         }
         
-        assertEquals(obj.get("Description"), task.getDescription());
-        assertEquals(obj.get("Date"), task.getDate().toString());
-        assertEquals(obj.get("End date"), task.getEndDate().toString());
-        assertEquals(priority, 1);
-        assertEquals(obj.get("Completed"), true);
+        assertEquals(task.getDescription(), obj.get("Description"));
+        assertEquals(task.getDate().toString(), obj.get("Date"));
+        assertEquals(task.getEndDate().toString(), obj.get("End date"));
+        assertEquals(1, priority);
+        assertEquals(true, obj.get("Completed"));
         
     }
     
@@ -109,10 +143,10 @@ public class DataStorageTest {
             isHighPriority = false;
         }
         
-        assertEquals(task.getDescription(), obj.get("Description"));
-        assertEquals(task.getEndDate().toString(), obj.get("End date"));
-        assertEquals(isHighPriority, true);
-        assertEquals(task.isCompleted(), true);
+        assertEquals(obj.get("Description"), task.getDescription());
+        assertEquals(obj.get("End date"), task.getEndDate().toString());
+        assertEquals(true, isHighPriority);
+        assertEquals(true, task.isCompleted());
         
     }
     
